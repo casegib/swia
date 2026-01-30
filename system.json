@@ -1,0 +1,71 @@
+{
+  "id": "swia",
+  "title": "Star Wars Imperial Assault",
+  "description": "Foundry VTT system scaffold for Star Wars: Imperial Assault (unofficial).",
+  "version": "0.0.1",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13.351"
+  },
+  "authors": [
+    {
+      "name": "CaseGib",
+      "discord": ""
+    }
+  ],
+  "url": "",
+  "bugs": "",
+  "license": "Proprietary",
+  "manifest": "",
+  "download": "",
+  "readme": "README.md",
+  "primaryTokenAttribute": "system.attributes.health.value",
+  "grid": {
+    "distance": 1,
+    "units": "square"
+  },
+  "initiative": "1d20",
+  "esmodules": [
+    "scripts/swia.js"
+  ],
+  "styles": [
+    "styles/swia.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "packs": [],
+  "socket": false,
+  "scripts": [],
+  "statusEffects": [
+    {
+      "id": "weakened",
+      "label": "SWIA.Conditions.Weakened",
+      "icon": "systems/swia/icons/Strain.png"
+    },
+    {
+      "id": "stunned",
+      "label": "SWIA.Conditions.Stunned",
+      "icon": "systems/swia/icons/Action.png"
+    },
+    {
+      "id": "bleeding",
+      "label": "SWIA.Conditions.Bleeding",
+      "icon": "systems/swia/icons/Damage.png"
+    },
+    {
+      "id": "focused",
+      "label": "SWIA.Conditions.Focused",
+      "icon": "systems/swia/icons/Power Surge Token.png"
+    },
+    {
+      "id": "hidden",
+      "label": "SWIA.Conditions.Hidden",
+      "icon": "systems/swia/icons/Evade.png"
+    }
+  ]
+}

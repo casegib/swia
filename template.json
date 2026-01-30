@@ -1,0 +1,121 @@
+{
+  "Actor": {
+    "types": ["hero", "imperial", "ally"],
+    "templates": {
+      "base": {
+        "attributes": {
+          "health": { "value": 10, "max": 10 },
+          "speed": 4,
+          "defense": {
+            "black": 0,
+            "white": 0
+          }
+        },
+        "abilities": [],
+        "equipment": [],
+        "notes": ""
+      }
+    },
+    "hero": {
+      "templates": ["base"],
+      "attributes": {
+        "endurance": { "value": 4, "max": 4 },
+        "surge": 1,
+        "threat": 0,
+        "strength": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "insight": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "tech": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        }
+      },
+      "woundedAttributes": {
+        "health": { "value": 10, "max": 10 },
+        "endurance": { "value": 4, "max": 4 },
+        "speed": 3,
+        "strength": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "insight": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "tech": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        }
+      },
+      "state": {
+        "wounded": false
+      }
+    },
+    "imperial": {
+      "templates": ["base"],
+      "attributes": {
+        "attack": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "surge": 0,
+        "threat": 1
+      }
+    },
+    "ally": {
+      "templates": ["base"],
+      "attributes": {
+        "attack": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "surge": 1,
+        "threat": 0
+      }
+    }
+  },
+  "Item": {
+    "types": ["weapon", "gear", "ability"],
+    "templates": {
+      "base": {
+        "description": "",
+        "cost": 0
+      }
+    },
+    "weapon": {
+      "templates": ["base"],
+      "damage": 1,
+      "range": "melee",
+      "dice": []
+    },
+    "gear": {
+      "templates": ["base"],
+      "effect": ""
+    },
+    "ability": {
+      "templates": ["base"],
+      "cooldown": 0
+    }
+  }
+}

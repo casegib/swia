@@ -1,0 +1,416 @@
+.swia-sheet {
+  font-family: "Segoe UI", sans-serif;
+  color: #e4e7ec;
+  background: linear-gradient(135deg, #0a1019 0%, #101a2b 60%, #0a1019 100%);
+  padding: 12px;
+  transition: border 0.3s ease;
+  --accent: #2e95c7;
+  --accent-rgb: 46, 149, 199;
+  --label: #8fb9d9;
+  --label-rgb: 143, 185, 217;
+}
+
+.swia-sheet.type-hero {
+  --accent: #dc3545;
+  --accent-rgb: 220, 53, 69;
+  --label: #e5a0a0;
+  --label-rgb: 229, 160, 160;
+}
+
+.swia-sheet.type-ally {
+  --accent: #38b27c;
+  --accent-rgb: 56, 178, 124;
+  --label: #9fd7b8;
+  --label-rgb: 159, 215, 184;
+}
+
+.swia-sheet.type-imperial {
+  --accent: #2e95c7;
+  --accent-rgb: 46, 149, 199;
+  --label: #8fb9d9;
+  --label-rgb: 143, 185, 217;
+}
+
+.swia-sheet.wounded {
+  border: 2px solid rgba(220, 53, 69, 0.6);
+  box-shadow: 0 0 12px rgba(220, 53, 69, 0.3);
+}
+
+.swia-sheet .sheet-header {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  align-items: center;
+  position: relative;
+}
+
+.swia-sheet .image-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.swia-sheet .image-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+}
+
+.swia-sheet .profile-image,
+.swia-sheet .token-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 2px solid var(--accent);
+  border-radius: 6px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.swia-sheet .token-image {
+  opacity: 0;
+}
+
+.swia-sheet .edit-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.swia-sheet .edit-toggle label {
+  font-size: 12px;
+  color: var(--label);
+  font-weight: 600;
+}
+
+.swia-sheet .edit-toggle input[type="checkbox"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  width: 44px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s ease;
+  padding: 2px;
+  margin: 0;
+  background-image: none !important;
+  box-shadow: none !important;
+  color: transparent;
+  outline: none;
+  overflow: hidden;
+  accent-color: transparent;
+}
+
+.swia-sheet .edit-toggle input[type="checkbox"]::-ms-check {
+  display: none;
+}
+
+.swia-sheet .edit-toggle input[type="checkbox"]::-webkit-check-mark {
+  display: none;
+}
+
+.swia-sheet .edit-toggle input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: var(--label);
+  border-radius: 10px;
+  top: 2px;
+  left: 2px;
+  transition: left 0.3s ease, background 0.3s ease;
+}
+
+.swia-sheet .edit-toggle input[type="checkbox"]:checked {
+  background: rgba(var(--accent-rgb), 0.3);
+  border-color: var(--accent);
+}
+
+.swia-sheet .edit-toggle input[type="checkbox"]:checked::before {
+  left: 22px;
+  background: var(--accent);
+}
+
+.swia-sheet .sheet-header h1 input {
+  width: 100%;
+  font-size: 22px;
+  background: transparent;
+  border: none;
+  color: #e4e7ec;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 4px;
+}
+
+.swia-sheet .sheet-header .meta {
+  color: #8fb9d9;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.swia-sheet .state-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.swia-sheet .state-toggle .toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.swia-sheet .state-toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--accent);
+  transition: accent-color 0.3s ease;
+}
+
+.swia-sheet .state-toggle input[type="checkbox"]:checked {
+  accent-color: #dc3545;
+}
+
+.swia-sheet .state-toggle .toggle-label {
+  font-weight: 600;
+  color: var(--label);
+  transition: color 0.3s ease;
+}
+
+.swia-sheet.wounded .state-toggle .toggle-label {
+  color: #dc3545;
+}
+
+.swia-sheet .resource-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.swia-sheet .resource {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  border-radius: 6px;
+  padding: 8px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  box-sizing: border-box;
+}
+
+.swia-sheet.wounded .resource {
+  border-color: rgba(220, 53, 69, 0.4);
+  background: rgba(220, 53, 69, 0.06);
+}
+
+.swia-sheet .resource .attribute-icon {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.swia-sheet .resource .attribute-icon-small {
+  width: 25%;
+  height: auto;
+  filter: invert(1) brightness(1.2);
+}
+
+.swia-sheet .resource label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--label);
+}
+
+.swia-sheet .resource input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e4e7ec;
+  border-radius: 4px;
+  padding: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.swia-sheet.wounded .resource input {
+  border-color: rgba(220, 53, 69, 0.3);
+}
+
+.swia-sheet .resource .pair {
+  display: grid;
+  grid-template-columns: 1fr 24px 1fr;
+  align-items: center;
+  gap: 4px;
+}
+
+.swia-sheet .resource .pair span {
+  text-align: center;
+  color: var(--label);
+}
+
+.swia-sheet .defense,
+.swia-sheet .attack {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px;
+  align-items: center;
+}
+
+.swia-sheet .dice-display {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.swia-sheet .dice-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swia-sheet .dice-group label {
+  font-size: 11px;
+  color: var(--label);
+  min-width: 40px;
+  margin: 0;
+}
+
+.swia-sheet .dice-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.swia-sheet .dice-block {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  display: inline-block;
+}
+
+.swia-sheet .dice-block.black {
+  background: #2c2c2c;
+  border-color: #1a1a1a;
+}
+
+.swia-sheet .dice-block.white {
+  background: #f0f0f0;
+  border-color: #d0d0d0;
+}
+
+.swia-sheet .dice-block.red {
+  background: #dc3545;
+  border-color: #b02a37;
+}
+
+.swia-sheet .dice-block.blue {
+  background: #2e95c7;
+  border-color: #1f6b8f;
+}
+
+.swia-sheet .dice-block.green {
+  background: #38b27c;
+  border-color: #2a8a5f;
+}
+
+.swia-sheet .dice-block.yellow {
+  background: #ffc107;
+  border-color: #d39e00;
+}
+
+.swia-sheet.wounded .dice-block.red {
+  background: #a02a38;
+  border-color: #6b1c24;
+  opacity: 0.7;
+}
+
+.swia-sheet.wounded .dice-block.blue {
+  background: #1f6b8f;
+  border-color: #0f3d52;
+  opacity: 0.7;
+}
+
+.swia-sheet.wounded .dice-block.green {
+  background: #1f6b40;
+  border-color: #0f3d23;
+  opacity: 0.7;
+}
+
+.swia-sheet.wounded .dice-block.yellow {
+  background: #b8860b;
+  border-color: #8a6307;
+  opacity: 0.7;
+}
+
+.swia-sheet section header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+
+.swia-sheet section h2 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--label);
+}
+
+.swia-sheet section button {
+  background: var(--accent);
+  border: none;
+  color: #0a1019;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.swia-sheet section ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.swia-sheet section li {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  display: grid;
+  gap: 6px;
+}
+
+.swia-sheet section input,
+.swia-sheet section textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e4e7ec;
+  border-radius: 4px;
+  padding: 6px;
+}
+
+.swia-sheet section textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.swia-sheet section .notes textarea {
+  min-height: 120px;
+}
