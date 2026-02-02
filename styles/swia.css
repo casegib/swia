@@ -52,8 +52,8 @@
 
 .swia-sheet .image-container {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
   overflow: hidden;
 }
 
@@ -107,18 +107,28 @@
   margin: 0;
   background-image: none !important;
   box-shadow: none !important;
-  color: transparent;
+  color: transparent !important;
   outline: none;
   overflow: hidden;
   accent-color: transparent;
 }
 
 .swia-sheet .edit-toggle input[type="checkbox"]::-ms-check {
-  display: none;
+  display: none !important;
 }
 
 .swia-sheet .edit-toggle input[type="checkbox"]::-webkit-check-mark {
-  display: none;
+  display: none !important;
+}
+
+.swia-sheet .edit-toggle input[type="checkbox"]::after {
+  content: none !important;
+  display: none !important;
+}
+
+.swia-sheet .edit-toggle input[type="checkbox"]:checked::after {
+  content: none !important;
+  display: none !important;
 }
 
 .swia-sheet .edit-toggle input[type="checkbox"]::before {
@@ -216,14 +226,21 @@
   background: rgba(220, 53, 69, 0.06);
 }
 
+.swia-sheet .resource .attribute-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .swia-sheet .resource .attribute-icon {
   display: block;
   margin-bottom: 8px;
 }
 
 .swia-sheet .resource .attribute-icon-small {
-  width: 25%;
+  width: 38px;
   height: auto;
+  flex-shrink: 0;
   filter: invert(1) brightness(1.2);
 }
 
@@ -411,6 +428,94 @@
   resize: vertical;
 }
 
-.swia-sheet section .notes textarea {
-  min-height: 120px;
+/* Power Tokens Section */
+.swia-sheet .power-tokens {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.swia-sheet .power-tokens h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: var(--label);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.swia-sheet .power-tokens-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.swia-sheet .power-token-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 8px;
+}
+
+.swia-sheet .power-token-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.swia-sheet .power-token-item img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+.swia-sheet .power-token-item label {
+  font-size: 11px;
+  color: var(--label);
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.swia-sheet .token-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+}
+
+.swia-sheet .token-controls button {
+  background: var(--accent);
+  border: none;
+  color: #0a1019;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swia-sheet .token-controls button:hover {
+  opacity: 0.8;
+}
+
+.swia-sheet .token-count {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+  color: #e4e7ec;
+  font-size: 12px;
 }

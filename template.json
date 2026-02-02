@@ -11,9 +11,13 @@
             "white": 0
           }
         },
-        "abilities": [],
-        "equipment": [],
-        "notes": ""
+        "powerTokens": {
+          "block": 0,
+          "damage": 0,
+          "evade": 0,
+          "surge": 0,
+          "any": 0
+        }
       }
     },
     "hero": {

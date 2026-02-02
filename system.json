@@ -45,27 +45,57 @@
     {
       "id": "weakened",
       "label": "SWIA.Conditions.Weakened",
-      "icon": "systems/swia/icons/Strain.png"
+      "icon": "systems/swia/icons/Weaken.png"
     },
     {
       "id": "stunned",
       "label": "SWIA.Conditions.Stunned",
-      "icon": "systems/swia/icons/Action.png"
+      "icon": "systems/swia/icons/Stunned.png"
     },
     {
       "id": "bleeding",
       "label": "SWIA.Conditions.Bleeding",
-      "icon": "systems/swia/icons/Damage.png"
+      "icon": "systems/swia/icons/Bleeding.png"
     },
     {
       "id": "focused",
       "label": "SWIA.Conditions.Focused",
-      "icon": "systems/swia/icons/Power Surge Token.png"
+      "icon": "systems/swia/icons/Focused.png"
     },
     {
       "id": "hidden",
       "label": "SWIA.Conditions.Hidden",
-      "icon": "systems/swia/icons/Evade.png"
+      "icon": "systems/swia/icons/Hidden.png"
+    },
+    {
+      "id": "blind",
+      "label": "SWIA.Conditions.Blind",
+      "icon": "systems/swia/icons/Blind.png"
+    },
+    {
+      "id": "power-block",
+      "label": "SWIA.PowerTokens.BlockToken",
+      "icon": "systems/swia/icons/Power Block Token.png"
+    },
+    {
+      "id": "power-damage",
+      "label": "SWIA.PowerTokens.DamageToken",
+      "icon": "systems/swia/icons/Power Damage Token.png"
+    },
+    {
+      "id": "power-evade",
+      "label": "SWIA.PowerTokens.EvadeToken",
+      "icon": "systems/swia/icons/Power Evade Token.png"
+    },
+    {
+      "id": "power-surge",
+      "label": "SWIA.PowerTokens.SurgeToken",
+      "icon": "systems/swia/icons/Power Surge Token.png"
+    },
+    {
+      "id": "power-any",
+      "label": "SWIA.PowerTokens.AnyToken",
+      "icon": "systems/swia/icons/Power Any Token.png"
     }
   ]
 }

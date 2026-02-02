@@ -1,3 +1,4 @@
+// Import base classes for V1/V2 compatibility
 const BaseActorSheetV2 = foundry.applications?.sheets?.ActorSheetV2;
 const BaseActorSheetV1 = foundry.appv1?.sheets?.ActorSheet ?? ActorSheet;
 const HandlebarsApplicationMixin = foundry.applications?.api?.HandlebarsApplicationMixin;
@@ -8,27 +9,32 @@ const BaseActorSheet = BaseActorSheetV2 && HandlebarsApplicationMixin
   : BaseActorSheetV1;
 const isV2 = !!BaseActorSheetV2;
 
+// Main actor sheet class supporting both V1 and V2 Foundry versions
 export class SWIAActorSheet extends BaseActorSheet {
+  // Track whether the sheet is in edit mode (GM only)
   constructor(...args) {
     super(...args);
     this._editMode = false;
   }
 
+  // Configuration for V2: sheet layout, position, and action handlers
   static DEFAULT_OPTIONS = {
     classes: ["swia", "sheet", "actor"],
     position: {
       width: 620,
       height: 640
     },
+    resizable: true,
     actions: {
+      // Combat state toggles
       toggleWounded: this._onToggleWounded,
       toggleEdit: this._onToggleEdit,
-      addAbility: this._onAddAbility,
-      addEquipment: this._onAddEquipment,
-      removeRow: this._onRemoveRow,
-      // Ensure image editing works in V2 by binding the action
+      // Image and name editing
       editImage: this._onEditImage,
-      changeName: this._onChangeName
+      changeName: this._onChangeName,
+      // Power token increment/decrement
+      incrementPowerToken: this._onPowerTokenChange,
+      decrementPowerToken: this._onPowerTokenChange
     }
   };
 
@@ -38,7 +44,8 @@ export class SWIAActorSheet extends BaseActorSheet {
       classes: ["swia", "sheet", "actor"],
       template: "systems/swia/templates/actors/actor-sheet.hbs",
       width: 620,
-      height: 640
+      height: 640,
+      resizable: true
     });
   }
 
@@ -57,23 +64,26 @@ export class SWIAActorSheet extends BaseActorSheet {
     return name || "";
   }
 
+  // Prepare rendering context for both V1 and V2
+  // Converts dice counts to arrays for template iteration and handles wounded state
   async _prepareContext(options) {
     const context = isV2 ? await super._prepareContext(options) : {};
     const actor = this.document ?? this.actor;
     const system = actor.system;
+    // Determine which attribute set to display based on wounded state
     const isWounded = system.state?.wounded ?? false;
     const currentAttrPath = isWounded ? "woundedAttributes" : "attributes";
     const tokenSrc = actor?.prototypeToken?.texture?.src ?? "";
     const profileSrc = actor?.img || tokenSrc || "";
 
-    // Create arrays for dice block rendering
+    // Extract dice pools from current (or wounded) attributes
     const defense = system.attributes?.defense || { black: 0, white: 0 };
     const attack = system.attributes?.attack || { red: 0, blue: 0, green: 0, yellow: 0 };
     const strength = system.attributes?.strength || { red: 0, blue: 0, green: 0, yellow: 0 };
     const insight = system.attributes?.insight || { red: 0, blue: 0, green: 0, yellow: 0 };
     const tech = system.attributes?.tech || { red: 0, blue: 0, green: 0, yellow: 0 };
     
-    // Get wounded dice if wounded
+    // Get wounded dice if wounded state is active
     const woundedStrength = isWounded && system.woundedAttributes?.strength ? system.woundedAttributes.strength : strength;
     const woundedInsight = isWounded && system.woundedAttributes?.insight ? system.woundedAttributes.insight : insight;
     const woundedTech = isWounded && system.woundedAttributes?.tech ? system.woundedAttributes.tech : tech;
@@ -88,7 +98,8 @@ export class SWIAActorSheet extends BaseActorSheet {
       currentAttributes: system[currentAttrPath] ?? system.attributes,
       config: CONFIG.SWIA ?? {},
       profileSrc,
-      // Dice arrays for rendering blocks
+      // Convert dice counts to arrays for Handlebars iteration (each loop)
+      // This allows displaying individual dice blocks in the template
       defenseBlackDice: Array.from({ length: defense.black || 0 }, (_, i) => i),
       defenseWhiteDice: Array.from({ length: defense.white || 0 }, (_, i) => i),
       attackRedDice: Array.from({ length: attack.red || 0 }, (_, i) => i),
@@ -187,39 +198,14 @@ export class SWIAActorSheet extends BaseActorSheet {
     html.find("[data-action='removeRow']").on("click", SWIAActorSheet._onRemoveRow.bind(this));
   }
 
+  // Toggle hero wounded state (heroes only)
   static async _onToggleWounded(event, target) {
     const isChecked = Boolean(target?.checked);
     await this.document.update({ "system.state.wounded": isChecked });
   }
 
-  static async _onAddAbility(event, target) {
-    if (!game.user?.isGM || !this._editMode) return;
-    const abilities = this.document.system.abilities ?? [];
-    abilities.push({ name: "New Ability", text: "" });
-    await this.document.update({ "system.abilities": abilities });
-  }
-
-  static async _onAddEquipment(event, target) {
-    if (!game.user?.isGM || !this._editMode) return;
-    const equipment = this.document.system.equipment ?? [];
-    equipment.push({ name: "New Gear", note: "" });
-    await this.document.update({ "system.equipment": equipment });
-  }
-
-  static async _onRemoveRow(event, target) {
-    if (!game.user?.isGM || !this._editMode) return;
-    const row = target.closest("[data-index]");
-    if (!row) return;
-    const index = Number(row.dataset.index);
-    const collection = row.dataset.collection;
-    if (!Number.isInteger(index) || !collection) return;
-
-    const path = `system.${collection}`;
-    const data = foundry.utils.duplicate(this.document.system[collection] ?? []);
-    data.splice(index, 1);
-    await this.document.update({ [path]: data });
-  }
-
+  // Open file picker for image selection (edit mode only)
+  // Updates both profile and token images simultaneously
   async _onEditImageInstance(event, target) {
     event.preventDefault();
     if (!game.user?.isGM || !this._editMode) return;
@@ -299,6 +285,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     fp.render(true);
   }
 
+  // Toggle edit mode (GM only) - enables field editing and image selection
   static async _onToggleEdit(event, target) {
     const checked = Boolean(target?.checked);
     const wasEditing = this._editMode;
@@ -313,6 +300,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     this.render(false);
   }
 
+  // Update actor name when changed in edit mode
   static async _onChangeName(event, target) {
     const nameInput = target ?? event?.currentTarget;
     const value = nameInput?.value?.trim();
@@ -327,6 +315,34 @@ export class SWIAActorSheet extends BaseActorSheet {
     }
   }
 
+  // Increment or decrement power token counts
+  // Prevents negative values and persists changes to actor
+  static async _onPowerTokenChange(event, target) {
+    const button = target?.closest("[data-power-token]");
+    if (!button) return;
+    
+    const tokenType = button.dataset.powerToken;
+    const action = button.dataset.action;
+    const actor = this.document ?? this.actor;
+    
+    if (!actor || !tokenType) return;
+    
+    const path = `system.powerTokens.${tokenType}`;
+    const current = foundry.utils.getProperty(actor.system, `powerTokens.${tokenType}`) ?? 0;
+    
+    let newValue = current;
+    if (action === "incrementPowerToken") {
+      newValue = current + 1;
+    } else if (action === "decrementPowerToken") {
+      newValue = Math.max(0, current - 1);
+    }
+    
+    await actor.update({ [path]: newValue });
+  }
+
+  /**
+   * Ensure name and system data persist when the form is submitted.
+   */
   /**
    * Ensure name and system data persist when the form is submitted.
    */
@@ -355,6 +371,9 @@ export class SWIAActorSheet extends BaseActorSheet {
   /**
    * Collect current form data and persist key fields, even if submit is skipped.
    */
+  /**
+   * Explicitly submit data to ensure name/system changes save across V1/V2.
+   */
   async _saveFormData() {
     const formData = this._collectFormData();
     const expanded = foundry.utils.expandObject(formData ?? {});
@@ -379,6 +398,10 @@ export class SWIAActorSheet extends BaseActorSheet {
 
   /**
    * Gather form data safely across V1/V2 without relying on _getSubmitData.
+   */
+  /**
+   * Gather form data safely across V1/V2 without relying on _getSubmitData.
+   * Handles disabled inputs which are normally skipped by FormData API.
    */
   _collectFormData() {
     if (typeof this._getSubmitData === "function") {

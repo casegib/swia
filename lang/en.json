@@ -30,5 +30,12 @@
   "SWIA.Conditions.Stunned": "Stunned",
   "SWIA.Conditions.Bleeding": "Bleeding",
   "SWIA.Conditions.Focused": "Focused",
-  "SWIA.Conditions.Hidden": "Hidden"
+  "SWIA.Conditions.Hidden": "Hidden",
+  "SWIA.Conditions.Blind": "Blind",
+  "SWIA.PowerTokens.BlockToken": "Block Token",
+  "SWIA.PowerTokens.DamageToken": "Damage Token",
+  "SWIA.PowerTokens.EvadeToken": "Evade Token",
+  "SWIA.PowerTokens.SurgeToken": "Surge Token",
+  "SWIA.PowerTokens.AnyToken": "Any Token",
+  "SWIA.PowerTokensTitle": "Power Tokens"
 }
