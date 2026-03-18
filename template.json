@@ -1,0 +1,136 @@
+{
+  "Actor": {
+    "types": ["hero", "imperial", "ally"],
+    "templates": {
+      "base": {
+        "biography": "",
+        "attributes": {
+          "health": { "value": 10, "max": 10 },
+          "speed": 4,
+          "defense": {
+            "black": 0,
+            "white": 0
+          }
+        }
+      }
+    },
+    "hero": {
+      "templates": ["base"],
+      "title": "",
+      "attributes": {
+        "endurance": { "value": 4, "max": 4 },
+        "surge": 1,
+        "threat": 0,
+        "strength": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "insight": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "tech": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        }
+      },
+      "woundedAttributes": {
+        "health": { "value": 10, "max": 10 },
+        "endurance": { "value": 4, "max": 4 },
+        "speed": 3,
+        "strength": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "insight": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "tech": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        }
+      },
+      "woundedBiography": "",
+      "state": {
+        "wounded": false,
+        "activated": false
+      }
+    },
+    "imperial": {
+      "templates": ["base"],
+      "attributes": {
+        "attack": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "surge": 0,
+        "threat": 1
+      },
+      "state": {
+        "activated": false
+      }
+    },
+    "ally": {
+      "templates": ["base"],
+      "attributes": {
+        "attack": {
+          "red": 0,
+          "blue": 0,
+          "green": 0,
+          "yellow": 0
+        },
+        "surge": 1,
+        "threat": 0
+      },
+      "state": {
+        "activated": false
+      }
+    }
+  },
+  "Item": {
+    "types": ["weapon", "gear", "ability"],
+    "templates": {
+      "base": {
+        "description": "",
+        "cost": 0,
+        "cardState": "ready"
+      }
+    },
+    "weapon": {
+      "templates": ["base"],
+      "attackDice": {
+        "red": 0,
+        "blue": 0,
+        "green": 0,
+        "yellow": 0
+      },
+      "damage": 0,
+      "range": "melee",
+      "surgeAbilities": [],
+      "traits": ""
+    },
+    "gear": {
+      "templates": ["base"],
+      "effect": ""
+    },
+    "ability": {
+      "templates": ["base"],
+      "cooldown": 0
+    }
+  }
+}

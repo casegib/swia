@@ -1,0 +1,14 @@
+<form class="swia-sheet item-sheet card-sheet ability-sheet" autocomplete="off">
+  <div class="card-image-container">
+    <img class="card-image {{systemData.cardState}}" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" alt="{{item.name}}" />
+    {{#unless hasCardImage}}
+    <div class="card-placeholder">
+      <i class="fas fa-image"></i>
+      <p>{{localize "SWIA.Item.ClickToUploadCard"}}</p>
+    </div>
+    {{/unless}}
+    <button type="button" class="card-state-btn {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
+      {{cardStateLabel}}
+    </button>
+  </div>
+</form>

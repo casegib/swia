@@ -1,0 +1,42 @@
+{
+  "id": "swia",
+  "title": "Star Wars Imperial Assault",
+  "description": "Foundry VTT system scaffold for Star Wars: Imperial Assault (unofficial).",
+  "version": "0.0.4",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13.351"
+  },  
+  "authors": [
+    {
+      "name": "CaseGib",
+      "discord": ""
+    }
+  ],
+  "url": "https://github.com/CaseGib/swia",
+  "manifest": "https://raw.githubusercontent.com/CaseGib/swia/master/system.json",
+  "download": "https://github.com/CaseGib/swia/releases/download/v0.0.4/swia.zip",
+  "readme": "README.md",
+  "primaryTokenAttribute": "system.attributes.health.value",
+  "grid": {
+    "distance": 1,
+    "units": "square"
+  },
+  "initiative": "1d20",
+  "esmodules": [
+    "scripts/swia.js"
+  ],
+  "styles": [
+    "styles/swia.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "packs": [],
+  "socket": false,
+  "scripts": []
+}

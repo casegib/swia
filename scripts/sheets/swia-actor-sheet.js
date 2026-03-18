@@ -1,0 +1,605 @@
+// Import base classes for V1/V2 compatibility
+const BaseActorSheetV2 = foundry.applications?.sheets?.ActorSheetV2;
+const BaseActorSheetV1 = foundry.appv1?.sheets?.ActorSheet ?? ActorSheet;
+const HandlebarsApplicationMixin = foundry.applications?.api?.HandlebarsApplicationMixin;
+
+// Create V2 base with Handlebars mixin if available, otherwise use V1
+const BaseActorSheet = BaseActorSheetV2 && HandlebarsApplicationMixin 
+  ? HandlebarsApplicationMixin(BaseActorSheetV2)
+  : BaseActorSheetV1;
+const isV2 = !!BaseActorSheetV2;
+
+// Main actor sheet class supporting both V1 and V2 Foundry versions
+export class SWIAActorSheet extends BaseActorSheet {
+  // Track whether the sheet is in edit mode (GM only)
+  constructor(...args) {
+    super(...args);
+    this._editMode = false;
+    this._activeInventoryPanel = null;
+  }
+
+  // Configuration for V2: sheet layout, position, and action handlers
+  static DEFAULT_OPTIONS = {
+    classes: ["swia", "sheet", "actor"],
+    window: {
+      resizable: true,
+      controls: []
+    },
+    position: {
+      width: 620,
+      height: 640
+    },
+    form: {
+      submitOnChange: true
+    },
+    actions: {
+      // Combat state toggles
+      toggleWounded: SWIAActorSheet.prototype._onToggleWounded,
+      toggleActivated: SWIAActorSheet.prototype._onToggleActivated,
+      toggleEdit: SWIAActorSheet.prototype._onToggleEdit,
+      // Image and name editing
+      editImage: SWIAActorSheet.prototype._onEditImage,
+      changeName: SWIAActorSheet.prototype._onChangeName,
+      // Item management
+      toggleInventoryPanel: SWIAActorSheet.prototype._onToggleInventoryPanel,
+      openItem: SWIAActorSheet.prototype._onOpenItem,
+      deleteItem: SWIAActorSheet.prototype._onDeleteItem,
+      cycleItemState: SWIAActorSheet.prototype._onCycleItemState
+    }
+  };
+
+  static get defaultOptions() {
+    if (isV2) return {};
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      classes: ["swia", "sheet", "actor"],
+      template: "systems/swia/templates/actors/actor-sheet.hbs",
+      width: 620,
+      height: 640,
+      resizable: true,
+      submitOnChange: true
+    });
+  }
+
+  static PARTS = {
+    form: {
+      template: "systems/swia/templates/actors/actor-sheet.hbs"
+    }
+  };
+
+  get template() {
+    return "systems/swia/templates/actors/actor-sheet.hbs";
+  }
+
+  get title() {
+    const name = this.document?.name ?? this.actor?.name ?? "";
+    return name || "";
+  }
+
+  // Prepare rendering context for both V1 and V2
+  // Converts dice counts to arrays for template iteration and handles wounded state
+  async _prepareContext(options) {
+    const context = isV2 ? await super._prepareContext(options) : {};
+    const actor = this.document ?? this.actor;
+    const system = actor.system;
+    // Determine which attribute set to display based on wounded state
+    const isWounded = system.state?.wounded ?? false;
+    const currentAttrPath = isWounded ? "woundedAttributes" : "attributes";
+    const tokenSrc = actor?.prototypeToken?.texture?.src ?? "";
+    const profileSrc = actor?.img || tokenSrc || "";
+
+    // Extract dice pools from current (or wounded) attributes
+    const defense = system.attributes?.defense || { black: 0, white: 0 };
+    const attack = system.attributes?.attack || { red: 0, blue: 0, green: 0, yellow: 0 };
+    const strength = system.attributes?.strength || { red: 0, blue: 0, green: 0, yellow: 0 };
+    const insight = system.attributes?.insight || { red: 0, blue: 0, green: 0, yellow: 0 };
+    const tech = system.attributes?.tech || { red: 0, blue: 0, green: 0, yellow: 0 };
+    
+    // Get wounded dice if wounded state is active
+    const woundedStrength = isWounded && system.woundedAttributes?.strength ? system.woundedAttributes.strength : strength;
+    const woundedInsight = isWounded && system.woundedAttributes?.insight ? system.woundedAttributes.insight : insight;
+    const woundedTech = isWounded && system.woundedAttributes?.tech ? system.woundedAttributes.tech : tech;
+    
+    // Get TextEditor with fallback for V1/V2 compatibility
+    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
+    
+    // Enrich biography HTML
+    const enrichedBiography = await TextEditorClass.enrichHTML(system.biography || "", {
+      async: true,
+      secrets: actor.isOwner,
+      relativeTo: actor
+    });
+
+    let enrichedWoundedBiography = "";
+    if (actor.type === "hero") {
+      enrichedWoundedBiography = await TextEditorClass.enrichHTML(system.woundedBiography || "", {
+        async: true,
+        secrets: actor.isOwner,
+        relativeTo: actor
+      });
+    }
+    
+    // Collect owned items grouped by type
+    const ownedItems = actor.items?.contents ?? [];
+    const abilities = ownedItems.filter(i => i.type === "ability");
+    const weapons = ownedItems.filter(i => i.type === "weapon");
+    const gear = ownedItems.filter(i => i.type === "gear");
+
+    return foundry.utils.mergeObject(context, {
+      actor: actor,
+      systemData: system,
+      isWounded: isWounded,
+      isActivated: system.state?.activated ?? false,
+      isGM: game.user?.isGM ?? false,
+      editMode: this._editMode ?? false,
+      isEditable: actor.isOwner ?? true,
+      currentAttrPath: currentAttrPath,
+      currentAttributes: system[currentAttrPath] ?? system.attributes,
+      config: CONFIG.SWIA ?? {},
+      profileSrc,
+      enrichedBiography: enrichedBiography,
+      enrichedWoundedBiography: enrichedWoundedBiography,
+      abilities: abilities,
+      weapons: weapons,
+      gear: gear,
+      hasItems: ownedItems.length > 0,
+      activeInventoryPanel: this._activeInventoryPanel,
+      // Convert dice counts to arrays for Handlebars iteration (each loop)
+      // This allows displaying individual dice blocks in the template
+      defenseBlackDice: Array.from({ length: defense.black || 0 }, (_, i) => i),
+      defenseWhiteDice: Array.from({ length: defense.white || 0 }, (_, i) => i),
+      attackRedDice: Array.from({ length: attack.red || 0 }, (_, i) => i),
+      attackBlueDice: Array.from({ length: attack.blue || 0 }, (_, i) => i),
+      attackGreenDice: Array.from({ length: attack.green || 0 }, (_, i) => i),
+      attackYellowDice: Array.from({ length: attack.yellow || 0 }, (_, i) => i),
+      strengthRedDice: Array.from({ length: woundedStrength.red || 0 }, (_, i) => i),
+      strengthBlueDice: Array.from({ length: woundedStrength.blue || 0 }, (_, i) => i),
+      strengthGreenDice: Array.from({ length: woundedStrength.green || 0 }, (_, i) => i),
+      strengthYellowDice: Array.from({ length: woundedStrength.yellow || 0 }, (_, i) => i),
+      insightRedDice: Array.from({ length: woundedInsight.red || 0 }, (_, i) => i),
+      insightBlueDice: Array.from({ length: woundedInsight.blue || 0 }, (_, i) => i),
+      insightGreenDice: Array.from({ length: woundedInsight.green || 0 }, (_, i) => i),
+      insightYellowDice: Array.from({ length: woundedInsight.yellow || 0 }, (_, i) => i),
+      techRedDice: Array.from({ length: woundedTech.red || 0 }, (_, i) => i),
+      techBlueDice: Array.from({ length: woundedTech.blue || 0 }, (_, i) => i),
+      techGreenDice: Array.from({ length: woundedTech.green || 0 }, (_, i) => i),
+      techYellowDice: Array.from({ length: woundedTech.yellow || 0 }, (_, i) => i)
+    });
+  }
+
+  async getData(options) {
+    if (isV2) return this._prepareContext(options);
+    
+    const data = await super.getData(options);
+    const system = data.actor.system;
+    const isWounded = system.state?.wounded ?? false;
+    const currentAttrPath = isWounded ? "woundedAttributes" : "attributes";
+    const tokenSrc = data.actor?.prototypeToken?.texture?.src ?? "";
+    const profileSrc = data.actor?.img || tokenSrc || "";
+
+    // Create arrays for dice block rendering
+    const defense = system.attributes?.defense || { black: 0, white: 0 };
+    const attack = system.attributes?.attack || { red: 0, blue: 0, green: 0, yellow: 0 };
+    const strength = system.attributes?.strength || { red: 0, blue: 0, green: 0, yellow: 0 };
+    const insight = system.attributes?.insight || { red: 0, blue: 0, green: 0, yellow: 0 };
+    const tech = system.attributes?.tech || { red: 0, blue: 0, green: 0, yellow: 0 };
+
+    // Get wounded dice if wounded
+    const woundedStrength = isWounded && system.woundedAttributes?.strength ? system.woundedAttributes.strength : strength;
+    const woundedInsight = isWounded && system.woundedAttributes?.insight ? system.woundedAttributes.insight : insight;
+    const woundedTech = isWounded && system.woundedAttributes?.tech ? system.woundedAttributes.tech : tech;
+
+    // Get TextEditor with fallback for V1/V2 compatibility
+    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
+    
+    // Enrich biography HTML
+    const enrichedBiography = await TextEditorClass.enrichHTML(system.biography || "", {
+      async: true,
+      secrets: data.actor.isOwner,
+      relativeTo: data.actor
+    });
+
+    let enrichedWoundedBiography = "";
+    if (data.actor.type === "hero") {
+      enrichedWoundedBiography = await TextEditorClass.enrichHTML(system.woundedBiography || "", {
+        async: true,
+        secrets: data.actor.isOwner,
+        relativeTo: data.actor
+      });
+    }
+
+    // Collect owned items grouped by type
+    const ownedItems = data.actor.items?.contents ?? [];
+    const abilities = ownedItems.filter(i => i.type === "ability");
+    const weapons = ownedItems.filter(i => i.type === "weapon");
+    const gear = ownedItems.filter(i => i.type === "gear");
+
+    data.systemData = system;
+    data.isWounded = isWounded;
+    data.isActivated = system.state?.activated ?? false;
+    data.isGM = game.user?.isGM ?? false;
+    data.editMode = this._editMode ?? false;
+    data.isEditable = data.actor.isOwner ?? true;
+    data.currentAttrPath = currentAttrPath;
+    data.currentAttributes = system[currentAttrPath] ?? system.attributes;
+    data.config = CONFIG.SWIA ?? {};
+    data.profileSrc = profileSrc;
+    data.enrichedBiography = enrichedBiography;
+    data.enrichedWoundedBiography = enrichedWoundedBiography;
+    data.abilities = abilities;
+    data.weapons = weapons;
+    data.gear = gear;
+    data.hasItems = ownedItems.length > 0;
+    data.activeInventoryPanel = this._activeInventoryPanel;
+    // Dice arrays for rendering blocks
+    data.defenseBlackDice = Array.from({ length: defense.black || 0 }, (_, i) => i);
+    data.defenseWhiteDice = Array.from({ length: defense.white || 0 }, (_, i) => i);
+    data.attackRedDice = Array.from({ length: attack.red || 0 }, (_, i) => i);
+    data.attackBlueDice = Array.from({ length: attack.blue || 0 }, (_, i) => i);
+    data.attackGreenDice = Array.from({ length: attack.green || 0 }, (_, i) => i);
+    data.attackYellowDice = Array.from({ length: attack.yellow || 0 }, (_, i) => i);
+    data.strengthRedDice = Array.from({ length: woundedStrength.red || 0 }, (_, i) => i);
+    data.strengthBlueDice = Array.from({ length: woundedStrength.blue || 0 }, (_, i) => i);
+    data.strengthGreenDice = Array.from({ length: woundedStrength.green || 0 }, (_, i) => i);
+    data.strengthYellowDice = Array.from({ length: woundedStrength.yellow || 0 }, (_, i) => i);
+    data.insightRedDice = Array.from({ length: woundedInsight.red || 0 }, (_, i) => i);
+    data.insightBlueDice = Array.from({ length: woundedInsight.blue || 0 }, (_, i) => i);
+    data.insightGreenDice = Array.from({ length: woundedInsight.green || 0 }, (_, i) => i);
+    data.insightYellowDice = Array.from({ length: woundedInsight.yellow || 0 }, (_, i) => i);
+    data.techRedDice = Array.from({ length: woundedTech.red || 0 }, (_, i) => i);
+    data.techBlueDice = Array.from({ length: woundedTech.blue || 0 }, (_, i) => i);
+    data.techGreenDice = Array.from({ length: woundedTech.green || 0 }, (_, i) => i);
+    data.techYellowDice = Array.from({ length: woundedTech.yellow || 0 }, (_, i) => i);
+    return data;
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+
+    // Always bind name change (both V1 and V2) so the actor name persists immediately
+    html.find("input[name='name']").on("change blur input", this._onChangeName.bind(this));
+
+    if (isV2) return;
+    // Bind wounded toggle for all users
+    html.find("[data-action='toggleWounded']").on("change", this._onToggleWounded.bind(this));
+    // Bind activation token click for all users
+    html.find("[data-action='toggleActivated']").on("click", this._onToggleActivated.bind(this));
+    // Bind edit toggle only for GM
+    if (game.user?.isGM) {
+      html.find("[data-action='toggleEdit']").on("change", this._onToggleEdit.bind(this));
+    }
+
+    // Use event delegation for image clicks to handle edit mode changes
+    html.on("click", ".profile-image.clickable, .token-image.clickable", (event) => {
+      console.log("SWIA: Image clicked");
+      this._onEditImageInstance(event, event.currentTarget);
+    });
+
+    html.find("[data-action='addEquipment']").on("click", this._onAddEquipment.bind(this));
+    html.find("[data-action='removeRow']").on("click", this._onRemoveRow.bind(this));
+
+    // Item management (V1)
+    html.find("[data-action='openItem']").on("click", this._onOpenItem.bind(this));
+    html.find("[data-action='deleteItem']").on("click", this._onDeleteItem.bind(this));
+    html.find("[data-action='cycleItemState']").on("click", this._onCycleItemState.bind(this));
+    // Inventory panel tab switching (V1)
+    html.find(".inv-tab-btn").on("click", this._onToggleInventoryPanel.bind(this));
+  }
+
+  // Toggle active inventory panel (Abilities / Items / Weapons)
+  _onToggleInventoryPanel(event, target) {
+    event?.preventDefault?.();
+    const btn = target ?? event?.currentTarget;
+    const panel = btn?.dataset?.panel;
+    if (!panel) return;
+
+    const wasSame = this._activeInventoryPanel === panel;
+    this._activeInventoryPanel = wasSame ? null : panel;
+
+    // Resize the Foundry window to accommodate the panel
+    const targetWidth = this._activeInventoryPanel ? 900 : 620;
+    try { this.setPosition({ width: targetWidth }); } catch (e) { /* noop */ }
+
+    // Re-render so the template applies the correct form classes and active tab state
+    this.render(false);
+  }
+
+  // Toggle hero wounded state (heroes only)
+  async _onToggleWounded(event, target) {
+    const isChecked = Boolean(target?.checked);
+    await this.document.update({ "system.state.wounded": isChecked });
+  }
+
+  // Toggle activation state (all actor types)
+  async _onToggleActivated(event, target) {
+    event.preventDefault();
+    const actor = this.document ?? this.actor;
+    
+    const currentState = actor.system.state?.activated ?? false;
+    await actor.update({ "system.state.activated": !currentState });
+  }
+
+  // Open an owned item's sheet
+  async _onOpenItem(event, target) {
+    event?.preventDefault?.();
+    const el = target ?? event?.currentTarget;
+    const itemId = el?.closest("[data-item-id]")?.dataset?.itemId;
+    if (!itemId) return;
+    const actor = this.document ?? this.actor;
+    const item = actor.items.get(itemId);
+    if (item) item.sheet.render(true);
+  }
+
+  // Delete an owned item
+  async _onDeleteItem(event, target) {
+    event?.preventDefault?.();
+    const el = target ?? event?.currentTarget;
+    const itemId = el?.closest("[data-item-id]")?.dataset?.itemId;
+    if (!itemId) return;
+    const actor = this.document ?? this.actor;
+    const item = actor.items.get(itemId);
+    if (!item) return;
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: { title: `Delete ${item.name}` },
+      content: `<p>Remove <strong>${item.name}</strong> from ${actor.name}?</p>`,
+      rejectClose: false
+    });
+    if (confirmed) await item.delete();
+  }
+
+  // Cycle card state on an owned item: ready → exhausted → depleted → ready
+  async _onCycleItemState(event, target) {
+    event?.preventDefault?.();
+    const el = target ?? event?.currentTarget;
+    const itemId = el?.closest("[data-item-id]")?.dataset?.itemId;
+    if (!itemId) return;
+    const actor = this.document ?? this.actor;
+    const item = actor.items.get(itemId);
+    if (!item) return;
+    const current = item.system.cardState || "ready";
+    const cycle = { ready: "exhausted", exhausted: "depleted", depleted: "ready" };
+    await item.update({ "system.cardState": cycle[current] || "ready" });
+  }
+
+  // Open file picker for image selection (edit mode only)
+  // Updates both profile and token images simultaneously
+  async _onEditImageInstance(event, target) {
+    event.preventDefault();
+    if (!game.user?.isGM || !this._editMode) return;
+    const path = target?.dataset?.path;
+    if (!path) return;
+    
+    // Use this.actor for V1 compatibility
+    const actor = this.actor || this.document;
+    if (!actor) {
+      console.error("SWIA: No actor found", { actor: this.actor, document: this.document });
+      return;
+    }
+    
+    const current = foundry.utils.getProperty(actor, path) || "";
+    console.log(`SWIA: FilePicker opened for path: ${path}, current: ${current}`);
+
+    // Use namespaced FilePicker to avoid deprecated global
+    const FilePickerClass = foundry?.applications?.apps?.FilePicker?.implementation
+      ?? foundry?.applications?.api?.FilePicker;
+    const sheet = this;
+    const callback = async (url) => {
+      console.log(`SWIA: FilePicker selected URL: ${url}`);
+      const updateObj = {
+        // Always sync portrait and token
+        img: url,
+        "prototypeToken.texture.src": url
+      };
+      // Also ensure the specific clicked path updates for safety
+      updateObj[path] = url;
+      console.log(`SWIA: Calling actor.update() with:`, updateObj);
+      
+      try {
+        const result = await actor.update(updateObj);
+        console.log(`SWIA: Update result:`, result);
+        // Ensure the sheet reflects the new image
+        try { sheet.render(false); } catch (e) { /* noop */ }
+      } catch (err) {
+        console.error(`SWIA: Update error:`, err);
+      }
+    };
+
+    const fp = new FilePickerClass({
+      type: "image",
+      current: current,
+      callback: callback
+    });
+    fp.render(true);
+  }
+
+  async _onEditImage(event, target) {
+    if (!game.user?.isGM || !this._editMode) return;
+    const path = target?.dataset?.path || target?.dataset?.edit;
+    if (!path) return;
+    const doc = this.document ?? this.actor;
+    const getProp = foundry.utils.getProperty;
+    const current = getProp(doc, path) || "";
+
+    const FilePickerClass = foundry?.applications?.apps?.FilePicker?.implementation
+      ?? foundry?.applications?.api?.FilePicker;
+    const sheet = this;
+    const fp = new FilePickerClass({
+      type: "image",
+      current,
+      callback: async (url) => {
+        console.log(`Updating ${path} with ${url}`);
+        const updateObj = {
+          // Always sync portrait and token
+          img: url,
+          "prototypeToken.texture.src": url
+        };
+        updateObj[path] = url;
+        await doc.update(updateObj);
+        // Re-render to refresh the portrait immediately
+        try { sheet.render(false); } catch (e) { /* noop */ }
+      }
+    });
+    fp.render(true);
+  }
+
+  // Toggle edit mode (GM only) - enables field editing and image selection
+  async _onToggleEdit(event, target) {
+    const checked = Boolean(target?.checked);
+    const wasEditing = this._editMode;
+    this._editMode = checked && (game.user?.isGM ?? false);
+
+    // If turning edit mode off, submit the form so name/fields persist
+    if (!this._editMode && wasEditing) {
+      await this._saveFormData();
+    }
+
+    // Re-render to reflect disabled/enabled fields
+    this.render(false);
+  }
+
+  // Update actor name when changed in edit mode
+  async _onChangeName(event, target) {
+    const nameInput = target ?? event?.currentTarget;
+    const value = nameInput?.value?.trim();
+    const actor = this.document ?? this.actor;
+    if (!actor) return;
+    if (!value) return;
+    if (value === actor.name) return;
+    try {
+      await actor.update({ name: value });
+    } catch (err) {
+      console.error("SWIA: Failed to update name", err);
+    }
+  }
+
+  /**
+   * Ensure name and system data persist when the form is submitted.
+  }
+
+  /**
+   * Ensure name and system data persist when the form is submitted.
+   */
+  /**
+   * Ensure name and system data persist when the form is submitted.
+   */
+  async _updateObject(event, formData) {
+    const expanded = foundry.utils.expandObject(formData ?? {});
+    const update = {};
+
+    // Prefer direct formData name if present; fall back to expanded
+    if (formData?.name !== undefined) update.name = formData.name;
+    else if (expanded.name !== undefined) update.name = expanded.name;
+
+    if (expanded.system !== undefined) update.system = expanded.system;
+
+    return this.actor.update(update);
+  }
+
+  /**
+   * Explicitly submit data to ensure name/system changes save across V1/V2.
+   */
+  async _onSubmit(event) {
+    event?.preventDefault?.();
+    const formData = this._collectFormData();
+    return this._updateObject(event, formData);
+  }
+
+  /**
+   * Collect current form data and persist key fields, even if submit is skipped.
+   */
+  /**
+   * Explicitly submit data to ensure name/system changes save across V1/V2.
+   */
+  async _saveFormData() {
+    const formData = this._collectFormData();
+    const expanded = foundry.utils.expandObject(formData ?? {});
+    const update = {};
+
+    if (formData?.name !== undefined) update.name = formData.name;
+    else if (expanded.name !== undefined) update.name = expanded.name;
+
+    if (expanded.system !== undefined) update.system = expanded.system;
+
+    if (Object.keys(update).length === 0) return;
+    
+    const actor = this.document ?? this.actor;
+    if (!actor) return;
+    
+    try {
+      await actor.update(update);
+    } catch (err) {
+      console.error("SWIA: Failed to save form data", err);
+    }
+  }
+
+  /**
+   * Gather form data safely across V1/V2 without relying on _getSubmitData.
+   */
+  /**
+   * Gather form data safely across V1/V2 without relying on _getSubmitData.
+   * Handles disabled inputs which are normally skipped by FormData API.
+   */
+  _collectFormData() {
+    if (typeof this._getSubmitData === "function") {
+      try {
+        return this._getSubmitData({ updateData: true });
+      } catch (e) {
+        console.warn("SWIA: _getSubmitData failed, falling back to manual", e);
+      }
+    }
+
+    // Find the actual form element - V2 uses this.element directly, V1 uses jQuery collection
+    let searchRoot = null;
+    if (isV2) {
+      // V2: this.element is a DOM element
+      searchRoot = this.element;
+    } else {
+      // V1: this.element is a jQuery collection
+      searchRoot = this.element?.[0] ?? this.form;
+    }
+    
+    let formElem = null;
+    if (searchRoot?.tagName === "FORM") {
+      formElem = searchRoot;
+    } else if (searchRoot) {
+      formElem = searchRoot.querySelector("form[data-application-part='form']") || searchRoot.querySelector("form");
+    }
+
+    if (formElem) {
+      // FormData skips disabled inputs, so we need to temporarily enable them or read manually
+      // Read inputs manually to capture disabled fields
+      const result = {};
+      const allInputs = formElem.querySelectorAll("input[name], textarea[name], select[name]");
+      allInputs.forEach(input => {
+        if (input.name) {
+          if (input.type === "checkbox") {
+            result[input.name] = input.checked;
+          } else if (input.type === "number") {
+            result[input.name] = input.value ? Number(input.value) : 0;
+          } else {
+            result[input.name] = input.value;
+          }
+        }
+      });
+      
+      return result;
+    }
+
+    // Final fallback: manually read key inputs
+    const elem = formElem ?? searchRoot;
+    if (!elem) return {};
+    
+    const nameInput = elem.querySelector("input[name='name']");
+    const result = {};
+    if (nameInput?.value) result.name = nameInput.value;
+    
+    // Gather system fields
+    const inputs = elem.querySelectorAll("input[name^='system.'], textarea[name^='system.']");
+    inputs.forEach(input => {
+      if (input.name && input.value !== undefined) {
+        result[input.name] = input.value;
+      }
+    });
+    
+    return result;
+  }
+}
