@@ -3,6 +3,9 @@
 
 import { SWIAActorSheet } from "./sheets/swia-actor-sheet.js";
 import { SWIAItemSheet } from "./sheets/swia-item-sheet.js";
+import { SWIAPlayerPortal } from "./player-portal.js";
+import { SWIACompanionPortal } from "./companion-portal.js";
+import { SWIAImperialPortal } from "./imperial-portal.js";
 
 // Get appropriate base class for V1/V2 compatibility
 const BaseActorSheet = foundry.appv1?.sheets?.ActorSheet ?? ActorSheet;
@@ -10,6 +13,45 @@ const BaseItemSheet = foundry.appv1?.sheets?.ItemSheet ?? ItemSheet;
 const loadTemplatesFn = foundry?.applications?.handlebars?.loadTemplates ?? loadTemplates;
 const ActorsCollection = foundry?.documents?.collections?.Actors ?? Actors;
 const ItemsCollection = foundry?.documents?.collections?.Items ?? Items;
+const LEGACY_ABILITY_MIGRATION_KEY = "schemaMigration";
+const LEGACY_ABILITY_MIGRATION_VERSION = "0.0.5-ability-to-classcard";
+
+async function migrateLegacyAbilityItems() {
+  if (!game.user?.isGM) return;
+
+  const completedVersion = game.settings.get("swia", LEGACY_ABILITY_MIGRATION_KEY);
+  if (completedVersion === LEGACY_ABILITY_MIGRATION_VERSION) return;
+
+  let migratedActors = 0;
+  let migratedItems = 0;
+
+  for (const actor of game.actors?.contents ?? []) {
+    const legacyItems = actor.items.filter((item) => item.type === "ability");
+    if (!legacyItems.length) continue;
+
+    const createData = legacyItems.map((item) => {
+      const data = item.toObject();
+      delete data._id;
+      data.type = "classcard";
+      data.system = data.system || {};
+      if (typeof data.system.cooldown !== "number") data.system.cooldown = 0;
+      return data;
+    });
+
+    await actor.createEmbeddedDocuments("Item", createData);
+    await actor.deleteEmbeddedDocuments("Item", legacyItems.map((item) => item.id));
+
+    migratedActors += 1;
+    migratedItems += legacyItems.length;
+  }
+
+  await game.settings.set("swia", LEGACY_ABILITY_MIGRATION_KEY, LEGACY_ABILITY_MIGRATION_VERSION);
+
+  if (migratedItems > 0) {
+    console.log(`SWIA | Migrated ${migratedItems} legacy ability items on ${migratedActors} actor(s).`);
+    ui.notifications?.info(`SWIA migrated ${migratedItems} legacy class card item(s).`);
+  }
+}
 
 // Initialize system on Foundry ready
 Hooks.once("init", async function initSWIA() {
@@ -39,6 +81,14 @@ Hooks.once("init", async function initSWIA() {
     sheets: {},
     config: {}
   };
+
+  game.settings.register("swia", LEGACY_ABILITY_MIGRATION_KEY, {
+    name: "SWIA Schema Migration Version",
+    scope: "world",
+    config: false,
+    type: String,
+    default: ""
+  });
 
   // Configure SWIA-specific status effects (conditions and power tokens)
   CONFIG.statusEffects = [
@@ -73,6 +123,21 @@ Hooks.once("init", async function initSWIA() {
       name: "SWIA.Conditions.Blind",
       icon: "systems/swia/icons/Blind.png"
     },
+    {
+      id: "scanned",
+      name: "SWIA.Conditions.Scanned",
+      icon: "systems/swia/icons/Scanned.png"
+    },
+    {
+      id: "recon",
+      name: "SWIA.Conditions.Recon",
+      icon: "systems/swia/icons/Recon.png"
+    },
+        {
+          id: "wanted",
+          name: "SWIA.Conditions.Wanted",
+          icon: "systems/swia/icons/Wanted.png"
+        },
     // Power Tokens - can stack on actors
     {
       id: "power-block",
@@ -104,7 +169,10 @@ Hooks.once("init", async function initSWIA() {
   // Preload Handlebars templates for actor and item sheets
   await loadTemplatesFn([
     "systems/swia/templates/actors/actor-sheet.hbs",
-    "systems/swia/templates/items/ability-sheet.hbs",
+    "systems/swia/templates/actors/player-portal.hbs",
+    "systems/swia/templates/actors/companion-portal.hbs",
+    "systems/swia/templates/actors/imperial-portal.hbs",
+    "systems/swia/templates/items/classcard-sheet.hbs",
     "systems/swia/templates/items/weapon-sheet.hbs",
     "systems/swia/templates/items/gear-sheet.hbs"
   ]);
@@ -119,7 +187,93 @@ Hooks.once("init", async function initSWIA() {
   // Register item sheets
   ItemsCollection.unregisterSheet("core", BaseItemSheet);
   ItemsCollection.registerSheet("swia", SWIAItemSheet, {
-    types: ["ability", "weapon", "gear"],
+    types: ["classcard", "weapon", "gear"],
     makeDefault: true
   });
+});
+
+Hooks.once("ready", async () => {
+  try {
+    await migrateLegacyAbilityItems();
+  } catch (error) {
+    console.error("SWIA | Legacy item migration failed", error);
+    ui.notifications?.error("SWIA failed to migrate legacy class card items. Check console for details.");
+  }
+});
+
+Hooks.on("renderActorDirectory", (app, html) => {
+  if (!game.user) return;
+
+  const root = html instanceof jQuery ? html : $(html);
+  if (root.find(".swia-player-portal-btn, .swia-companion-portal-btn, .swia-imperial-portal-btn").length) return;
+
+  const buttons = [];
+
+  const playerLabel = game.i18n.localize("SWIA.Portal.Button");
+  const playerButton = $(
+    `<button
+      type="button"
+      class="swia-player-portal-btn"
+      aria-label="${playerLabel}"
+      title="${playerLabel}"
+    >
+      <i class="fa-brands fa-rebel" aria-hidden="true"></i>
+    </button>`
+  );
+
+  playerButton.on("click", () => {
+    new SWIAPlayerPortal().render(true);
+  });
+
+  buttons.push(playerButton);
+
+  const companionLabel = game.i18n.localize("SWIA.Portal.Companion.Button");
+  const companionButton = $(
+    `<button
+      type="button"
+      class="swia-companion-portal-btn"
+      aria-label="${companionLabel}"
+      title="${companionLabel}"
+    >
+      <i class="fa-solid fa-robot-astromech" aria-hidden="true"></i>
+    </button>`
+  );
+
+  companionButton.on("click", () => {
+    new SWIACompanionPortal().render(true);
+  });
+
+  buttons.push(companionButton);
+
+  const imperialLabel = game.i18n.localize("SWIA.Portal.Imperial.Button");
+  const imperialButton = $(
+    `<button
+      type="button"
+      class="swia-imperial-portal-btn"
+      aria-label="${imperialLabel}"
+      title="${imperialLabel}"
+    >
+      <i class="fa-brands fa-empire" aria-hidden="true"></i>
+    </button>`
+  );
+
+  imperialButton.on("click", () => {
+    new SWIAImperialPortal().render(true);
+  });
+
+  buttons.push(imperialButton);
+
+  const headerActions = root.find(".header-actions").first();
+  if (headerActions.length) {
+    buttons.forEach((button) => headerActions.append(button));
+    return;
+  }
+
+  const directoryFooter = root.find(".directory-footer").first();
+  if (directoryFooter.length) {
+    buttons.forEach((button) => directoryFooter.append(button));
+    return;
+  }
+
+  buttons.slice().reverse().forEach((button) => root.prepend(button));
 });

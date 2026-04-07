@@ -1,4 +1,4 @@
-<form class="swia-sheet type-{{actor.type}} {{#if isWounded}}wounded{{/if}} {{#if editMode}}editing{{/if}} {{#if activeInventoryPanel}}inv-panel-open inv-open-{{activeInventoryPanel}}{{/if}}" autocomplete="off">
+<form class="swia-sheet type-{{actor.type}} {{#if isWounded}}wounded{{/if}} {{#if editMode}}editing{{/if}}" autocomplete="off">
   <div class="sheet-body">
   <div class="sheet-main">
   <header class="sheet-header">
@@ -11,18 +11,31 @@
     <div class="image-section">
       <div class="image-container {{#if editMode}}editing{{/if}}">
         <img class="profile-image {{#if editMode}}clickable{{/if}}" src="{{profileSrc}}" {{#if editMode}}data-action="editImage" data-path="img"{{/if}} title="{{actor.name}}" />
-        <img class="token-image {{#if editMode}}clickable{{/if}}" src="{{actor.prototypeToken.texture.src}}" {{#if editMode}}data-action="editImage" data-path="prototypeToken.texture.src"{{/if}} title="Token" />
+        <img class="token-image {{#if editMode}}clickable{{/if}}" src="{{tokenPreviewSrc}}" {{#if editMode}}data-action="editImage" data-path="prototypeToken.texture.src"{{/if}} title="Token" />
       </div>
-      <div class="activation-token-container">
-        <img class="activation-token" 
-             src="systems/swia/icons/{{#if isActivated}}Token Hero Turn Over.png{{else}}Token Hero Turn Start.png{{/if}}" 
-             data-action="toggleActivated" 
-             title="{{#if isActivated}}{{localize 'SWIA.ActivationToken.Activated'}}{{else}}{{localize 'SWIA.ActivationToken.Ready'}}{{/if}}" 
-             alt="Activation Token" />
+      {{#if (eq actor.type "hero")}}
+      {{#if editMode}}
+      <div class="wounded-token-picker">
+        <label>{{localize "SWIA.WoundedTokenImage"}}</label>
+        <div class="wounded-token-thumb">
+          <img class="wounded-token-image clickable" src="{{woundedTokenPreviewSrc}}" data-action="editImage" data-path="system.woundedTokenImage" title="{{localize 'SWIA.WoundedTokenImage'}}" />
+        </div>
+        <span class="editor-hint">{{localize "SWIA.WoundedTokenHint"}}</span>
       </div>
+      {{/if}}
+      {{/if}}
     </div>
     <div class="header-fields">
-      <h1><input name="name" type="text" value="{{actor.name}}" placeholder="Name" data-action="changeName" {{#unless editMode}}disabled{{/unless}} /></h1>
+      <div class="name-row">
+        <div class="activation-token-container name-activation">
+          <img class="activation-token" 
+               src="systems/swia/icons/{{#if isActivated}}Token Hero Turn Over.png{{else}}Token Hero Turn Start.png{{/if}}" 
+               data-action="toggleActivated" 
+               title="{{#if isActivated}}{{localize 'SWIA.ActivationToken.Activated'}}{{else}}{{localize 'SWIA.ActivationToken.Ready'}}{{/if}}" 
+               alt="Activation Token" />
+        </div>
+        <h1><input name="name" type="text" value="{{actor.name}}" placeholder="Name" data-action="changeName" {{#unless editMode}}disabled{{/unless}} /></h1>
+      </div>
       {{#if (eq actor.type "hero")}}
       <div class="character-title">
         <input name="system.title" type="text" value="{{systemData.title}}" placeholder="Title" {{#unless editMode}}disabled{{/unless}} />
@@ -52,13 +65,23 @@
     </div>
   </header>
 
-  <section class="biography-section">
+  <section class="sheet-section biography-section-wrapper {{#if editMode}}collapsible-section {{#if sectionCollapse.biography}}collapsed{{else}}expanded{{/if}}{{/if}}">
+    {{#if editMode}}
+    <button type="button" class="section-toggle" data-action="toggleSectionCollapse" data-section="biography" aria-expanded="{{#if sectionCollapse.biography}}false{{else}}true{{/if}}">
+      <span class="section-toggle-label">Profile</span>
+      <span class="section-toggle-meta">
+        <span class="section-toggle-indicator">{{#if sectionCollapse.biography}}+{{else}}-{{/if}}</span>
+      </span>
+    </button>
+    {{/if}}
+    <div class="collapsible-content">
+    <div class="biography-section">
     <div class="editor-container">
       {{#if (eq actor.type "hero")}}
         {{#if isWounded}}
           {{#if editMode}}
           <div class="html-editor">
-            <label class="editor-label">{{localize "SWIA.Biography"}} (HTML)</label>
+            <label class="editor-label">Profile (HTML)</label>
             <textarea name="system.woundedBiography" data-dtype="String" rows="8">{{systemData.woundedBiography}}</textarea>
             <div class="editor-hint">{{localize "SWIA.BiographyHint"}}</div>
           </div>
@@ -70,7 +93,7 @@
         {{else}}
           {{#if editMode}}
           <div class="html-editor">
-            <label class="editor-label">{{localize "SWIA.Biography"}} (HTML)</label>
+            <label class="editor-label">Profile (HTML)</label>
             <textarea name="system.biography" data-dtype="String" rows="8">{{systemData.biography}}</textarea>
             <div class="editor-hint">{{localize "SWIA.BiographyHint"}}</div>
           </div>
@@ -83,7 +106,7 @@
       {{else}}
         {{#if editMode}}
         <div class="html-editor">
-          <label class="editor-label">{{localize "SWIA.Biography"}} (HTML)</label>
+          <label class="editor-label">Profile (HTML)</label>
           <textarea name="system.biography" data-dtype="String" rows="8">{{systemData.biography}}</textarea>
           <div class="editor-hint">{{localize "SWIA.BiographyHint"}}</div>
         </div>
@@ -94,25 +117,45 @@
         {{/if}}
       {{/if}}
     </div>
+    </div>
+    </div>
   </section>
 
+  <section class="sheet-section stats-section-wrapper {{#if editMode}}collapsible-section {{#if sectionCollapse.stats}}collapsed{{else}}expanded{{/if}}{{/if}}">
+    {{#if editMode}}
+    <button type="button" class="section-toggle" data-action="toggleSectionCollapse" data-section="stats" aria-expanded="{{#if sectionCollapse.stats}}false{{else}}true{{/if}}">
+      <span class="section-toggle-label">Stats / Resources</span>
+      <span class="section-toggle-meta">
+        <span class="section-toggle-indicator">{{#if sectionCollapse.stats}}+{{else}}-{{/if}}</span>
+      </span>
+    </button>
+    {{/if}}
+    <div class="collapsible-content">
   <section class="resource-grid">
     <div class="resource">
       <label>{{localize "SWIA.Attributes.Health"}}</label>
+      {{#if editMode}}
       <div class="pair">
-        <input name="system.{{currentAttrPath}}.health.value" type="number" value="{{currentAttributes.health.value}}" {{#unless editMode}}disabled{{/unless}} />
+        <input name="system.{{currentAttrPath}}.health.value" type="number" value="{{currentAttributes.health.value}}" />
         <span>/</span>
-        <input name="system.{{currentAttrPath}}.health.max" type="number" value="{{currentAttributes.health.max}}" {{#unless editMode}}disabled{{/unless}} />
+        <input name="system.{{currentAttrPath}}.health.max" type="number" value="{{currentAttributes.health.max}}" />
       </div>
+      {{else}}
+      <input type="number" value="{{currentAttributes.health.value}}" disabled />
+      {{/if}}
     </div>
     {{#if (eq actor.type "hero")}}
     <div class="resource">
       <label>{{localize "SWIA.Attributes.Endurance"}}</label>
+      {{#if editMode}}
       <div class="pair">
-        <input name="system.{{currentAttrPath}}.endurance.value" type="number" value="{{currentAttributes.endurance.value}}" {{#unless editMode}}disabled{{/unless}} />
+        <input name="system.{{currentAttrPath}}.endurance.value" type="number" value="{{currentAttributes.endurance.value}}" />
         <span>/</span>
-        <input name="system.{{currentAttrPath}}.endurance.max" type="number" value="{{currentAttributes.endurance.max}}" {{#unless editMode}}disabled{{/unless}} />
+        <input name="system.{{currentAttrPath}}.endurance.max" type="number" value="{{currentAttributes.endurance.max}}" />
       </div>
+      {{else}}
+      <input type="number" value="{{currentAttributes.endurance.value}}" disabled />
+      {{/if}}
     </div>
     {{/if}}
     <div class="resource">
@@ -313,32 +356,116 @@
     </div>
     {{/if}}
   </section>
-  </div>{{!-- /.sheet-main --}}
+    </div>
+  </section>
+  <section class="inventory-sections">
+    {{#unless (or (eq actor.type "ally") (eq actor.type "imperial"))}}
+    <div class="inventory-group inventory-group-weapons {{#if editMode}}collapsible-section {{#if sectionCollapse.weapons}}collapsed{{else}}expanded{{/if}}{{/if}}">
+      {{#if editMode}}
+      <button type="button" class="section-toggle section-toggle-inline inv-panel-header" data-action="toggleSectionCollapse" data-section="weapons" aria-expanded="{{#if sectionCollapse.weapons}}false{{else}}true{{/if}}">
+        <span class="section-toggle-label">{{localize "SWIA.Inventory.Weapons"}}</span>
+        <span class="section-toggle-meta">
+          {{#if weapons.length}}<span class="group-count">{{weapons.length}}</span>{{/if}}
+          <span class="section-toggle-indicator">{{#if sectionCollapse.weapons}}+{{else}}-{{/if}}</span>
+        </span>
+      </button>
+      {{else}}
+      <header class="inv-panel-header">
+        <h2>{{localize "SWIA.Inventory.Weapons"}}</h2>
+        {{#if weapons.length}}<span class="group-count">{{weapons.length}}</span>{{/if}}
+      </header>
+      {{/if}}
+      <div class="collapsible-content">
+      {{#if weapons.length}}
+      <ol class="item-list weapon-list">
+        {{#each weapons}}
+        <li class="item-entry weapon-entry" data-item-id="{{this.id}}">
+          <div class="item-image" data-action="openItem">
+            <img src="{{this.img}}" alt="{{this.name}}" title="{{localize 'SWIA.Inventory.ClickToOpen'}}" />
+          </div>
+          <div class="item-info weapon-info">
+            <span class="item-name">{{this.name}}</span>
+            <div class="weapon-meta" data-action="openItem">
+              <span class="weapon-open-hint">{{localize "SWIA.Inventory.ClickToOpen"}}</span>
+            </div>
+            <div class="weapon-attachments">
+              <div class="weapon-attachments-header">
+                <span class="weapon-attachments-title">{{localize "SWIA.Item.Weapon.Attachments"}}</span>
+                {{#if ../editMode}}
+                <button type="button" class="attachment-add" data-action="addWeaponAttachment">
+                  {{localize "SWIA.Item.Weapon.AddAttachment"}}
+                </button>
+                {{/if}}
+              </div>
+              {{#if this.system.attachments.length}}
+              <ul class="attachment-list">
+                {{#each this.system.attachments}}
+                <li class="attachment-entry">
+                  <div class="attachment-text">
+                    <span class="attachment-name">{{this.name}}</span>
+                    {{#if this.description}}
+                    <span class="attachment-effect">{{this.description}}</span>
+                    {{else}}
+                      {{#if this.effect}}
+                      <span class="attachment-effect">{{this.effect}}</span>
+                      {{/if}}
+                    {{/if}}
+                  </div>
+                  <div class="attachment-controls">
+                    <button type="button" class="item-state-btn {{this.cardState}}" data-action="cycleWeaponAttachmentState" data-index="{{@index}}" title="{{this.cardState}}">
+                      {{this.cardState}}
+                    </button>
+                  {{#if ../../editMode}}
+                  <button type="button" class="attachment-remove" data-action="removeWeaponAttachment" data-index="{{@index}}" title="{{localize 'SWIA.Item.Weapon.RemoveAttachment'}}">
+                    <i class="fas fa-times"></i>
+                  </button>
+                  {{/if}}
+                  </div>
+                </li>
+                {{/each}}
+              </ul>
+              {{else}}
+              <p class="attachment-empty">{{localize "SWIA.Item.Weapon.NoAttachments"}}</p>
+              {{/if}}
+            </div>
+          </div>
+          <div class="item-controls">
+            <button type="button" class="item-state-btn {{this.system.cardState}}" data-action="cycleItemState" title="{{this.system.cardState}}">
+              {{this.system.cardState}}
+            </button>
+            {{#if ../editMode}}
+            <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
+              <i class="fas fa-trash"></i>
+            </button>
+            {{/if}}
+          </div>
+        </li>
+        {{/each}}
+      </ol>
+      {{else}}
+      <div class="inventory-empty">
+        <p>{{localize "SWIA.Inventory.EmptyWeapons"}}</p>
+      </div>
+      {{/if}}
+      </div>
+    </div>
 
-  {{!-- Right-side inventory tab strip --}}
-  <nav class="inv-tab-strip">
-    <button type="button" class="inv-tab-btn {{#if (eq activeInventoryPanel 'abilities')}}active{{/if}}" data-action="toggleInventoryPanel" data-panel="abilities">
-      <span class="inv-tab-label">{{localize "SWIA.Inventory.Abilities"}}</span>
-      <span class="inv-tab-count">{{abilities.length}}</span>
-    </button>
-    <button type="button" class="inv-tab-btn {{#if (eq activeInventoryPanel 'gear')}}active{{/if}}" data-action="toggleInventoryPanel" data-panel="gear">
-      <span class="inv-tab-label">{{localize "SWIA.Inventory.Items"}}</span>
-      <span class="inv-tab-count">{{gear.length}}</span>
-    </button>
-    <button type="button" class="inv-tab-btn {{#if (eq activeInventoryPanel 'weapons')}}active{{/if}}" data-action="toggleInventoryPanel" data-panel="weapons">
-      <span class="inv-tab-label">{{localize "SWIA.Inventory.Weapons"}}</span>
-      <span class="inv-tab-count">{{weapons.length}}</span>
-    </button>
-  </nav>
-
-  {{!-- Right-side inventory panels --}}
-  <div class="inv-panels">
-    {{!-- Abilities --}}
-    <div class="inv-panel" data-panel="abilities">
+    <div class="inventory-group {{#if editMode}}collapsible-section {{#if sectionCollapse.abilities}}collapsed{{else}}expanded{{/if}}{{/if}}">
+      {{#if editMode}}
+      <button type="button" class="section-toggle section-toggle-inline inv-panel-header" data-action="toggleSectionCollapse" data-section="abilities" aria-expanded="{{#if sectionCollapse.abilities}}false{{else}}true{{/if}}">
+        <span class="section-toggle-label">{{localize "SWIA.Inventory.Abilities"}}</span>
+        <span class="section-toggle-meta">
+          {{#if abilities.length}}<span class="group-count">{{abilities.length}}</span>{{/if}}
+          <span class="section-toggle-indicator">{{#if sectionCollapse.abilities}}+{{else}}-{{/if}}</span>
+        </span>
+      </button>
+      {{else}}
       <header class="inv-panel-header">
         <h2>{{localize "SWIA.Inventory.Abilities"}}</h2>
         {{#if abilities.length}}<span class="group-count">{{abilities.length}}</span>{{/if}}
       </header>
+      {{/if}}
+      <div class="collapsible-content">
       {{#if abilities.length}}
       <ol class="item-list">
         {{#each abilities}}
@@ -367,14 +494,25 @@
         <p>{{localize "SWIA.Inventory.EmptyAbilities"}}</p>
       </div>
       {{/if}}
+      </div>
     </div>
 
-    {{!-- Items (Gear) --}}
-    <div class="inv-panel" data-panel="gear">
+    <div class="inventory-group {{#if editMode}}collapsible-section {{#if sectionCollapse.items}}collapsed{{else}}expanded{{/if}}{{/if}}">
+      {{#if editMode}}
+      <button type="button" class="section-toggle section-toggle-inline inv-panel-header" data-action="toggleSectionCollapse" data-section="items" aria-expanded="{{#if sectionCollapse.items}}false{{else}}true{{/if}}">
+        <span class="section-toggle-label">{{localize "SWIA.Inventory.Items"}}</span>
+        <span class="section-toggle-meta">
+          {{#if gear.length}}<span class="group-count">{{gear.length}}</span>{{/if}}
+          <span class="section-toggle-indicator">{{#if sectionCollapse.items}}+{{else}}-{{/if}}</span>
+        </span>
+      </button>
+      {{else}}
       <header class="inv-panel-header">
         <h2>{{localize "SWIA.Inventory.Items"}}</h2>
         {{#if gear.length}}<span class="group-count">{{gear.length}}</span>{{/if}}
       </header>
+      {{/if}}
+      <div class="collapsible-content">
       {{#if gear.length}}
       <ol class="item-list">
         {{#each gear}}
@@ -403,43 +541,10 @@
         <p>{{localize "SWIA.Inventory.EmptyItems"}}</p>
       </div>
       {{/if}}
-    </div>
-
-    {{!-- Weapons --}}
-    <div class="inv-panel" data-panel="weapons">
-      <header class="inv-panel-header">
-        <h2>{{localize "SWIA.Inventory.Weapons"}}</h2>
-        {{#if weapons.length}}<span class="group-count">{{weapons.length}}</span>{{/if}}
-      </header>
-      {{#if weapons.length}}
-      <ol class="item-list">
-        {{#each weapons}}
-        <li class="item-entry" data-item-id="{{this.id}}">
-          <div class="item-image" data-action="openItem">
-            <img src="{{this.img}}" alt="{{this.name}}" title="{{localize 'SWIA.Inventory.ClickToOpen'}}" />
-          </div>
-          <div class="item-info" data-action="openItem">
-            <span class="item-name">{{this.name}}</span>
-          </div>
-          <div class="item-controls">
-            <button type="button" class="item-state-btn {{this.system.cardState}}" data-action="cycleItemState" title="{{this.system.cardState}}">
-              {{this.system.cardState}}
-            </button>
-            {{#if ../editMode}}
-            <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
-              <i class="fas fa-trash"></i>
-            </button>
-            {{/if}}
-          </div>
-        </li>
-        {{/each}}
-      </ol>
-      {{else}}
-      <div class="inventory-empty">
-        <p>{{localize "SWIA.Inventory.EmptyWeapons"}}</p>
       </div>
-      {{/if}}
     </div>
-  </div>{{!-- /.inv-panels --}}
+    {{/unless}}
+  </section>
+  </div>{{!-- /.sheet-main --}}
   </div>{{!-- /.sheet-body --}}
 </form>

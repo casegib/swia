@@ -11,11 +11,20 @@ const isV2 = !!BaseActorSheetV2;
 
 // Main actor sheet class supporting both V1 and V2 Foundry versions
 export class SWIAActorSheet extends BaseActorSheet {
+  static EDIT_COLLAPSE_DEFAULTS = {
+    biography: true,
+    stats: false,
+    weapons: false,
+    abilities: true,
+    items: true
+  };
+
   // Track whether the sheet is in edit mode (GM only)
   constructor(...args) {
     super(...args);
     this._editMode = false;
     this._activeInventoryPanel = null;
+    this._collapsedSections = foundry.utils.mergeObject({}, SWIAActorSheet.EDIT_COLLAPSE_DEFAULTS);
   }
 
   // Configuration for V2: sheet layout, position, and action handlers
@@ -26,8 +35,8 @@ export class SWIAActorSheet extends BaseActorSheet {
       controls: []
     },
     position: {
-      width: 620,
-      height: 640
+      width: 980,
+      height: 700
     },
     form: {
       submitOnChange: true
@@ -37,6 +46,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       toggleWounded: SWIAActorSheet.prototype._onToggleWounded,
       toggleActivated: SWIAActorSheet.prototype._onToggleActivated,
       toggleEdit: SWIAActorSheet.prototype._onToggleEdit,
+      toggleSectionCollapse: SWIAActorSheet.prototype._onToggleSectionCollapse,
       // Image and name editing
       editImage: SWIAActorSheet.prototype._onEditImage,
       changeName: SWIAActorSheet.prototype._onChangeName,
@@ -44,7 +54,10 @@ export class SWIAActorSheet extends BaseActorSheet {
       toggleInventoryPanel: SWIAActorSheet.prototype._onToggleInventoryPanel,
       openItem: SWIAActorSheet.prototype._onOpenItem,
       deleteItem: SWIAActorSheet.prototype._onDeleteItem,
-      cycleItemState: SWIAActorSheet.prototype._onCycleItemState
+      cycleItemState: SWIAActorSheet.prototype._onCycleItemState,
+      addWeaponAttachment: SWIAActorSheet.prototype._onAddWeaponAttachment,
+      removeWeaponAttachment: SWIAActorSheet.prototype._onRemoveWeaponAttachment,
+      cycleWeaponAttachmentState: SWIAActorSheet.prototype._onCycleWeaponAttachmentState
     }
   };
 
@@ -53,8 +66,8 @@ export class SWIAActorSheet extends BaseActorSheet {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["swia", "sheet", "actor"],
       template: "systems/swia/templates/actors/actor-sheet.hbs",
-      width: 620,
-      height: 640,
+      width: 980,
+      height: 700,
       resizable: true,
       submitOnChange: true
     });
@@ -75,6 +88,55 @@ export class SWIAActorSheet extends BaseActorSheet {
     return name || "";
   }
 
+  _getHealthyTokenSrc(actor) {
+    return actor?.img || actor?.prototypeToken?.texture?.src || "";
+  }
+
+  _getWoundedTokenSrc(actor) {
+    return actor?.system?.woundedTokenImage || this._getHealthyTokenSrc(actor);
+  }
+
+  _getTokenPreviewSrc(actor, isWounded) {
+    if (actor?.type === "hero" && isWounded) {
+      return this._getWoundedTokenSrc(actor);
+    }
+    return actor?.prototypeToken?.texture?.src || this._getHealthyTokenSrc(actor);
+  }
+
+  async _syncActiveTokenTextures(actor, src) {
+    if (!actor || !src) return;
+
+    const tokenDocs = [];
+
+    // Pull from canvas first when available, including both linked and unlinked tokens.
+    if (typeof actor.getActiveTokens === "function") {
+      const activeTokens = actor.getActiveTokens(false, true) || [];
+      for (const token of activeTokens) {
+        const tokenDoc = token?.document ?? token;
+        if (tokenDoc?.id) tokenDocs.push(tokenDoc);
+      }
+    }
+
+    // Fallback/coverage: scan scene token documents by actorId.
+    for (const scene of game.scenes?.contents ?? []) {
+      for (const tokenDoc of scene.tokens?.contents ?? []) {
+        if (tokenDoc?.actorId !== actor.id) continue;
+        if (tokenDocs.some(existing => existing.id === tokenDoc.id && existing.parent?.id === tokenDoc.parent?.id)) continue;
+        tokenDocs.push(tokenDoc);
+      }
+    }
+
+    if (!tokenDocs.length) return;
+
+    const updates = [];
+    for (const tokenDoc of tokenDocs) {
+      if ((tokenDoc.texture?.src || "") === src) continue;
+      updates.push(tokenDoc.update({ "texture.src": src }));
+    }
+
+    if (updates.length) await Promise.allSettled(updates);
+  }
+
   // Prepare rendering context for both V1 and V2
   // Converts dice counts to arrays for template iteration and handles wounded state
   async _prepareContext(options) {
@@ -86,6 +148,8 @@ export class SWIAActorSheet extends BaseActorSheet {
     const currentAttrPath = isWounded ? "woundedAttributes" : "attributes";
     const tokenSrc = actor?.prototypeToken?.texture?.src ?? "";
     const profileSrc = actor?.img || tokenSrc || "";
+    const tokenPreviewSrc = this._getTokenPreviewSrc(actor, isWounded) || profileSrc;
+    const woundedTokenPreviewSrc = actor?.system?.woundedTokenImage || tokenPreviewSrc;
 
     // Extract dice pools from current (or wounded) attributes
     const defense = system.attributes?.defense || { black: 0, white: 0 };
@@ -120,7 +184,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     
     // Collect owned items grouped by type
     const ownedItems = actor.items?.contents ?? [];
-    const abilities = ownedItems.filter(i => i.type === "ability");
+    const abilities = ownedItems.filter(i => i.type === "classcard");
     const weapons = ownedItems.filter(i => i.type === "weapon");
     const gear = ownedItems.filter(i => i.type === "gear");
 
@@ -136,6 +200,8 @@ export class SWIAActorSheet extends BaseActorSheet {
       currentAttributes: system[currentAttrPath] ?? system.attributes,
       config: CONFIG.SWIA ?? {},
       profileSrc,
+      tokenPreviewSrc,
+      woundedTokenPreviewSrc,
       enrichedBiography: enrichedBiography,
       enrichedWoundedBiography: enrichedWoundedBiography,
       abilities: abilities,
@@ -143,6 +209,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       gear: gear,
       hasItems: ownedItems.length > 0,
       activeInventoryPanel: this._activeInventoryPanel,
+      sectionCollapse: this._collapsedSections,
       // Convert dice counts to arrays for Handlebars iteration (each loop)
       // This allows displaying individual dice blocks in the template
       defenseBlackDice: Array.from({ length: defense.black || 0 }, (_, i) => i),
@@ -175,6 +242,8 @@ export class SWIAActorSheet extends BaseActorSheet {
     const currentAttrPath = isWounded ? "woundedAttributes" : "attributes";
     const tokenSrc = data.actor?.prototypeToken?.texture?.src ?? "";
     const profileSrc = data.actor?.img || tokenSrc || "";
+    const tokenPreviewSrc = this._getTokenPreviewSrc(data.actor, isWounded) || profileSrc;
+    const woundedTokenPreviewSrc = data.actor?.system?.woundedTokenImage || tokenPreviewSrc;
 
     // Create arrays for dice block rendering
     const defense = system.attributes?.defense || { black: 0, white: 0 };
@@ -209,7 +278,7 @@ export class SWIAActorSheet extends BaseActorSheet {
 
     // Collect owned items grouped by type
     const ownedItems = data.actor.items?.contents ?? [];
-    const abilities = ownedItems.filter(i => i.type === "ability");
+    const abilities = ownedItems.filter(i => i.type === "classcard");
     const weapons = ownedItems.filter(i => i.type === "weapon");
     const gear = ownedItems.filter(i => i.type === "gear");
 
@@ -223,6 +292,8 @@ export class SWIAActorSheet extends BaseActorSheet {
     data.currentAttributes = system[currentAttrPath] ?? system.attributes;
     data.config = CONFIG.SWIA ?? {};
     data.profileSrc = profileSrc;
+    data.tokenPreviewSrc = tokenPreviewSrc;
+    data.woundedTokenPreviewSrc = woundedTokenPreviewSrc;
     data.enrichedBiography = enrichedBiography;
     data.enrichedWoundedBiography = enrichedWoundedBiography;
     data.abilities = abilities;
@@ -230,6 +301,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     data.gear = gear;
     data.hasItems = ownedItems.length > 0;
     data.activeInventoryPanel = this._activeInventoryPanel;
+    data.sectionCollapse = this._collapsedSections;
     // Dice arrays for rendering blocks
     data.defenseBlackDice = Array.from({ length: defense.black || 0 }, (_, i) => i);
     data.defenseWhiteDice = Array.from({ length: defense.white || 0 }, (_, i) => i);
@@ -267,6 +339,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     if (game.user?.isGM) {
       html.find("[data-action='toggleEdit']").on("change", this._onToggleEdit.bind(this));
     }
+    html.find("[data-action='toggleSectionCollapse']").on("click", this._onToggleSectionCollapse.bind(this));
 
     // Use event delegation for image clicks to handle edit mode changes
     html.on("click", ".profile-image.clickable, .token-image.clickable", (event) => {
@@ -281,6 +354,9 @@ export class SWIAActorSheet extends BaseActorSheet {
     html.find("[data-action='openItem']").on("click", this._onOpenItem.bind(this));
     html.find("[data-action='deleteItem']").on("click", this._onDeleteItem.bind(this));
     html.find("[data-action='cycleItemState']").on("click", this._onCycleItemState.bind(this));
+    html.find("[data-action='addWeaponAttachment']").on("click", this._onAddWeaponAttachment.bind(this));
+    html.find("[data-action='removeWeaponAttachment']").on("click", this._onRemoveWeaponAttachment.bind(this));
+    html.find("[data-action='cycleWeaponAttachmentState']").on("click", this._onCycleWeaponAttachmentState.bind(this));
     // Inventory panel tab switching (V1)
     html.find(".inv-tab-btn").on("click", this._onToggleInventoryPanel.bind(this));
   }
@@ -305,8 +381,29 @@ export class SWIAActorSheet extends BaseActorSheet {
 
   // Toggle hero wounded state (heroes only)
   async _onToggleWounded(event, target) {
-    const isChecked = Boolean(target?.checked);
-    await this.document.update({ "system.state.wounded": isChecked });
+    const actor = this.document ?? this.actor;
+    if (!actor || actor.type !== "hero") return;
+
+    const checkbox = target ?? event?.currentTarget;
+    const isChecked = Boolean(checkbox?.checked);
+    const nextTokenSrc = isChecked ? this._getWoundedTokenSrc(actor) : this._getHealthyTokenSrc(actor);
+    const update = { "system.state.wounded": isChecked };
+
+    if (nextTokenSrc) {
+      update["prototypeToken.texture.src"] = nextTokenSrc;
+    }
+
+    try {
+      await actor.update(update);
+    } catch (error) {
+      console.error("SWIA: Failed to toggle wounded state", error);
+      ui.notifications?.error("Failed to toggle wounded state. Check console for validation errors.");
+      return;
+    }
+
+    if (nextTokenSrc) {
+      await this._syncActiveTokenTextures(actor, nextTokenSrc);
+    }
   }
 
   // Toggle activation state (all actor types)
@@ -316,6 +413,19 @@ export class SWIAActorSheet extends BaseActorSheet {
     
     const currentState = actor.system.state?.activated ?? false;
     await actor.update({ "system.state.activated": !currentState });
+  }
+
+  _onToggleSectionCollapse(event, target) {
+    event?.preventDefault?.();
+    if (!this._editMode) return;
+
+    const toggle = target ?? event?.currentTarget;
+    const section = toggle?.dataset?.section;
+    if (!section) return;
+
+    const current = Boolean(this._collapsedSections?.[section]);
+    this._collapsedSections[section] = !current;
+    this.render(false);
   }
 
   // Open an owned item's sheet
@@ -360,6 +470,73 @@ export class SWIAActorSheet extends BaseActorSheet {
     await item.update({ "system.cardState": cycle[current] || "ready" });
   }
 
+  async _onAddWeaponAttachment(event, target) {
+    event?.preventDefault?.();
+    if (!this._editMode) return;
+
+    const el = target ?? event?.currentTarget;
+    const itemId = el?.closest("[data-item-id]")?.dataset?.itemId;
+    if (!itemId) return;
+
+    const actor = this.document ?? this.actor;
+    const weapon = actor?.items?.get(itemId);
+    if (!weapon || weapon.type !== "weapon") return;
+
+    const attachments = Array.isArray(weapon.system.attachments) ? [...weapon.system.attachments] : [];
+
+    attachments.push({
+      name: game.i18n.localize("SWIA.Item.Weapon.NewAttachment"),
+      description: "",
+      img: "",
+      cardState: "ready"
+    });
+    await weapon.update({ "system.attachments": attachments });
+  }
+
+  async _onCycleWeaponAttachmentState(event, target) {
+    event?.preventDefault?.();
+
+    const el = target ?? event?.currentTarget;
+    const itemId = el?.closest("[data-item-id]")?.dataset?.itemId;
+    const index = Number(el?.dataset?.index);
+    if (!itemId || Number.isNaN(index)) return;
+
+    const actor = this.document ?? this.actor;
+    const weapon = actor?.items?.get(itemId);
+    if (!weapon || weapon.type !== "weapon") return;
+
+    const attachments = Array.isArray(weapon.system.attachments) ? [...weapon.system.attachments] : [];
+    if (!attachments[index]) return;
+
+    const current = attachments[index].cardState || "ready";
+    const cycle = { ready: "exhausted", exhausted: "depleted", depleted: "ready" };
+    attachments[index] = {
+      ...attachments[index],
+      cardState: cycle[current] || "ready"
+    };
+
+    await weapon.update({ "system.attachments": attachments });
+  }
+
+  async _onRemoveWeaponAttachment(event, target) {
+    event?.preventDefault?.();
+    if (!this._editMode) return;
+
+    const el = target ?? event?.currentTarget;
+    const itemId = el?.closest("[data-item-id]")?.dataset?.itemId;
+    const index = Number(el?.dataset?.index);
+    if (!itemId || Number.isNaN(index)) return;
+
+    const actor = this.document ?? this.actor;
+    const weapon = actor?.items?.get(itemId);
+    if (!weapon || weapon.type !== "weapon") return;
+
+    const attachments = Array.isArray(weapon.system.attachments) ? weapon.system.attachments : [];
+    const nextAttachments = attachments.filter((_, attachmentIndex) => attachmentIndex !== index);
+
+    await weapon.update({ "system.attachments": nextAttachments });
+  }
+
   // Open file picker for image selection (edit mode only)
   // Updates both profile and token images simultaneously
   async _onEditImageInstance(event, target) {
@@ -384,18 +561,27 @@ export class SWIAActorSheet extends BaseActorSheet {
     const sheet = this;
     const callback = async (url) => {
       console.log(`SWIA: FilePicker selected URL: ${url}`);
-      const updateObj = {
-        // Always sync portrait and token
-        img: url,
-        "prototypeToken.texture.src": url
-      };
-      // Also ensure the specific clicked path updates for safety
-      updateObj[path] = url;
+      const updateObj = {};
+      // Portrait and healthy token images stay in sync unless editing wounded art.
+      if (path === "system.woundedTokenImage") {
+        updateObj[path] = url;
+        if (actor.type === "hero" && (actor.system?.state?.wounded ?? false)) {
+          updateObj["prototypeToken.texture.src"] = url;
+        }
+      } else if (path === "img" || path === "prototypeToken.texture.src") {
+        updateObj.img = url;
+        updateObj["prototypeToken.texture.src"] = url;
+      } else {
+        updateObj[path] = url;
+      }
       console.log(`SWIA: Calling actor.update() with:`, updateObj);
       
       try {
         const result = await actor.update(updateObj);
         console.log(`SWIA: Update result:`, result);
+        if (path === "system.woundedTokenImage" && actor.type === "hero" && (actor.system?.state?.wounded ?? false)) {
+          await sheet._syncActiveTokenTextures(actor, url);
+        }
         // Ensure the sheet reflects the new image
         try { sheet.render(false); } catch (e) { /* noop */ }
       } catch (err) {
@@ -427,13 +613,23 @@ export class SWIAActorSheet extends BaseActorSheet {
       current,
       callback: async (url) => {
         console.log(`Updating ${path} with ${url}`);
-        const updateObj = {
-          // Always sync portrait and token
-          img: url,
-          "prototypeToken.texture.src": url
-        };
-        updateObj[path] = url;
+        const updateObj = {};
+        // Portrait and healthy token images stay in sync unless editing wounded art.
+        if (path === "system.woundedTokenImage") {
+          updateObj[path] = url;
+          if (doc.type === "hero" && (doc.system?.state?.wounded ?? false)) {
+            updateObj["prototypeToken.texture.src"] = url;
+          }
+        } else if (path === "img" || path === "prototypeToken.texture.src") {
+          updateObj.img = url;
+          updateObj["prototypeToken.texture.src"] = url;
+        } else {
+          updateObj[path] = url;
+        }
         await doc.update(updateObj);
+        if (path === "system.woundedTokenImage" && doc.type === "hero" && (doc.system?.state?.wounded ?? false)) {
+          await sheet._syncActiveTokenTextures(doc, url);
+        }
         // Re-render to refresh the portrait immediately
         try { sheet.render(false); } catch (e) { /* noop */ }
       }

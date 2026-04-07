@@ -1,0 +1,132 @@
+<section class="swia-player-portal swia-companion-portal">
+  <header class="portal-header">
+    <div>
+      <h1>{{title}}</h1>
+      <p>{{subtitle}}</p>
+    </div>
+  </header>
+
+  {{#if hasActors}}
+    <div class="portal-grid">
+      {{#each actors as |actor|}}
+        <div class="portal-actor-section">
+        <article class="portal-card type-{{actor.type}} {{#if actor.isMine}}is-mine{{/if}} {{#if actor.isWounded}}is-wounded{{/if}}">
+          <div class="identity">
+            <img src="{{actor.img}}" alt="{{actor.name}}" loading="lazy">
+            <div class="identity-text">
+              <h2>{{actor.name}}</h2>
+              <div class="activation-row {{#if actor.canManage}}is-clickable{{/if}}" title="{{actor.activationTokenLabel}}">
+                <img
+                  src="{{actor.activationTokenIcon}}"
+                  alt="{{actor.activationTokenLabel}}"
+                  class="activation-token"
+                  loading="lazy"
+                  data-action="toggleActivated"
+                  data-actor-id="{{actor.id}}"
+                >
+              </div>
+              <div class="type-row">
+                <span>{{actor.typeLabel}}</span>
+                {{#if actor.isWounded}}
+                  <span class="wounded-chip">{{localize "SWIA.State.Wounded"}}</span>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <label>{{localize "SWIA.Attributes.Health"}}</label>
+              <strong>{{actor.health.value}}</strong>
+            </div>
+
+            {{#if actor.isHero}}
+              <div class="stat-box">
+                <label>{{localize "SWIA.Attributes.Endurance"}}</label>
+                <strong>{{actor.endurance.value}}</strong>
+              </div>
+            {{/if}}
+
+            <div class="stat-box">
+              <label>{{localize "SWIA.Attributes.Speed"}}</label>
+              <strong>{{actor.speed}}</strong>
+            </div>
+          </div>
+
+          {{#if actor.hasBiography}}
+            <section class="portal-bio">
+              <div class="portal-bio-content">{{{actor.enrichedBiography}}}</div>
+            </section>
+          {{/if}}
+
+          {{#if actor.isHero}}
+            <div class="dice-line">
+              <label>{{localize "SWIA.Attributes.Defense"}}</label>
+              <span class="dice-blocks">
+                {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
+                {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
+              </span>
+            </div>
+            <div class="dice-list hero-dice-row">
+              <div class="dice-line hero-dice-line">
+                <label class="dice-attr-icon" title="{{localize 'SWIA.Attributes.Strength'}}">
+                  <img src="systems/swia/icons/Might.png" alt="{{localize 'SWIA.Attributes.Strength'}}" loading="lazy">
+                </label>
+                <span class="dice-blocks">
+                  {{#each actor.strengthRedDice}}<span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
+                  {{#each actor.strengthBlueDice}}<span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
+                  {{#each actor.strengthGreenDice}}<span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
+                  {{#each actor.strengthYellowDice}}<span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
+                </span>
+              </div>
+              <div class="dice-line hero-dice-line">
+                <label class="dice-attr-icon" title="{{localize 'SWIA.Attributes.Insight'}}">
+                  <img src="systems/swia/icons/Insight.png" alt="{{localize 'SWIA.Attributes.Insight'}}" loading="lazy">
+                </label>
+                <span class="dice-blocks">
+                  {{#each actor.insightRedDice}}<span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
+                  {{#each actor.insightBlueDice}}<span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
+                  {{#each actor.insightGreenDice}}<span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
+                  {{#each actor.insightYellowDice}}<span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
+                </span>
+              </div>
+              <div class="dice-line hero-dice-line">
+                <label class="dice-attr-icon" title="{{localize 'SWIA.Attributes.Tech'}}">
+                  <img src="systems/swia/icons/Tech.png" alt="{{localize 'SWIA.Attributes.Tech'}}" loading="lazy">
+                </label>
+                <span class="dice-blocks">
+                  {{#each actor.techRedDice}}<span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
+                  {{#each actor.techBlueDice}}<span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
+                  {{#each actor.techGreenDice}}<span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
+                  {{#each actor.techYellowDice}}<span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
+                </span>
+              </div>
+            </div>
+          {{else}}
+            <div class="dice-list portal-combat-row">
+              <div class="dice-line">
+                <label>{{localize "SWIA.Attributes.Defense"}}</label>
+                <span class="dice-blocks">
+                  {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
+                  {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
+                </span>
+              </div>
+              <div class="dice-line">
+                <label>{{localize "SWIA.Attributes.Attack"}}</label>
+                <span class="dice-blocks">
+                  {{#each actor.attackRedDice}}<span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
+                  {{#each actor.attackBlueDice}}<span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
+                  {{#each actor.attackGreenDice}}<span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
+                  {{#each actor.attackYellowDice}}<span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
+                </span>
+              </div>
+            </div>
+          {{/if}}
+        </article>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <p class="portal-empty">{{localize "SWIA.Portal.Companion.Empty"}}</p>
+  {{/if}}
+</section>

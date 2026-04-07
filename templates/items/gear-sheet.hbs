@@ -1,4 +1,17 @@
-<form class="swia-sheet item-sheet card-sheet gear-sheet" autocomplete="off">
+<form class="swia-sheet item-sheet card-sheet gear-sheet {{#if editMode}}editing{{/if}}" autocomplete="off">
+  <div class="item-sheet-toolbar">
+    {{#if isGM}}
+    <button type="button" class="item-edit-toggle {{#if editMode}}active{{/if}}" data-action="toggleEdit">
+      {{#if editMode}}{{localize "SWIA.Item.ViewMode"}}{{else}}{{localize "SWIA.EditMode"}}{{/if}}
+    </button>
+    {{#if editMode}}
+    <button type="button" class="item-save-btn" data-action="saveItem">
+      {{localize "SWIA.Item.Save"}}
+    </button>
+    {{/if}}
+    {{/if}}
+  </div>
+
   <div class="card-image-container">
     <img class="card-image {{systemData.cardState}}" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" alt="{{item.name}}" />
     {{#unless hasCardImage}}
@@ -10,5 +23,28 @@
     <button type="button" class="card-state-btn {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
       {{cardStateLabel}}
     </button>
+  </div>
+
+  <div class="item-sheet-body">
+    <div class="item-name-row">
+      <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'SWIA.Item.Name'}}" {{#unless editMode}}disabled{{/unless}} />
+    </div>
+
+    <section class="item-description-section">
+      <h3>{{localize "SWIA.Item.Description"}}</h3>
+      <div class="editor-container">
+        {{#if editMode}}
+        <div class="html-editor">
+          <label class="editor-label">{{localize "SWIA.Item.Description"}} (HTML)</label>
+          <textarea name="system.description" data-dtype="String" rows="8">{{systemData.description}}</textarea>
+          <div class="editor-hint">{{localize "SWIA.BiographyHint"}}</div>
+        </div>
+        {{else}}
+        <div class="editor">
+          <div class="editor-content">{{{ enrichedDescription }}}</div>
+        </div>
+        {{/if}}
+      </div>
+    </section>
   </div>
 </form>

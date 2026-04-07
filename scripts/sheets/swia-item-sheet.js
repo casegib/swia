@@ -9,6 +9,10 @@ const BaseItemSheet = BaseItemSheetV2 && HandlebarsApplicationMixin
   : BaseItemSheetV1;
 const isV2 = !!BaseItemSheetV2;
 
+function resolveItemDocument(ctx) {
+  return ctx?.document ?? ctx?.item ?? ctx?.object ?? ctx?.options?.document ?? null;
+}
+
 // Main item sheet class supporting both V1 and V2 Foundry versions
 export class SWIAItemSheet extends BaseItemSheet {
   // Configuration for V2: sheet layout and position
@@ -23,14 +27,14 @@ export class SWIAItemSheet extends BaseItemSheet {
       height: 580
     },
     form: {
-      submitOnChange: true,
-      handler: SWIAItemSheet.#onSubmitItemForm
+      submitOnChange: false
     },
     actions: {
       editImage: SWIAItemSheet.#onEditImage,
       addSurgeAbility: SWIAItemSheet.#onAddSurgeAbility,
       removeSurgeAbility: SWIAItemSheet.#onRemoveSurgeAbility,
       toggleEdit: SWIAItemSheet.#onToggleEdit,
+      saveItem: SWIAItemSheet.#onSaveItem,
       cycleCardState: SWIAItemSheet.#onCycleCardState
     }
   };
@@ -39,14 +43,25 @@ export class SWIAItemSheet extends BaseItemSheet {
   // so we'll override _renderHTML instead
   static PARTS = {
     form: {
-      template: "systems/swia/templates/items/ability-sheet.hbs",
+      template: "systems/swia/templates/items/classcard-sheet.hbs",
       scrollable: [""]
     }
   };
 
+  constructor(...args) {
+    super(...args);
+
+    if (isV2) {
+      this.options.form ??= {};
+      this.options.form.submitOnChange = false;
+      this.options.form.handler = this._onSubmitItemForm.bind(this);
+    }
+  }
+
   // Override V2's template loading to use the correct template based on item type
   async _renderHTML(context, options) {
-    const itemType = this.document?.type ?? "ability";
+    const sourceType = this.document?.type ?? "classcard";
+    const itemType = ["weapon", "gear"].includes(sourceType) ? "classcard" : sourceType;
     const templatePath = `systems/swia/templates/items/${itemType}-sheet.hbs`;
     
     // Manually load and compile the correct template
@@ -76,7 +91,19 @@ export class SWIAItemSheet extends BaseItemSheet {
   _replaceHTML(result, content, options) {
     const wrapper = content.querySelector('[data-application-part="form"]');
     if (wrapper && result.form) {
-      wrapper.replaceChildren(result.form);
+      const resultTag = result.form.tagName?.toLowerCase?.();
+
+      // Avoid nesting template <form> tags inside V2 wrappers.
+      if (resultTag === "form") {
+        const existingClass = wrapper.getAttribute("class") || "";
+        const mergedClass = `${existingClass} ${result.form.className || ""}`.trim();
+        if (mergedClass) wrapper.setAttribute("class", mergedClass);
+
+        wrapper.replaceChildren(...Array.from(result.form.childNodes));
+      } else {
+        wrapper.replaceChildren(result.form);
+      }
+
     } else {
       content.replaceChildren(result.form);
     }
@@ -84,20 +111,35 @@ export class SWIAItemSheet extends BaseItemSheet {
 
   // V1 template getter
   get template() {
-    const itemType = this.document?.type ?? this.item?.type ?? "ability";
+    const sourceType = this.document?.type ?? this.item?.type ?? "classcard";
+    const itemType = ["weapon", "gear"].includes(sourceType) ? "classcard" : sourceType;
     return `systems/swia/templates/items/${itemType}-sheet.hbs`;
   }
 
   // Handle form submission in V2
-  static async #onSubmitItemForm(event, form, formData) {
-    const submitData = foundry.utils.expandObject(formData.object);
-    await this.document.update(submitData);
+  async _onSubmitItemForm(event, form, formData) {
+    const raw = formData?.object ?? formData ?? {};
+    const normalized = foundry.utils.flattenObject(foundry.utils.expandObject(raw));
+    let update = this._extractItemUpdate(normalized);
+
+    // Fallback: pull values from the live form if Foundry supplied an empty payload.
+    if (!Object.keys(update).length) {
+      update = this._collectUpdateFromForm(form);
+    }
+
+    if (!Object.keys(update).length) return;
+
+    const item = resolveItemDocument(this);
+    if (!item) return;
+    await item.update(update);
   }
 
   // Handle image editing in V2
   static async #onEditImage(event, target) {
     const attr = target.dataset.edit;
-    const current = foundry.utils.getProperty(this.document, attr);
+    const item = resolveItemDocument(this);
+    if (!item) return;
+    const current = foundry.utils.getProperty(item, attr);
     const FilePickerClass = foundry?.applications?.apps?.FilePicker?.implementation
       ?? foundry?.applications?.api?.FilePicker;
     const fp = new FilePickerClass({
@@ -105,7 +147,7 @@ export class SWIAItemSheet extends BaseItemSheet {
       current: current,
       callback: path => {
         target.src = path;
-        this.document.update({ [attr]: path });
+        item.update({ [attr]: path });
       }
     });
     return fp.browse();
@@ -113,7 +155,8 @@ export class SWIAItemSheet extends BaseItemSheet {
 
   // Add surge ability to weapon (V2)
   static async #onAddSurgeAbility(event, target) {
-    const item = this.document;
+    const item = resolveItemDocument(this);
+    if (!item) return;
     if (item.type !== "weapon") return;
     
     const surgeAbilities = item.system.surgeAbilities || [];
@@ -124,7 +167,8 @@ export class SWIAItemSheet extends BaseItemSheet {
 
   // Remove surge ability from weapon (V2)
   static async #onRemoveSurgeAbility(event, target) {
-    const item = this.document;
+    const item = resolveItemDocument(this);
+    if (!item) return;
     if (item.type !== "weapon") return;
     
     const index = parseInt(target.dataset.index);
@@ -143,9 +187,35 @@ export class SWIAItemSheet extends BaseItemSheet {
     this.render();
   }
 
+  // Explicit save action (V2)
+  static async #onSaveItem(event, target) {
+    if (event?.preventDefault) event.preventDefault();
+
+    const update = this._collectUpdateFromForm(target?.closest?.("form") ?? null);
+    const item = resolveItemDocument(this);
+    if (!item) {
+      ui.notifications?.error("SWIA | Unable to resolve item document for save.");
+      return;
+    }
+
+    if (!Object.keys(update).length) {
+      ui.notifications?.warn(game.i18n.localize("SWIA.Item.NoChangesToSave"));
+      return;
+    }
+
+    try {
+      await item.update(update);
+      ui.notifications?.info(game.i18n.localize("SWIA.Item.Saved"));
+    } catch (error) {
+      console.error("SWIA | Manual save failed", error);
+      ui.notifications?.error(game.i18n.localize("SWIA.Item.SaveFailed"));
+    }
+  }
+
   // Cycle card state: ready → exhausted → depleted → ready (V2)
   static async #onCycleCardState(event, target) {
-    const item = this.document;
+    const item = resolveItemDocument(this);
+    if (!item) return;
     const current = item.system.cardState || "ready";
     const cycle = { ready: "exhausted", exhausted: "depleted", depleted: "ready" };
     await item.update({ "system.cardState": cycle[current] || "ready" });
@@ -158,7 +228,7 @@ export class SWIAItemSheet extends BaseItemSheet {
       width: 420,
       height: 580,
       resizable: true,
-      submitOnChange: true
+      submitOnChange: false
     });
   }
 
@@ -170,7 +240,8 @@ export class SWIAItemSheet extends BaseItemSheet {
   // Prepare rendering context for both V1 and V2
   async _prepareContext(options) {
     const context = isV2 ? await super._prepareContext(options) : {};
-    const item = this.document ?? this.item;
+    const item = resolveItemDocument(this);
+    if (!item) return context;
     const system = item.system;
 
     // Get TextEditor with fallback for V1/V2 compatibility
@@ -196,7 +267,9 @@ export class SWIAItemSheet extends BaseItemSheet {
       item: item,
       systemData: system,
       enrichedDescription: enrichedDescription,
+      editMode: this.editMode ?? false,
       isEditable: this.isEditable !== false,
+      isGM: game.user?.isGM ?? false,
       hasCardImage: hasCardImage,
       cardStateLabel: cardStateLabel,
       config: CONFIG.SWIA ?? {}
@@ -241,7 +314,9 @@ export class SWIAItemSheet extends BaseItemSheet {
 
     data.systemData = system;
     data.enrichedDescription = enrichedDescription;
+    data.editMode = this.editMode ?? false;
     data.isEditable = this.isEditable !== false;
+    data.isGM = game.user?.isGM ?? false;
     data.hasCardImage = hasCardImage;
     data.cardStateLabel = cardStateLabel;
     data.config = CONFIG.SWIA ?? {};
@@ -251,6 +326,7 @@ export class SWIAItemSheet extends BaseItemSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+
     if (isV2) return;
 
     // Card image click to edit (V1 only)
@@ -263,6 +339,7 @@ export class SWIAItemSheet extends BaseItemSheet {
     html.find("[data-action='addSurgeAbility']").on("click", this._onAddSurgeAbility.bind(this));
     html.find("[data-action='removeSurgeAbility']").on("click", this._onRemoveSurgeAbility.bind(this));
     html.find("[data-action='toggleEdit']").on("click", this._onToggleEdit.bind(this));
+    html.find("[data-action='saveItem']").on("click", this._onSaveItem.bind(this));
   }
 
   // Add surge ability to weapon (V1)
@@ -289,11 +366,37 @@ export class SWIAItemSheet extends BaseItemSheet {
   }
 
   // Toggle edit mode (V1)
-  _onToggleEdit(event) {
+  async _onToggleEdit(event) {
     event.preventDefault();
+
     const currentEditMode = this.editMode ?? false;
     this.editMode = !currentEditMode;
     this.render();
+  }
+
+  // Explicit save action (V1)
+  async _onSaveItem(event) {
+    event.preventDefault();
+
+    const update = this._collectUpdateFromForm(event.currentTarget?.closest?.("form") ?? null);
+    const item = resolveItemDocument(this);
+    if (!item) {
+      ui.notifications?.error("SWIA | Unable to resolve item document for save.");
+      return;
+    }
+
+    if (!Object.keys(update).length) {
+      ui.notifications?.warn(game.i18n.localize("SWIA.Item.NoChangesToSave"));
+      return;
+    }
+
+    try {
+      await item.update(update);
+      ui.notifications?.info(game.i18n.localize("SWIA.Item.Saved"));
+    } catch (error) {
+      console.error("SWIA | Manual save failed", error);
+      ui.notifications?.error(game.i18n.localize("SWIA.Item.SaveFailed"));
+    }
   }
 
   // Cycle card state: ready → exhausted → depleted → ready (V1)
@@ -309,7 +412,9 @@ export class SWIAItemSheet extends BaseItemSheet {
   _onEditImage(event) {
     event.preventDefault();
     const attr = event.currentTarget.dataset.edit;
-    const current = foundry.utils.getProperty(this.item, attr);
+    const item = resolveItemDocument(this);
+    if (!item) return;
+    const current = foundry.utils.getProperty(item, attr);
     const FilePickerClass = foundry?.applications?.apps?.FilePicker?.implementation
       ?? foundry?.applications?.api?.FilePicker;
     const fp = new FilePickerClass({
@@ -317,21 +422,74 @@ export class SWIAItemSheet extends BaseItemSheet {
       current: current,
       callback: path => {
         event.currentTarget.src = path;
-        this.item.update({ [attr]: path });
+        item.update({ [attr]: path });
       }
     });
     return fp.browse();
   }
 
   async _updateObject(event, formData) {
-    const expanded = foundry.utils.expandObject(formData ?? {});
+    const normalized = foundry.utils.flattenObject(foundry.utils.expandObject(formData ?? {}));
+    const update = this._extractItemUpdate(normalized);
+
+    if (!Object.keys(update).length) return;
+
+    const item = resolveItemDocument(this);
+    if (!item) return;
+    return item.update(update);
+  }
+
+  _extractItemUpdate(source) {
     const update = {};
 
-    if (formData?.name !== undefined) update.name = formData.name;
-    else if (expanded.name !== undefined) update.name = expanded.name;
+    for (const [key, value] of Object.entries(source ?? {})) {
+      if (key === "name" || key.startsWith("system.")) {
+        update[key] = value;
+      }
+    }
 
-    if (expanded.system !== undefined) update.system = expanded.system;
-
-    return this.item.update(update);
+    return update;
   }
+
+  _collectUpdateFromForm(formEl) {
+    const root = formEl
+      ?? this.element?.querySelector?.('[data-application-part="form"]')
+      ?? this.element
+      ?? null;
+
+    if (!(root instanceof HTMLElement)) return {};
+
+    const update = {};
+    const fields = root.querySelectorAll("input[name], select[name], textarea[name]");
+
+    for (const el of fields) {
+      if (el.disabled) continue;
+
+      const name = el.name;
+      if (!(name === "name" || name.startsWith("system."))) continue;
+
+      if (el instanceof HTMLInputElement) {
+        if (el.type === "radio" && !el.checked) continue;
+        if (el.type === "checkbox") {
+          update[name] = el.checked;
+          continue;
+        }
+      }
+
+      let value = el.value;
+      const expectsNumber = el.dataset?.dtype === "Number" || (el instanceof HTMLInputElement && el.type === "number");
+
+      if (expectsNumber) {
+        if (value === "") continue;
+        const num = Number(value);
+        if (Number.isNaN(num)) continue;
+        value = num;
+      }
+
+      update[name] = value;
+    }
+
+    return update;
+  }
+
 }

@@ -1,14 +1,154 @@
-<form class="swia-sheet item-sheet card-sheet weapon-sheet" autocomplete="off">
-  <div class="card-image-container">
-    <img class="card-image {{systemData.cardState}}" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" alt="{{item.name}}" />
-    {{#unless hasCardImage}}
-    <div class="card-placeholder">
-      <i class="fas fa-image"></i>
-      <p>{{localize "SWIA.Item.ClickToUploadCard"}}</p>
-    </div>
-    {{/unless}}
-    <button type="button" class="card-state-btn {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
-      {{cardStateLabel}}
+<form class="swia-sheet item-sheet card-sheet weapon-sheet {{#if editMode}}editing{{/if}}" autocomplete="off">
+  <div class="item-sheet-toolbar">
+    {{#if isGM}}
+    <button type="button" class="item-edit-toggle {{#if editMode}}active{{/if}}" data-action="toggleEdit">
+      {{#if editMode}}{{localize "SWIA.Item.ViewMode"}}{{else}}{{localize "SWIA.EditMode"}}{{/if}}
     </button>
+    {{#if editMode}}
+    <button type="button" class="item-save-btn" data-action="saveItem">
+      {{localize "SWIA.Item.Save"}}
+    </button>
+    {{/if}}
+    {{/if}}
+  </div>
+
+  <div class="weapon-card-frame">
+    <header class="weapon-title-strip">
+      {{#if editMode}}
+      <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'SWIA.Item.Name'}}" />
+      {{else}}
+      <h1>{{item.name}}</h1>
+      {{/if}}
+    </header>
+
+    <div class="weapon-art-area">
+      <div class="weapon-art-panel">
+        <img class="card-image {{systemData.cardState}}" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" alt="{{item.name}}" />
+        {{#unless hasCardImage}}
+        <div class="card-placeholder">
+          <i class="fas fa-image"></i>
+          <p>{{localize "SWIA.Item.ClickToUploadCard"}}</p>
+        </div>
+        {{/unless}}
+      </div>
+
+      <button type="button" class="card-state-btn {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
+        {{cardStateLabel}}
+      </button>
+    </div>
+
+    <div class="weapon-subtitle-row">
+      {{#if editMode}}
+      <input class="weapon-traits-input" name="system.traits" type="text" value="{{systemData.traits}}" placeholder="{{localize 'SWIA.Item.Weapon.TraitsPlaceholder'}}" />
+      <div class="weapon-range-pill">
+        <label>{{localize "SWIA.Item.Weapon.Range"}}</label>
+        <select name="system.range" data-dtype="String">
+          <option value="melee" {{#if (eq systemData.range "melee")}}selected{{/if}}>{{localize "SWIA.Item.Weapon.RangeMelee"}}</option>
+          <option value="ranged" {{#if (eq systemData.range "ranged")}}selected{{/if}}>{{localize "SWIA.Item.Weapon.RangeRanged"}}</option>
+        </select>
+      </div>
+      {{else}}
+      <p class="weapon-traits-text">{{#if systemData.traits}}{{systemData.traits}}{{else}}{{localize "SWIA.Item.Weapon.TraitsPlaceholder"}}{{/if}}</p>
+      {{/if}}
+
+      <aside class="attack-badge" aria-label="{{localize 'SWIA.Attributes.Attack'}}">
+        <div class="attack-badge-title">{{localize "SWIA.Attributes.Attack"}}</div>
+        <div class="attack-badge-icon">
+          {{#if (eq systemData.range "melee")}}
+          <img src="systems/swia/icons/Melee.png" alt="{{localize 'SWIA.Item.Weapon.RangeMelee'}}" />
+          {{else}}
+          <img src="systems/swia/icons/Ranged.png" alt="{{localize 'SWIA.Item.Weapon.RangeRanged'}}" />
+          {{/if}}
+        </div>
+        <div class="attack-badge-dice">
+          {{#each (range systemData.attackDice.red)}}<span class="attack-pip red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
+          {{#each (range systemData.attackDice.blue)}}<span class="attack-pip blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
+          {{#each (range systemData.attackDice.green)}}<span class="attack-pip green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
+          {{#each (range systemData.attackDice.yellow)}}<span class="attack-pip yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
+        </div>
+      </aside>
+    </div>
+
+    {{#if editMode}}
+    <div class="weapon-edit-fields">
+      <div class="edit-field">
+        <label>{{localize "SWIA.Item.Weapon.AttachmentSlots"}}</label>
+        <input name="system.attachmentSlots" type="number" value="{{systemData.attachmentSlots}}" data-dtype="Number" min="0" />
+      </div>
+      <div class="edit-field dice-edit-field">
+        <label>{{localize "SWIA.Item.Weapon.AttackDice"}}</label>
+        <div class="dice-edit-grid">
+          <label>{{localize "SWIA.Attack.Red"}} <input name="system.attackDice.red" type="number" value="{{systemData.attackDice.red}}" data-dtype="Number" min="0" /></label>
+          <label>{{localize "SWIA.Attack.Blue"}} <input name="system.attackDice.blue" type="number" value="{{systemData.attackDice.blue}}" data-dtype="Number" min="0" /></label>
+          <label>{{localize "SWIA.Attack.Green"}} <input name="system.attackDice.green" type="number" value="{{systemData.attackDice.green}}" data-dtype="Number" min="0" /></label>
+          <label>{{localize "SWIA.Attack.Yellow"}} <input name="system.attackDice.yellow" type="number" value="{{systemData.attackDice.yellow}}" data-dtype="Number" min="0" /></label>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+    <section class="weapon-surge-section">
+      <div class="section-header">
+        <h3>{{localize "SWIA.Item.Weapon.SurgeAbilities"}}</h3>
+        {{#if editMode}}
+        <button type="button" data-action="addSurgeAbility">{{localize "SWIA.Item.Weapon.AddSurge"}}</button>
+        {{/if}}
+      </div>
+
+      <ol class="surge-abilities-list">
+        {{#each systemData.surgeAbilities as |surge index|}}
+        <li class="surge-ability-item">
+          <div class="surge-icon-and-cost">
+            <img class="surge-icon" src="systems/swia/icons/Surge.png" alt="{{localize 'SWIA.Surge'}}" />
+            {{#if ../editMode}}
+            <input class="surge-cost-input" name="system.surgeAbilities.{{index}}.cost" type="number" value="{{surge.cost}}" data-dtype="Number" min="0" />
+            {{else}}
+            <span class="surge-cost-display">+{{surge.cost}}</span>
+            {{/if}}
+          </div>
+
+          {{#if ../editMode}}
+          <input class="surge-effect-input" name="system.surgeAbilities.{{index}}.effect" type="text" value="{{surge.effect}}" placeholder="{{localize 'SWIA.Item.Weapon.SurgeEffectPlaceholder'}}" />
+          <button type="button" class="surge-delete" data-action="removeSurgeAbility" data-index="{{index}}" title="{{localize 'SWIA.Item.Weapon.RemoveSurge'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+          {{else}}
+          <p class="surge-effect-display">{{surge.effect}}</p>
+          {{/if}}
+        </li>
+        {{else}}
+        <li class="empty-message">{{localize "SWIA.Item.Weapon.NoSurgeAbilities"}}</li>
+        {{/each}}
+      </ol>
+    </section>
+
+    <section class="weapon-flavor-section">
+      {{#if editMode}}
+      <h3>{{localize "SWIA.Item.Weapon.FlavorText"}}</h3>
+      {{/if}}
+      {{#if editMode}}
+      <textarea name="system.description" data-dtype="String" rows="5" placeholder="{{localize 'SWIA.Item.Description'}}">{{systemData.description}}</textarea>
+      {{else}}
+      <div class="flavor-display">{{{enrichedDescription}}}</div>
+      {{/if}}
+    </section>
+
+    <footer class="weapon-bottom-row">
+      <div class="cost-badge">
+        {{#if editMode}}
+        <label for="weapon-cost-input">{{localize "SWIA.Item.Weapon.Cost"}}</label>
+        <input id="weapon-cost-input" name="system.cost" type="number" value="{{systemData.cost}}" data-dtype="Number" min="0" />
+        {{else}}
+        <span class="cost-value">{{systemData.cost}}</span>
+        <span class="cost-label">{{localize "SWIA.Item.Weapon.Credits"}}</span>
+        {{/if}}
+      </div>
+
+      <div class="attachment-slots-track" aria-label="{{localize 'SWIA.Item.Weapon.AttachmentSlots'}}" title="{{localize 'SWIA.Item.Weapon.AttachmentSlots'}}">
+        {{#each (range systemData.attachmentSlots)}}
+        <span class="attachment-slot-rectangle"></span>
+        {{/each}}
+      </div>
+    </footer>
   </div>
 </form>

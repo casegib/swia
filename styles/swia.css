@@ -3,8 +3,13 @@
   color: #2b1f14;
   background: #d9c9a8;
   background-image: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.08)),
+    url("../images/bgSheet.jpg"),
     repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px),
     repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+  background-size: cover, cover, auto, auto;
+  background-position: center, center, 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat, repeat, repeat;
   padding: 0;
   transition: all 0.3s ease;
   border: 10px solid #8b6f47;
@@ -52,11 +57,11 @@
 
 .swia-sheet .sheet-header {
   display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 16px;
+  grid-template-columns: 110px 1fr;
+  gap: 12px;
   align-items: center;
   position: relative;
-  padding: 16px;
+  padding: 12px 14px;
   background: linear-gradient(180deg, rgba(139, 111, 71, 0.2) 0%, transparent 100%);
   border-bottom: 3px solid var(--accent);
   margin-bottom: 12px;
@@ -65,21 +70,68 @@
 .swia-sheet .image-section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
+  min-width: 0;
+}
+
+.swia-sheet .wounded-token-picker {
+  width: 100%;
+  max-width: 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 6px;
+  background: rgba(139, 111, 71, 0.15);
+  border: 1px solid rgba(var(--label-rgb), 0.25);
+}
+
+.swia-sheet .wounded-token-picker > label {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--label);
+  text-align: center;
+}
+
+.swia-sheet .wounded-token-thumb {
+  width: 64px;
+  height: 64px;
+}
+
+.swia-sheet .wounded-token-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  background: var(--stat-bg);
+}
+
+.swia-sheet .wounded-token-picker .editor-hint {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.2;
+  text-align: center;
 }
 
 .swia-sheet .activation-token-container {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .swia-sheet .activation-token {
-  width: 35px;
-  height: 35px;
+  width: 28px;
+  height: 28px;
   cursor: pointer;
   transition: all 0.2s ease;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
@@ -203,8 +255,8 @@
 
 .swia-sheet .image-container {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 92px;
+  height: 92px;
   overflow: visible;
 }
 
@@ -230,20 +282,20 @@
 
 .swia-sheet .edit-toggle {
   position: absolute;
-  top: 8px;
-  right: 16px;
+  top: 6px;
+  right: 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   z-index: 10;
   background: rgba(217, 201, 168, 0.9);
-  padding: 6px 10px;
+  padding: 4px 8px;
   border-radius: 4px;
   border: 1px solid var(--label);
 }
 
 .swia-sheet .edit-toggle label {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--label);
   font-weight: 700;
   text-transform: uppercase;
@@ -253,11 +305,11 @@
   appearance: none !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
-  width: 44px;
-  height: 24px;
+  width: 38px;
+  height: 20px;
   background: rgba(90, 68, 41, 0.2);
-  border: 2px solid var(--label);
-  border-radius: 12px;
+  border: 1px solid var(--label);
+  border-radius: 10px;
   cursor: pointer;
   position: relative;
   transition: background 0.3s ease;
@@ -292,10 +344,10 @@
 .swia-sheet .edit-toggle input[type="checkbox"]::before {
   content: "";
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   background: var(--label);
-  border-radius: 10px;
+  border-radius: 7px;
   top: 2px;
   left: 2px;
   transition: left 0.3s ease, background 0.3s ease;
@@ -307,13 +359,13 @@
 }
 
 .swia-sheet .edit-toggle input[type="checkbox"]:checked::before {
-  left: 18px;
+  left: 20px;
   background: var(--accent);
 }
 
 .swia-sheet .sheet-header h1 input {
   width: 100%;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -321,11 +373,35 @@
   border: none;
   color: #2b1f14;
   border-bottom: 2px solid var(--accent);
-  padding-bottom: 4px;
+  padding-bottom: 2px;
+}
+
+.swia-sheet .header-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.swia-sheet .name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.swia-sheet .name-row h1 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.swia-sheet .name-activation {
+  flex-shrink: 0;
 }
 
 .swia-sheet .character-title {
-  margin-top: 2px;
+  margin-top: 0;
 }
 
 .swia-sheet .character-title input {
@@ -361,8 +437,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 10px;
-  padding: 6px 10px;
+  margin-top: 4px;
+  padding: 4px 8px;
   background: rgba(139, 111, 71, 0.15);
   border-radius: 4px;
   border: 1px solid rgba(var(--label-rgb), 0.3);
@@ -829,199 +905,329 @@
   padding-left: 2em;
 }
 
-/* Weapon Sheet Specific Styles */
-.swia-sheet.weapon-sheet {
-  --accent: #c97a2a;
-  --accent-rgb: 201, 122, 42;
-  --label: #6b4423;
-  --label-rgb: 107, 68, 35;
-}
-
-.swia-sheet.weapon-sheet .weapon-meta {
+/* Item edit toolbar shared by item sheets */
+.swia-sheet.item-sheet .item-sheet-toolbar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 25;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.swia-sheet.weapon-sheet .weapon-meta label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--label);
-  text-transform: uppercase;
-}
-
-.swia-sheet.weapon-sheet .weapon-meta input {
-  width: 80px;
-  background: rgba(255, 255, 255, 0.4);
-  border: 2px solid rgba(var(--accent-rgb), 0.3);
-  color: #2b1f14;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-.swia-sheet.weapon-sheet .weapon-section {
-  margin-bottom: 20px;
-  padding: 0 12px;
-}
-
-.swia-sheet.weapon-sheet .weapon-section h3 {
-  margin: 0 0 10px 0;
-  font-size: 13px;
-  color: var(--label);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding-bottom: 6px;
-  border-bottom: 2px solid rgba(var(--accent-rgb), 0.3);
-}
-
-.swia-sheet.weapon-sheet .attack-dice-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  padding: 10px 0;
-}
-
-.swia-sheet.weapon-sheet .dice-display {
-  padding: 15px 0;
-  min-height: 40px;
-}
-
-.swia-sheet.weapon-sheet .dice-display .dice-blocks {
-  display: flex;
-  flex-wrap: wrap;
   gap: 6px;
-  align-items: center;
-  justify-content: center;
 }
 
-.swia-sheet.weapon-sheet .dice-input-group {
-  background: rgba(139, 111, 71, 0.1);
-  border: 2px solid rgba(var(--accent-rgb), 0.3);
-  border-radius: 6px;
-  padding: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.swia-sheet.weapon-sheet .dice-input-group label {
-  display: block;
-  font-size: 11px;
+.swia-sheet.item-sheet .item-edit-toggle {
+  border: 1px solid rgba(40, 28, 18, 0.45);
+  background: linear-gradient(180deg, #f2e8d0 0%, #d6c09a 100%);
+  color: #3a2a1d;
+  font-size: 10px;
   font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 6px;
   letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
-.swia-sheet.weapon-sheet .dice-input-group label.red-label {
-  color: #c0392b;
+.swia-sheet.item-sheet .item-edit-toggle.active {
+  background: linear-gradient(180deg, #c58e3d 0%, #9c6b29 100%);
+  color: #fff;
 }
 
-.swia-sheet.weapon-sheet .dice-input-group label.blue-label {
-  color: #2980b9;
-}
-
-.swia-sheet.weapon-sheet .dice-input-group label.green-label {
-  color: #27ae60;
-}
-
-.swia-sheet.weapon-sheet .dice-input-group label.yellow-label {
-  color: #f39c12;
-}
-
-.swia-sheet.weapon-sheet .dice-input-group input {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.5);
-  border: 2px solid rgba(var(--accent-rgb), 0.3);
-  color: #2b1f14;
-  padding: 6px;
-  border-radius: 4px;
+.swia-sheet.item-sheet .item-save-btn {
+  border: 1px solid rgba(28, 56, 30, 0.55);
+  background: linear-gradient(180deg, #7dcf82 0%, #3b8f44 100%);
+  color: #fff;
+  font-size: 10px;
   font-weight: 700;
-  font-size: 16px;
-  text-align: center;
-  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
-.swia-sheet.weapon-sheet .dice-preview {
+.swia-sheet.item-sheet .item-save-btn:hover {
+  filter: brightness(1.06);
+}
+
+/* Weapon sheet IA card styling */
+.swia-sheet.weapon-sheet {
+  --accent: #b07a35;
+  --accent-rgb: 176, 122, 53;
+  --label: #5f4323;
+  --label-rgb: 95, 67, 35;
+  background: #d2c0a2;
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(81, 54, 29, 0.08) 100%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0, rgba(255, 255, 255, 0.05) 2px, transparent 2px, transparent 4px);
+  border: 10px solid #7e6240;
+  border-radius: 10px;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(60, 38, 18, 0.28);
+  overflow: hidden;
+}
+
+.swia-sheet.weapon-sheet .weapon-card-frame {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  min-height: 24px;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 14px;
+  gap: 10px;
+}
+
+.swia-sheet.weapon-sheet .weapon-title-strip {
+  border: 2px solid rgba(53, 33, 17, 0.5);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f8f0de 0%, #e1d0b1 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  padding: 4px 9px;
+  text-align: center;
+}
+
+.swia-sheet.weapon-sheet .weapon-title-strip h1 {
+  margin: 0;
+  font-size: 27px;
+  line-height: 1.05;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: #252014;
+}
+
+.swia-sheet.weapon-sheet .weapon-title-strip input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #252014;
+  font-size: 23px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.swia-sheet.weapon-sheet .weapon-art-area {
+  position: relative;
+  display: block;
+  align-items: stretch;
+}
+
+.swia-sheet.weapon-sheet .weapon-art-panel {
+  position: relative;
+  min-height: 176px;
+  border: 2px solid rgba(48, 32, 18, 0.48);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #7c6a5c 0%, #3f3030 100%);
+  overflow: hidden;
+}
+
+.swia-sheet.weapon-sheet .weapon-art-panel .card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #62584d 0%, #423734 100%);
+}
+
+.swia-sheet.weapon-sheet .weapon-art-panel .card-placeholder {
+  color: rgba(247, 237, 222, 0.86);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.swia-sheet.weapon-sheet .attack-badge {
+  position: relative;
+  border-radius: 999px;
+  border: 2px solid #a49a8b;
+  background: linear-gradient(180deg, #f9f4e8 0%, #d3ccbf 60%, #a89e8f 100%);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.65),
+    inset 0 -2px 4px rgba(56, 45, 34, 0.22),
+    0 3px 6px rgba(0, 0, 0, 0.22);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
+  padding: 4px 8px;
+  min-height: 0;
+  white-space: nowrap;
 }
 
-.swia-sheet.weapon-sheet .properties-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 10px 0;
-}
-
-.swia-sheet.weapon-sheet .properties-grid .form-group {
-  margin-bottom: 0;
-}
-
-.swia-sheet.weapon-sheet .properties-grid label {
-  display: block;
-  font-size: 11px;
+.swia-sheet.weapon-sheet .attack-badge-title {
+  font-size: 8px;
+  line-height: 1;
   font-weight: 700;
-  color: var(--label);
+  color: #4f4434;
   text-transform: uppercase;
-  margin-bottom: 6px;
-  letter-spacing: 0.5px;
 }
 
-.swia-sheet.weapon-sheet .properties-grid input,
-.swia-sheet.weapon-sheet .properties-grid select {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.4);
-  border: 2px solid rgba(var(--accent-rgb), 0.3);
+.swia-sheet.weapon-sheet .attack-badge-icon img {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  filter: brightness(0.2);
+}
+
+.swia-sheet.weapon-sheet .attack-badge-dice {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 3px;
+}
+
+.swia-sheet.weapon-sheet .attack-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(30, 25, 20, 0.6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.swia-sheet.weapon-sheet .attack-pip.red { background: linear-gradient(180deg, #f07464 0%, #be3728 100%); }
+.swia-sheet.weapon-sheet .attack-pip.blue { background: linear-gradient(180deg, #74c2ff 0%, #2b7ab3 100%); }
+.swia-sheet.weapon-sheet .attack-pip.green { background: linear-gradient(180deg, #90e57f 0%, #3f9b37 100%); }
+.swia-sheet.weapon-sheet .attack-pip.yellow { background: linear-gradient(180deg, #ffe375 0%, #cf9722 100%); }
+
+.swia-sheet.weapon-sheet .weapon-art-area .card-state-btn {
+  right: 12px;
+  bottom: 8px;
+}
+
+.swia-sheet.weapon-sheet .weapon-subtitle-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 4px 3px;
+  border-bottom: 2px solid rgba(95, 67, 35, 0.25);
+}
+
+.swia-sheet.weapon-sheet .weapon-traits-text,
+.swia-sheet.weapon-sheet .weapon-traits-input {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.05;
+  color: #2f1f14;
+}
+
+.swia-sheet.weapon-sheet .weapon-traits-input {
+  border: none;
+  background: transparent;
+  border-bottom: 1px dashed rgba(66, 46, 22, 0.35);
+  padding: 0 0 2px;
+}
+
+.swia-sheet.weapon-sheet .weapon-range-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(66, 46, 22, 0.45);
+  background: rgba(245, 236, 220, 0.8);
+  padding: 2px 8px;
+  min-height: 24px;
+}
+
+.swia-sheet.weapon-sheet .weapon-range-pill span,
+.swia-sheet.weapon-sheet .weapon-range-pill label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #533d24;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.swia-sheet.weapon-sheet .weapon-range-pill select {
+  border: none;
+  background: transparent;
+  font-size: 10px;
+  font-weight: 700;
+  color: #2f1f14;
+  padding: 0;
+}
+
+.swia-sheet.weapon-sheet .weapon-edit-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.swia-sheet.weapon-sheet .edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(255, 251, 239, 0.35);
+  border: 1px solid rgba(95, 67, 35, 0.25);
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.swia-sheet.weapon-sheet .edit-field label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  color: #5f4323;
+}
+
+.swia-sheet.weapon-sheet .edit-field input,
+.swia-sheet.weapon-sheet .edit-field textarea,
+.swia-sheet.weapon-sheet .edit-field select {
+  border: 1px solid rgba(95, 67, 35, 0.35);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.75);
   color: #2b1f14;
-  padding: 6px 8px;
-  border-radius: 4px;
   font-weight: 600;
+}
+
+.swia-sheet.weapon-sheet .dice-edit-field {
+  grid-column: 1 / -1;
+}
+
+.swia-sheet.weapon-sheet .dice-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.swia-sheet.weapon-sheet .dice-edit-grid label {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3px;
+}
+
+.swia-sheet.weapon-sheet .weapon-surge-section {
+  border-top: 1px solid rgba(95, 67, 35, 0.3);
+  padding-top: 8px;
 }
 
 .swia-sheet.weapon-sheet .section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
-  padding-bottom: 6px;
-  border-bottom: 2px solid rgba(var(--accent-rgb), 0.3);
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
-.swia-sheet.weapon-sheet .section-header h3 {
+.swia-sheet.weapon-sheet .section-header h3,
+.swia-sheet.weapon-sheet .weapon-flavor-section h3 {
   margin: 0;
-  padding: 0;
-  border: none;
+  font-size: 15px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #4f331e;
 }
 
 .swia-sheet.weapon-sheet .section-header button {
-  background: var(--accent);
-  border: none;
-  color: #ffffff;
-  padding: 5px 12px;
+  background: linear-gradient(180deg, #d8a35c 0%, #a16f2d 100%);
+  border: 1px solid rgba(64, 43, 21, 0.5);
+  color: #fff;
   border-radius: 4px;
-  cursor: pointer;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  font-size: 10px;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.swia-sheet.weapon-sheet .section-header button:hover {
-  background: rgba(var(--accent-rgb), 0.8);
-  transform: translateY(-1px);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-}
-
-.swia-sheet.weapon-sheet .section-header button:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.5px;
+  padding: 4px 9px;
 }
 
 .swia-sheet.weapon-sheet .surge-abilities-list {
@@ -1030,105 +1236,229 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .swia-sheet.weapon-sheet .surge-ability-item {
-  border: 2px solid rgba(var(--accent-rgb), 0.3);
-  border-radius: 6px;
-  padding: 10px;
-  background: rgba(139, 111, 71, 0.08);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-}
-
-.swia-sheet.weapon-sheet .surge-ability-item:hover {
-  background: rgba(139, 111, 71, 0.15);
-  border-color: rgba(var(--accent-rgb), 0.5);
-}
-
-.swia-sheet.weapon-sheet .surge-ability-row {
   display: grid;
-  grid-template-columns: 80px 1fr auto;
-  gap: 10px;
-  align-items: start;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  border-top: 1px solid rgba(66, 46, 22, 0.2);
+  padding-top: 6px;
 }
 
-.swia-sheet.weapon-sheet .surge-cost label,
-.swia-sheet.weapon-sheet .surge-effect label {
-  display: block;
-  font-size: 10px;
+.swia-sheet.weapon-sheet .surge-icon-and-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 68px;
+}
+
+.swia-sheet.weapon-sheet .surge-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.swia-sheet.weapon-sheet .surge-cost-display {
+  font-size: 17px;
   font-weight: 700;
-  color: var(--label);
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  letter-spacing: 0.3px;
+  color: #1f1a14;
 }
 
-.swia-sheet.weapon-sheet .surge-cost input {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.4);
-  border: 2px solid rgba(var(--accent-rgb), 0.3);
-  color: #2b1f14;
-  padding: 6px;
+.swia-sheet.weapon-sheet .surge-cost-input {
+  width: 54px;
+  border: 1px solid rgba(95, 67, 35, 0.35);
   border-radius: 4px;
+  background: rgba(255, 255, 255, 0.75);
   font-weight: 700;
-  text-align: center;
 }
 
-.swia-sheet.weapon-sheet .surge-effect input {
+.swia-sheet.weapon-sheet .surge-effect-display,
+.swia-sheet.weapon-sheet .surge-effect-input {
+  margin: 0;
   width: 100%;
-  background: rgba(255, 255, 255, 0.4);
-  border: 2px solid rgba(var(--accent-rgb), 0.3);
-  color: #2b1f14;
-  padding: 6px 8px;
+  color: #23180f;
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.swia-sheet.weapon-sheet .surge-effect-input {
+  border: 1px solid rgba(95, 67, 35, 0.35);
   border-radius: 4px;
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 5px 6px;
 }
 
 .swia-sheet.weapon-sheet .surge-delete {
-  background: #a82323;
-  border: none;
-  color: #ffffff;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(123, 31, 31, 0.4);
   border-radius: 4px;
+  color: #8f2626;
+  background: rgba(255, 255, 255, 0.65);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 18px;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.swia-sheet.weapon-sheet .surge-delete:hover {
-  background: #8b1e1e;
-  transform: scale(1.05);
-}
-
-.swia-sheet.weapon-sheet .surge-delete:active {
-  transform: scale(0.95);
 }
 
 .swia-sheet.weapon-sheet .empty-message {
-  list-style: none;
-  padding: 20px;
   text-align: center;
-  color: rgba(var(--label-rgb), 0.6);
   font-style: italic;
-  font-size: 13px;
-  background: rgba(139, 111, 71, 0.05);
-  border: 2px dashed rgba(var(--accent-rgb), 0.2);
+  color: rgba(66, 46, 22, 0.7);
+  border: 1px dashed rgba(95, 67, 35, 0.35);
   border-radius: 6px;
+  padding: 10px;
 }
 
-.swia-sheet.weapon-sheet .hint {
-  font-size: 10px;
-  color: rgba(var(--label-rgb), 0.7);
+.swia-sheet.weapon-sheet .weapon-flavor-section {
+  margin-top: 2px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(66, 46, 22, 0.2);
+}
+
+.swia-sheet.weapon-sheet .weapon-flavor-section textarea {
+  width: 100%;
+  border: 1px solid rgba(95, 67, 35, 0.35);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.75);
+  min-height: 95px;
+  padding: 8px;
+}
+
+.swia-sheet.weapon-sheet .flavor-display {
   font-style: italic;
-  margin: 4px 0 0 0;
-  line-height: 1.3;
+  color: rgba(42, 29, 18, 0.9);
+  min-height: 58px;
+  line-height: 1.35;
+  padding: 6px 4px;
+}
+
+.swia-sheet.weapon-sheet .flavor-display p:first-child {
+  margin-top: 0;
+}
+
+.swia-sheet.weapon-sheet .flavor-display p:last-child {
+  margin-bottom: 0;
+}
+
+.swia-sheet.weapon-sheet .weapon-bottom-row {
+  margin-top: auto;
+  padding-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.swia-sheet.weapon-sheet .attachment-slots-track {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.swia-sheet.weapon-sheet .attachment-slot-rectangle {
+  width: 24px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid #0d4a7a;
+  background: linear-gradient(180deg, #6ec2ff 0%, #2d7fbd 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 1px 2px rgba(0, 0, 0, 0.32);
+}
+
+.swia-sheet.weapon-sheet .cost-badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  background: linear-gradient(180deg, #f6efde 0%, #e4d4b4 100%);
+  border: 2px solid rgba(57, 39, 21, 0.45);
+  border-radius: 999px;
+  padding: 3px 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.swia-sheet.weapon-sheet .cost-value {
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 800;
+  color: #1c1711;
+}
+
+.swia-sheet.weapon-sheet .cost-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #5f4323;
+}
+
+.swia-sheet.weapon-sheet .cost-badge label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #5f4323;
+}
+
+.swia-sheet.weapon-sheet .cost-badge input {
+  width: 82px;
+  border: 1px solid rgba(95, 67, 35, 0.35);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.75);
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (max-width: 540px) {
+  .swia-sheet.weapon-sheet .weapon-card-frame {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .swia-sheet.weapon-sheet .weapon-title-strip h1 {
+    font-size: 22px;
+  }
+
+  .swia-sheet.weapon-sheet .weapon-traits-text,
+  .swia-sheet.weapon-sheet .weapon-traits-input,
+  .swia-sheet.weapon-sheet .surge-effect-display,
+  .swia-sheet.weapon-sheet .surge-effect-input {
+    font-size: 14px;
+  }
+
+  .swia-sheet.weapon-sheet .weapon-art-area {
+    grid-template-columns: 1fr;
+  }
+
+  .swia-sheet.weapon-sheet .attack-badge {
+    align-items: center;
+    gap: 5px;
+    padding: 4px 7px;
+  }
+
+  .swia-sheet.weapon-sheet .attack-badge-title {
+    font-size: 8px;
+  }
+
+  .swia-sheet.weapon-sheet .weapon-edit-fields,
+  .swia-sheet.weapon-sheet .dice-edit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .swia-sheet.weapon-sheet .surge-ability-item {
+    grid-template-columns: 1fr;
+  }
+
+  .swia-sheet.weapon-sheet .weapon-bottom-row {
+    align-items: center;
+  }
+
+  .swia-sheet.weapon-sheet .attachment-slots-track {
+    min-width: 24px;
+  }
 }
 
 /* =========================================
@@ -1142,6 +1472,29 @@
 .swia-sheet .sheet-main {
   flex: 1;
   min-width: 0;
+}
+
+.swia-sheet .collapsible-section.collapsed > .collapsible-content {
+  display: none;
+}
+
+.swia-sheet .section-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.swia-sheet .section-toggle .section-toggle-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.swia-sheet .section-toggle-inline {
+  border-radius: 0;
 }
 
 /* =========================================
@@ -1415,4 +1768,774 @@
   border: 2px dashed rgba(var(--accent-rgb), 0.2);
   border-radius: 6px;
   margin-top: 8px;
+}
+
+.swia-sheet .inventory-sections {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0 16px 16px;
+  align-items: start;
+}
+
+.swia-sheet .inventory-group {
+  min-width: 0;
+  border: 2px solid rgba(var(--accent-rgb), 0.25);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 1px 3px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.swia-sheet .inventory-group .collapsible-content {
+  padding: 8px;
+}
+
+.swia-sheet .inventory-group .inventory-empty {
+  margin-top: 0;
+}
+
+.swia-sheet .inventory-group .item-list {
+  min-width: 0;
+}
+
+.swia-sheet .inventory-group .item-entry {
+  align-items: start;
+  min-width: 0;
+}
+
+.swia-sheet .inventory-group .item-controls {
+  padding-top: 1px;
+}
+
+@media (max-width: 900px) {
+  .swia-sheet .inventory-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .swia-sheet .sheet-header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding-top: 44px;
+  }
+
+  .swia-sheet .header-fields {
+    width: 100%;
+  }
+
+  .swia-sheet .name-row {
+    align-items: flex-start;
+  }
+
+  .swia-sheet .state-toggle {
+    flex-wrap: wrap;
+  }
+}
+
+.swia-player-portal-btn,
+.swia-companion-portal-btn,
+.swia-imperial-portal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #6f5738;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #ead9b9 0%, #ccb184 100%);
+  color: #2b1f14;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.swia-player-portal-btn {
+  border-color: #7f1212;
+  background: linear-gradient(180deg, #c74a4a 0%, #8f1f1f 100%);
+  color: #fff4eb;
+}
+
+.swia-companion-portal-btn {
+  border-color: #2a7a4f;
+  background: linear-gradient(180deg, #d8f1e1 0%, #9dcea8 100%);
+  color: #123225;
+}
+
+.swia-player-portal-btn,
+.swia-companion-portal-btn,
+.swia-imperial-portal-btn {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+  gap: 0;
+  justify-content: center;
+}
+
+.swia-player-portal-btn i,
+.swia-companion-portal-btn i {
+  font-size: 14px;
+  line-height: 1;
+  margin: 0;
+}
+
+.swia-imperial-portal-btn i {
+  font-size: 14px;
+  line-height: 1;
+  margin: 0;
+}
+
+.swia-imperial-portal-btn {
+  border-color: #1a4a6b;
+  background: linear-gradient(180deg, #dbe8f4 0%, #9fbed7 100%);
+  color: #0f2a3d;
+}
+
+.swia-player-portal-btn:hover,
+.swia-companion-portal-btn:hover,
+.swia-imperial-portal-btn:hover {
+  filter: brightness(1.06);
+}
+
+.swia-companion-portal .portal-header {
+  border-color: rgba(42, 122, 79, 0.45);
+}
+
+.swia-imperial-portal .portal-header {
+  border-color: rgba(26, 74, 107, 0.5);
+}
+
+.swia-player-portal {
+  min-height: 100%;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.05)),
+    url("../images/bgSheet.jpg");
+  background-size: cover;
+  color: #2b1f14;
+  padding: 14px;
+}
+
+.swia-player-portal .portal-header {
+  margin-bottom: 12px;
+  border: 2px solid rgba(111, 87, 56, 0.6);
+  background: rgba(242, 228, 201, 0.92);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.swia-player-portal .portal-header h1 {
+  margin: 0;
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: #1f140b;
+}
+
+.swia-player-portal .portal-header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #4e3b26;
+}
+
+.swia-player-portal .portal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.swia-player-portal .portal-card {
+  position: relative;
+  border: 3px solid #8b6f47;
+  border-radius: 10px;
+  background: rgba(237, 224, 195, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.swia-player-portal .portal-actor-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.swia-player-portal .portal-card.type-ally {
+  border-color: #2a7a4f;
+}
+
+.swia-player-portal .portal-card.type-imperial {
+  border-color: #1a4a6b;
+}
+
+.swia-player-portal .portal-card.is-wounded {
+  box-shadow: 0 0 0 2px rgba(168, 35, 35, 0.45), 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.swia-player-portal .portal-card.is-mine {
+  outline: 3px solid #d49f34;
+  outline-offset: 1px;
+}
+
+.swia-player-portal .portal-open {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  background: rgba(43, 31, 20, 0.9);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.swia-player-portal .portal-open:hover {
+  background: #2a7a4f;
+}
+
+.swia-player-portal .my-tag {
+  display: inline-flex;
+  width: fit-content;
+  border: 1px solid #8a640a;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffdb84 0%, #c7931f 100%);
+  color: #2b1f14;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+}
+
+.swia-player-portal .identity {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.swia-player-portal .identity img {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 3px solid #8b6f47;
+  object-fit: cover;
+  background: #1b1b1b;
+}
+
+.swia-player-portal .identity-text h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.1;
+  color: #1f140b;
+}
+
+.swia-player-portal .type-row {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #5a4429;
+  font-weight: 700;
+}
+
+.swia-player-portal .activation-row {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #3a2b1a;
+}
+
+.swia-player-portal .activation-row.is-clickable .activation-token {
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.swia-player-portal .activation-row.is-clickable .activation-token:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.45));
+}
+
+.swia-player-portal .activation-row .activation-token {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+}
+
+.swia-player-portal .wounded-chip {
+  border: 1px solid #8d1e1e;
+  border-radius: 999px;
+  padding: 2px 7px;
+  color: #fff;
+  background: #a82323;
+}
+
+.swia-player-portal .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.swia-player-portal .stat-box {
+  border: 1px solid rgba(111, 87, 56, 0.45);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 6px;
+}
+
+.swia-player-portal .stat-box label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #5a4429;
+}
+
+.swia-player-portal .stat-box strong {
+  font-size: 14px;
+}
+
+.swia-player-portal .portal-bio {
+  border: 1px solid rgba(111, 87, 56, 0.35);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.42);
+  padding: 6px 8px;
+}
+
+.swia-player-portal .portal-bio h3 {
+  margin: 0 0 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #5a4429;
+}
+
+.swia-player-portal .portal-bio-content {
+  max-height: 96px;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #2f2114;
+}
+
+.swia-player-portal .portal-bio-content img {
+  max-width: 100%;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 4px;
+  border-radius: 3px;
+}
+
+.swia-player-portal .portal-bio-content figure {
+  display: inline-block;
+  margin: 0 4px;
+  vertical-align: middle;
+}
+
+.swia-player-portal .portal-bio-content figure img {
+  margin: 0;
+}
+
+.swia-player-portal .portal-bio-content p {
+  margin: 0 0 0.45em;
+}
+
+.swia-player-portal .portal-bio-content p:last-child {
+  margin-bottom: 0;
+}
+
+.swia-player-portal .dice-list {
+  display: grid;
+  gap: 5px;
+}
+
+.swia-companion-portal .portal-combat-row,
+.swia-imperial-portal .portal-combat-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+/* ===== Sidebar Tab Icon Overrides ===== */
+nav.tabs [data-tab="combat"]::before {
+  font-family: "Font Awesome 6 Pro" !important;
+  font-weight: 900 !important;
+  content: "\e4e9" !important; /* fa-explosion */
+}
+
+nav.tabs [data-tab="journal"]::before {
+  font-family: "Font Awesome 6 Pro" !important;
+  font-weight: 900 !important;
+  content: "\f66a" !important; /* fa-book-journal-whills */
+}
+
+nav.tabs [data-tab="items"]::before {
+  font-family: "Font Awesome 6 Pro" !important;
+  font-weight: 900 !important;
+  content: "\f468" !important; /* fa-boxes-stacked */
+}
+
+nav.tabs [data-tab="cards"]::before {
+  font-family: "Font Awesome 6 Pro" !important;
+  font-weight: 900 !important;
+  content: "\e4df" !important; /* fa-cards-blank */
+}
+
+.swia-player-portal .hero-dice-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+
+
+.swia-player-portal .hero-dice-row .hero-dice-line {
+  min-width: 0;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.swia-player-portal .hero-dice-row .hero-dice-line .dice-attr-icon {
+  min-width: auto;
+}
+
+.swia-player-portal .hero-dice-row .hero-dice-line .dice-attr-icon img {
+  width: 16px;
+  height: 16px;
+}
+
+.swia-player-portal .hero-dice-row .hero-dice-line .dice-blocks {
+  gap: 2px;
+  justify-content: center;
+}
+
+.swia-player-portal .hero-dice-row .hero-dice-line .dice-block {
+  width: 12px;
+  height: 12px;
+  border-width: 1px;
+  border-radius: 2px;
+}
+
+.swia-player-portal .dice-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #2f2114;
+}
+
+.swia-player-portal .dice-line label {
+  min-width: 64px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #5a4429;
+}
+
+.swia-player-portal .dice-line .dice-attr-icon {
+  min-width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swia-player-portal .dice-line .dice-attr-icon img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.swia-player-portal .dice-line span {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(111, 87, 56, 0.35);
+  border-radius: 4px;
+  padding: 1px 5px;
+  background: rgba(255, 255, 255, 0.45);
+  font-weight: 700;
+}
+
+.swia-player-portal .dice-line .dice-blocks {
+  border: none;
+  padding: 0;
+  background: transparent;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.swia-player-portal .dice-line .dice-block {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.swia-player-portal .dice-line .dice-block.black {
+  background: linear-gradient(135deg, #3a3a3a 0%, #1a1a1a 100%);
+  border-color: #0a0a0a;
+}
+
+.swia-player-portal .dice-line .dice-block.white {
+  background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+  border-color: #b0b0b0;
+}
+
+.swia-player-portal .dice-line .dice-block.red {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  border-color: #a12a1f;
+}
+
+.swia-player-portal .dice-line .dice-block.blue {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  border-color: #1c5d8f;
+}
+
+.swia-player-portal .dice-line .dice-block.green {
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  border-color: #1e8449;
+}
+
+.swia-player-portal .dice-line .dice-block.yellow {
+  background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+  border-color: #c87f0a;
+}
+
+.swia-player-portal .portal-inventory {
+  border: 1px solid rgba(111, 87, 56, 0.35);
+  border-radius: 8px;
+  background: rgba(237, 224, 195, 0.75);
+  padding: 8px;
+}
+
+.swia-player-portal .portal-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  align-items: start;
+}
+
+.swia-player-portal .portal-item-column {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 6px;
+  align-content: start;
+}
+
+.swia-player-portal .portal-item-column > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(111, 87, 56, 0.35);
+  padding-bottom: 3px;
+}
+
+.swia-player-portal .portal-item-column > header h3 {
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #5a4429;
+}
+
+.swia-player-portal .portal-item-column > header span {
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid rgba(90, 68, 41, 0.35);
+  border-radius: 999px;
+  padding: 1px 7px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.swia-player-portal .portal-drop-zone {
+  min-height: 80px;
+  max-height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  border: 1px dashed rgba(90, 68, 41, 0.35);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.33);
+  padding: 6px;
+  scroll-behavior: smooth;
+}
+
+.swia-player-portal .portal-drop-zone.can-drop {
+  border-color: rgba(42, 122, 79, 0.6);
+}
+
+.swia-player-portal .portal-card-stack {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.swia-player-portal .portal-item-card {
+  border: 1px solid rgba(111, 87, 56, 0.45);
+  border-radius: 6px;
+  background: rgba(238, 225, 196, 0.95);
+  overflow: hidden;
+}
+
+.swia-player-portal .portal-item-open {
+  display: block;
+  width: 100%;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: #1f1b16;
+  cursor: pointer;
+}
+
+.swia-player-portal .portal-item-open img {
+  width: 100%;
+  max-height: 110px;
+  object-fit: contain;
+  display: block;
+  background: #1f1b16;
+}
+
+.swia-portal-card-preview {
+  position: fixed;
+  z-index: 12000;
+  width: min(340px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  border: 2px solid rgba(111, 87, 56, 0.7);
+  border-radius: 8px;
+  background: #1f1b16;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.swia-portal-card-preview.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.swia-portal-card-preview img {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - 24px);
+  object-fit: contain;
+  display: block;
+  background: #1f1b16;
+}
+
+.swia-player-portal .portal-item-footer {
+  display: flex;
+  justify-content: center;
+  padding: 4px;
+}
+
+.swia-player-portal .portal-item-state {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  padding: 3px 4px;
+  text-transform: uppercase;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+}
+
+.swia-player-portal .portal-item-state:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.swia-player-portal .portal-item-state.state-ready {
+  background: #27ae60;
+  color: #fff;
+}
+
+.swia-player-portal .portal-item-state.state-exhausted {
+  background: #e67e22;
+  color: #fff;
+}
+
+.swia-player-portal .portal-item-state.state-depleted {
+  background: #c0392b;
+  color: #fff;
+}
+
+.swia-player-portal .portal-col-empty {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.3;
+  color: #5a4429;
+  font-style: italic;
+}
+
+.swia-player-portal .portal-empty {
+  margin: 12px 0 0;
+  border: 2px dashed rgba(90, 68, 41, 0.4);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.45);
+  color: #5a4429;
+  padding: 14px;
+  font-style: italic;
+  text-align: center;
+}
+
+@media (max-width: 1500px) {
+  .swia-player-portal .portal-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  .swia-player-portal .portal-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .swia-player-portal .portal-inventory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .swia-player-portal {
+    padding: 10px;
+  }
+
+  .swia-player-portal .portal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .swia-player-portal .portal-inventory-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .swia-player-portal .portal-open {
+    position: static;
+    justify-self: end;
+  }
+
+  .swia-companion-portal .portal-combat-row,
+  .swia-imperial-portal .portal-combat-row {
+    grid-template-columns: 1fr;
+  }
 }
