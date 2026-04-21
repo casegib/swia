@@ -44,6 +44,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     actions: {
       // Combat state toggles
       toggleWounded: SWIAActorSheet.prototype._onToggleWounded,
+      toggleDefeated: SWIAActorSheet.prototype._onToggleDefeated,
       toggleActivated: SWIAActorSheet.prototype._onToggleActivated,
       toggleEdit: SWIAActorSheet.prototype._onToggleEdit,
       toggleSectionCollapse: SWIAActorSheet.prototype._onToggleSectionCollapse,
@@ -55,9 +56,15 @@ export class SWIAActorSheet extends BaseActorSheet {
       openItem: SWIAActorSheet.prototype._onOpenItem,
       deleteItem: SWIAActorSheet.prototype._onDeleteItem,
       cycleItemState: SWIAActorSheet.prototype._onCycleItemState,
-      addWeaponAttachment: SWIAActorSheet.prototype._onAddWeaponAttachment,
-      removeWeaponAttachment: SWIAActorSheet.prototype._onRemoveWeaponAttachment,
-      cycleWeaponAttachmentState: SWIAActorSheet.prototype._onCycleWeaponAttachmentState
+      setAttackType: SWIAActorSheet.prototype._onSetAttackType,
+      // Imperial/ally list management
+      addSurgeAbility: SWIAActorSheet.prototype._onAddSurgeAbility,
+      removeSurgeAbility: SWIAActorSheet.prototype._onRemoveSurgeAbility,
+      addSpecialAbility: SWIAActorSheet.prototype._onAddSpecialAbility,
+      removeSpecialAbility: SWIAActorSheet.prototype._onRemoveSpecialAbility,
+      // Hero ability list management
+      addHeroAbility: SWIAActorSheet.prototype._onAddHeroAbility,
+      removeHeroAbility: SWIAActorSheet.prototype._onRemoveHeroAbility
     }
   };
 
@@ -174,12 +181,28 @@ export class SWIAActorSheet extends BaseActorSheet {
     });
 
     let enrichedWoundedBiography = "";
+    let enrichedHeroAbilities = [];
+    let enrichedWoundedHeroAbilities = [];
     if (actor.type === "hero") {
       enrichedWoundedBiography = await TextEditorClass.enrichHTML(system.woundedBiography || "", {
         async: true,
         secrets: actor.isOwner,
         relativeTo: actor
       });
+      enrichedHeroAbilities = await Promise.all(
+        (Array.isArray(system.heroAbilities) ? system.heroAbilities : Object.values(system.heroAbilities ?? {})).map(async (a, i) => ({
+          ...a,
+          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
+          index: i
+        }))
+      );
+      enrichedWoundedHeroAbilities = await Promise.all(
+        (Array.isArray(system.woundedHeroAbilities) ? system.woundedHeroAbilities : Object.values(system.woundedHeroAbilities ?? {})).map(async (a, i) => ({
+          ...a,
+          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
+          index: i
+        }))
+      );
     }
     
     // Collect owned items grouped by type
@@ -192,6 +215,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       actor: actor,
       systemData: system,
       isWounded: isWounded,
+      isDefeated: system.state?.defeated ?? false,
       isActivated: system.state?.activated ?? false,
       isGM: game.user?.isGM ?? false,
       editMode: this._editMode ?? false,
@@ -204,6 +228,8 @@ export class SWIAActorSheet extends BaseActorSheet {
       woundedTokenPreviewSrc,
       enrichedBiography: enrichedBiography,
       enrichedWoundedBiography: enrichedWoundedBiography,
+      enrichedHeroAbilities: enrichedHeroAbilities,
+      enrichedWoundedHeroAbilities: enrichedWoundedHeroAbilities,
       abilities: abilities,
       weapons: weapons,
       gear: gear,
@@ -268,12 +294,28 @@ export class SWIAActorSheet extends BaseActorSheet {
     });
 
     let enrichedWoundedBiography = "";
+    let enrichedHeroAbilities = [];
+    let enrichedWoundedHeroAbilities = [];
     if (data.actor.type === "hero") {
       enrichedWoundedBiography = await TextEditorClass.enrichHTML(system.woundedBiography || "", {
         async: true,
         secrets: data.actor.isOwner,
         relativeTo: data.actor
       });
+      enrichedHeroAbilities = await Promise.all(
+        (Array.isArray(system.heroAbilities) ? system.heroAbilities : Object.values(system.heroAbilities ?? {})).map(async (a, i) => ({
+          ...a,
+          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
+          index: i
+        }))
+      );
+      enrichedWoundedHeroAbilities = await Promise.all(
+        (Array.isArray(system.woundedHeroAbilities) ? system.woundedHeroAbilities : Object.values(system.woundedHeroAbilities ?? {})).map(async (a, i) => ({
+          ...a,
+          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
+          index: i
+        }))
+      );
     }
 
     // Collect owned items grouped by type
@@ -284,6 +326,7 @@ export class SWIAActorSheet extends BaseActorSheet {
 
     data.systemData = system;
     data.isWounded = isWounded;
+    data.isDefeated = system.state?.defeated ?? false;
     data.isActivated = system.state?.activated ?? false;
     data.isGM = game.user?.isGM ?? false;
     data.editMode = this._editMode ?? false;
@@ -296,6 +339,8 @@ export class SWIAActorSheet extends BaseActorSheet {
     data.woundedTokenPreviewSrc = woundedTokenPreviewSrc;
     data.enrichedBiography = enrichedBiography;
     data.enrichedWoundedBiography = enrichedWoundedBiography;
+    data.enrichedHeroAbilities = enrichedHeroAbilities;
+    data.enrichedWoundedHeroAbilities = enrichedWoundedHeroAbilities;
     data.abilities = abilities;
     data.weapons = weapons;
     data.gear = gear;
@@ -333,6 +378,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     if (isV2) return;
     // Bind wounded toggle for all users
     html.find("[data-action='toggleWounded']").on("change", this._onToggleWounded.bind(this));
+    html.find("[data-action='toggleDefeated']").on("change", this._onToggleDefeated.bind(this));
     // Bind activation token click for all users
     html.find("[data-action='toggleActivated']").on("click", this._onToggleActivated.bind(this));
     // Bind edit toggle only for GM
@@ -354,9 +400,17 @@ export class SWIAActorSheet extends BaseActorSheet {
     html.find("[data-action='openItem']").on("click", this._onOpenItem.bind(this));
     html.find("[data-action='deleteItem']").on("click", this._onDeleteItem.bind(this));
     html.find("[data-action='cycleItemState']").on("click", this._onCycleItemState.bind(this));
-    html.find("[data-action='addWeaponAttachment']").on("click", this._onAddWeaponAttachment.bind(this));
-    html.find("[data-action='removeWeaponAttachment']").on("click", this._onRemoveWeaponAttachment.bind(this));
-    html.find("[data-action='cycleWeaponAttachmentState']").on("click", this._onCycleWeaponAttachmentState.bind(this));
+    html.find("[data-action='setAttackType']").on("click", this._onSetAttackType.bind(this));
+    // Imperial/ally list actions (V1)
+    html.find("[data-action='addSurgeAbility']").on("click", this._onAddSurgeAbility.bind(this));
+    html.find("[data-action='removeSurgeAbility']").on("click", this._onRemoveSurgeAbility.bind(this));
+    html.find("[data-action='addSpecialAbility']").on("click", this._onAddSpecialAbility.bind(this));
+    html.find("[data-action='removeSpecialAbility']").on("click", this._onRemoveSpecialAbility.bind(this));
+    html.find("[data-action='addHeroAbility']").on("click", this._onAddHeroAbility.bind(this));
+    html.find("[data-action='removeHeroAbility']").on("click", this._onRemoveHeroAbility.bind(this));
+    // Surge/special ability field editing (V1) - bypass form submission for array fields
+    html.on("change", ".surge-ability-entry input", this._onSurgeAbilityChange.bind(this));
+    html.on("change", ".special-ability-entry input, .special-ability-entry textarea", this._onSpecialAbilityChange.bind(this));
     // Inventory panel tab switching (V1)
     html.find(".inv-tab-btn").on("click", this._onToggleInventoryPanel.bind(this));
   }
@@ -388,6 +442,16 @@ export class SWIAActorSheet extends BaseActorSheet {
     const isChecked = Boolean(checkbox?.checked);
     const nextTokenSrc = isChecked ? this._getWoundedTokenSrc(actor) : this._getHealthyTokenSrc(actor);
     const update = { "system.state.wounded": isChecked };
+    if (!isChecked) update["system.state.defeated"] = false;
+
+    // Reset the active health pool to its maximum when toggling between states
+    if (isChecked) {
+      const wMax = actor.system.woundedAttributes?.health?.max ?? actor.system.woundedAttributes?.health?.value ?? 0;
+      update["system.woundedAttributes.health.value"] = wMax;
+    } else {
+      const hMax = actor.system.attributes?.health?.max ?? actor.system.attributes?.health?.value ?? 0;
+      update["system.attributes.health.value"] = hMax;
+    }
 
     if (nextTokenSrc) {
       update["prototypeToken.texture.src"] = nextTokenSrc;
@@ -406,6 +470,17 @@ export class SWIAActorSheet extends BaseActorSheet {
     }
   }
 
+  // Toggle defeated state (heroes only, only valid when wounded)
+  async _onToggleDefeated(event, target) {
+    const actor = this.document ?? this.actor;
+    if (!actor || actor.type !== "hero") return;
+    if (!actor.system.state?.wounded) return;
+
+    const checkbox = target ?? event?.currentTarget;
+    const isChecked = Boolean(checkbox?.checked);
+    await actor.update({ "system.state.defeated": isChecked });
+  }
+
   // Toggle activation state (all actor types)
   async _onToggleActivated(event, target) {
     event.preventDefault();
@@ -413,6 +488,17 @@ export class SWIAActorSheet extends BaseActorSheet {
     
     const currentState = actor.system.state?.activated ?? false;
     await actor.update({ "system.state.activated": !currentState });
+  }
+
+  // Set attack type (ranged/melee) for ally and imperial actors
+  async _onSetAttackType(event, target) {
+    event.preventDefault();
+    const actor = this.document ?? this.actor;
+    if (!actor || (actor.type !== "ally" && actor.type !== "villain")) return;
+    const el = target ?? event?.currentTarget;
+    const type = el?.dataset?.value;
+    if (!type) return;
+    await actor.update({ "system.attributes.attackType": type });
   }
 
   _onToggleSectionCollapse(event, target) {
@@ -468,73 +554,6 @@ export class SWIAActorSheet extends BaseActorSheet {
     const current = item.system.cardState || "ready";
     const cycle = { ready: "exhausted", exhausted: "depleted", depleted: "ready" };
     await item.update({ "system.cardState": cycle[current] || "ready" });
-  }
-
-  async _onAddWeaponAttachment(event, target) {
-    event?.preventDefault?.();
-    if (!this._editMode) return;
-
-    const el = target ?? event?.currentTarget;
-    const itemId = el?.closest("[data-item-id]")?.dataset?.itemId;
-    if (!itemId) return;
-
-    const actor = this.document ?? this.actor;
-    const weapon = actor?.items?.get(itemId);
-    if (!weapon || weapon.type !== "weapon") return;
-
-    const attachments = Array.isArray(weapon.system.attachments) ? [...weapon.system.attachments] : [];
-
-    attachments.push({
-      name: game.i18n.localize("SWIA.Item.Weapon.NewAttachment"),
-      description: "",
-      img: "",
-      cardState: "ready"
-    });
-    await weapon.update({ "system.attachments": attachments });
-  }
-
-  async _onCycleWeaponAttachmentState(event, target) {
-    event?.preventDefault?.();
-
-    const el = target ?? event?.currentTarget;
-    const itemId = el?.closest("[data-item-id]")?.dataset?.itemId;
-    const index = Number(el?.dataset?.index);
-    if (!itemId || Number.isNaN(index)) return;
-
-    const actor = this.document ?? this.actor;
-    const weapon = actor?.items?.get(itemId);
-    if (!weapon || weapon.type !== "weapon") return;
-
-    const attachments = Array.isArray(weapon.system.attachments) ? [...weapon.system.attachments] : [];
-    if (!attachments[index]) return;
-
-    const current = attachments[index].cardState || "ready";
-    const cycle = { ready: "exhausted", exhausted: "depleted", depleted: "ready" };
-    attachments[index] = {
-      ...attachments[index],
-      cardState: cycle[current] || "ready"
-    };
-
-    await weapon.update({ "system.attachments": attachments });
-  }
-
-  async _onRemoveWeaponAttachment(event, target) {
-    event?.preventDefault?.();
-    if (!this._editMode) return;
-
-    const el = target ?? event?.currentTarget;
-    const itemId = el?.closest("[data-item-id]")?.dataset?.itemId;
-    const index = Number(el?.dataset?.index);
-    if (!itemId || Number.isNaN(index)) return;
-
-    const actor = this.document ?? this.actor;
-    const weapon = actor?.items?.get(itemId);
-    if (!weapon || weapon.type !== "weapon") return;
-
-    const attachments = Array.isArray(weapon.system.attachments) ? weapon.system.attachments : [];
-    const nextAttachments = attachments.filter((_, attachmentIndex) => attachmentIndex !== index);
-
-    await weapon.update({ "system.attachments": nextAttachments });
   }
 
   // Open file picker for image selection (edit mode only)
@@ -707,21 +726,35 @@ export class SWIAActorSheet extends BaseActorSheet {
    */
   async _saveFormData() {
     const formData = this._collectFormData();
-    const expanded = foundry.utils.expandObject(formData ?? {});
-    const update = {};
+    if (!formData || Object.keys(formData).length === 0) return;
 
-    if (formData?.name !== undefined) update.name = formData.name;
-    else if (expanded.name !== undefined) update.name = expanded.name;
-
-    if (expanded.system !== undefined) update.system = expanded.system;
-
-    if (Object.keys(update).length === 0) return;
-    
     const actor = this.document ?? this.actor;
     if (!actor) return;
-    
+
+    // Strip out dot-notation array-indexed keys (e.g. "system.attributes.surgeAbilities.0.cost").
+    // Passing these flat to actor.update causes Foundry's internal expandObject to produce a plain
+    // object like { "0": {...} } instead of a real JS array, which breaks .length checks in the
+    // template. Instead, save those array fields via their dedicated handlers which build proper arrays.
+    const ARRAY_PATH_PATTERNS = [
+      /^system\.attributes\.surgeAbilities\.\d+\./,
+      /^system\.specialAbilities\.\d+\./,
+      /^system\.heroAbilities\.\d+\./,
+      /^system\.woundedHeroAbilities\.\d+\./,
+    ];
+
+    const scalarData = {};
+    for (const [key, value] of Object.entries(formData)) {
+      if (!ARRAY_PATH_PATTERNS.some(re => re.test(key))) {
+        scalarData[key] = value;
+      }
+    }
+
     try {
-      await actor.update(update);
+      if (Object.keys(scalarData).length > 0) await actor.update(scalarData);
+      // Re-save array fields as proper arrays from the current DOM.
+      // Only for actor types that own these fields.
+      if (actor.type === "villain" || actor.type === "ally") await this._onSurgeAbilityChange(null);
+      if (actor.type === "villain") await this._onSpecialAbilityChange(null);
     } catch (err) {
       console.error("SWIA: Failed to save form data", err);
     }
@@ -797,5 +830,183 @@ export class SWIAActorSheet extends BaseActorSheet {
     });
     
     return result;
+  }
+
+  // V1: Intercept item drops dispatched by ActorSheet._onDrop
+  async _onDropItem(event, data) {
+    if (await this._interceptHeroAbilityDrop(data)) return;
+    return super._onDropItem(event, data);
+  }
+
+  // V2: Intercept change events for surge/special ability inputs and save directly
+  // This bypasses V2's native form submission which can fail for nested array fields
+  _onChangeForm(formConfig, event) {
+    if (event.target?.closest(".surge-ability-entry")) {
+      this._onSurgeAbilityChange(event);
+      return;
+    }
+    if (event.target?.closest(".special-ability-entry")) {
+      this._onSpecialAbilityChange(event);
+      return;
+    }
+    super._onChangeForm(formConfig, event);
+  }
+
+  // V2: Attach a native drop listener after each render
+  _onRender(context, options) {
+    if (typeof super._onRender === "function") super._onRender(context, options);
+    if (!isV2) return;
+    const el = this.element;
+    if (!el || el._swiaHeroDropBound) return;
+    el._swiaHeroDropBound = true;
+    el.addEventListener("drop", async (event) => {
+      let data;
+      try { data = JSON.parse(event.dataTransfer.getData("text/plain")); } catch { return; }
+      if (data?.type !== "Item") return;
+      await this._interceptHeroAbilityDrop(data);
+    });
+  }
+
+  // Shared: resolve dropped item, push onto the correct heroAbilities field
+  async _interceptHeroAbilityDrop(data) {
+    const actor = this.document ?? this.actor;
+    if (actor?.type !== "hero") return false;
+
+    let item;
+    try { item = data?.uuid ? await fromUuid(data.uuid) : null; } catch { return false; }
+    if (item?.type !== "heroability") return false;
+
+    const isWounded = actor.system.state?.wounded ?? false;
+    const field = isWounded ? "woundedHeroAbilities" : "heroAbilities";
+    const raw = foundry.utils.deepClone(actor.system[field] ?? []);
+    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    current.push({
+      name: item.name,
+      description: item.system.abilityText ?? item.system.description ?? "",
+      sourceUuid: item.uuid
+    });
+    await actor.update({ [`system.${field}`]: current });
+    return true;
+  }
+
+  // Add a blank hero ability (healthy or wounded)
+  async _onAddHeroAbility(event, target) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor || actor.type !== "hero") return;
+    const el = target ?? event?.currentTarget;
+    const field = el?.dataset?.field ?? "heroAbilities";
+    const raw = foundry.utils.deepClone(actor.system[field] ?? []);
+    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    current.push({ name: "", description: "" });
+    await actor.update({ [`system.${field}`]: current });
+  }
+
+  // Remove a hero ability by index (healthy or wounded)
+  async _onRemoveHeroAbility(event, target) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor || actor.type !== "hero") return;
+    const el = target ?? event?.currentTarget;
+    const field = el?.dataset?.field ?? "heroAbilities";
+    const idx = parseInt(el?.dataset?.index ?? "-1", 10);
+    if (idx < 0) return;
+    const raw = foundry.utils.deepClone(actor.system[field] ?? []);
+    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    current.splice(idx, 1);
+    await actor.update({ [`system.${field}`]: current });
+  }
+
+  // Add a blank surge ability to villain or ally
+  async _onAddSurgeAbility(event, target) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor || (actor.type !== "villain" && actor.type !== "ally")) return;
+    const raw = foundry.utils.deepClone(actor.system.attributes?.surgeAbilities ?? []);
+    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    current.push({ cost: 1, effectText: "" });
+    await actor.update({ "system.attributes.surgeAbilities": current });
+  }
+
+  // Remove a surge ability by index from villain or ally
+  async _onRemoveSurgeAbility(event, target) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor || (actor.type !== "villain" && actor.type !== "ally")) return;
+    const el = target ?? event?.currentTarget;
+    const idx = parseInt(el?.dataset?.index ?? "-1", 10);
+    if (idx < 0) return;
+    const raw = foundry.utils.deepClone(actor.system.attributes?.surgeAbilities ?? []);
+    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    current.splice(idx, 1);
+    await actor.update({ "system.attributes.surgeAbilities": current });
+  }
+
+  // Save surge ability fields when any input changes (V1 + V2 fallback)
+  async _onSurgeAbilityChange(event) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor) return;
+    // V2: this.element is a raw DOM element; V1: this.element is a jQuery collection
+    const sheetEl = this.element instanceof Element ? this.element : this.element?.[0];
+    const container = event?.target?.closest("form") ?? this.form ?? sheetEl;
+    if (!container) return;
+    const entries = container.querySelectorAll(".surge-ability-entry");
+    const updated = [];
+    entries.forEach(entry => {
+      const costInput = entry.querySelector("input.surge-cost-input");
+      const effectInput = entry.querySelector("input.surge-effect-input");
+      updated.push({
+        cost: costInput ? (Number(costInput.value) || 1) : 1,
+        effectText: effectInput?.value ?? ""
+      });
+    });
+    await actor.update({ "system.attributes.surgeAbilities": updated });
+  }
+
+  // Save special ability fields when any input changes (V1 + V2 fallback)
+  async _onSpecialAbilityChange(event) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor) return;
+    const sheetEl = this.element instanceof Element ? this.element : this.element?.[0];
+    const container = event?.target?.closest("form") ?? this.form ?? sheetEl;
+    if (!container) return;
+    const entries = container.querySelectorAll(".special-ability-entry");
+    const updated = [];
+    entries.forEach(entry => {
+      const nameInput = entry.querySelector("input.special-ability-name");
+      const descInput = entry.querySelector("textarea.special-ability-desc");
+      updated.push({
+        name: nameInput?.value ?? "",
+        description: descInput?.value ?? ""
+      });
+    });
+    await actor.update({ "system.specialAbilities": updated });
+  }
+
+  // Add a blank special ability to villain
+  async _onAddSpecialAbility(event, target) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor || actor.type !== "villain") return;
+    const raw = foundry.utils.deepClone(actor.system.specialAbilities ?? []);
+    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    current.push({ name: "", description: "" });
+    await actor.update({ "system.specialAbilities": current });
+  }
+
+  // Remove a special ability by index from villain
+  async _onRemoveSpecialAbility(event, target) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor || actor.type !== "villain") return;
+    const el = target ?? event?.currentTarget;
+    const idx = parseInt(el?.dataset?.index ?? "-1", 10);
+    if (idx < 0) return;
+    const raw = foundry.utils.deepClone(actor.system.specialAbilities ?? []);
+    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    current.splice(idx, 1);
+    await actor.update({ "system.specialAbilities": current });
   }
 }

@@ -87,8 +87,6 @@ export class SWIAPlayerPortal extends BaseApplication {
     const actors = await Promise.all(orderedActors.map(actor => this._toPortalActor(actor)));
 
     return {
-      title: game.i18n.localize("SWIA.Portal.Title"),
-      subtitle: game.i18n.localize("SWIA.Portal.Subtitle"),
       actors,
       hasActors: actors.length > 0
     };
@@ -134,6 +132,11 @@ export class SWIAPlayerPortal extends BaseApplication {
       // Ownership or GM/player toggles can change portal visibility/order.
       this._queueRefresh();
     });
+
+    watch("updateSetting", (setting) => {
+      if (setting?.key !== `swia.${CAMPAIGN_RESOURCES_KEY}`) return;
+      this._queueRefresh();
+    });
   }
 
   _unregisterSyncHooks() {
@@ -149,7 +152,7 @@ export class SWIAPlayerPortal extends BaseApplication {
   }
 
   _isPortalActor(actor) {
-    return ["hero", "imperial", "ally"].includes(actor?.type);
+    return ["hero", "villain", "ally"].includes(actor?.type);
   }
 
   _isPortalItem(item) {
@@ -195,7 +198,7 @@ export class SWIAPlayerPortal extends BaseApplication {
     };
 
     return (game.actors?.contents ?? [])
-      .filter(actor => ["hero", "imperial", "ally"].includes(actor.type))
+      .filter(actor => ["hero", "villain", "ally"].includes(actor.type))
       .filter(actor => isPlayerActor(actor))
       .sort((a, b) => {
         const mineDelta = Number(isMine(b)) - Number(isMine(a));
@@ -208,6 +211,10 @@ export class SWIAPlayerPortal extends BaseApplication {
     const system = actor.system ?? {};
     const isHero = actor.type === "hero";
     const isWounded = isHero && (system.state?.wounded ?? false);
+    const isDefeated = isHero && isWounded && (system.state?.defeated ?? false);
+    const tokenImage = isWounded
+      ? (system.woundedTokenImage || actor.prototypeToken?.texture?.src || actor.img)
+      : (actor.prototypeToken?.texture?.src || actor.img);
     const isActivated = system.state?.activated ?? false;
     const currentAttributes = isWounded
       ? (system.woundedAttributes ?? system.attributes ?? {})
@@ -244,25 +251,35 @@ export class SWIAPlayerPortal extends BaseApplication {
       };
     };
 
-    const biographySource = (isHero && isWounded)
-      ? (system.woundedBiography || system.biography || "")
-      : (system.biography || "");
-
     const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
-    const enrichedBiography = await TextEditorClass.enrichHTML(biographySource, {
-      async: true,
-      secrets: actor.isOwner,
-      relativeTo: actor
-    });
+
+    let enrichedHeroAbilities = [];
+    if (isHero) {
+      const abilitiesSource = isWounded
+        ? (Array.isArray(system.woundedHeroAbilities) ? system.woundedHeroAbilities : Object.values(system.woundedHeroAbilities ?? {}))
+        : (Array.isArray(system.heroAbilities) ? system.heroAbilities : Object.values(system.heroAbilities ?? {}));
+      enrichedHeroAbilities = await Promise.all(
+        abilitiesSource.map(async (a) => ({
+          name: a.name || "",
+          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", {
+            async: true,
+            secrets: actor.isOwner,
+            relativeTo: actor
+          })
+        }))
+      );
+    }
 
     return {
       id: actor.id,
       name: actor.name,
       img: actor.img,
+      tokenImage,
       type: actor.type,
       typeLabel: game.i18n.localize(`SWIA.Actor.${actor.type.charAt(0).toUpperCase()}${actor.type.slice(1)}`),
       isHero,
       isWounded,
+      isDefeated,
       isActivated,
       isMine,
       canManage,
@@ -276,8 +293,7 @@ export class SWIAPlayerPortal extends BaseApplication {
       strength,
       insight,
       tech,
-      enrichedBiography,
-      hasBiography: !!biographySource?.trim(),
+      enrichedHeroAbilities,
       defenseBlackDice: Array.from({ length: defense.black || 0 }, (_, i) => i),
       defenseWhiteDice: Array.from({ length: defense.white || 0 }, (_, i) => i),
       attackRedDice: Array.from({ length: attack.red || 0 }, (_, i) => i),

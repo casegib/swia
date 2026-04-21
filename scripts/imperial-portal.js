@@ -7,6 +7,7 @@ const BaseApplication = BaseApplicationV2 && HandlebarsApplicationMixin
   : BaseApplicationV1;
 
 const isV2 = !!(BaseApplicationV2 && HandlebarsApplicationMixin);
+const IMPERIAL_PORTAL_WORLD_ITEM_TYPES = ["agendacard", "imperialclasscard"];
 
 export class SWIAImperialPortal extends BaseApplication {
   static DEFAULT_OPTIONS = {
@@ -25,7 +26,8 @@ export class SWIAImperialPortal extends BaseApplication {
       openActor: SWIAImperialPortal.prototype._onOpenActor,
       toggleActivated: SWIAImperialPortal.prototype._onToggleActivated,
       openItem: SWIAImperialPortal.prototype._onOpenItem,
-      cycleItemState: SWIAImperialPortal.prototype._onCycleItemState
+      cycleItemState: SWIAImperialPortal.prototype._onCycleItemState,
+      removeImperialCard: SWIAImperialPortal.prototype._onRemoveImperialCard
     }
   };
 
@@ -85,12 +87,26 @@ export class SWIAImperialPortal extends BaseApplication {
   async _buildContext() {
     const orderedActors = this._getOrderedImperialActors();
     const actors = await Promise.all(orderedActors.map(actor => this._toPortalActor(actor)));
+    const worldItems = game.items?.contents ?? [];
+    const agendaCards = worldItems
+      .filter(item => item.type === "agendacard")
+      .sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang, { sensitivity: "base" }))
+      .map(item => this._toPortalItem(item));
+    const imperialClassCards = worldItems
+      .filter(item => item.type === "imperialclasscard")
+      .sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang, { sensitivity: "base" }))
+      .map(item => this._toPortalItem(item));
 
     return {
-      title: game.i18n.localize("SWIA.Portal.Imperial.Title"),
-      subtitle: game.i18n.localize("SWIA.Portal.Imperial.Subtitle"),
       actors,
-      hasActors: actors.length > 0
+      hasActors: actors.length > 0,
+      canManageImperialCards: Boolean(game.user?.isGM),
+      agendaCards,
+      imperialClassCards,
+      agendaCount: agendaCards.length,
+      imperialClassCount: imperialClassCards.length,
+      hasAgendaCards: agendaCards.length > 0,
+      hasImperialClassCards: imperialClassCards.length > 0
     };
   }
 
@@ -134,6 +150,16 @@ export class SWIAImperialPortal extends BaseApplication {
       // Ownership or GM/player toggles can change portal visibility/order.
       this._queueRefresh();
     });
+
+    watch("updateSetting", (setting) => {
+      if (setting?.key !== `swia.${CAMPAIGN_RESOURCES_KEY}`) return;
+      this._queueRefresh();
+    });
+
+    watch("createToken", () => this._queueRefresh());
+    watch("deleteToken", () => this._queueRefresh());
+    watch("updateToken", () => this._queueRefresh());
+    watch("canvasReady", () => this._queueRefresh());
   }
 
   _unregisterSyncHooks() {
@@ -149,14 +175,32 @@ export class SWIAImperialPortal extends BaseApplication {
   }
 
   _isPortalActor(actor) {
-    return actor?.type === "imperial";
+    return actor?.type === "villain";
   }
 
   _isPortalItem(item) {
+    if (IMPERIAL_PORTAL_WORLD_ITEM_TYPES.includes(item?.type) && item.parent?.documentName !== "Actor") {
+      return true;
+    }
     if (!item?.parent) return false;
     if (item.parent.documentName !== "Actor") return false;
     if (!["weapon", "classcard", "gear"].includes(item.type)) return false;
     return this._isPortalActor(item.parent);
+  }
+
+  _toPortalItem(item) {
+    const state = item.system?.cardState || "ready";
+    const normalizedState = ["ready", "exhausted", "depleted"].includes(state) ? state : "ready";
+    const stateLabelKey = `SWIA.Item.CardState.${normalizedState.charAt(0).toUpperCase()}${normalizedState.slice(1)}`;
+
+    return {
+      id: item.id,
+      name: item.name,
+      img: item.img,
+      type: item.type,
+      state: normalizedState,
+      stateLabel: game.i18n.localize(stateLabelKey)
+    };
   }
 
   _queueRefresh() {
@@ -175,7 +219,7 @@ export class SWIAImperialPortal extends BaseApplication {
 
   _getOrderedImperialActors() {
     return (game.actors?.contents ?? [])
-      .filter(actor => actor.type === "imperial")
+      .filter(actor => actor.type === "villain")
       .sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang, { sensitivity: "base" }));
   }
 
@@ -193,6 +237,7 @@ export class SWIAImperialPortal extends BaseApplication {
     const speed = currentAttributes.speed ?? system.attributes?.speed ?? 0;
     const defense = system.attributes?.defense ?? { black: 0, white: 0 };
     const attack = system.attributes?.attack ?? { red: 0, blue: 0, green: 0, yellow: 0 };
+    const attackType = system.attributes?.attackType ?? "ranged";
     const strength = currentAttributes.strength ?? { red: 0, blue: 0, green: 0, yellow: 0 };
     const insight = currentAttributes.insight ?? { red: 0, blue: 0, green: 0, yellow: 0 };
     const tech = currentAttributes.tech ?? { red: 0, blue: 0, green: 0, yellow: 0 };
@@ -252,8 +297,30 @@ export class SWIAImperialPortal extends BaseApplication {
       techBlueDice: Array.from({ length: tech.blue || 0 }, (_, i) => i),
       techGreenDice: Array.from({ length: tech.green || 0 }, (_, i) => i),
       techYellowDice: Array.from({ length: tech.yellow || 0 }, (_, i) => i),
-      hasAttack: actor.type !== "hero"
+      hasAttack: actor.type !== "hero",
+      attackType,
+      groupSize: system.groupSize ?? 1,
+      sceneTokens: this._getSceneTokensForActor(actor)
     };
+  }
+
+  _getSceneTokensForActor(actor) {
+    const tokenDocs = (game.scenes?.active?.tokens?.contents ?? [])
+      .filter(t => t.actorId === actor.id);
+    return tokenDocs.map((tokenDoc, index) => {
+      const tokenActor = tokenDoc.actor ?? actor;
+      const health = tokenActor.system?.attributes?.health ?? { value: 0, max: 10 };
+      const maxHealth = health.max || 1;
+      const currentHealth = health.value ?? 0;
+      const pct = Math.max(0, Math.min(100, Math.round((currentHealth / maxHealth) * 100)));
+      return {
+        id: tokenDoc.id,
+        name: tokenDoc.name || `${actor.name} ${index + 1}`,
+        img: tokenDoc.texture?.src || actor.prototypeToken?.texture?.src || actor.img,
+        health: { value: currentHealth, max: health.max, pct },
+        isDefeated: currentHealth <= 0
+      };
+    });
   }
 
   activateListeners(html) {
@@ -263,6 +330,7 @@ export class SWIAImperialPortal extends BaseApplication {
     html.find("[data-action='toggleActivated']").on("click", this._onToggleActivated.bind(this));
     html.find("[data-action='openItem']").on("click", this._onOpenItem.bind(this));
     html.find("[data-action='cycleItemState']").on("click", this._onCycleItemState.bind(this));
+    html.find("[data-action='removeImperialCard']").on("click", this._onRemoveImperialCard.bind(this));
 
     html.find(".portal-drop-zone")
       .on("dragover", this._onPortalDragOver.bind(this))
@@ -458,7 +526,14 @@ export class SWIAImperialPortal extends BaseApplication {
     const el = target ?? event.currentTarget;
     const actorId = el?.dataset?.actorId;
     const itemId = el?.dataset?.itemId;
-    if (!actorId || !itemId) return;
+    if (!itemId) return;
+
+    if (!actorId) {
+      const worldItem = game.items?.get(itemId);
+      if (!worldItem?.sheet) return;
+      worldItem.sheet.render(true);
+      return;
+    }
 
     const actor = game.actors?.get(actorId);
     const item = actor?.items?.get(itemId);
@@ -474,18 +549,54 @@ export class SWIAImperialPortal extends BaseApplication {
     const el = target ?? event.currentTarget;
     const actorId = el?.dataset?.actorId;
     const itemId = el?.dataset?.itemId;
-    if (!actorId || !itemId) return;
-
-    const actor = game.actors?.get(actorId);
-    if (!actor) return;
+    if (!itemId) return;
     if (!game.user?.isGM) return;
 
-    const item = actor.items?.get(itemId);
+    const item = actorId
+      ? game.actors?.get(actorId)?.items?.get(itemId)
+      : game.items?.get(itemId);
     if (!item) return;
 
     const current = item.system?.cardState || "ready";
     const cycle = { ready: "exhausted", exhausted: "depleted", depleted: "ready" };
     await item.update({ "system.cardState": cycle[current] || "ready" });
+  }
+
+  async _onRemoveImperialCard(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const el = target ?? event.currentTarget;
+    const itemId = el?.dataset?.itemId;
+    if (!itemId) return;
+    if (!game.user?.isGM) return;
+
+    const item = game.items?.get(itemId);
+    if (!item || !IMPERIAL_PORTAL_WORLD_ITEM_TYPES.includes(item.type)) return;
+
+    const DialogClass = foundry?.applications?.api?.DialogV2;
+    const title = game.i18n.localize("SWIA.Portal.Imperial.RemoveCardTitle");
+    const message = game.i18n.format("SWIA.Portal.Imperial.RemoveCardPrompt", { name: item.name });
+
+    let confirmed = false;
+    if (DialogClass?.confirm) {
+      confirmed = await DialogClass.confirm({
+        window: { title },
+        content: `<p>${message}</p>`,
+        rejectClose: false
+      });
+    } else {
+      confirmed = await Dialog.confirm({
+        title,
+        content: `<p>${message}</p>`,
+        yes: () => true,
+        no: () => false,
+        defaultYes: false
+      });
+    }
+
+    if (!confirmed) return;
+    await item.delete();
   }
 
   _onPortalDragOver(event) {
@@ -502,10 +613,9 @@ export class SWIAImperialPortal extends BaseApplication {
     const target = event.currentTarget;
     const actorId = target?.dataset?.actorId;
     const expectedType = target?.dataset?.itemType;
-    if (!actorId || !expectedType) return;
+    const expectedWorldType = target?.dataset?.worldItemType;
 
-    const actor = game.actors?.get(actorId);
-    if (!actor) return;
+    if (!expectedType && !expectedWorldType) return;
 
     const dropped = TextEditor.getDragEventData(event.originalEvent ?? event);
     if (!dropped) return;
@@ -518,14 +628,25 @@ export class SWIAImperialPortal extends BaseApplication {
     }
 
     if (!sourceItem || sourceItem.documentName !== "Item") return;
-    if (sourceItem.type !== expectedType) {
-      const expectedLabel = game.i18n.localize(`SWIA.Inventory.${expectedType === "gear" ? "Items" : `${expectedType.charAt(0).toUpperCase()}${expectedType.slice(1)}s`}`);
+    const dropType = expectedType || expectedWorldType;
+    if (sourceItem.type !== dropType) {
+      const expectedLabel = expectedWorldType
+        ? game.i18n.localize(`SWIA.Portal.Imperial.${expectedWorldType === "agendacard" ? "AgendaCards" : "ClassCards"}`)
+        : game.i18n.localize(`SWIA.Inventory.${expectedType === "gear" ? "Items" : `${expectedType.charAt(0).toUpperCase()}${expectedType.slice(1)}s`}`);
       ui.notifications?.warn(game.i18n.format("SWIA.Portal.DropWrongType", { expected: expectedLabel }));
       return;
     }
 
     const itemData = sourceItem.toObject();
     delete itemData._id;
+
+    if (expectedWorldType) {
+      await Item.create(itemData);
+      return;
+    }
+
+    const actor = game.actors?.get(actorId);
+    if (!actor) return;
     await actor.createEmbeddedDocuments("Item", [itemData]);
   }
 

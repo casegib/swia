@@ -87,8 +87,6 @@ export class SWIACompanionPortal extends BaseApplication {
     const actors = await Promise.all(orderedActors.map(actor => this._toPortalActor(actor)));
 
     return {
-      title: game.i18n.localize("SWIA.Portal.Companion.Title"),
-      subtitle: game.i18n.localize("SWIA.Portal.Companion.Subtitle"),
       actors,
       hasActors: actors.length > 0
     };
@@ -132,6 +130,24 @@ export class SWIACompanionPortal extends BaseApplication {
 
     watch("updateUser", () => {
       // Ownership or GM/player toggles can change portal visibility/order.
+      this._queueRefresh();
+    });
+
+    watch("updateToken", (tokenDoc) => {
+      const actor = tokenDoc.actor;
+      if (!actor || !this._isPortalActor(actor)) return;
+      this._queueRefresh();
+    });
+
+    watch("createToken", (tokenDoc) => {
+      const actor = tokenDoc.actor;
+      if (!actor || !this._isPortalActor(actor)) return;
+      this._queueRefresh();
+    });
+
+    watch("deleteToken", (tokenDoc) => {
+      const actor = tokenDoc.actor;
+      if (!actor || !this._isPortalActor(actor)) return;
       this._queueRefresh();
     });
   }
@@ -252,8 +268,28 @@ export class SWIACompanionPortal extends BaseApplication {
       techBlueDice: Array.from({ length: tech.blue || 0 }, (_, i) => i),
       techGreenDice: Array.from({ length: tech.green || 0 }, (_, i) => i),
       techYellowDice: Array.from({ length: tech.yellow || 0 }, (_, i) => i),
-      hasAttack: actor.type !== "hero"
+      hasAttack: actor.type !== "hero",
+      sceneTokens: this._getSceneTokensForActor(actor)
     };
+  }
+
+  _getSceneTokensForActor(actor) {
+    const tokenDocs = (game.scenes?.active?.tokens?.contents ?? [])
+      .filter(t => t.actorId === actor.id);
+    return tokenDocs.map((tokenDoc, index) => {
+      const tokenActor = tokenDoc.actor ?? actor;
+      const health = tokenActor.system?.attributes?.health ?? { value: 0, max: 10 };
+      const maxHealth = health.max || 1;
+      const currentHealth = health.value ?? 0;
+      const pct = Math.max(0, Math.min(100, Math.round((currentHealth / maxHealth) * 100)));
+      return {
+        id: tokenDoc.id,
+        name: tokenDoc.name || `${actor.name} ${index + 1}`,
+        img: tokenDoc.texture?.src || actor.prototypeToken?.texture?.src || actor.img,
+        health: { value: currentHealth, max: health.max, pct },
+        isDefeated: currentHealth <= 0
+      };
+    });
   }
 
   activateListeners(html) {

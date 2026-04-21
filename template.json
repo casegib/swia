@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["hero", "imperial", "ally"],
+    "types": ["hero", "villain", "ally"],
     "templates": {
       "base": {
         "biography": "",
@@ -17,6 +17,8 @@
     "hero": {
       "templates": ["base"],
       "title": "",
+      "archetype": "",
+      "xp": 0,
       "woundedTokenImage": "",
       "attributes": {
         "endurance": { "value": 4, "max": 4 },
@@ -65,14 +67,27 @@
         }
       },
       "woundedBiography": "",
+      "heroAbilities": [],
+      "woundedHeroAbilities": [],
       "state": {
         "wounded": false,
-        "activated": false
+        "activated": false,
+        "defeated": false
       }
     },
-    "imperial": {
+    "villain": {
       "templates": ["base"],
+      "groupSize": 1,
+      "isElite": false,
+      "isUnique": false,
+      "affiliation": "",
+      "deployCost": 6,
+      "traits": "",
+      "reinforceCost": 1,
+      "reward": "",
+      "specialAbilities": [],
       "attributes": {
+        "attackType": "ranged",
         "attack": {
           "red": 0,
           "blue": 0,
@@ -80,7 +95,7 @@
           "yellow": 0
         },
         "surge": 0,
-        "threat": 1
+        "surgeAbilities": []
       },
       "state": {
         "activated": false
@@ -89,6 +104,7 @@
     "ally": {
       "templates": ["base"],
       "attributes": {
+        "attackType": "ranged",
         "attack": {
           "red": 0,
           "blue": 0,
@@ -96,7 +112,8 @@
           "yellow": 0
         },
         "surge": 1,
-        "threat": 0
+        "threat": 0,
+        "surgeAbilities": []
       },
       "state": {
         "activated": false
@@ -104,7 +121,7 @@
     }
   },
   "Item": {
-    "types": ["weapon", "gear", "classcard"],
+    "types": ["weapon", "gear", "classcard", "agendacard", "imperialclasscard", "heroability"],
     "templates": {
       "base": {
         "description": "",
@@ -121,9 +138,14 @@
         "yellow": 0
       },
       "damage": 0,
+      "accuracy": 0,
       "range": "melee",
-      "attachmentSlots": 2,
-      "attachments": [],
+      "keywords": {
+        "pierce": 0,
+        "blast": 0,
+        "cleave": false,
+        "reach": false
+      },
       "surgeAbilities": [],
       "traits": ""
     },
@@ -133,7 +155,25 @@
     },
     "classcard": {
       "templates": ["base"],
+      "cooldown": 0,
+      "xpCost": 0,
+      "heroClass": "",
+      "abilityText": ""
+    },
+    "agendacard": {
+      "templates": ["base"],
+      "cooldown": 0,
+      "influenceCost": 0,
+      "agendaType": "",
+      "missionEffect": ""
+    },
+    "imperialclasscard": {
+      "templates": ["base"],
       "cooldown": 0
+    },
+    "heroability": {
+      "templates": ["base"],
+      "abilityText": ""
     }
   }
 }

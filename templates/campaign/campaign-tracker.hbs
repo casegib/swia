@@ -1,0 +1,71 @@
+<section class="swia-campaign-tracker">
+  <header class="tracker-header">
+    <div>
+      <h1>{{title}}</h1>
+      <p>{{subtitle}}</p>
+    </div>
+  </header>
+
+  <form class="tracker-form">
+    <div class="tracker-grid">
+      <label class="tracker-field">
+        <span>{{localize "SWIA.CampaignTracker.Credits"}}</span>
+        <input name="credits" type="number" min="0" step="1" inputmode="numeric" value="{{resources.credits}}" {{#unless canEdit}}readonly{{/unless}}>
+      </label>
+
+      <label class="tracker-field">
+        <span>{{localize "SWIA.CampaignTracker.XP"}}</span>
+        <input name="xp" type="number" min="0" step="1" inputmode="numeric" value="{{resources.xp}}" {{#unless canEdit}}readonly{{/unless}}>
+      </label>
+
+      <label class="tracker-field">
+        <span>{{localize "SWIA.CampaignTracker.Requisition"}}</span>
+        <input name="requisition" type="number" min="0" step="1" inputmode="numeric" value="{{resources.requisition}}" {{#unless canEdit}}readonly{{/unless}}>
+      </label>
+
+      <label class="tracker-field">
+        <span>{{localize "SWIA.CampaignTracker.ImperialXP"}}</span>
+        <input name="imperialXp" type="number" min="0" step="1" inputmode="numeric" value="{{resources.imperialXp}}" {{#unless canEdit}}readonly{{/unless}}>
+      </label>
+
+      <label class="tracker-field">
+        <span>{{localize "SWIA.CampaignTracker.ImperialInfluence"}}</span>
+        <input name="imperialInfluence" type="number" min="0" step="1" inputmode="numeric" value="{{resources.imperialInfluence}}" {{#unless canEdit}}readonly{{/unless}}>
+      </label>
+
+      <label class="tracker-field">
+        <span>{{localize "SWIA.CampaignTracker.ThreatLevel"}}</span>
+        <input name="threatLevel" type="number" min="0" step="1" inputmode="numeric" value="{{resources.threatLevel}}" {{#unless canEdit}}readonly{{/unless}}>
+      </label>
+
+      <label class="tracker-field">
+        <span>{{localize "SWIA.CampaignTracker.Threat"}}</span>
+        <input name="threat" type="number" min="0" step="1" inputmode="numeric" value="{{resources.threat}}" {{#unless canEdit}}readonly{{/unless}}>
+      </label>
+    </div>
+
+    <section class="tracker-hero-xp">
+      <h2>{{localize "SWIA.CampaignTracker.HeroXP"}}</h2>
+      {{#if heroXpEntries.length}}
+        <div class="tracker-hero-xp-grid">
+          {{#each heroXpEntries}}
+            <label class="tracker-hero-xp-field">
+              <span>{{name}}</span>
+              <input name="heroXp.{{id}}" type="number" min="0" step="1" inputmode="numeric" value="{{xp}}" {{#unless ../canEdit}}readonly{{/unless}}>
+            </label>
+          {{/each}}
+        </div>
+      {{else}}
+        <p class="tracker-hero-xp-empty">{{localize "SWIA.CampaignTracker.HeroXPNone"}}</p>
+      {{/if}}
+    </section>
+
+    {{#if canEdit}}
+      <footer class="tracker-actions">
+        <button type="button" data-action="saveResources">{{localize "SWIA.CampaignTracker.Save"}}</button>
+      </footer>
+    {{else}}
+      <p class="tracker-readonly">{{localize "SWIA.CampaignTracker.ReadOnly"}}</p>
+    {{/if}}
+  </form>
+</section>

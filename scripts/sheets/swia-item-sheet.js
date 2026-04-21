@@ -61,7 +61,7 @@ export class SWIAItemSheet extends BaseItemSheet {
   // Override V2's template loading to use the correct template based on item type
   async _renderHTML(context, options) {
     const sourceType = this.document?.type ?? "classcard";
-    const itemType = ["weapon", "gear"].includes(sourceType) ? "classcard" : sourceType;
+    const itemType = ["weapon", "gear", "agendacard", "imperialclasscard"].includes(sourceType) ? "classcard" : sourceType;
     const templatePath = `systems/swia/templates/items/${itemType}-sheet.hbs`;
     
     // Manually load and compile the correct template
@@ -112,7 +112,7 @@ export class SWIAItemSheet extends BaseItemSheet {
   // V1 template getter
   get template() {
     const sourceType = this.document?.type ?? this.item?.type ?? "classcard";
-    const itemType = ["weapon", "gear"].includes(sourceType) ? "classcard" : sourceType;
+    const itemType = ["weapon", "gear", "agendacard", "imperialclasscard"].includes(sourceType) ? "classcard" : sourceType;
     return `systems/swia/templates/items/${itemType}-sheet.hbs`;
   }
 
@@ -254,6 +254,10 @@ export class SWIAItemSheet extends BaseItemSheet {
       relativeTo: item
     });
 
+    const enrichedAbilityText = item.type === "heroability"
+      ? await TextEditorClass.enrichHTML(system.abilityText || "", { async: true, secrets: item.isOwner, relativeTo: item })
+      : "";
+
     // Determine if a real card image has been uploaded (not the default mystery-man)
     const defaultImages = ["icons/svg/item-bag.svg", "icons/svg/sword.svg", "icons/svg/mystery-man.svg"];
     const hasCardImage = item.img && !defaultImages.includes(item.img);
@@ -267,6 +271,7 @@ export class SWIAItemSheet extends BaseItemSheet {
       item: item,
       systemData: system,
       enrichedDescription: enrichedDescription,
+      enrichedAbilityText: enrichedAbilityText,
       editMode: this.editMode ?? false,
       isEditable: this.isEditable !== false,
       isGM: game.user?.isGM ?? false,
@@ -303,6 +308,10 @@ export class SWIAItemSheet extends BaseItemSheet {
       relativeTo: data.item
     });
 
+    const enrichedAbilityText = data.item.type === "heroability"
+      ? await TextEditorClass.enrichHTML(system.abilityText || "", { async: true, secrets: data.item.isOwner, relativeTo: data.item })
+      : "";
+
     // Determine if a real card image has been uploaded
     const defaultImages = ["icons/svg/item-bag.svg", "icons/svg/sword.svg", "icons/svg/mystery-man.svg"];
     const hasCardImage = data.item.img && !defaultImages.includes(data.item.img);
@@ -314,6 +323,7 @@ export class SWIAItemSheet extends BaseItemSheet {
 
     data.systemData = system;
     data.enrichedDescription = enrichedDescription;
+    data.enrichedAbilityText = enrichedAbilityText;
     data.editMode = this.editMode ?? false;
     data.isEditable = this.isEditable !== false;
     data.isGM = game.user?.isGM ?? false;

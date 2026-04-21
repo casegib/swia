@@ -1,13 +1,13 @@
 # Star Wars Imperial Assault (Foundry VTT System Scaffold)
 
-Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor sheets for heroes, imperials, and allies. This is a starting point—replace placeholder assets and flesh out rules, dice, and item automation as needed.
+Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor sheets for heroes, villains, and allies. This is a starting point—replace placeholder assets and flesh out rules, dice, and item automation as needed.
 
 ## Install (local dev)
 1. Clone or copy this folder into your Foundry `Data/systems/swia` directory.
 2. Launch Foundry VTT (v13.351) and enable the `Star Wars Imperial Assault` system for a world.
 
 ## Current Features
-- Actor types: `hero`, `imperial`, and `ally` with system-specific attribute schemas.
+- Actor types: `hero`, `villain`, and `ally` with system-specific attribute schemas.
 - Hero healthy/wounded state toggle with separate wounded attributes and biography.
 - Activation token toggle on actor sheets.
 - GM edit mode for actor and item sheets (including portrait/token/card image updates).

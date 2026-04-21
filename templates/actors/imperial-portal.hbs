@@ -1,10 +1,4 @@
 <section class="swia-player-portal swia-imperial-portal">
-  <header class="portal-header">
-    <div>
-      <h1>{{title}}</h1>
-      <p>{{subtitle}}</p>
-    </div>
-  </header>
 
   {{#if hasActors}}
     <div class="portal-grid">
@@ -35,23 +29,71 @@
           </div>
 
           <div class="stats-grid">
+            {{#if actor.isHero}}
             <div class="stat-box">
               <label>{{localize "SWIA.Attributes.Health"}}</label>
               <strong>{{actor.health.value}}</strong>
             </div>
-
-            {{#if actor.isHero}}
-              <div class="stat-box">
-                <label>{{localize "SWIA.Attributes.Endurance"}}</label>
-                <strong>{{actor.endurance.value}}</strong>
-              </div>
-            {{/if}}
-
+            <div class="stat-box">
+              <label>{{localize "SWIA.Attributes.Endurance"}}</label>
+              <strong>{{actor.endurance.value}}</strong>
+            </div>
             <div class="stat-box">
               <label>{{localize "SWIA.Attributes.Speed"}}</label>
               <strong>{{actor.speed}}</strong>
             </div>
+            {{else}}
+            <div class="stat-box stat-box-speed-dice">
+              <div class="speed-dice-row">
+                <div class="speed-dice-speed-row">
+                  <label>{{localize "SWIA.Attributes.Speed"}}</label>
+                  <strong>{{actor.speed}}</strong>
+                </div>
+                <div class="inline-dice-group">
+                  <img src="systems/swia/icons/Block.png" class="dice-type-icon" alt="{{localize 'SWIA.Attributes.Defense'}}" title="{{localize 'SWIA.Attributes.Defense'}}">
+                  <span class="dice-blocks">
+                    {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
+                    {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
+                  </span>
+                </div>
+                <div class="inline-dice-group">
+                  {{#if (eq actor.attackType 'melee')}}
+                  <img src="systems/swia/icons/Melee.png" class="dice-type-icon attack-type-icon" alt="{{localize 'SWIA.Item.Weapon.RangeMelee'}}" title="{{localize 'SWIA.Item.Weapon.RangeMelee'}}">
+                  {{else}}
+                  <img src="systems/swia/icons/Ranged.png" class="dice-type-icon attack-type-icon" alt="{{localize 'SWIA.Item.Weapon.RangeRanged'}}" title="{{localize 'SWIA.Item.Weapon.RangeRanged'}}">
+                  {{/if}}
+                  <span class="dice-blocks">
+                    {{#each actor.attackRedDice}}<span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
+                    {{#each actor.attackBlueDice}}<span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
+                    {{#each actor.attackGreenDice}}<span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
+                    {{#each actor.attackYellowDice}}<span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            {{/if}}
           </div>
+
+          {{#unless actor.isHero}}
+          {{#if actor.sceneTokens.length}}
+          <div class="token-health-list">
+            {{#each actor.sceneTokens as |token|}}
+            <div class="token-health-row {{#if token.isDefeated}}is-defeated{{/if}}">
+              <img src="{{token.img}}" class="token-mini-img" alt="{{token.name}}" loading="lazy" title="{{token.name}}">
+              <div class="token-health-info">
+                <span class="token-name">{{token.name}}</span>
+                <div class="token-health-bar-row">
+                  <span class="token-health-label">{{token.health.value}}/{{token.health.max}}</span>
+                  <div class="health-bar-wrap">
+                    <div class="health-bar" style="width: {{token.health.pct}}%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{/each}}
+          </div>
+          {{/if}}
+          {{/unless}}
 
           {{#if actor.hasBiography}}
             <section class="portal-bio">
@@ -60,14 +102,14 @@
           {{/if}}
 
           {{#if actor.isHero}}
-            <div class="dice-line">
-              <label>{{localize "SWIA.Attributes.Defense"}}</label>
-              <span class="dice-blocks">
-                {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
-                {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
-              </span>
-            </div>
             <div class="dice-list hero-dice-row">
+              <div class="dice-line hero-dice-line">
+                <label>{{localize "SWIA.Attributes.Defense"}}</label>
+                <span class="dice-blocks">
+                  {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
+                  {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
+                </span>
+              </div>
               <div class="dice-line hero-dice-line">
                 <label class="dice-attr-icon" title="{{localize 'SWIA.Attributes.Strength'}}">
                   <img src="systems/swia/icons/Might.png" alt="{{localize 'SWIA.Attributes.Strength'}}" loading="lazy">
@@ -102,25 +144,6 @@
                 </span>
               </div>
             </div>
-          {{else}}
-            <div class="dice-list portal-combat-row">
-              <div class="dice-line">
-                <label>{{localize "SWIA.Attributes.Defense"}}</label>
-                <span class="dice-blocks">
-                  {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
-                  {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
-                </span>
-              </div>
-              <div class="dice-line">
-                <label>{{localize "SWIA.Attributes.Attack"}}</label>
-                <span class="dice-blocks">
-                  {{#each actor.attackRedDice}}<span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
-                  {{#each actor.attackBlueDice}}<span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
-                  {{#each actor.attackGreenDice}}<span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
-                  {{#each actor.attackYellowDice}}<span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
-                </span>
-              </div>
-            </div>
           {{/if}}
         </article>
         </div>
@@ -129,4 +152,108 @@
   {{else}}
     <p class="portal-empty">{{localize "SWIA.Portal.Imperial.Empty"}}</p>
   {{/if}}
+
+  <section class="portal-inventory imperial-card-area" aria-label="{{localize 'SWIA.Portal.Imperial.Cards'}}">
+    <div class="portal-inventory-grid">
+      <div class="portal-item-column">
+        <header>
+          <h3>{{localize "SWIA.Portal.Imperial.AgendaCards"}}</h3>
+          <span>{{agendaCount}}</span>
+        </header>
+        <div class="portal-drop-zone {{#if canManageImperialCards}}can-drop{{/if}}" data-world-item-type="agendacard">
+          {{#if hasAgendaCards}}
+            <div class="portal-card-stack">
+              {{#each agendaCards as |item|}}
+                <article class="portal-item-card state-{{item.state}}" data-item-id="{{item.id}}">
+                  <button
+                    type="button"
+                    class="portal-item-open"
+                    data-action="openItem"
+                    data-item-id="{{item.id}}"
+                    title="{{item.name}}"
+                  >
+                    <img src="{{item.img}}" alt="{{item.name}}" loading="lazy">
+                  </button>
+                  <div class="portal-item-footer">
+                    <button
+                      type="button"
+                      class="portal-item-state state-{{item.state}}"
+                      data-action="cycleItemState"
+                      data-item-id="{{item.id}}"
+                      title="{{item.stateLabel}}"
+                      {{#unless ../canManageImperialCards}}disabled{{/unless}}
+                    >
+                      {{item.stateLabel}}
+                    </button>
+                    <button
+                      type="button"
+                      class="portal-item-remove"
+                      data-action="removeImperialCard"
+                      data-item-id="{{item.id}}"
+                      title="{{localize 'SWIA.Inventory.Remove'}}"
+                      {{#unless ../canManageImperialCards}}disabled{{/unless}}
+                    >
+                      <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </article>
+              {{/each}}
+            </div>
+          {{else}}
+            <p class="portal-col-empty">{{localize "SWIA.Portal.Imperial.EmptyAgendaCards"}}</p>
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="portal-item-column">
+        <header>
+          <h3>{{localize "SWIA.Portal.Imperial.ClassCards"}}</h3>
+          <span>{{imperialClassCount}}</span>
+        </header>
+        <div class="portal-drop-zone {{#if canManageImperialCards}}can-drop{{/if}}" data-world-item-type="imperialclasscard">
+          {{#if hasImperialClassCards}}
+            <div class="portal-card-stack">
+              {{#each imperialClassCards as |item|}}
+                <article class="portal-item-card state-{{item.state}}" data-item-id="{{item.id}}">
+                  <button
+                    type="button"
+                    class="portal-item-open"
+                    data-action="openItem"
+                    data-item-id="{{item.id}}"
+                    title="{{item.name}}"
+                  >
+                    <img src="{{item.img}}" alt="{{item.name}}" loading="lazy">
+                  </button>
+                  <div class="portal-item-footer">
+                    <button
+                      type="button"
+                      class="portal-item-state state-{{item.state}}"
+                      data-action="cycleItemState"
+                      data-item-id="{{item.id}}"
+                      title="{{item.stateLabel}}"
+                      {{#unless ../canManageImperialCards}}disabled{{/unless}}
+                    >
+                      {{item.stateLabel}}
+                    </button>
+                    <button
+                      type="button"
+                      class="portal-item-remove"
+                      data-action="removeImperialCard"
+                      data-item-id="{{item.id}}"
+                      title="{{localize 'SWIA.Inventory.Remove'}}"
+                      {{#unless ../canManageImperialCards}}disabled{{/unless}}
+                    >
+                      <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </article>
+              {{/each}}
+            </div>
+          {{else}}
+            <p class="portal-col-empty">{{localize "SWIA.Portal.Imperial.EmptyClassCards"}}</p>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </section>
 </section>

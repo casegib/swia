@@ -1,4 +1,4 @@
-<form class="swia-sheet type-{{actor.type}} {{#if isWounded}}wounded{{/if}} {{#if editMode}}editing{{/if}}" autocomplete="off">
+<form class="swia-sheet type-{{actor.type}} {{#if isWounded}}wounded{{/if}} {{#if editMode}}editing{{/if}} {{#if systemData.isElite}}elite{{/if}}" autocomplete="off">
   <div class="sheet-body">
   <div class="sheet-main">
   <header class="sheet-header">
@@ -9,6 +9,42 @@
     </div>
     {{/if}}
     <div class="image-section">
+      {{#if (eq actor.type "villain")}}
+      <div class="villain-image-row">
+        <div class="villain-cost-block">
+          <div class="villain-costs-row">
+            <div class="villain-deploy-cost" title="{{localize 'SWIA.Villain.DeployCost'}}">
+              {{#if editMode}}
+              <input name="system.deployCost" type="number" min="0" max="20" value="{{systemData.deployCost}}" class="deploy-cost-input" />
+              {{else}}
+              <span class="cost-value">{{systemData.deployCost}}</span>
+              {{/if}}
+            </div>
+            {{#if (gt systemData.groupSize 1)}}
+            <div class="villain-reinforce-cost" title="{{localize 'SWIA.Villain.ReinforceCost'}}">
+              {{#if editMode}}
+              <input name="system.reinforceCost" type="number" min="0" value="{{systemData.reinforceCost}}" class="reinforce-cost-input" />
+              {{else}}
+              <span class="reinforce-value">{{systemData.reinforceCost}}</span>
+              {{/if}}
+            </div>
+            {{/if}}
+          </div>
+          <div class="villain-group-pips">
+            {{#each (range systemData.groupSize)}}
+            <span class="group-pip"></span>
+            {{/each}}
+            {{#if editMode}}
+            <input name="system.groupSize" type="number" min="1" max="10" value="{{systemData.groupSize}}" class="group-size-input" />
+            {{/if}}
+          </div>
+        </div>
+        <div class="image-container {{#if editMode}}editing{{/if}}">
+          <img class="profile-image {{#if editMode}}clickable{{/if}}" src="{{profileSrc}}" {{#if editMode}}data-action="editImage" data-path="img"{{/if}} title="{{actor.name}}" />
+          <img class="token-image {{#if editMode}}clickable{{/if}}" src="{{tokenPreviewSrc}}" {{#if editMode}}data-action="editImage" data-path="prototypeToken.texture.src"{{/if}} title="Token" />
+        </div>
+      </div>
+      {{else}}
       <div class="image-container {{#if editMode}}editing{{/if}}">
         <img class="profile-image {{#if editMode}}clickable{{/if}}" src="{{profileSrc}}" {{#if editMode}}data-action="editImage" data-path="img"{{/if}} title="{{actor.name}}" />
         <img class="token-image {{#if editMode}}clickable{{/if}}" src="{{tokenPreviewSrc}}" {{#if editMode}}data-action="editImage" data-path="prototypeToken.texture.src"{{/if}} title="Token" />
@@ -24,6 +60,7 @@
       </div>
       {{/if}}
       {{/if}}
+      {{/if}}
     </div>
     <div class="header-fields">
       <div class="name-row">
@@ -35,20 +72,64 @@
                alt="Activation Token" />
         </div>
         <h1><input name="name" type="text" value="{{actor.name}}" placeholder="Name" data-action="changeName" {{#unless editMode}}disabled{{/unless}} /></h1>
+        {{#if (eq actor.type "villain")}}{{#if systemData.isUnique}}<span class="unique-pip" title="{{localize 'SWIA.Villain.IsUnique'}}"></span>{{/if}}{{/if}}
+        {{#if (eq actor.type "villain")}}{{#unless editMode}}{{#if systemData.affiliation}}
+        <span class="affiliation-badge affiliation-{{systemData.affiliation}}" title="{{systemData.affiliation}}">
+          {{#if (eq systemData.affiliation "imperial")}}<i class="fa-brands fa-empire"></i>{{/if}}
+          {{#if (eq systemData.affiliation "rebel")}}<i class="fa-brands fa-rebel"></i>{{/if}}
+          {{#if (eq systemData.affiliation "mercenary")}}<i class="fa-brands fa-mandalorian"></i>{{/if}}
+        </span>
+        {{/if}}{{/unless}}{{/if}}
       </div>
       {{#if (eq actor.type "hero")}}
       <div class="character-title">
         <input name="system.title" type="text" value="{{systemData.title}}" placeholder="Title" {{#unless editMode}}disabled{{/unless}} />
+        {{#if editMode}}
+        <select name="system.archetype" class="archetype-select">
+          <option value="" {{#unless systemData.archetype}}selected{{/unless}}></option>
+          <option value="Brawler" {{#if (eq systemData.archetype "Brawler")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.Brawler"}}</option>
+          <option value="Commander" {{#if (eq systemData.archetype "Commander")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.Commander"}}</option>
+          <option value="Force Sensitive" {{#if (eq systemData.archetype "Force Sensitive")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.ForceSensitive"}}</option>
+          <option value="Hunter" {{#if (eq systemData.archetype "Hunter")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.Hunter"}}</option>
+          <option value="Medic" {{#if (eq systemData.archetype "Medic")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.Medic"}}</option>
+          <option value="Pilot" {{#if (eq systemData.archetype "Pilot")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.Pilot"}}</option>
+          <option value="Smuggler" {{#if (eq systemData.archetype "Smuggler")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.Smuggler"}}</option>
+          <option value="Soldier" {{#if (eq systemData.archetype "Soldier")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.Soldier"}}</option>
+          <option value="Spy" {{#if (eq systemData.archetype "Spy")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.Spy"}}</option>
+          <option value="Technician" {{#if (eq systemData.archetype "Technician")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.Technician"}}</option>
+        </select>
+        {{else}}
+        <span class="archetype-view {{#unless systemData.archetype}}archetype-empty{{/unless}}">{{#if systemData.archetype}}{{systemData.archetype}}{{else}}—{{/if}}</span>
+        {{/if}}
       </div>
       {{/if}}
-      {{#if (eq actor.type "imperial")}}
-      <div class="imperial-fields">
-        <div class="imperial-field">
-          <input name="system.field1" type="number" min="1" max="20" value="{{systemData.field1}}" {{#unless editMode}}disabled{{/unless}} />
+      {{#if (eq actor.type "villain")}}
+      <div class="villain-meta">
+        {{#if editMode}}
+        <div class="villain-flags-edit">
+          <label class="flag-label">
+            <input name="system.isElite" type="checkbox" {{#if systemData.isElite}}checked{{/if}} />
+            {{localize "SWIA.Villain.IsElite"}}
+          </label>
+          <label class="flag-label">
+            <input name="system.isUnique" type="checkbox" {{#if systemData.isUnique}}checked{{/if}} />
+            {{localize "SWIA.Villain.IsUnique"}}
+          </label>
         </div>
-        <div class="imperial-field">
-          <input name="system.field2" type="number" min="1" max="20" value="{{systemData.field2}}" {{#unless editMode}}disabled{{/unless}} />
+        <div class="villain-affiliation-edit">
+          <select name="system.affiliation">
+            <option value="" {{#unless systemData.affiliation}}selected{{/unless}}>{{localize "SWIA.Villain.Affiliation.None"}}</option>
+            <option value="imperial" {{#if (eq systemData.affiliation "imperial")}}selected{{/if}}>{{localize "SWIA.Villain.Affiliation.Imperial"}}</option>
+            <option value="rebel" {{#if (eq systemData.affiliation "rebel")}}selected{{/if}}>{{localize "SWIA.Villain.Affiliation.Rebel"}}</option>
+            <option value="mercenary" {{#if (eq systemData.affiliation "mercenary")}}selected{{/if}}>{{localize "SWIA.Villain.Affiliation.Mercenary"}}</option>
+          </select>
         </div>
+        <div class="villain-traits-edit">
+          <input name="system.traits" type="text" value="{{systemData.traits}}" placeholder="{{localize 'SWIA.Villain.TraitsPlaceholder'}}" />
+        </div>
+        {{else}}
+        {{#if systemData.traits}}<div class="villain-traits-view">{{systemData.traits}}</div>{{/if}}
+        {{/if}}
       </div>
       {{/if}}
       {{#if (eq actor.type "hero")}}
@@ -60,66 +141,84 @@
             {{#if isWounded}}{{localize "SWIA.State.Wounded"}}{{else}}{{localize "SWIA.State.Healthy"}}{{/if}}
           </span>
         </label>
+        {{#if isWounded}}
+        <label class="toggle toggle-defeated">
+          <input id="state-defeated" type="checkbox" data-action="toggleDefeated" {{#if isDefeated}}checked{{/if}} />
+          <span class="toggle-label defeated-label">
+            {{#if isDefeated}}{{localize "SWIA.State.Defeated"}}{{else}}{{localize "SWIA.State.Active"}}{{/if}}
+          </span>
+        </label>
+        {{/if}}
       </div>
       {{/if}}
     </div>
   </header>
 
-  <section class="sheet-section biography-section-wrapper {{#if editMode}}collapsible-section {{#if sectionCollapse.biography}}collapsed{{else}}expanded{{/if}}{{/if}}">
-    {{#if editMode}}
-    <button type="button" class="section-toggle" data-action="toggleSectionCollapse" data-section="biography" aria-expanded="{{#if sectionCollapse.biography}}false{{else}}true{{/if}}">
-      <span class="section-toggle-label">Profile</span>
-      <span class="section-toggle-meta">
-        <span class="section-toggle-indicator">{{#if sectionCollapse.biography}}+{{else}}-{{/if}}</span>
-      </span>
-    </button>
-    {{/if}}
-    <div class="collapsible-content">
-    <div class="biography-section">
-    <div class="editor-container">
-      {{#if (eq actor.type "hero")}}
-        {{#if isWounded}}
-          {{#if editMode}}
-          <div class="html-editor">
-            <label class="editor-label">Profile (HTML)</label>
-            <textarea name="system.woundedBiography" data-dtype="String" rows="8">{{systemData.woundedBiography}}</textarea>
-            <div class="editor-hint">{{localize "SWIA.BiographyHint"}}</div>
-          </div>
-          {{else}}
-          <div class="editor">
-            <div class="editor-content">{{{ enrichedWoundedBiography }}}</div>
-          </div>
-          {{/if}}
-        {{else}}
-          {{#if editMode}}
-          <div class="html-editor">
-            <label class="editor-label">Profile (HTML)</label>
-            <textarea name="system.biography" data-dtype="String" rows="8">{{systemData.biography}}</textarea>
-            <div class="editor-hint">{{localize "SWIA.BiographyHint"}}</div>
-          </div>
-          {{else}}
-          <div class="editor">
-            <div class="editor-content">{{{ enrichedBiography }}}</div>
-          </div>
-          {{/if}}
-        {{/if}}
-      {{else}}
-        {{#if editMode}}
-        <div class="html-editor">
-          <label class="editor-label">Profile (HTML)</label>
-          <textarea name="system.biography" data-dtype="String" rows="8">{{systemData.biography}}</textarea>
-          <div class="editor-hint">{{localize "SWIA.BiographyHint"}}</div>
-        </div>
-        {{else}}
-        <div class="editor">
-          <div class="editor-content">{{{ enrichedBiography }}}</div>
-        </div>
-        {{/if}}
+  {{!-- Hero abilities --}}
+  {{#if (eq actor.type "hero")}}
+  <div class="actor-list-section hero-ability-section">
+    <div class="list-section-header">
+      <span class="list-section-title">{{localize "SWIA.Hero.HeroAbility"}}</span>
+      {{#if editMode}}
+      <span class="drop-hint">{{localize "SWIA.HeroAbility.DropHint"}}</span>
+      <button type="button" class="add-row-btn" data-action="addHeroAbility" data-field="{{#if isWounded}}woundedHeroAbilities{{else}}heroAbilities{{/if}}" title="{{localize 'SWIA.Hero.AddHeroAbility'}}"><i class="fas fa-plus"></i></button>
       {{/if}}
     </div>
-    </div>
-    </div>
-  </section>
+    {{#if isWounded}}
+      {{#if editMode}}
+        {{#each systemData.woundedHeroAbilities}}
+        <div class="hero-ability-entry" data-index="{{@index}}">
+          <div class="hero-ability-entry-header">
+            <input name="system.woundedHeroAbilities.{{@index}}.name" type="text" value="{{this.name}}" placeholder="{{localize 'SWIA.Hero.HeroAbilityNamePlaceholder'}}" />
+            <button type="button" class="remove-row-btn" data-action="removeHeroAbility" data-field="woundedHeroAbilities" data-index="{{@index}}" title="{{localize 'SWIA.Hero.RemoveHeroAbility'}}"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="html-editor">
+            <textarea name="system.woundedHeroAbilities.{{@index}}.description" placeholder="{{localize 'SWIA.Hero.HeroAbilityDescriptionPlaceholder'}}" rows="3">{{this.description}}</textarea>
+          </div>
+        </div>
+        {{else}}
+        <p class="list-empty">{{localize "SWIA.Hero.NoHeroAbilities"}}</p>
+        {{/each}}
+      {{else}}
+        {{#each enrichedWoundedHeroAbilities}}
+        {{#if this.name}}
+        <div class="hero-ability-view">
+          <strong class="hero-ability-name">{{this.name}}</strong>
+          <div class="editor"><div class="editor-content hero-ability-description">{{{ this.enrichedDescription }}}</div></div>
+        </div>
+        {{/if}}
+        {{/each}}
+        {{#unless enrichedWoundedHeroAbilities.length}}<p class="list-empty">{{localize "SWIA.Hero.NoHeroAbilities"}}</p>{{/unless}}
+      {{/if}}
+    {{else}}
+      {{#if editMode}}
+        {{#each systemData.heroAbilities}}
+        <div class="hero-ability-entry" data-index="{{@index}}">
+          <div class="hero-ability-entry-header">
+            <input name="system.heroAbilities.{{@index}}.name" type="text" value="{{this.name}}" placeholder="{{localize 'SWIA.Hero.HeroAbilityNamePlaceholder'}}" />
+            <button type="button" class="remove-row-btn" data-action="removeHeroAbility" data-field="heroAbilities" data-index="{{@index}}" title="{{localize 'SWIA.Hero.RemoveHeroAbility'}}"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="html-editor">
+            <textarea name="system.heroAbilities.{{@index}}.description" placeholder="{{localize 'SWIA.Hero.HeroAbilityDescriptionPlaceholder'}}" rows="3">{{this.description}}</textarea>
+          </div>
+        </div>
+        {{else}}
+        <p class="list-empty">{{localize "SWIA.Hero.NoHeroAbilities"}}</p>
+        {{/each}}
+      {{else}}
+        {{#each enrichedHeroAbilities}}
+        {{#if this.name}}
+        <div class="hero-ability-view">
+          <strong class="hero-ability-name">{{this.name}}</strong>
+          <div class="editor"><div class="editor-content hero-ability-description">{{{ this.enrichedDescription }}}</div></div>
+        </div>
+        {{/if}}
+        {{/each}}
+        {{#unless enrichedHeroAbilities.length}}<p class="list-empty">{{localize "SWIA.Hero.NoHeroAbilities"}}</p>{{/unless}}
+      {{/if}}
+    {{/if}}
+  </div>
+  {{/if}}
 
   <section class="sheet-section stats-section-wrapper {{#if editMode}}collapsible-section {{#if sectionCollapse.stats}}collapsed{{else}}expanded{{/if}}{{/if}}">
     {{#if editMode}}
@@ -132,234 +231,380 @@
     {{/if}}
     <div class="collapsible-content">
   <section class="resource-grid">
-    <div class="resource">
-      <label>{{localize "SWIA.Attributes.Health"}}</label>
-      {{#if editMode}}
-      <div class="pair">
-        <input name="system.{{currentAttrPath}}.health.value" type="number" value="{{currentAttributes.health.value}}" />
-        <span>/</span>
-        <input name="system.{{currentAttrPath}}.health.max" type="number" value="{{currentAttributes.health.max}}" />
-      </div>
-      {{else}}
-      <input type="number" value="{{currentAttributes.health.value}}" disabled />
-      {{/if}}
-    </div>
-    {{#if (eq actor.type "hero")}}
-    <div class="resource">
-      <label>{{localize "SWIA.Attributes.Endurance"}}</label>
-      {{#if editMode}}
-      <div class="pair">
-        <input name="system.{{currentAttrPath}}.endurance.value" type="number" value="{{currentAttributes.endurance.value}}" />
-        <span>/</span>
-        <input name="system.{{currentAttrPath}}.endurance.max" type="number" value="{{currentAttributes.endurance.max}}" />
-      </div>
-      {{else}}
-      <input type="number" value="{{currentAttributes.endurance.value}}" disabled />
-      {{/if}}
-    </div>
-    {{/if}}
-    <div class="resource">
-      <label>{{localize "SWIA.Attributes.Speed"}}</label>
-      <input name="system.{{currentAttrPath}}.speed" type="number" value="{{currentAttributes.speed}}" {{#unless editMode}}disabled{{/unless}} />
-    </div>
-    <div class="resource">
-      <label>{{localize "SWIA.Attributes.Defense"}}</label>
-      {{#if editMode}}
-      <div class="defense">
-        <label>{{localize "SWIA.Defense.Black"}}</label>
-        <input name="system.attributes.defense.black" type="number" value="{{systemData.attributes.defense.black}}" />
-        <label>{{localize "SWIA.Defense.White"}}</label>
-        <input name="system.attributes.defense.white" type="number" value="{{systemData.attributes.defense.white}}" />
-      </div>
-      {{else}}
-      <div class="dice-display">
-        <div class="dice-blocks">
-          {{#each defenseBlackDice}}
-          <span class="dice-block black"></span>
-          {{/each}}
-          {{#each defenseWhiteDice}}
-          <span class="dice-block white"></span>
-          {{/each}}
-        </div>
-      </div>
-      {{/if}}
-    </div>
-    {{#if (eq actor.type "hero")}}
-    <div class="resource">
-      <div class="attribute-row">
-        <img class="attribute-icon attribute-icon-small" src="systems/swia/icons/Might.png" alt="Strength" title="{{localize 'SWIA.Attributes.Strength'}}" />
+    {{!-- Stat chips: Health / Endurance / Speed / XP on one compact line --}}
+    <div class="stat-chips-row">
+      <div class="resource">
+        <label>{{localize "SWIA.Attributes.Health"}}</label>
         {{#if editMode}}
-        <div class="strength">
-          {{#if isWounded}}
-          <label>{{localize "SWIA.Attack.Red"}}</label>
-          <input name="system.woundedAttributes.strength.red" type="number" value="{{systemData.woundedAttributes.strength.red}}" />
-          <label>{{localize "SWIA.Attack.Blue"}}</label>
-          <input name="system.woundedAttributes.strength.blue" type="number" value="{{systemData.woundedAttributes.strength.blue}}" />
-          <label>{{localize "SWIA.Attack.Green"}}</label>
-          <input name="system.woundedAttributes.strength.green" type="number" value="{{systemData.woundedAttributes.strength.green}}" />
-          <label>{{localize "SWIA.Attack.Yellow"}}</label>
-          <input name="system.woundedAttributes.strength.yellow" type="number" value="{{systemData.woundedAttributes.strength.yellow}}" />
-          {{else}}
-          <label>{{localize "SWIA.Attack.Red"}}</label>
-          <input name="system.attributes.strength.red" type="number" value="{{systemData.attributes.strength.red}}" />
-          <label>{{localize "SWIA.Attack.Blue"}}</label>
-          <input name="system.attributes.strength.blue" type="number" value="{{systemData.attributes.strength.blue}}" />
-          <label>{{localize "SWIA.Attack.Green"}}</label>
-          <input name="system.attributes.strength.green" type="number" value="{{systemData.attributes.strength.green}}" />
-          <label>{{localize "SWIA.Attack.Yellow"}}</label>
-          <input name="system.attributes.strength.yellow" type="number" value="{{systemData.attributes.strength.yellow}}" />
-          {{/if}}
+        <div class="pair">
+          <input name="system.{{currentAttrPath}}.health.value" type="number" value="{{currentAttributes.health.value}}" />
+          <span>/</span>
+          <input name="system.{{currentAttrPath}}.health.max" type="number" value="{{currentAttributes.health.max}}" />
         </div>
         {{else}}
-        <div class="dice-display">
-          <div class="dice-blocks">
-            {{#each strengthRedDice}}
-            <span class="dice-block red"></span>
-            {{/each}}
-            {{#each strengthBlueDice}}
-            <span class="dice-block blue"></span>
-            {{/each}}
-            {{#each strengthGreenDice}}
-            <span class="dice-block green"></span>
-            {{/each}}
-            {{#each strengthYellowDice}}
-            <span class="dice-block yellow"></span>
-            {{/each}}
+        <input type="number" value="{{currentAttributes.health.value}}" disabled />
+        {{/if}}
+      </div>
+      {{#if (eq actor.type "hero")}}
+      <div class="resource">
+        <label>{{localize "SWIA.Attributes.Endurance"}}</label>
+        {{#if editMode}}
+        <div class="pair">
+          <input name="system.{{currentAttrPath}}.endurance.value" type="number" value="{{currentAttributes.endurance.value}}" />
+          <span>/</span>
+          <input name="system.{{currentAttrPath}}.endurance.max" type="number" value="{{currentAttributes.endurance.max}}" />
+        </div>
+        {{else}}
+        <input type="number" value="{{currentAttributes.endurance.value}}" disabled />
+        {{/if}}
+      </div>
+      {{/if}}
+      <div class="resource">
+        <label>{{localize "SWIA.Attributes.Speed"}}</label>
+        <input name="system.{{currentAttrPath}}.speed" type="number" value="{{currentAttributes.speed}}" {{#unless editMode}}disabled{{/unless}} />
+      </div>
+      {{#if (eq actor.type "hero")}}
+      <div class="resource">
+        <label>{{localize "SWIA.Attributes.XP"}}</label>
+        <input name="system.xp" type="number" min="0" step="1" value="{{systemData.xp}}" {{#unless editMode}}disabled{{/unless}} />
+      </div>
+      {{/if}}
+      {{#if (or (eq actor.type "ally") (eq actor.type "villain"))}}
+      <div class="resource">
+        {{#if editMode}}
+        <label>{{localize "SWIA.Attributes.Defense"}}</label>
+        <div class="defense">
+          <label>{{localize "SWIA.Defense.Black"}}</label>
+          <input name="system.attributes.defense.black" type="number" value="{{systemData.attributes.defense.black}}" />
+          <label>{{localize "SWIA.Defense.White"}}</label>
+          <input name="system.attributes.defense.white" type="number" value="{{systemData.attributes.defense.white}}" />
+        </div>
+        {{else}}
+        <div class="attribute-row">
+          <label class="dice-attr-label">{{localize "SWIA.Attributes.Defense"}}</label>
+          <div class="dice-display">
+            <div class="dice-blocks">
+              {{#each defenseBlackDice}}
+              <span class="dice-block black"></span>
+              {{/each}}
+              {{#each defenseWhiteDice}}
+              <span class="dice-block white"></span>
+              {{/each}}
+            </div>
           </div>
         </div>
         {{/if}}
       </div>
-    </div>
-    <div class="resource">
-      <div class="attribute-row">
-        <img class="attribute-icon attribute-icon-small" src="systems/swia/icons/Insight.png" alt="Insight" title="{{localize 'SWIA.Attributes.Insight'}}" />
+      <div class="resource">
         {{#if editMode}}
-        <div class="insight">
-          {{#if isWounded}}
+        <label>{{localize "SWIA.Attributes.Attack"}}</label>
+        <div class="attack-type-selector">
+          <img class="attack-type-btn {{#if (eq systemData.attributes.attackType 'ranged')}}active{{/if}}"
+               src="systems/swia/icons/Ranged.png"
+               data-action="setAttackType" data-value="ranged"
+               title="{{localize 'SWIA.AttackType.Ranged'}}" alt="Ranged" />
+          <img class="attack-type-btn {{#if (eq systemData.attributes.attackType 'melee')}}active{{/if}}"
+               src="systems/swia/icons/Melee.png"
+               data-action="setAttackType" data-value="melee"
+               title="{{localize 'SWIA.AttackType.Melee'}}" alt="Melee" />
+        </div>
+        <div class="attack">
           <label>{{localize "SWIA.Attack.Red"}}</label>
-          <input name="system.woundedAttributes.insight.red" type="number" value="{{systemData.woundedAttributes.insight.red}}" />
+          <input name="system.attributes.attack.red" type="number" value="{{systemData.attributes.attack.red}}" />
           <label>{{localize "SWIA.Attack.Blue"}}</label>
-          <input name="system.woundedAttributes.insight.blue" type="number" value="{{systemData.woundedAttributes.insight.blue}}" />
+          <input name="system.attributes.attack.blue" type="number" value="{{systemData.attributes.attack.blue}}" />
           <label>{{localize "SWIA.Attack.Green"}}</label>
-          <input name="system.woundedAttributes.insight.green" type="number" value="{{systemData.woundedAttributes.insight.green}}" />
+          <input name="system.attributes.attack.green" type="number" value="{{systemData.attributes.attack.green}}" />
           <label>{{localize "SWIA.Attack.Yellow"}}</label>
-          <input name="system.woundedAttributes.insight.yellow" type="number" value="{{systemData.woundedAttributes.insight.yellow}}" />
-          {{else}}
-          <label>{{localize "SWIA.Attack.Red"}}</label>
-          <input name="system.attributes.insight.red" type="number" value="{{systemData.attributes.insight.red}}" />
-          <label>{{localize "SWIA.Attack.Blue"}}</label>
-          <input name="system.attributes.insight.blue" type="number" value="{{systemData.attributes.insight.blue}}" />
-          <label>{{localize "SWIA.Attack.Green"}}</label>
-          <input name="system.attributes.insight.green" type="number" value="{{systemData.attributes.insight.green}}" />
-          <label>{{localize "SWIA.Attack.Yellow"}}</label>
-          <input name="system.attributes.insight.yellow" type="number" value="{{systemData.attributes.insight.yellow}}" />
-          {{/if}}
+          <input name="system.attributes.attack.yellow" type="number" value="{{systemData.attributes.attack.yellow}}" />
         </div>
         {{else}}
-        <div class="dice-display">
-          <div class="dice-blocks">
-            {{#each insightRedDice}}
-            <span class="dice-block red"></span>
-            {{/each}}
-            {{#each insightBlueDice}}
-            <span class="dice-block blue"></span>
-            {{/each}}
-            {{#each insightGreenDice}}
-            <span class="dice-block green"></span>
-            {{/each}}
-            {{#each insightYellowDice}}
-            <span class="dice-block yellow"></span>
-            {{/each}}
+        <div class="attribute-row">
+          <img class="attribute-icon attribute-icon-small" 
+               src="systems/swia/icons/{{#if (eq systemData.attributes.attackType 'melee')}}Melee.png{{else}}Ranged.png{{/if}}"
+               alt="{{systemData.attributes.attackType}}"
+               title="{{#if (eq systemData.attributes.attackType 'melee')}}{{localize 'SWIA.AttackType.Melee'}}{{else}}{{localize 'SWIA.AttackType.Ranged'}}{{/if}}" />
+          <div class="dice-display">
+            <div class="dice-blocks">
+              {{#each attackRedDice}}
+              <span class="dice-block red"></span>
+              {{/each}}
+              {{#each attackBlueDice}}
+              <span class="dice-block blue"></span>
+              {{/each}}
+              {{#each attackGreenDice}}
+              <span class="dice-block green"></span>
+              {{/each}}
+              {{#each attackYellowDice}}
+              <span class="dice-block yellow"></span>
+              {{/each}}
+            </div>
           </div>
         </div>
         {{/if}}
       </div>
+      {{/if}}
     </div>
-    <div class="resource">
-      <div class="attribute-row">
-        <img class="attribute-icon attribute-icon-small" src="systems/swia/icons/Tech.png" alt="Tech" title="{{localize 'SWIA.Attributes.Tech'}}" />
+    {{!-- Dice row: Defense + Strength / Insight / Tech (hero) or Attack (ally/imperial) all on one row --}}
+    <div class="dice-attributes-row">
+      {{#if (eq actor.type "hero")}}
+      <div class="resource">
         {{#if editMode}}
-        <div class="tech">
-          {{#if isWounded}}
-          <label>{{localize "SWIA.Attack.Red"}}</label>
-          <input name="system.woundedAttributes.tech.red" type="number" value="{{systemData.woundedAttributes.tech.red}}" />
-          <label>{{localize "SWIA.Attack.Blue"}}</label>
-          <input name="system.woundedAttributes.tech.blue" type="number" value="{{systemData.woundedAttributes.tech.blue}}" />
-          <label>{{localize "SWIA.Attack.Green"}}</label>
-          <input name="system.woundedAttributes.tech.green" type="number" value="{{systemData.woundedAttributes.tech.green}}" />
-          <label>{{localize "SWIA.Attack.Yellow"}}</label>
-          <input name="system.woundedAttributes.tech.yellow" type="number" value="{{systemData.woundedAttributes.tech.yellow}}" />
-          {{else}}
-          <label>{{localize "SWIA.Attack.Red"}}</label>
-          <input name="system.attributes.tech.red" type="number" value="{{systemData.attributes.tech.red}}" />
-          <label>{{localize "SWIA.Attack.Blue"}}</label>
-          <input name="system.attributes.tech.blue" type="number" value="{{systemData.attributes.tech.blue}}" />
-          <label>{{localize "SWIA.Attack.Green"}}</label>
-          <input name="system.attributes.tech.green" type="number" value="{{systemData.attributes.tech.green}}" />
-          <label>{{localize "SWIA.Attack.Yellow"}}</label>
-          <input name="system.attributes.tech.yellow" type="number" value="{{systemData.attributes.tech.yellow}}" />
-          {{/if}}
+        <label>{{localize "SWIA.Attributes.Defense"}}</label>
+        <div class="defense">
+          <label>{{localize "SWIA.Defense.Black"}}</label>
+          <input name="system.attributes.defense.black" type="number" value="{{systemData.attributes.defense.black}}" />
+          <label>{{localize "SWIA.Defense.White"}}</label>
+          <input name="system.attributes.defense.white" type="number" value="{{systemData.attributes.defense.white}}" />
         </div>
         {{else}}
-        <div class="dice-display">
-          <div class="dice-blocks">
-            {{#each techRedDice}}
-            <span class="dice-block red"></span>
-            {{/each}}
-            {{#each techBlueDice}}
-            <span class="dice-block blue"></span>
-            {{/each}}
-            {{#each techGreenDice}}
-            <span class="dice-block green"></span>
-            {{/each}}
-            {{#each techYellowDice}}
-            <span class="dice-block yellow"></span>
-            {{/each}}
+        <div class="attribute-row">
+          <label class="dice-attr-label">{{localize "SWIA.Attributes.Defense"}}</label>
+          <div class="dice-display">
+            <div class="dice-blocks">
+              {{#each defenseBlackDice}}
+              <span class="dice-block black"></span>
+              {{/each}}
+              {{#each defenseWhiteDice}}
+              <span class="dice-block white"></span>
+              {{/each}}
+            </div>
           </div>
         </div>
         {{/if}}
       </div>
-    </div>
-    {{/if}}
-    {{#if (or (eq actor.type "ally") (eq actor.type "imperial"))}}
-    <div class="resource">
-      <label>{{localize "SWIA.Attributes.Attack"}}</label>
-      {{#if editMode}}
-      <div class="attack">
-        <label>{{localize "SWIA.Attack.Red"}}</label>
-        <input name="system.attributes.attack.red" type="number" value="{{systemData.attributes.attack.red}}" />
-        <label>{{localize "SWIA.Attack.Blue"}}</label>
-        <input name="system.attributes.attack.blue" type="number" value="{{systemData.attributes.attack.blue}}" />
-        <label>{{localize "SWIA.Attack.Green"}}</label>
-        <input name="system.attributes.attack.green" type="number" value="{{systemData.attributes.attack.green}}" />
-        <label>{{localize "SWIA.Attack.Yellow"}}</label>
-        <input name="system.attributes.attack.yellow" type="number" value="{{systemData.attributes.attack.yellow}}" />
+      {{/if}}
+      {{#if (eq actor.type "hero")}}
+      <div class="resource">
+        <div class="attribute-row">
+          <img class="attribute-icon attribute-icon-small" src="systems/swia/icons/Might.png" alt="Strength" title="{{localize 'SWIA.Attributes.Strength'}}" />
+          {{#if editMode}}
+          <div class="strength">
+            {{#if isWounded}}
+            <label>{{localize "SWIA.Attack.Red"}}</label>
+            <input name="system.woundedAttributes.strength.red" type="number" value="{{systemData.woundedAttributes.strength.red}}" />
+            <label>{{localize "SWIA.Attack.Blue"}}</label>
+            <input name="system.woundedAttributes.strength.blue" type="number" value="{{systemData.woundedAttributes.strength.blue}}" />
+            <label>{{localize "SWIA.Attack.Green"}}</label>
+            <input name="system.woundedAttributes.strength.green" type="number" value="{{systemData.woundedAttributes.strength.green}}" />
+            <label>{{localize "SWIA.Attack.Yellow"}}</label>
+            <input name="system.woundedAttributes.strength.yellow" type="number" value="{{systemData.woundedAttributes.strength.yellow}}" />
+            {{else}}
+            <label>{{localize "SWIA.Attack.Red"}}</label>
+            <input name="system.attributes.strength.red" type="number" value="{{systemData.attributes.strength.red}}" />
+            <label>{{localize "SWIA.Attack.Blue"}}</label>
+            <input name="system.attributes.strength.blue" type="number" value="{{systemData.attributes.strength.blue}}" />
+            <label>{{localize "SWIA.Attack.Green"}}</label>
+            <input name="system.attributes.strength.green" type="number" value="{{systemData.attributes.strength.green}}" />
+            <label>{{localize "SWIA.Attack.Yellow"}}</label>
+            <input name="system.attributes.strength.yellow" type="number" value="{{systemData.attributes.strength.yellow}}" />
+            {{/if}}
+          </div>
+          {{else}}
+          <div class="dice-display">
+            <div class="dice-blocks">
+              {{#each strengthRedDice}}
+              <span class="dice-block red"></span>
+              {{/each}}
+              {{#each strengthBlueDice}}
+              <span class="dice-block blue"></span>
+              {{/each}}
+              {{#each strengthGreenDice}}
+              <span class="dice-block green"></span>
+              {{/each}}
+              {{#each strengthYellowDice}}
+              <span class="dice-block yellow"></span>
+              {{/each}}
+            </div>
+          </div>
+          {{/if}}
+        </div>
       </div>
-      {{else}}
-      <div class="dice-display">
-        <div class="dice-blocks">
-          {{#each attackRedDice}}
-          <span class="dice-block red"></span>
-          {{/each}}
-          {{#each attackBlueDice}}
-          <span class="dice-block blue"></span>
-          {{/each}}
-          {{#each attackGreenDice}}
-          <span class="dice-block green"></span>
-          {{/each}}
-          {{#each attackYellowDice}}
-          <span class="dice-block yellow"></span>
-          {{/each}}
+      <div class="resource">
+        <div class="attribute-row">
+          <img class="attribute-icon attribute-icon-small" src="systems/swia/icons/Insight.png" alt="Insight" title="{{localize 'SWIA.Attributes.Insight'}}" />
+          {{#if editMode}}
+          <div class="insight">
+            {{#if isWounded}}
+            <label>{{localize "SWIA.Attack.Red"}}</label>
+            <input name="system.woundedAttributes.insight.red" type="number" value="{{systemData.woundedAttributes.insight.red}}" />
+            <label>{{localize "SWIA.Attack.Blue"}}</label>
+            <input name="system.woundedAttributes.insight.blue" type="number" value="{{systemData.woundedAttributes.insight.blue}}" />
+            <label>{{localize "SWIA.Attack.Green"}}</label>
+            <input name="system.woundedAttributes.insight.green" type="number" value="{{systemData.woundedAttributes.insight.green}}" />
+            <label>{{localize "SWIA.Attack.Yellow"}}</label>
+            <input name="system.woundedAttributes.insight.yellow" type="number" value="{{systemData.woundedAttributes.insight.yellow}}" />
+            {{else}}
+            <label>{{localize "SWIA.Attack.Red"}}</label>
+            <input name="system.attributes.insight.red" type="number" value="{{systemData.attributes.insight.red}}" />
+            <label>{{localize "SWIA.Attack.Blue"}}</label>
+            <input name="system.attributes.insight.blue" type="number" value="{{systemData.attributes.insight.blue}}" />
+            <label>{{localize "SWIA.Attack.Green"}}</label>
+            <input name="system.attributes.insight.green" type="number" value="{{systemData.attributes.insight.green}}" />
+            <label>{{localize "SWIA.Attack.Yellow"}}</label>
+            <input name="system.attributes.insight.yellow" type="number" value="{{systemData.attributes.insight.yellow}}" />
+            {{/if}}
+          </div>
+          {{else}}
+          <div class="dice-display">
+            <div class="dice-blocks">
+              {{#each insightRedDice}}
+              <span class="dice-block red"></span>
+              {{/each}}
+              {{#each insightBlueDice}}
+              <span class="dice-block blue"></span>
+              {{/each}}
+              {{#each insightGreenDice}}
+              <span class="dice-block green"></span>
+              {{/each}}
+              {{#each insightYellowDice}}
+              <span class="dice-block yellow"></span>
+              {{/each}}
+            </div>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+      <div class="resource">
+        <div class="attribute-row">
+          <img class="attribute-icon attribute-icon-small" src="systems/swia/icons/Tech.png" alt="Tech" title="{{localize 'SWIA.Attributes.Tech'}}" />
+          {{#if editMode}}
+          <div class="tech">
+            {{#if isWounded}}
+            <label>{{localize "SWIA.Attack.Red"}}</label>
+            <input name="system.woundedAttributes.tech.red" type="number" value="{{systemData.woundedAttributes.tech.red}}" />
+            <label>{{localize "SWIA.Attack.Blue"}}</label>
+            <input name="system.woundedAttributes.tech.blue" type="number" value="{{systemData.woundedAttributes.tech.blue}}" />
+            <label>{{localize "SWIA.Attack.Green"}}</label>
+            <input name="system.woundedAttributes.tech.green" type="number" value="{{systemData.woundedAttributes.tech.green}}" />
+            <label>{{localize "SWIA.Attack.Yellow"}}</label>
+            <input name="system.woundedAttributes.tech.yellow" type="number" value="{{systemData.woundedAttributes.tech.yellow}}" />
+            {{else}}
+            <label>{{localize "SWIA.Attack.Red"}}</label>
+            <input name="system.attributes.tech.red" type="number" value="{{systemData.attributes.tech.red}}" />
+            <label>{{localize "SWIA.Attack.Blue"}}</label>
+            <input name="system.attributes.tech.blue" type="number" value="{{systemData.attributes.tech.blue}}" />
+            <label>{{localize "SWIA.Attack.Green"}}</label>
+            <input name="system.attributes.tech.green" type="number" value="{{systemData.attributes.tech.green}}" />
+            <label>{{localize "SWIA.Attack.Yellow"}}</label>
+            <input name="system.attributes.tech.yellow" type="number" value="{{systemData.attributes.tech.yellow}}" />
+            {{/if}}
+          </div>
+          {{else}}
+          <div class="dice-display">
+            <div class="dice-blocks">
+              {{#each techRedDice}}
+              <span class="dice-block red"></span>
+              {{/each}}
+              {{#each techBlueDice}}
+              <span class="dice-block blue"></span>
+              {{/each}}
+              {{#each techGreenDice}}
+              <span class="dice-block green"></span>
+              {{/each}}
+              {{#each techYellowDice}}
+              <span class="dice-block yellow"></span>
+              {{/each}}
+            </div>
+          </div>
+          {{/if}}
         </div>
       </div>
       {{/if}}
     </div>
-    {{/if}}
   </section>
+
+  {{!-- Villain extra stats: reward --}}
+  {{#if (eq actor.type "villain")}}
+  <div class="villain-extra-stats">
+    {{#if editMode}}
+    <div class="villain-extra-row">
+      <div class="stat-field reward-field">
+        <label>{{localize "SWIA.Villain.Reward"}}</label>
+        <input name="system.reward" type="text" value="{{systemData.reward}}" placeholder="{{localize 'SWIA.Villain.RewardPlaceholder'}}" />
+      </div>
+    </div>
+    {{else}}
+    <div class="villain-extra-row">
+      {{#if systemData.reward}}
+      <div class="stat-field reward-field">
+        <label>{{localize "SWIA.Villain.Reward"}}</label>
+        <span class="reward-value">{{systemData.reward}}</span>
+      </div>
+      {{/if}}
+    </div>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{!-- Surge abilities (villain + ally) --}}
+  {{#if (or (eq actor.type "villain") (eq actor.type "ally"))}}
+  <div class="actor-list-section surge-abilities-section">
+    <div class="list-section-header">
+      <span class="list-section-title">{{localize "SWIA.Villain.SurgeAbilities"}}</span>
+      {{#if editMode}}
+      <button type="button" class="add-row-btn" data-action="addSurgeAbility" title="{{localize 'SWIA.Villain.AddSurgeAbility'}}"><i class="fas fa-plus"></i></button>
+      {{/if}}
+    </div>
+    {{#if systemData.attributes.surgeAbilities.length}}
+    <ol class="surge-abilities-list ability-list">
+      {{#each systemData.attributes.surgeAbilities}}
+      <li class="surge-ability-entry ability-entry" data-index="{{@index}}">
+        {{#if ../editMode}}
+        <input class="surge-cost-input" name="system.attributes.surgeAbilities.{{@index}}.cost" type="number" min="1" value="{{this.cost}}" placeholder="1" />
+        <input class="surge-effect-input" name="system.attributes.surgeAbilities.{{@index}}.effectText" type="text" value="{{this.effectText}}" placeholder="e.g., +2 Damage" />
+        <button type="button" class="remove-row-btn" data-action="removeSurgeAbility" data-index="{{@index}}" title="{{localize 'SWIA.Villain.RemoveSurgeAbility'}}"><i class="fas fa-trash"></i></button>
+        {{else}}
+        <span class="surge-symbol">↯</span>
+        <span class="surge-cost">{{this.cost}}</span>
+        <span class="surge-effect">{{this.effectText}}</span>
+        {{/if}}
+      </li>
+      {{/each}}
+    </ol>
+    {{else}}
+    <p class="list-empty">{{localize "SWIA.Villain.NoSurgeAbilities"}}</p>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{!-- Special abilities (villain only) --}}
+  {{#if (eq actor.type "villain")}}
+  <div class="actor-list-section special-abilities-section">
+    <div class="list-section-header">
+      <span class="list-section-title">{{localize "SWIA.Villain.SpecialAbilities"}}</span>
+      {{#if editMode}}
+      <button type="button" class="add-row-btn" data-action="addSpecialAbility" title="{{localize 'SWIA.Villain.AddSpecialAbility'}}"><i class="fas fa-plus"></i></button>
+      {{/if}}
+    </div>
+    {{#if systemData.specialAbilities.length}}
+    <ol class="special-abilities-list ability-list">
+      {{#each systemData.specialAbilities}}
+      <li class="special-ability-entry ability-entry" data-index="{{@index}}">
+        {{#if ../editMode}}
+        <input class="special-ability-name" name="system.specialAbilities.{{@index}}.name" type="text" value="{{this.name}}" placeholder="{{localize 'SWIA.Villain.SpecialAbilities'}}" />
+        <textarea class="special-ability-desc" name="system.specialAbilities.{{@index}}.description" placeholder="Description" rows="2">{{this.description}}</textarea>
+        <button type="button" class="remove-row-btn" data-action="removeSpecialAbility" data-index="{{@index}}" title="{{localize 'SWIA.Villain.RemoveSpecialAbility'}}"><i class="fas fa-trash"></i></button>
+        {{else}}
+        <div class="special-ability-view">
+          {{#if this.name}}<strong class="special-ability-view-name">{{this.name}}:</strong>{{/if}}
+          <span class="special-ability-view-desc">{{this.description}}</span>
+        </div>
+        {{/if}}
+      </li>
+      {{/each}}
+    </ol>
+    {{else}}
+    <p class="list-empty">{{localize "SWIA.Villain.NoSpecialAbilities"}}</p>
+    {{/if}}
+  </div>
+  {{/if}}
+
     </div>
   </section>
+
   <section class="inventory-sections">
-    {{#unless (or (eq actor.type "ally") (eq actor.type "imperial"))}}
+    {{#unless (or (eq actor.type "ally") (eq actor.type "villain"))}}
     <div class="inventory-group inventory-group-weapons {{#if editMode}}collapsible-section {{#if sectionCollapse.weapons}}collapsed{{else}}expanded{{/if}}{{/if}}">
       {{#if editMode}}
       <button type="button" class="section-toggle section-toggle-inline inv-panel-header" data-action="toggleSectionCollapse" data-section="weapons" aria-expanded="{{#if sectionCollapse.weapons}}false{{else}}true{{/if}}">
@@ -383,50 +628,9 @@
           <div class="item-image" data-action="openItem">
             <img src="{{this.img}}" alt="{{this.name}}" title="{{localize 'SWIA.Inventory.ClickToOpen'}}" />
           </div>
-          <div class="item-info weapon-info">
+          <div class="item-info weapon-info" data-action="openItem">
             <span class="item-name">{{this.name}}</span>
             <div class="weapon-meta" data-action="openItem">
-              <span class="weapon-open-hint">{{localize "SWIA.Inventory.ClickToOpen"}}</span>
-            </div>
-            <div class="weapon-attachments">
-              <div class="weapon-attachments-header">
-                <span class="weapon-attachments-title">{{localize "SWIA.Item.Weapon.Attachments"}}</span>
-                {{#if ../editMode}}
-                <button type="button" class="attachment-add" data-action="addWeaponAttachment">
-                  {{localize "SWIA.Item.Weapon.AddAttachment"}}
-                </button>
-                {{/if}}
-              </div>
-              {{#if this.system.attachments.length}}
-              <ul class="attachment-list">
-                {{#each this.system.attachments}}
-                <li class="attachment-entry">
-                  <div class="attachment-text">
-                    <span class="attachment-name">{{this.name}}</span>
-                    {{#if this.description}}
-                    <span class="attachment-effect">{{this.description}}</span>
-                    {{else}}
-                      {{#if this.effect}}
-                      <span class="attachment-effect">{{this.effect}}</span>
-                      {{/if}}
-                    {{/if}}
-                  </div>
-                  <div class="attachment-controls">
-                    <button type="button" class="item-state-btn {{this.cardState}}" data-action="cycleWeaponAttachmentState" data-index="{{@index}}" title="{{this.cardState}}">
-                      {{this.cardState}}
-                    </button>
-                  {{#if ../../editMode}}
-                  <button type="button" class="attachment-remove" data-action="removeWeaponAttachment" data-index="{{@index}}" title="{{localize 'SWIA.Item.Weapon.RemoveAttachment'}}">
-                    <i class="fas fa-times"></i>
-                  </button>
-                  {{/if}}
-                  </div>
-                </li>
-                {{/each}}
-              </ul>
-              {{else}}
-              <p class="attachment-empty">{{localize "SWIA.Item.Weapon.NoAttachments"}}</p>
-              {{/if}}
             </div>
           </div>
           <div class="item-controls">

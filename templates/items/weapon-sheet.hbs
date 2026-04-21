@@ -71,10 +71,6 @@
 
     {{#if editMode}}
     <div class="weapon-edit-fields">
-      <div class="edit-field">
-        <label>{{localize "SWIA.Item.Weapon.AttachmentSlots"}}</label>
-        <input name="system.attachmentSlots" type="number" value="{{systemData.attachmentSlots}}" data-dtype="Number" min="0" />
-      </div>
       <div class="edit-field dice-edit-field">
         <label>{{localize "SWIA.Item.Weapon.AttackDice"}}</label>
         <div class="dice-edit-grid">
@@ -142,12 +138,6 @@
         <span class="cost-value">{{systemData.cost}}</span>
         <span class="cost-label">{{localize "SWIA.Item.Weapon.Credits"}}</span>
         {{/if}}
-      </div>
-
-      <div class="attachment-slots-track" aria-label="{{localize 'SWIA.Item.Weapon.AttachmentSlots'}}" title="{{localize 'SWIA.Item.Weapon.AttachmentSlots'}}">
-        {{#each (range systemData.attachmentSlots)}}
-        <span class="attachment-slot-rectangle"></span>
-        {{/each}}
       </div>
     </footer>
   </div>
