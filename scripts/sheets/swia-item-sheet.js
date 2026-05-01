@@ -13,6 +13,22 @@ function resolveItemDocument(ctx) {
   return ctx?.document ?? ctx?.item ?? ctx?.object ?? ctx?.options?.document ?? null;
 }
 
+function mapItemSheetType(sourceType) {
+  if (sourceType === "agendacard" || sourceType === "imperialclasscard") return "classcard";
+  return sourceType;
+}
+
+function resolveWeaponmodAttachmentName(item) {
+  if (!item || item.type !== "weaponmod") return "";
+
+  const attachedWeaponId = item.system?.attachedWeaponId || "";
+  if (!attachedWeaponId) return game.i18n.localize("SWIA.Item.Weaponmod.AttachedWeaponNone");
+
+  const actor = item.actor ?? item.parent;
+  const attachedWeapon = actor?.items?.get?.(attachedWeaponId);
+  return attachedWeapon?.name || attachedWeaponId;
+}
+
 // Main item sheet class supporting both V1 and V2 Foundry versions
 export class SWIAItemSheet extends BaseItemSheet {
   // Configuration for V2: sheet layout and position
@@ -33,6 +49,10 @@ export class SWIAItemSheet extends BaseItemSheet {
       editImage: SWIAItemSheet.#onEditImage,
       addSurgeAbility: SWIAItemSheet.#onAddSurgeAbility,
       removeSurgeAbility: SWIAItemSheet.#onRemoveSurgeAbility,
+      addExhaustAbility: SWIAItemSheet.#onAddExhaustAbility,
+      removeExhaustAbility: SWIAItemSheet.#onRemoveExhaustAbility,
+      addAbility: SWIAItemSheet.#onAddAbility,
+      removeAbility: SWIAItemSheet.#onRemoveAbility,
       toggleEdit: SWIAItemSheet.#onToggleEdit,
       saveItem: SWIAItemSheet.#onSaveItem,
       cycleCardState: SWIAItemSheet.#onCycleCardState
@@ -61,7 +81,7 @@ export class SWIAItemSheet extends BaseItemSheet {
   // Override V2's template loading to use the correct template based on item type
   async _renderHTML(context, options) {
     const sourceType = this.document?.type ?? "classcard";
-    const itemType = ["weapon", "gear", "agendacard", "imperialclasscard"].includes(sourceType) ? "classcard" : sourceType;
+    const itemType = mapItemSheetType(sourceType);
     const templatePath = `systems/swia/templates/items/${itemType}-sheet.hbs`;
     
     // Manually load and compile the correct template
@@ -107,12 +127,13 @@ export class SWIAItemSheet extends BaseItemSheet {
     } else {
       content.replaceChildren(result.form);
     }
+
   }
 
   // V1 template getter
   get template() {
     const sourceType = this.document?.type ?? this.item?.type ?? "classcard";
-    const itemType = ["weapon", "gear", "agendacard", "imperialclasscard"].includes(sourceType) ? "classcard" : sourceType;
+    const itemType = mapItemSheetType(sourceType);
     return `systems/swia/templates/items/${itemType}-sheet.hbs`;
   }
 
@@ -157,10 +178,10 @@ export class SWIAItemSheet extends BaseItemSheet {
   static async #onAddSurgeAbility(event, target) {
     const item = resolveItemDocument(this);
     if (!item) return;
-    if (item.type !== "weapon") return;
+    if (!["weapon", "weaponmod"].includes(item.type)) return;
     
     const surgeAbilities = item.system.surgeAbilities || [];
-    const newSurgeAbilities = [...surgeAbilities, { cost: 1, effect: "" }];
+    const newSurgeAbilities = [...surgeAbilities, { cost: 1, effectType: "damage", effectValue: 0, effectText: "" }];
     
     await item.update({ "system.surgeAbilities": newSurgeAbilities });
   }
@@ -169,7 +190,7 @@ export class SWIAItemSheet extends BaseItemSheet {
   static async #onRemoveSurgeAbility(event, target) {
     const item = resolveItemDocument(this);
     if (!item) return;
-    if (item.type !== "weapon") return;
+    if (!["weapon", "weaponmod"].includes(item.type)) return;
     
     const index = parseInt(target.dataset.index);
     if (isNaN(index)) return;
@@ -178,6 +199,53 @@ export class SWIAItemSheet extends BaseItemSheet {
     const newSurgeAbilities = surgeAbilities.filter((_, i) => i !== index);
     
     await item.update({ "system.surgeAbilities": newSurgeAbilities });
+  }
+
+  // Add exhaust ability to weapon (V2)
+  static async #onAddExhaustAbility(event, target) {
+    const item = resolveItemDocument(this);
+    if (!item) return;
+    if (item.type !== "weapon") return;
+
+    const exhaustAbilities = item.system.exhaustAbilities || [];
+    const newExhaustAbilities = [...exhaustAbilities, { trigger: "action", effect: "" }];
+
+    await item.update({ "system.exhaustAbilities": newExhaustAbilities });
+  }
+
+  // Remove exhaust ability from weapon (V2)
+  static async #onRemoveExhaustAbility(event, target) {
+    const item = resolveItemDocument(this);
+    if (!item) return;
+    if (item.type !== "weapon") return;
+
+    const index = parseInt(target.dataset.index);
+    if (isNaN(index)) return;
+
+    const exhaustAbilities = item.system.exhaustAbilities || [];
+    const newExhaustAbilities = exhaustAbilities.filter((_, i) => i !== index);
+
+    await item.update({ "system.exhaustAbilities": newExhaustAbilities });
+  }
+
+  // Add ability to weapon (V2)
+  static async #onAddAbility(event, target) {
+    const item = resolveItemDocument(this);
+    if (!item) return;
+    if (item.type !== "weapon") return;
+    const abilities = Array.isArray(item.system.abilities) ? item.system.abilities : Object.values(item.system.abilities || {});
+    await item.update({ "system.abilities": [...abilities, { prefix: "none", description: "" }] });
+  }
+
+  // Remove ability from weapon (V2)
+  static async #onRemoveAbility(event, target) {
+    const item = resolveItemDocument(this);
+    if (!item) return;
+    if (item.type !== "weapon") return;
+    const index = parseInt(target.dataset.index);
+    if (isNaN(index)) return;
+    const abilities = Array.isArray(item.system.abilities) ? item.system.abilities : Object.values(item.system.abilities || {});
+    await item.update({ "system.abilities": abilities.filter((_, i) => i !== index) });
   }
 
   // Toggle edit mode (V2)
@@ -258,6 +326,22 @@ export class SWIAItemSheet extends BaseItemSheet {
       ? await TextEditorClass.enrichHTML(system.abilityText || "", { async: true, secrets: item.isOwner, relativeTo: item })
       : "";
 
+    // Enrich weapon abilities (free-form ability rows with optional prefix icons)
+    // Normalize to array — Foundry can store new array fields as {} on existing documents
+    const abilitiesRaw = Array.isArray(system.abilities)
+      ? system.abilities
+      : Object.values(system.abilities || {});
+    const enrichedAbilities = await Promise.all(
+      abilitiesRaw.map(async (ability, index) => ({
+        ...ability,
+        enrichedDescription: await TextEditorClass.enrichHTML(ability.description || "", {
+          async: true,
+          secrets: item.isOwner,
+          relativeTo: item
+        })
+      }))
+    );
+
     // Determine if a real card image has been uploaded (not the default mystery-man)
     const defaultImages = ["icons/svg/item-bag.svg", "icons/svg/sword.svg", "icons/svg/mystery-man.svg"];
     const hasCardImage = item.img && !defaultImages.includes(item.img);
@@ -266,17 +350,20 @@ export class SWIAItemSheet extends BaseItemSheet {
     const stateLabels = { ready: "SWIA.Item.CardState.Ready", exhausted: "SWIA.Item.CardState.Exhausted", depleted: "SWIA.Item.CardState.Depleted" };
     const cardState = system.cardState || "ready";
     const cardStateLabel = game.i18n.localize(stateLabels[cardState] || stateLabels.ready);
+    const weaponmodAttachedWeaponName = resolveWeaponmodAttachmentName(item);
 
     return foundry.utils.mergeObject(context, {
       item: item,
       systemData: system,
       enrichedDescription: enrichedDescription,
       enrichedAbilityText: enrichedAbilityText,
+      enrichedAbilities: enrichedAbilities,
       editMode: this.editMode ?? false,
       isEditable: this.isEditable !== false,
       isGM: game.user?.isGM ?? false,
       hasCardImage: hasCardImage,
       cardStateLabel: cardStateLabel,
+      weaponmodAttachedWeaponName: weaponmodAttachedWeaponName,
       config: CONFIG.SWIA ?? {}
     });
   }
@@ -320,15 +407,34 @@ export class SWIAItemSheet extends BaseItemSheet {
     const stateLabels = { ready: "SWIA.Item.CardState.Ready", exhausted: "SWIA.Item.CardState.Exhausted", depleted: "SWIA.Item.CardState.Depleted" };
     const cardState = system.cardState || "ready";
     const cardStateLabel = game.i18n.localize(stateLabels[cardState] || stateLabels.ready);
+    const weaponmodAttachedWeaponName = resolveWeaponmodAttachmentName(data.item);
+
+    // Enrich weapon abilities (V1 path)
+    // Normalize to array — Foundry can store new array fields as {} on existing documents
+    const abilitiesRaw = Array.isArray(system.abilities)
+      ? system.abilities
+      : Object.values(system.abilities || {});
+    const enrichedAbilities = await Promise.all(
+      abilitiesRaw.map(async (ability) => ({
+        ...ability,
+        enrichedDescription: await TextEditorClass.enrichHTML(ability.description || "", {
+          async: true,
+          secrets: data.item.isOwner,
+          relativeTo: data.item
+        })
+      }))
+    );
 
     data.systemData = system;
     data.enrichedDescription = enrichedDescription;
     data.enrichedAbilityText = enrichedAbilityText;
+    data.enrichedAbilities = enrichedAbilities;
     data.editMode = this.editMode ?? false;
     data.isEditable = this.isEditable !== false;
     data.isGM = game.user?.isGM ?? false;
     data.hasCardImage = hasCardImage;
     data.cardStateLabel = cardStateLabel;
+    data.weaponmodAttachedWeaponName = weaponmodAttachedWeaponName;
     data.config = CONFIG.SWIA ?? {};
     
     return data;
@@ -348,17 +454,22 @@ export class SWIAItemSheet extends BaseItemSheet {
     // Weapon-specific listeners (V1 only)
     html.find("[data-action='addSurgeAbility']").on("click", this._onAddSurgeAbility.bind(this));
     html.find("[data-action='removeSurgeAbility']").on("click", this._onRemoveSurgeAbility.bind(this));
+    html.find("[data-action='addExhaustAbility']").on("click", this._onAddExhaustAbility.bind(this));
+    html.find("[data-action='removeExhaustAbility']").on("click", this._onRemoveExhaustAbility.bind(this));
+    html.find("[data-action='addAbility']").on("click", this._onAddAbility.bind(this));
+    html.find("[data-action='removeAbility']").on("click", this._onRemoveAbility.bind(this));
     html.find("[data-action='toggleEdit']").on("click", this._onToggleEdit.bind(this));
     html.find("[data-action='saveItem']").on("click", this._onSaveItem.bind(this));
+
   }
 
   // Add surge ability to weapon (V1)
   async _onAddSurgeAbility(event) {
     event.preventDefault();
-    if (this.item.type !== "weapon") return;
+    if (!["weapon", "weaponmod"].includes(this.item.type)) return;
     
     const surgeAbilities = this.item.system.surgeAbilities || [];
-    const newSurgeAbilities = [...surgeAbilities, { cost: 1, effect: "" }];
+    const newSurgeAbilities = [...surgeAbilities, { cost: 1, effectType: "damage", effectValue: 0, effectText: "" }];
     
     await this.item.update({ "system.surgeAbilities": newSurgeAbilities });
   }
@@ -367,12 +478,52 @@ export class SWIAItemSheet extends BaseItemSheet {
   async _onRemoveSurgeAbility(event) {
     event.preventDefault();
     const index = parseInt(event.currentTarget.dataset.index);
-    if (isNaN(index) || this.item.type !== "weapon") return;
+    if (isNaN(index) || !["weapon", "weaponmod"].includes(this.item.type)) return;
     
     const surgeAbilities = this.item.system.surgeAbilities || [];
     const newSurgeAbilities = surgeAbilities.filter((_, i) => i !== index);
     
     await this.item.update({ "system.surgeAbilities": newSurgeAbilities });
+  }
+
+  // Add exhaust ability to weapon (V1)
+  async _onAddExhaustAbility(event) {
+    event.preventDefault();
+    if (this.item.type !== "weapon") return;
+
+    const exhaustAbilities = this.item.system.exhaustAbilities || [];
+    const newExhaustAbilities = [...exhaustAbilities, { trigger: "action", effect: "" }];
+
+    await this.item.update({ "system.exhaustAbilities": newExhaustAbilities });
+  }
+
+  // Remove exhaust ability from weapon (V1)
+  async _onRemoveExhaustAbility(event) {
+    event.preventDefault();
+    const index = parseInt(event.currentTarget.dataset.index);
+    if (isNaN(index) || this.item.type !== "weapon") return;
+
+    const exhaustAbilities = this.item.system.exhaustAbilities || [];
+    const newExhaustAbilities = exhaustAbilities.filter((_, i) => i !== index);
+
+    await this.item.update({ "system.exhaustAbilities": newExhaustAbilities });
+  }
+
+  // Add ability to weapon (V1)
+  async _onAddAbility(event) {
+    event.preventDefault();
+    if (this.item.type !== "weapon") return;
+    const abilities = Array.isArray(this.item.system.abilities) ? this.item.system.abilities : Object.values(this.item.system.abilities || {});
+    await this.item.update({ "system.abilities": [...abilities, { prefix: "none", description: "" }] });
+  }
+
+  // Remove ability from weapon (V1)
+  async _onRemoveAbility(event) {
+    event.preventDefault();
+    const index = parseInt(event.currentTarget.dataset.index);
+    if (isNaN(index) || this.item.type !== "weapon") return;
+    const abilities = Array.isArray(this.item.system.abilities) ? this.item.system.abilities : Object.values(this.item.system.abilities || {});
+    await this.item.update({ "system.abilities": abilities.filter((_, i) => i !== index) });
   }
 
   // Toggle edit mode (V1)

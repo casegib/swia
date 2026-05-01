@@ -632,7 +632,13 @@ export class SWIAImperialPortal extends BaseApplication {
     if (sourceItem.type !== dropType) {
       const expectedLabel = expectedWorldType
         ? game.i18n.localize(`SWIA.Portal.Imperial.${expectedWorldType === "agendacard" ? "AgendaCards" : "ClassCards"}`)
-        : game.i18n.localize(`SWIA.Inventory.${expectedType === "gear" ? "Items" : `${expectedType.charAt(0).toUpperCase()}${expectedType.slice(1)}s`}`);
+        : game.i18n.localize(({
+          weapon: "SWIA.Inventory.Weapons",
+          classcard: "SWIA.Inventory.Abilities",
+          gear: "SWIA.Inventory.Items",
+          armor: "SWIA.Inventory.Armor",
+          weaponmod: "SWIA.Inventory.WeaponMods"
+        })[expectedType] ?? "SWIA.Inventory.Items");
       ui.notifications?.warn(game.i18n.format("SWIA.Portal.DropWrongType", { expected: expectedLabel }));
       return;
     }

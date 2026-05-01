@@ -18,6 +18,7 @@
       "templates": ["base"],
       "title": "",
       "archetype": "",
+      "affiliation": "",
       "xp": 0,
       "woundedTokenImage": "",
       "attributes": {
@@ -103,6 +104,15 @@
     },
     "ally": {
       "templates": ["base"],
+      "groupSize": 1,
+      "isElite": false,
+      "isUnique": false,
+      "affiliation": "",
+      "deployCost": 6,
+      "traits": "",
+      "reinforceCost": 1,
+      "reward": "",
+      "specialAbilities": [],
       "attributes": {
         "attackType": "ranged",
         "attack": {
@@ -111,8 +121,7 @@
           "green": 0,
           "yellow": 0
         },
-        "surge": 1,
-        "threat": 0,
+        "surge": 0,
         "surgeAbilities": []
       },
       "state": {
@@ -121,7 +130,7 @@
     }
   },
   "Item": {
-    "types": ["weapon", "gear", "classcard", "agendacard", "imperialclasscard", "heroability"],
+    "types": ["weapon", "weaponmod", "armor", "gear", "classcard", "agendacard", "imperialclasscard", "heroability"],
     "templates": {
       "base": {
         "description": "",
@@ -131,6 +140,8 @@
     },
     "weapon": {
       "templates": ["base"],
+      "weaponClass": "",
+      "weaponSubtype": "",
       "attackDice": {
         "red": 0,
         "blue": 0,
@@ -147,11 +158,46 @@
         "reach": false
       },
       "surgeAbilities": [],
-      "traits": ""
+      "exhaustAbilities": [],
+      "abilities": [],
+      "attachmentSlots": 0,
+      "traits": "",
+      "imageOffsetX": 50,
+      "imageOffsetY": 50,
+      "imageZoom": 1
+    },
+    "weaponmod": {
+      "templates": ["base"],
+      "modCompatType": "melee",
+      "modSubtype": "",
+      "attachedWeaponId": "",
+      "bonusDice": {
+        "red": 0,
+        "blue": 0,
+        "green": 0,
+        "yellow": 0
+      },
+      "bonusDamage": 0,
+      "bonusAccuracy": 0,
+      "surgeAbilities": [],
+      "keywords": {
+        "pierce": 0,
+        "blast": 0,
+        "cleave": false,
+        "reach": false
+      }
+    },
+    "armor": {
+      "templates": ["base"],
+      "armorClass": "",
+      "defenseDice": {
+        "black": 0,
+        "white": 0
+      }
     },
     "gear": {
       "templates": ["base"],
-      "effect": ""
+      "accessorySubtype": ""
     },
     "classcard": {
       "templates": ["base"],

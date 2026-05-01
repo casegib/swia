@@ -13,10 +13,13 @@ const isV2 = !!BaseActorSheetV2;
 export class SWIAActorSheet extends BaseActorSheet {
   static EDIT_COLLAPSE_DEFAULTS = {
     biography: true,
+    heroAbilities: false,
     stats: false,
     weapons: false,
     abilities: true,
-    items: true
+    items: true,
+    surgeAbilities: false,
+    specialAbilities: false
   };
 
   // Track whether the sheet is in edit mode (GM only)
@@ -48,6 +51,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       toggleActivated: SWIAActorSheet.prototype._onToggleActivated,
       toggleEdit: SWIAActorSheet.prototype._onToggleEdit,
       toggleSectionCollapse: SWIAActorSheet.prototype._onToggleSectionCollapse,
+      applyTokenFootprintPreset: SWIAActorSheet.prototype._onApplyTokenFootprintPreset,
       // Image and name editing
       editImage: SWIAActorSheet.prototype._onEditImage,
       changeName: SWIAActorSheet.prototype._onChangeName,
@@ -110,6 +114,20 @@ export class SWIAActorSheet extends BaseActorSheet {
     return actor?.prototypeToken?.texture?.src || this._getHealthyTokenSrc(actor);
   }
 
+  _getTokenFootprint(actor) {
+    const width = Number(actor?.prototypeToken?.width);
+    const height = Number(actor?.prototypeToken?.height);
+    const scaleX = Number(actor?.prototypeToken?.texture?.scaleX);
+    const scaleY = Number(actor?.prototypeToken?.texture?.scaleY);
+
+    return {
+      width: Number.isFinite(width) && width > 0 ? width : 1,
+      height: Number.isFinite(height) && height > 0 ? height : 1,
+      scaleX: Number.isFinite(scaleX) && scaleX > 0 ? scaleX : 1,
+      scaleY: Number.isFinite(scaleY) && scaleY > 0 ? scaleY : 1
+    };
+  }
+
   async _syncActiveTokenTextures(actor, src) {
     if (!actor || !src) return;
 
@@ -144,6 +162,52 @@ export class SWIAActorSheet extends BaseActorSheet {
     if (updates.length) await Promise.allSettled(updates);
   }
 
+  async _syncActiveTokenFootprint(actor, footprint, linkedOnly = true) {
+    if (!actor || !footprint) return;
+
+    const tokenDocs = [];
+    const pushDoc = (tokenDoc) => {
+      if (!tokenDoc?.id) return;
+      if (linkedOnly && !tokenDoc.actorLink) return;
+      if (tokenDocs.some(existing => existing.id === tokenDoc.id && existing.parent?.id === tokenDoc.parent?.id)) return;
+      tokenDocs.push(tokenDoc);
+    };
+
+    if (typeof actor.getActiveTokens === "function") {
+      const activeTokens = actor.getActiveTokens(false, true) || [];
+      for (const token of activeTokens) {
+        pushDoc(token?.document ?? token);
+      }
+    }
+
+    for (const scene of game.scenes?.contents ?? []) {
+      for (const tokenDoc of scene.tokens?.contents ?? []) {
+        if (tokenDoc?.actorId !== actor.id) continue;
+        pushDoc(tokenDoc);
+      }
+    }
+
+    if (!tokenDocs.length) return;
+
+    const updates = [];
+    for (const tokenDoc of tokenDocs) {
+      const needsWidth = Number(tokenDoc.width) !== Number(footprint.width);
+      const needsHeight = Number(tokenDoc.height) !== Number(footprint.height);
+      const needsScaleX = Number(tokenDoc.texture?.scaleX) !== Number(footprint.scaleX);
+      const needsScaleY = Number(tokenDoc.texture?.scaleY) !== Number(footprint.scaleY);
+      if (!needsWidth && !needsHeight && !needsScaleX && !needsScaleY) continue;
+
+      updates.push(tokenDoc.update({
+        width: Number(footprint.width),
+        height: Number(footprint.height),
+        "texture.scaleX": Number(footprint.scaleX),
+        "texture.scaleY": Number(footprint.scaleY)
+      }));
+    }
+
+    if (updates.length) await Promise.allSettled(updates);
+  }
+
   // Prepare rendering context for both V1 and V2
   // Converts dice counts to arrays for template iteration and handles wounded state
   async _prepareContext(options) {
@@ -157,6 +221,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const profileSrc = actor?.img || tokenSrc || "";
     const tokenPreviewSrc = this._getTokenPreviewSrc(actor, isWounded) || profileSrc;
     const woundedTokenPreviewSrc = actor?.system?.woundedTokenImage || tokenPreviewSrc;
+    const tokenFootprint = this._getTokenFootprint(actor);
 
     // Extract dice pools from current (or wounded) attributes
     const defense = system.attributes?.defense || { black: 0, white: 0 };
@@ -204,11 +269,61 @@ export class SWIAActorSheet extends BaseActorSheet {
         }))
       );
     }
-    
+
+    let enrichedSurgeAbilities = [];
+    let enrichedSpecialAbilities = [];
+    if (actor.type === "villain" || actor.type === "ally") {
+      enrichedSurgeAbilities = await Promise.all(
+        (Array.isArray(system.attributes?.surgeAbilities) ? system.attributes.surgeAbilities : Object.values(system.attributes?.surgeAbilities ?? {})).map(async (a, i) => ({
+          ...a,
+          enrichedEffectText: await TextEditorClass.enrichHTML(a.effectText || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
+          index: i
+        }))
+      );
+    }
+    if (actor.type === "villain" || actor.type === "ally") {
+      enrichedSpecialAbilities = await Promise.all(
+        (Array.isArray(system.specialAbilities) ? system.specialAbilities : Object.values(system.specialAbilities ?? {})).map(async (a, i) => ({
+          ...a,
+          enrichedName: await TextEditorClass.enrichHTML(a.name || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
+          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
+          index: i
+        }))
+      );
+    }
+
     // Collect owned items grouped by type
     const ownedItems = actor.items?.contents ?? [];
     const abilities = ownedItems.filter(i => i.type === "classcard");
-    const weapons = ownedItems.filter(i => i.type === "weapon");
+    const weapons = await Promise.all(
+      ownedItems.filter(i => i.type === "weapon").map(async w => {
+        const dice = w.system?.attackDice || {};
+        const abilitiesRaw = Array.isArray(w.system?.abilities)
+          ? w.system.abilities
+          : Object.values(w.system?.abilities || {});
+        const enrichedAbilities = await Promise.all(
+          abilitiesRaw.map(async a => ({
+            ...a,
+            enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", {
+              async: true,
+              secrets: actor.isOwner,
+              relativeTo: w
+            })
+          }))
+        );
+        return {
+          id: w.id,
+          name: w.name,
+          img: w.img,
+          system: w.system,
+          enrichedAbilities,
+          attackRedDice: Array.from({ length: dice.red || 0 }),
+          attackBlueDice: Array.from({ length: dice.blue || 0 }),
+          attackGreenDice: Array.from({ length: dice.green || 0 }),
+          attackYellowDice: Array.from({ length: dice.yellow || 0 }),
+        };
+      })
+    );
     const gear = ownedItems.filter(i => i.type === "gear");
 
     return foundry.utils.mergeObject(context, {
@@ -226,10 +341,13 @@ export class SWIAActorSheet extends BaseActorSheet {
       profileSrc,
       tokenPreviewSrc,
       woundedTokenPreviewSrc,
+      tokenFootprint,
       enrichedBiography: enrichedBiography,
       enrichedWoundedBiography: enrichedWoundedBiography,
       enrichedHeroAbilities: enrichedHeroAbilities,
       enrichedWoundedHeroAbilities: enrichedWoundedHeroAbilities,
+      enrichedSurgeAbilities: enrichedSurgeAbilities,
+      enrichedSpecialAbilities: enrichedSpecialAbilities,
       abilities: abilities,
       weapons: weapons,
       gear: gear,
@@ -270,6 +388,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const profileSrc = data.actor?.img || tokenSrc || "";
     const tokenPreviewSrc = this._getTokenPreviewSrc(data.actor, isWounded) || profileSrc;
     const woundedTokenPreviewSrc = data.actor?.system?.woundedTokenImage || tokenPreviewSrc;
+    const tokenFootprint = this._getTokenFootprint(data.actor);
 
     // Create arrays for dice block rendering
     const defense = system.attributes?.defense || { black: 0, white: 0 };
@@ -318,10 +437,60 @@ export class SWIAActorSheet extends BaseActorSheet {
       );
     }
 
+    let enrichedSurgeAbilities = [];
+    let enrichedSpecialAbilities = [];
+    if (data.actor.type === "villain" || data.actor.type === "ally") {
+      enrichedSurgeAbilities = await Promise.all(
+        (Array.isArray(system.attributes?.surgeAbilities) ? system.attributes.surgeAbilities : Object.values(system.attributes?.surgeAbilities ?? {})).map(async (a, i) => ({
+          ...a,
+          enrichedEffectText: await TextEditorClass.enrichHTML(a.effectText || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
+          index: i
+        }))
+      );
+    }
+    if (data.actor.type === "villain" || data.actor.type === "ally") {
+      enrichedSpecialAbilities = await Promise.all(
+        (Array.isArray(system.specialAbilities) ? system.specialAbilities : Object.values(system.specialAbilities ?? {})).map(async (a, i) => ({
+          ...a,
+          enrichedName: await TextEditorClass.enrichHTML(a.name || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
+          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
+          index: i
+        }))
+      );
+    }
+
     // Collect owned items grouped by type
     const ownedItems = data.actor.items?.contents ?? [];
     const abilities = ownedItems.filter(i => i.type === "classcard");
-    const weapons = ownedItems.filter(i => i.type === "weapon");
+    const weapons = await Promise.all(
+      ownedItems.filter(i => i.type === "weapon").map(async w => {
+        const dice = w.system?.attackDice || {};
+        const abilitiesRaw = Array.isArray(w.system?.abilities)
+          ? w.system.abilities
+          : Object.values(w.system?.abilities || {});
+        const enrichedAbilities = await Promise.all(
+          abilitiesRaw.map(async a => ({
+            ...a,
+            enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", {
+              async: true,
+              secrets: data.actor.isOwner,
+              relativeTo: w
+            })
+          }))
+        );
+        return {
+          id: w.id,
+          name: w.name,
+          img: w.img,
+          system: w.system,
+          enrichedAbilities,
+          attackRedDice: Array.from({ length: dice.red || 0 }),
+          attackBlueDice: Array.from({ length: dice.blue || 0 }),
+          attackGreenDice: Array.from({ length: dice.green || 0 }),
+          attackYellowDice: Array.from({ length: dice.yellow || 0 }),
+        };
+      })
+    );
     const gear = ownedItems.filter(i => i.type === "gear");
 
     data.systemData = system;
@@ -337,10 +506,13 @@ export class SWIAActorSheet extends BaseActorSheet {
     data.profileSrc = profileSrc;
     data.tokenPreviewSrc = tokenPreviewSrc;
     data.woundedTokenPreviewSrc = woundedTokenPreviewSrc;
+    data.tokenFootprint = tokenFootprint;
     data.enrichedBiography = enrichedBiography;
     data.enrichedWoundedBiography = enrichedWoundedBiography;
     data.enrichedHeroAbilities = enrichedHeroAbilities;
     data.enrichedWoundedHeroAbilities = enrichedWoundedHeroAbilities;
+    data.enrichedSurgeAbilities = enrichedSurgeAbilities;
+    data.enrichedSpecialAbilities = enrichedSpecialAbilities;
     data.abilities = abilities;
     data.weapons = weapons;
     data.gear = gear;
@@ -386,6 +558,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       html.find("[data-action='toggleEdit']").on("change", this._onToggleEdit.bind(this));
     }
     html.find("[data-action='toggleSectionCollapse']").on("click", this._onToggleSectionCollapse.bind(this));
+    html.find("[data-action='applyTokenFootprintPreset']").on("click", this._onApplyTokenFootprintPreset.bind(this));
 
     // Use event delegation for image clicks to handle edit mode changes
     html.on("click", ".profile-image.clickable, .token-image.clickable", (event) => {
@@ -512,6 +685,34 @@ export class SWIAActorSheet extends BaseActorSheet {
     const current = Boolean(this._collapsedSections?.[section]);
     this._collapsedSections[section] = !current;
     this.render(false);
+  }
+
+  async _onApplyTokenFootprintPreset(event, target) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor || actor.type !== "villain") return;
+    if (!game.user?.isGM || !this._editMode) return;
+
+    const el = target ?? event?.currentTarget;
+    const width = Number(el?.dataset?.width);
+    const height = Number(el?.dataset?.height);
+    const scale = Number(el?.dataset?.scale ?? "1");
+    if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) return;
+    const safeScale = Number.isFinite(scale) && scale > 0 ? scale : 1;
+
+    await actor.update({
+      "prototypeToken.width": width,
+      "prototypeToken.height": height,
+      "prototypeToken.texture.scaleX": safeScale,
+      "prototypeToken.texture.scaleY": safeScale
+    });
+
+    await this._syncActiveTokenFootprint(actor, {
+      width,
+      height,
+      scaleX: safeScale,
+      scaleY: safeScale
+    }, true);
   }
 
   // Open an owned item's sheet
@@ -754,7 +955,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       // Re-save array fields as proper arrays from the current DOM.
       // Only for actor types that own these fields.
       if (actor.type === "villain" || actor.type === "ally") await this._onSurgeAbilityChange(null);
-      if (actor.type === "villain") await this._onSpecialAbilityChange(null);
+      if (actor.type === "villain" || actor.type === "ally") await this._onSpecialAbilityChange(null);
     } catch (err) {
       console.error("SWIA: Failed to save form data", err);
     }
@@ -985,22 +1186,22 @@ export class SWIAActorSheet extends BaseActorSheet {
     await actor.update({ "system.specialAbilities": updated });
   }
 
-  // Add a blank special ability to villain
+  // Add a blank special ability to villain or ally
   async _onAddSpecialAbility(event, target) {
     event?.preventDefault?.();
     const actor = this.document ?? this.actor;
-    if (!actor || actor.type !== "villain") return;
+    if (!actor || (actor.type !== "villain" && actor.type !== "ally")) return;
     const raw = foundry.utils.deepClone(actor.system.specialAbilities ?? []);
     const current = Array.isArray(raw) ? raw : Object.values(raw);
     current.push({ name: "", description: "" });
     await actor.update({ "system.specialAbilities": current });
   }
 
-  // Remove a special ability by index from villain
+  // Remove a special ability by index from villain or ally
   async _onRemoveSpecialAbility(event, target) {
     event?.preventDefault?.();
     const actor = this.document ?? this.actor;
-    if (!actor || actor.type !== "villain") return;
+    if (!actor || (actor.type !== "villain" && actor.type !== "ally")) return;
     const el = target ?? event?.currentTarget;
     const idx = parseInt(el?.dataset?.index ?? "-1", 10);
     if (idx < 0) return;

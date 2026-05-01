@@ -163,6 +163,8 @@ Hooks.once("init", async function initSWIA() {
     "systems/swia/templates/campaign/campaign-tracker.hbs",
     "systems/swia/templates/items/classcard-sheet.hbs",
     "systems/swia/templates/items/weapon-sheet.hbs",
+    "systems/swia/templates/items/weaponmod-sheet.hbs",
+    "systems/swia/templates/items/armor-sheet.hbs",
     "systems/swia/templates/items/gear-sheet.hbs",
     "systems/swia/templates/items/heroability-sheet.hbs"
   ]);
@@ -177,7 +179,7 @@ Hooks.once("init", async function initSWIA() {
   // Register item sheets
   ItemsCollection.unregisterSheet("core", BaseItemSheet);
   ItemsCollection.registerSheet("swia", SWIAItemSheet, {
-    types: ["classcard", "agendacard", "imperialclasscard", "weapon", "gear", "heroability"],
+    types: ["classcard", "agendacard", "imperialclasscard", "weapon", "weaponmod", "armor", "gear", "heroability"],
     makeDefault: true
   });
 });

@@ -11,6 +11,7 @@ Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor shee
 - Hero healthy/wounded state toggle with separate wounded attributes and biography.
 - Activation token toggle on actor sheets.
 - GM edit mode for actor and item sheets (including portrait/token/card image updates).
+- Villain token footprint controls (preset buttons + manual width/height/scale) for massive multi-grid figures.
 - Owned item support with item types: `weapon`, `gear`, `ability`.
 - Dedicated item sheets for all item types, including weapon surge ability rows and card state cycling (`ready` -> `exhausted` -> `depleted`).
 - Actor inventory side-panel tabs (Abilities, Items/Gear, Weapons) with open/delete/cycle-state controls.
@@ -38,6 +39,13 @@ Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor shee
 - [Dice Tray](https://foundryvtt.com/packages/dice-tray) for managing dice pools.
 - [Status Counter](https://foundryvtt.com/packages/statuscounter) for custom status effects.
 - [Star Wars Imperial Assault Dice](https://github.com/casegib/swia-dice) for accurate Imperial Assault dice representation.
+
+
+## Massive Villain Tokens
+- Open a villain sheet as GM and enable Edit Mode.
+- In the token area, use `Token Footprint` preset buttons (`1x1`, `2x1`, `2x2`, `3x2`, `3x3`) or set width/height/scale manually.
+- Footprint uses Foundry grid occupancy (`width x height`).
+- Non-circular silhouettes should come from transparent token art; occupancy remains rectangular.
 
 
 ## Notes

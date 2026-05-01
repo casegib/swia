@@ -586,7 +586,14 @@ export class SWIAPlayerPortal extends BaseApplication {
 
     if (!sourceItem || sourceItem.documentName !== "Item") return;
     if (sourceItem.type !== expectedType) {
-      const expectedLabel = game.i18n.localize(`SWIA.Inventory.${expectedType === "gear" ? "Items" : `${expectedType.charAt(0).toUpperCase()}${expectedType.slice(1)}s`}`);
+      const expectedLabelKey = {
+        weapon: "SWIA.Inventory.Weapons",
+        classcard: "SWIA.Inventory.Abilities",
+        gear: "SWIA.Inventory.Items",
+        armor: "SWIA.Inventory.Armor",
+        weaponmod: "SWIA.Inventory.WeaponMods"
+      }[expectedType] ?? "SWIA.Inventory.Items";
+      const expectedLabel = game.i18n.localize(expectedLabelKey);
       ui.notifications?.warn(game.i18n.format("SWIA.Portal.DropWrongType", { expected: expectedLabel }));
       return;
     }
