@@ -8,6 +8,7 @@ import { SWIACompanionPortal } from "./companion-portal.js";
 import { SWIAImperialPortal } from "./imperial-portal.js";
 import { SWIAGMPortal } from "./gm-portal.js";
 import { SWIACampaignTracker } from "./campaign-tracker.js";
+import { diceArray } from "./utils.js";
 
 // Get appropriate base class for V1/V2 compatibility
 const BaseActorSheet = foundry.appv1?.sheets?.ActorSheet ?? ActorSheet;
@@ -104,12 +105,7 @@ Hooks.once("init", async function initSWIA() {
     return value.charAt(0).toUpperCase() + value.slice(1);
   });
 
-  // Helper to create array of specific length for iteration (e.g., rendering dice blocks)
-  Handlebars.registerHelper("range", (count) => {
-    const num = parseInt(count) || 0;
-    if (num <= 0) return [];
-    return Array.from({ length: num }, (_, i) => i);
-  });
+  Handlebars.registerHelper("range", (count) => diceArray(parseInt(count) || 0));
 
   // Helper for equality comparison in templates
   Handlebars.registerHelper("eq", (a, b) => a === b);
