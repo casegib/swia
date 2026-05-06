@@ -1,5 +1,3 @@
-import { ensureArray, TextEditorImpl } from "../utils.js";
-
 // Import base classes for V1/V2 compatibility
 const BaseItemSheetV2 = foundry.applications?.sheets?.ItemSheetV2;
 const BaseItemSheetV1 = foundry.appv1?.sheets?.ItemSheet ?? ItemSheet;
@@ -235,7 +233,7 @@ export class SWIAItemSheet extends BaseItemSheet {
     const item = resolveItemDocument(this);
     if (!item) return;
     if (item.type !== "weapon") return;
-    const abilities = ensureArray(item.system.abilities);
+    const abilities = Array.isArray(item.system.abilities) ? item.system.abilities : Object.values(item.system.abilities || {});
     await item.update({ "system.abilities": [...abilities, { prefix: "none", description: "" }] });
   }
 
@@ -246,7 +244,7 @@ export class SWIAItemSheet extends BaseItemSheet {
     if (item.type !== "weapon") return;
     const index = parseInt(target.dataset.index);
     if (isNaN(index)) return;
-    const abilities = ensureArray(item.system.abilities);
+    const abilities = Array.isArray(item.system.abilities) ? item.system.abilities : Object.values(item.system.abilities || {});
     await item.update({ "system.abilities": abilities.filter((_, i) => i !== index) });
   }
 
@@ -307,10 +305,17 @@ export class SWIAItemSheet extends BaseItemSheet {
     return name || "Item";
   }
 
-  async _buildItemContext(item) {
+  // Prepare rendering context for both V1 and V2
+  async _prepareContext(options) {
+    const context = isV2 ? await super._prepareContext(options) : {};
+    const item = resolveItemDocument(this);
+    if (!item) return context;
     const system = item.system;
-    const TextEditorClass = TextEditorImpl;
 
+    // Get TextEditor with fallback for V1/V2 compatibility
+    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
+
+    // Enrich HTML for description field
     const enrichedDescription = await TextEditorClass.enrichHTML(system.description || "", {
       async: true,
       secrets: item.isOwner,
@@ -321,8 +326,13 @@ export class SWIAItemSheet extends BaseItemSheet {
       ? await TextEditorClass.enrichHTML(system.abilityText || "", { async: true, secrets: item.isOwner, relativeTo: item })
       : "";
 
+    // Enrich weapon abilities (free-form ability rows with optional prefix icons)
+    // Normalize to array — Foundry can store new array fields as {} on existing documents
+    const abilitiesRaw = Array.isArray(system.abilities)
+      ? system.abilities
+      : Object.values(system.abilities || {});
     const enrichedAbilities = await Promise.all(
-      ensureArray(system.abilities).map(async (ability) => ({
+      abilitiesRaw.map(async (ability, index) => ({
         ...ability,
         enrichedDescription: await TextEditorClass.enrichHTML(ability.description || "", {
           async: true,
@@ -332,46 +342,102 @@ export class SWIAItemSheet extends BaseItemSheet {
       }))
     );
 
-    const DEFAULT_ITEM_IMAGES = ["icons/svg/item-bag.svg", "icons/svg/sword.svg", "icons/svg/mystery-man.svg"];
-    const hasCardImage = item.img && !DEFAULT_ITEM_IMAGES.includes(item.img);
+    // Determine if a real card image has been uploaded (not the default mystery-man)
+    const defaultImages = ["icons/svg/item-bag.svg", "icons/svg/sword.svg", "icons/svg/mystery-man.svg"];
+    const hasCardImage = item.img && !defaultImages.includes(item.img);
 
+    // Card state label for display
     const stateLabels = { ready: "SWIA.Item.CardState.Ready", exhausted: "SWIA.Item.CardState.Exhausted", depleted: "SWIA.Item.CardState.Depleted" };
     const cardState = system.cardState || "ready";
     const cardStateLabel = game.i18n.localize(stateLabels[cardState] || stateLabels.ready);
+    const weaponmodAttachedWeaponName = resolveWeaponmodAttachmentName(item);
 
-    return {
-      item,
+    return foundry.utils.mergeObject(context, {
+      item: item,
       systemData: system,
-      enrichedDescription,
-      enrichedAbilityText,
-      enrichedAbilities,
+      enrichedDescription: enrichedDescription,
+      enrichedAbilityText: enrichedAbilityText,
+      enrichedAbilities: enrichedAbilities,
       editMode: this.editMode ?? false,
       isEditable: this.isEditable !== false,
       isGM: game.user?.isGM ?? false,
-      hasCardImage,
-      cardStateLabel,
-      weaponmodAttachedWeaponName: resolveWeaponmodAttachmentName(item),
+      hasCardImage: hasCardImage,
+      cardStateLabel: cardStateLabel,
+      weaponmodAttachedWeaponName: weaponmodAttachedWeaponName,
       config: CONFIG.SWIA ?? {}
-    };
+    });
   }
 
-  async _prepareContext(options) {
-    const base = isV2 ? await super._prepareContext(options) : {};
-    const item = resolveItemDocument(this);
-    if (!item) return base;
-    return foundry.utils.mergeObject(base, await this._buildItemContext(item));
-  }
-
+  // V2 specific: prepare context for the form part
   async _preparePartContext(partId, context, options) {
     context = await super._preparePartContext?.(partId, context, options) ?? context;
-    if (partId === "form") return this._prepareContext(options);
+    
+    if (partId === "form") {
+      return await this._prepareContext(options);
+    }
+    
     return context;
   }
 
   async getData(options) {
     if (isV2) return this._prepareContext(options);
+    
     const data = await super.getData(options);
-    return Object.assign(data, await this._buildItemContext(data.item));
+    const system = data.item.system;
+
+    // Get TextEditor with fallback for V1/V2 compatibility
+    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
+
+    // Enrich HTML for description
+    const enrichedDescription = await TextEditorClass.enrichHTML(system.description || "", {
+      async: true,
+      secrets: data.item.isOwner,
+      relativeTo: data.item
+    });
+
+    const enrichedAbilityText = data.item.type === "heroability"
+      ? await TextEditorClass.enrichHTML(system.abilityText || "", { async: true, secrets: data.item.isOwner, relativeTo: data.item })
+      : "";
+
+    // Determine if a real card image has been uploaded
+    const defaultImages = ["icons/svg/item-bag.svg", "icons/svg/sword.svg", "icons/svg/mystery-man.svg"];
+    const hasCardImage = data.item.img && !defaultImages.includes(data.item.img);
+
+    // Card state label for display
+    const stateLabels = { ready: "SWIA.Item.CardState.Ready", exhausted: "SWIA.Item.CardState.Exhausted", depleted: "SWIA.Item.CardState.Depleted" };
+    const cardState = system.cardState || "ready";
+    const cardStateLabel = game.i18n.localize(stateLabels[cardState] || stateLabels.ready);
+    const weaponmodAttachedWeaponName = resolveWeaponmodAttachmentName(data.item);
+
+    // Enrich weapon abilities (V1 path)
+    // Normalize to array — Foundry can store new array fields as {} on existing documents
+    const abilitiesRaw = Array.isArray(system.abilities)
+      ? system.abilities
+      : Object.values(system.abilities || {});
+    const enrichedAbilities = await Promise.all(
+      abilitiesRaw.map(async (ability) => ({
+        ...ability,
+        enrichedDescription: await TextEditorClass.enrichHTML(ability.description || "", {
+          async: true,
+          secrets: data.item.isOwner,
+          relativeTo: data.item
+        })
+      }))
+    );
+
+    data.systemData = system;
+    data.enrichedDescription = enrichedDescription;
+    data.enrichedAbilityText = enrichedAbilityText;
+    data.enrichedAbilities = enrichedAbilities;
+    data.editMode = this.editMode ?? false;
+    data.isEditable = this.isEditable !== false;
+    data.isGM = game.user?.isGM ?? false;
+    data.hasCardImage = hasCardImage;
+    data.cardStateLabel = cardStateLabel;
+    data.weaponmodAttachedWeaponName = weaponmodAttachedWeaponName;
+    data.config = CONFIG.SWIA ?? {};
+    
+    return data;
   }
 
   activateListeners(html) {
@@ -447,7 +513,7 @@ export class SWIAItemSheet extends BaseItemSheet {
   async _onAddAbility(event) {
     event.preventDefault();
     if (this.item.type !== "weapon") return;
-    const abilities = ensureArray(this.item.system.abilities);
+    const abilities = Array.isArray(this.item.system.abilities) ? this.item.system.abilities : Object.values(this.item.system.abilities || {});
     await this.item.update({ "system.abilities": [...abilities, { prefix: "none", description: "" }] });
   }
 
@@ -456,7 +522,7 @@ export class SWIAItemSheet extends BaseItemSheet {
     event.preventDefault();
     const index = parseInt(event.currentTarget.dataset.index);
     if (isNaN(index) || this.item.type !== "weapon") return;
-    const abilities = ensureArray(this.item.system.abilities);
+    const abilities = Array.isArray(this.item.system.abilities) ? this.item.system.abilities : Object.values(this.item.system.abilities || {});
     await this.item.update({ "system.abilities": abilities.filter((_, i) => i !== index) });
   }
 

@@ -32,7 +32,13 @@
   --label-rgb: 90, 68, 41;
 }
 
-.swia-sheet.type-ally,
+.swia-sheet.type-ally {
+  --accent: #1a4a6b;
+  --accent-rgb: 26, 74, 107;
+  --label: #2d3f50;
+  --label-rgb: 45, 63, 80;
+}
+
 .swia-sheet.type-villain {
   --accent: #1a4a6b;
   --accent-rgb: 26, 74, 107;
@@ -40,7 +46,14 @@
   --label-rgb: 45, 63, 80;
 }
 
-.swia-sheet.type-villain.elite,
+.swia-sheet.type-villain.elite {
+  border-image: none;
+  border-color: #b03030;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    0 0 16px rgba(176, 48, 48, 0.5);
+}
+
 .swia-sheet.type-ally.elite {
   border-image: none;
   border-color: #b03030;
@@ -49,7 +62,8 @@
     0 0 16px rgba(176, 48, 48, 0.5);
 }
 
-.swia-sheet.affiliation-imperial:not(.elite) {
+.swia-sheet.type-villain.affiliation-imperial:not(.elite),
+.swia-sheet.type-ally.affiliation-imperial:not(.elite) {
   border-image: none;
   border-color: #3a7abf;
   box-shadow:
@@ -57,7 +71,8 @@
     0 0 16px rgba(58, 122, 191, 0.45);
 }
 
-.swia-sheet.affiliation-rebel:not(.elite) {
+.swia-sheet.type-villain.affiliation-rebel:not(.elite),
+.swia-sheet.type-ally.affiliation-rebel:not(.elite) {
   border-image: none;
   border-color: #d4a84a;
   box-shadow:
@@ -65,7 +80,8 @@
     0 0 16px rgba(212, 168, 74, 0.45);
 }
 
-.swia-sheet.affiliation-mercenary:not(.elite) {
+.swia-sheet.type-villain.affiliation-mercenary:not(.elite),
+.swia-sheet.type-ally.affiliation-mercenary:not(.elite) {
   border-image: none;
   border-color: #3a8c3a;
   box-shadow:

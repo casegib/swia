@@ -1,5 +1,3 @@
-import { diceArray, TextEditorImpl } from "./utils.js";
-
 const BaseApplicationV2 = foundry.applications?.api?.ApplicationV2;
 const HandlebarsApplicationMixin = foundry.applications?.api?.HandlebarsApplicationMixin;
 const BaseApplicationV1 = foundry.appv1?.api?.Application ?? Application;
@@ -251,7 +249,7 @@ export class SWIAImperialPortal extends BaseApplication {
       ? (system.woundedBiography || system.biography || "")
       : (system.biography || "");
 
-    const TextEditorClass = TextEditorImpl;
+    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
     const enrichedBiography = await TextEditorClass.enrichHTML(biographySource, {
       async: true,
       secrets: actor.isOwner,
@@ -281,24 +279,24 @@ export class SWIAImperialPortal extends BaseApplication {
       tech,
       enrichedBiography,
       hasBiography: !!biographySource?.trim(),
-      defenseBlackDice: diceArray(defense.black),
-      defenseWhiteDice: diceArray(defense.white),
-      attackRedDice: diceArray(attack.red),
-      attackBlueDice: diceArray(attack.blue),
-      attackGreenDice: diceArray(attack.green),
-      attackYellowDice: diceArray(attack.yellow),
-      strengthRedDice: diceArray(strength.red),
-      strengthBlueDice: diceArray(strength.blue),
-      strengthGreenDice: diceArray(strength.green),
-      strengthYellowDice: diceArray(strength.yellow),
-      insightRedDice: diceArray(insight.red),
-      insightBlueDice: diceArray(insight.blue),
-      insightGreenDice: diceArray(insight.green),
-      insightYellowDice: diceArray(insight.yellow),
-      techRedDice: diceArray(tech.red),
-      techBlueDice: diceArray(tech.blue),
-      techGreenDice: diceArray(tech.green),
-      techYellowDice: diceArray(tech.yellow),
+      defenseBlackDice: Array.from({ length: defense.black || 0 }, (_, i) => i),
+      defenseWhiteDice: Array.from({ length: defense.white || 0 }, (_, i) => i),
+      attackRedDice: Array.from({ length: attack.red || 0 }, (_, i) => i),
+      attackBlueDice: Array.from({ length: attack.blue || 0 }, (_, i) => i),
+      attackGreenDice: Array.from({ length: attack.green || 0 }, (_, i) => i),
+      attackYellowDice: Array.from({ length: attack.yellow || 0 }, (_, i) => i),
+      strengthRedDice: Array.from({ length: strength.red || 0 }, (_, i) => i),
+      strengthBlueDice: Array.from({ length: strength.blue || 0 }, (_, i) => i),
+      strengthGreenDice: Array.from({ length: strength.green || 0 }, (_, i) => i),
+      strengthYellowDice: Array.from({ length: strength.yellow || 0 }, (_, i) => i),
+      insightRedDice: Array.from({ length: insight.red || 0 }, (_, i) => i),
+      insightBlueDice: Array.from({ length: insight.blue || 0 }, (_, i) => i),
+      insightGreenDice: Array.from({ length: insight.green || 0 }, (_, i) => i),
+      insightYellowDice: Array.from({ length: insight.yellow || 0 }, (_, i) => i),
+      techRedDice: Array.from({ length: tech.red || 0 }, (_, i) => i),
+      techBlueDice: Array.from({ length: tech.blue || 0 }, (_, i) => i),
+      techGreenDice: Array.from({ length: tech.green || 0 }, (_, i) => i),
+      techYellowDice: Array.from({ length: tech.yellow || 0 }, (_, i) => i),
       hasAttack: actor.type !== "hero",
       attackType,
       groupSize: system.groupSize ?? 1,
