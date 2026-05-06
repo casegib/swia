@@ -1,3 +1,5 @@
+import { diceArray, ensureArray, TextEditorImpl } from "../utils.js";
+
 // Import base classes for V1/V2 compatibility
 const BaseActorSheetV2 = foundry.applications?.sheets?.ActorSheetV2;
 const BaseActorSheetV1 = foundry.appv1?.sheets?.ActorSheet ?? ActorSheet;
@@ -236,7 +238,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const woundedTech = isWounded && system.woundedAttributes?.tech ? system.woundedAttributes.tech : tech;
     
     // Get TextEditor with fallback for V1/V2 compatibility
-    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
+    const TextEditorClass = TextEditorImpl;
     
     // Enrich biography HTML
     const enrichedBiography = await TextEditorClass.enrichHTML(system.biography || "", {
@@ -255,14 +257,14 @@ export class SWIAActorSheet extends BaseActorSheet {
         relativeTo: actor
       });
       enrichedHeroAbilities = await Promise.all(
-        (Array.isArray(system.heroAbilities) ? system.heroAbilities : Object.values(system.heroAbilities ?? {})).map(async (a, i) => ({
+        ensureArray(system.heroAbilities).map(async (a, i) => ({
           ...a,
           enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
           index: i
         }))
       );
       enrichedWoundedHeroAbilities = await Promise.all(
-        (Array.isArray(system.woundedHeroAbilities) ? system.woundedHeroAbilities : Object.values(system.woundedHeroAbilities ?? {})).map(async (a, i) => ({
+        ensureArray(system.woundedHeroAbilities).map(async (a, i) => ({
           ...a,
           enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
           index: i
@@ -274,7 +276,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     let enrichedSpecialAbilities = [];
     if (actor.type === "villain" || actor.type === "ally") {
       enrichedSurgeAbilities = await Promise.all(
-        (Array.isArray(system.attributes?.surgeAbilities) ? system.attributes.surgeAbilities : Object.values(system.attributes?.surgeAbilities ?? {})).map(async (a, i) => ({
+        ensureArray(system.attributes?.surgeAbilities).map(async (a, i) => ({
           ...a,
           enrichedEffectText: await TextEditorClass.enrichHTML(a.effectText || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
           index: i
@@ -283,7 +285,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     }
     if (actor.type === "villain" || actor.type === "ally") {
       enrichedSpecialAbilities = await Promise.all(
-        (Array.isArray(system.specialAbilities) ? system.specialAbilities : Object.values(system.specialAbilities ?? {})).map(async (a, i) => ({
+        ensureArray(system.specialAbilities).map(async (a, i) => ({
           ...a,
           enrichedName: await TextEditorClass.enrichHTML(a.name || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
           enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
@@ -298,11 +300,8 @@ export class SWIAActorSheet extends BaseActorSheet {
     const weapons = await Promise.all(
       ownedItems.filter(i => i.type === "weapon").map(async w => {
         const dice = w.system?.attackDice || {};
-        const abilitiesRaw = Array.isArray(w.system?.abilities)
-          ? w.system.abilities
-          : Object.values(w.system?.abilities || {});
         const enrichedAbilities = await Promise.all(
-          abilitiesRaw.map(async a => ({
+          ensureArray(w.system?.abilities).map(async a => ({
             ...a,
             enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", {
               async: true,
@@ -317,10 +316,10 @@ export class SWIAActorSheet extends BaseActorSheet {
           img: w.img,
           system: w.system,
           enrichedAbilities,
-          attackRedDice: Array.from({ length: dice.red || 0 }),
-          attackBlueDice: Array.from({ length: dice.blue || 0 }),
-          attackGreenDice: Array.from({ length: dice.green || 0 }),
-          attackYellowDice: Array.from({ length: dice.yellow || 0 }),
+          attackRedDice: diceArray(dice.red),
+          attackBlueDice: diceArray(dice.blue),
+          attackGreenDice: diceArray(dice.green),
+          attackYellowDice: diceArray(dice.yellow),
         };
       })
     );
@@ -354,26 +353,24 @@ export class SWIAActorSheet extends BaseActorSheet {
       hasItems: ownedItems.length > 0,
       activeInventoryPanel: this._activeInventoryPanel,
       sectionCollapse: this._collapsedSections,
-      // Convert dice counts to arrays for Handlebars iteration (each loop)
-      // This allows displaying individual dice blocks in the template
-      defenseBlackDice: Array.from({ length: defense.black || 0 }, (_, i) => i),
-      defenseWhiteDice: Array.from({ length: defense.white || 0 }, (_, i) => i),
-      attackRedDice: Array.from({ length: attack.red || 0 }, (_, i) => i),
-      attackBlueDice: Array.from({ length: attack.blue || 0 }, (_, i) => i),
-      attackGreenDice: Array.from({ length: attack.green || 0 }, (_, i) => i),
-      attackYellowDice: Array.from({ length: attack.yellow || 0 }, (_, i) => i),
-      strengthRedDice: Array.from({ length: woundedStrength.red || 0 }, (_, i) => i),
-      strengthBlueDice: Array.from({ length: woundedStrength.blue || 0 }, (_, i) => i),
-      strengthGreenDice: Array.from({ length: woundedStrength.green || 0 }, (_, i) => i),
-      strengthYellowDice: Array.from({ length: woundedStrength.yellow || 0 }, (_, i) => i),
-      insightRedDice: Array.from({ length: woundedInsight.red || 0 }, (_, i) => i),
-      insightBlueDice: Array.from({ length: woundedInsight.blue || 0 }, (_, i) => i),
-      insightGreenDice: Array.from({ length: woundedInsight.green || 0 }, (_, i) => i),
-      insightYellowDice: Array.from({ length: woundedInsight.yellow || 0 }, (_, i) => i),
-      techRedDice: Array.from({ length: woundedTech.red || 0 }, (_, i) => i),
-      techBlueDice: Array.from({ length: woundedTech.blue || 0 }, (_, i) => i),
-      techGreenDice: Array.from({ length: woundedTech.green || 0 }, (_, i) => i),
-      techYellowDice: Array.from({ length: woundedTech.yellow || 0 }, (_, i) => i)
+      defenseBlackDice: diceArray(defense.black),
+      defenseWhiteDice: diceArray(defense.white),
+      attackRedDice: diceArray(attack.red),
+      attackBlueDice: diceArray(attack.blue),
+      attackGreenDice: diceArray(attack.green),
+      attackYellowDice: diceArray(attack.yellow),
+      strengthRedDice: diceArray(woundedStrength.red),
+      strengthBlueDice: diceArray(woundedStrength.blue),
+      strengthGreenDice: diceArray(woundedStrength.green),
+      strengthYellowDice: diceArray(woundedStrength.yellow),
+      insightRedDice: diceArray(woundedInsight.red),
+      insightBlueDice: diceArray(woundedInsight.blue),
+      insightGreenDice: diceArray(woundedInsight.green),
+      insightYellowDice: diceArray(woundedInsight.yellow),
+      techRedDice: diceArray(woundedTech.red),
+      techBlueDice: diceArray(woundedTech.blue),
+      techGreenDice: diceArray(woundedTech.green),
+      techYellowDice: diceArray(woundedTech.yellow)
     });
   }
 
@@ -403,7 +400,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const woundedTech = isWounded && system.woundedAttributes?.tech ? system.woundedAttributes.tech : tech;
 
     // Get TextEditor with fallback for V1/V2 compatibility
-    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
+    const TextEditorClass = TextEditorImpl;
     
     // Enrich biography HTML
     const enrichedBiography = await TextEditorClass.enrichHTML(system.biography || "", {
@@ -422,14 +419,14 @@ export class SWIAActorSheet extends BaseActorSheet {
         relativeTo: data.actor
       });
       enrichedHeroAbilities = await Promise.all(
-        (Array.isArray(system.heroAbilities) ? system.heroAbilities : Object.values(system.heroAbilities ?? {})).map(async (a, i) => ({
+        ensureArray(system.heroAbilities).map(async (a, i) => ({
           ...a,
           enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
           index: i
         }))
       );
       enrichedWoundedHeroAbilities = await Promise.all(
-        (Array.isArray(system.woundedHeroAbilities) ? system.woundedHeroAbilities : Object.values(system.woundedHeroAbilities ?? {})).map(async (a, i) => ({
+        ensureArray(system.woundedHeroAbilities).map(async (a, i) => ({
           ...a,
           enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
           index: i
@@ -441,7 +438,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     let enrichedSpecialAbilities = [];
     if (data.actor.type === "villain" || data.actor.type === "ally") {
       enrichedSurgeAbilities = await Promise.all(
-        (Array.isArray(system.attributes?.surgeAbilities) ? system.attributes.surgeAbilities : Object.values(system.attributes?.surgeAbilities ?? {})).map(async (a, i) => ({
+        ensureArray(system.attributes?.surgeAbilities).map(async (a, i) => ({
           ...a,
           enrichedEffectText: await TextEditorClass.enrichHTML(a.effectText || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
           index: i
@@ -450,7 +447,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     }
     if (data.actor.type === "villain" || data.actor.type === "ally") {
       enrichedSpecialAbilities = await Promise.all(
-        (Array.isArray(system.specialAbilities) ? system.specialAbilities : Object.values(system.specialAbilities ?? {})).map(async (a, i) => ({
+        ensureArray(system.specialAbilities).map(async (a, i) => ({
           ...a,
           enrichedName: await TextEditorClass.enrichHTML(a.name || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
           enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
@@ -465,11 +462,8 @@ export class SWIAActorSheet extends BaseActorSheet {
     const weapons = await Promise.all(
       ownedItems.filter(i => i.type === "weapon").map(async w => {
         const dice = w.system?.attackDice || {};
-        const abilitiesRaw = Array.isArray(w.system?.abilities)
-          ? w.system.abilities
-          : Object.values(w.system?.abilities || {});
         const enrichedAbilities = await Promise.all(
-          abilitiesRaw.map(async a => ({
+          ensureArray(w.system?.abilities).map(async a => ({
             ...a,
             enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", {
               async: true,
@@ -484,10 +478,10 @@ export class SWIAActorSheet extends BaseActorSheet {
           img: w.img,
           system: w.system,
           enrichedAbilities,
-          attackRedDice: Array.from({ length: dice.red || 0 }),
-          attackBlueDice: Array.from({ length: dice.blue || 0 }),
-          attackGreenDice: Array.from({ length: dice.green || 0 }),
-          attackYellowDice: Array.from({ length: dice.yellow || 0 }),
+          attackRedDice: diceArray(dice.red),
+          attackBlueDice: diceArray(dice.blue),
+          attackGreenDice: diceArray(dice.green),
+          attackYellowDice: diceArray(dice.yellow),
         };
       })
     );
@@ -519,25 +513,24 @@ export class SWIAActorSheet extends BaseActorSheet {
     data.hasItems = ownedItems.length > 0;
     data.activeInventoryPanel = this._activeInventoryPanel;
     data.sectionCollapse = this._collapsedSections;
-    // Dice arrays for rendering blocks
-    data.defenseBlackDice = Array.from({ length: defense.black || 0 }, (_, i) => i);
-    data.defenseWhiteDice = Array.from({ length: defense.white || 0 }, (_, i) => i);
-    data.attackRedDice = Array.from({ length: attack.red || 0 }, (_, i) => i);
-    data.attackBlueDice = Array.from({ length: attack.blue || 0 }, (_, i) => i);
-    data.attackGreenDice = Array.from({ length: attack.green || 0 }, (_, i) => i);
-    data.attackYellowDice = Array.from({ length: attack.yellow || 0 }, (_, i) => i);
-    data.strengthRedDice = Array.from({ length: woundedStrength.red || 0 }, (_, i) => i);
-    data.strengthBlueDice = Array.from({ length: woundedStrength.blue || 0 }, (_, i) => i);
-    data.strengthGreenDice = Array.from({ length: woundedStrength.green || 0 }, (_, i) => i);
-    data.strengthYellowDice = Array.from({ length: woundedStrength.yellow || 0 }, (_, i) => i);
-    data.insightRedDice = Array.from({ length: woundedInsight.red || 0 }, (_, i) => i);
-    data.insightBlueDice = Array.from({ length: woundedInsight.blue || 0 }, (_, i) => i);
-    data.insightGreenDice = Array.from({ length: woundedInsight.green || 0 }, (_, i) => i);
-    data.insightYellowDice = Array.from({ length: woundedInsight.yellow || 0 }, (_, i) => i);
-    data.techRedDice = Array.from({ length: woundedTech.red || 0 }, (_, i) => i);
-    data.techBlueDice = Array.from({ length: woundedTech.blue || 0 }, (_, i) => i);
-    data.techGreenDice = Array.from({ length: woundedTech.green || 0 }, (_, i) => i);
-    data.techYellowDice = Array.from({ length: woundedTech.yellow || 0 }, (_, i) => i);
+    data.defenseBlackDice = diceArray(defense.black);
+    data.defenseWhiteDice = diceArray(defense.white);
+    data.attackRedDice = diceArray(attack.red);
+    data.attackBlueDice = diceArray(attack.blue);
+    data.attackGreenDice = diceArray(attack.green);
+    data.attackYellowDice = diceArray(attack.yellow);
+    data.strengthRedDice = diceArray(woundedStrength.red);
+    data.strengthBlueDice = diceArray(woundedStrength.blue);
+    data.strengthGreenDice = diceArray(woundedStrength.green);
+    data.strengthYellowDice = diceArray(woundedStrength.yellow);
+    data.insightRedDice = diceArray(woundedInsight.red);
+    data.insightBlueDice = diceArray(woundedInsight.blue);
+    data.insightGreenDice = diceArray(woundedInsight.green);
+    data.insightYellowDice = diceArray(woundedInsight.yellow);
+    data.techRedDice = diceArray(woundedTech.red);
+    data.techBlueDice = diceArray(woundedTech.blue);
+    data.techGreenDice = diceArray(woundedTech.green);
+    data.techYellowDice = diceArray(woundedTech.yellow);
     return data;
   }
 
@@ -1080,7 +1073,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const isWounded = actor.system.state?.wounded ?? false;
     const field = isWounded ? "woundedHeroAbilities" : "heroAbilities";
     const raw = foundry.utils.deepClone(actor.system[field] ?? []);
-    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    const current = ensureArray(raw);
     current.push({
       name: item.name,
       description: item.system.abilityText ?? item.system.description ?? "",
@@ -1098,7 +1091,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const el = target ?? event?.currentTarget;
     const field = el?.dataset?.field ?? "heroAbilities";
     const raw = foundry.utils.deepClone(actor.system[field] ?? []);
-    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    const current = ensureArray(raw);
     current.push({ name: "", description: "" });
     await actor.update({ [`system.${field}`]: current });
   }
@@ -1113,7 +1106,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const idx = parseInt(el?.dataset?.index ?? "-1", 10);
     if (idx < 0) return;
     const raw = foundry.utils.deepClone(actor.system[field] ?? []);
-    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    const current = ensureArray(raw);
     current.splice(idx, 1);
     await actor.update({ [`system.${field}`]: current });
   }
@@ -1124,7 +1117,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const actor = this.document ?? this.actor;
     if (!actor || (actor.type !== "villain" && actor.type !== "ally")) return;
     const raw = foundry.utils.deepClone(actor.system.attributes?.surgeAbilities ?? []);
-    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    const current = ensureArray(raw);
     current.push({ cost: 1, effectText: "" });
     await actor.update({ "system.attributes.surgeAbilities": current });
   }
@@ -1138,7 +1131,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const idx = parseInt(el?.dataset?.index ?? "-1", 10);
     if (idx < 0) return;
     const raw = foundry.utils.deepClone(actor.system.attributes?.surgeAbilities ?? []);
-    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    const current = ensureArray(raw);
     current.splice(idx, 1);
     await actor.update({ "system.attributes.surgeAbilities": current });
   }
@@ -1192,7 +1185,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const actor = this.document ?? this.actor;
     if (!actor || (actor.type !== "villain" && actor.type !== "ally")) return;
     const raw = foundry.utils.deepClone(actor.system.specialAbilities ?? []);
-    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    const current = ensureArray(raw);
     current.push({ name: "", description: "" });
     await actor.update({ "system.specialAbilities": current });
   }
@@ -1206,7 +1199,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const idx = parseInt(el?.dataset?.index ?? "-1", 10);
     if (idx < 0) return;
     const raw = foundry.utils.deepClone(actor.system.specialAbilities ?? []);
-    const current = Array.isArray(raw) ? raw : Object.values(raw);
+    const current = ensureArray(raw);
     current.splice(idx, 1);
     await actor.update({ "system.specialAbilities": current });
   }
