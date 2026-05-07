@@ -165,6 +165,12 @@
             <input name="system.isUnique" type="checkbox" {{#if systemData.isUnique}}checked{{/if}} />
             {{localize "SWIA.Villain.IsUnique"}}
           </label>
+          {{#if (eq actor.type "villain")}}
+          <label class="flag-label">
+            <input type="checkbox" data-action="toggleShift" {{#if systemData.hasShift}}checked{{/if}} />
+            {{localize "SWIA.Villain.HasShift"}}
+          </label>
+          {{/if}}
         </div>
         <div class="villain-affiliation-edit">
           <select name="system.affiliation">
@@ -277,6 +283,103 @@
     {{/if}}
     </div>
   </div>
+  {{/if}}
+
+  {{!-- Form card section (villain + hasShift only) --}}
+  {{#if (eq actor.type "villain")}}
+  {{#if systemData.hasShift}}
+  <div class="actor-list-section form-card-section">
+    <div class="form-card-header">
+      {{#if editMode}}
+      <span class="form-card-label">{{localize "SWIA.Villain.FormCard.Label"}}</span>
+      {{#if formCards.length}}
+      <ol class="form-card-manage-list">
+        {{#each formCards}}
+        <li class="form-card-manage-entry" data-item-id="{{this.id}}">
+          <span class="form-card-manage-name">{{this.name}}</span>
+          <button type="button" class="form-card-open-btn" data-action="openItem" title="{{localize 'SWIA.Inventory.ClickToOpen'}}"><i class="fas fa-edit"></i></button>
+          <button type="button" class="form-card-delete-btn" data-action="deleteItem" title="{{localize 'SWIA.Villain.FormCard.Remove'}}"><i class="fas fa-trash"></i></button>
+        </li>
+        {{/each}}
+      </ol>
+      {{else}}
+      <p class="list-empty">{{localize "SWIA.Villain.FormCard.NoCards"}}</p>
+      {{/if}}
+      {{/if}}
+      {{#if formCards.length}}
+      <select class="form-card-select" data-action="setActiveForm">
+        <option value="">{{localize "SWIA.Villain.FormCard.None"}}</option>
+        {{#each formCards}}
+        <option value="{{this.id}}" {{#if (eq this.id ../systemData.activeFormId)}}selected{{/if}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+      {{/if}}
+    </div>
+
+    {{#if activeForm}}
+    {{!-- Form surge abilities --}}
+    <div class="form-card-surge-subsection">
+      {{#if editMode}}
+      <div class="list-section-header">
+        <span class="form-card-sublabel">{{localize "SWIA.Item.FormCard.SurgeAbilities"}}</span>
+        <button type="button" class="add-row-btn" data-action="addFormCardSurgeAbility" title="{{localize 'SWIA.Villain.AddSurgeAbility'}}"><i class="fas fa-plus"></i></button>
+      </div>
+      {{/if}}
+      {{#if enrichedFormSurgeAbilities.length}}
+      <ol class="surge-abilities-list ability-list {{#if editMode}}edit-list{{else}}view-grid{{#if (eq enrichedFormSurgeAbilities.length 3)}} surge-grid-three{{/if}}{{/if}}">
+        {{#each enrichedFormSurgeAbilities}}
+        <li class="form-surge-ability-entry ability-entry" data-index="{{@index}}">
+          {{#if ../editMode}}
+          <input class="surge-cost-input" type="number" min="1" value="{{this.cost}}" placeholder="1" />
+          <input class="surge-effect-input" type="text" value="{{this.effectText}}" placeholder="e.g., +2 Damage" />
+          <button type="button" class="remove-row-btn" data-action="removeFormCardSurgeAbility" data-index="{{@index}}" title="{{localize 'SWIA.Villain.RemoveSurgeAbility'}}"><i class="fas fa-trash"></i></button>
+          {{else}}
+          <span class="surge-effect">{{{this.enrichedEffectText}}}</span>
+          {{/if}}
+        </li>
+        {{/each}}
+      </ol>
+      {{else}}
+      {{#if editMode}}<p class="list-empty">{{localize "SWIA.Villain.NoSurgeAbilities"}}</p>{{/if}}
+      {{/if}}
+    </div>
+
+    {{!-- Form special abilities --}}
+    <div class="form-card-special-subsection">
+      {{#if editMode}}
+      <div class="list-section-header">
+        <span class="form-card-sublabel">{{localize "SWIA.Item.FormCard.SpecialAbilities"}}</span>
+        <button type="button" class="add-row-btn" data-action="addFormCardSpecialAbility" title="{{localize 'SWIA.Villain.AddSpecialAbility'}}"><i class="fas fa-plus"></i></button>
+      </div>
+      {{/if}}
+      {{#if enrichedFormSpecialAbilities.length}}
+      <ol class="special-abilities-list ability-list">
+        {{#each enrichedFormSpecialAbilities}}
+        <li class="form-special-ability-entry ability-entry" data-index="{{@index}}">
+          {{#if ../editMode}}
+          <input class="special-ability-name" type="text" value="{{this.name}}" placeholder="Ability Name" />
+          <textarea class="special-ability-desc" placeholder="Description" rows="2">{{this.description}}</textarea>
+          <button type="button" class="remove-row-btn" data-action="removeFormCardSpecialAbility" data-index="{{@index}}" title="{{localize 'SWIA.Villain.RemoveSpecialAbility'}}"><i class="fas fa-trash"></i></button>
+          {{else}}
+          <div class="special-ability-view">
+            {{#if this.name}}<strong class="special-ability-view-name">{{{this.enrichedName}}}:</strong>{{/if}}
+            <span class="special-ability-view-desc">{{{this.enrichedDescription}}}</span>
+          </div>
+          {{/if}}
+        </li>
+        {{/each}}
+      </ol>
+      {{else}}
+      {{#if editMode}}<p class="list-empty">{{localize "SWIA.Villain.NoSpecialAbilities"}}</p>{{/if}}
+      {{/if}}
+    </div>
+    {{else}}
+    {{#if formCards.length}}
+    <p class="list-empty">{{localize "SWIA.Villain.FormCard.SelectPrompt"}}</p>
+    {{/if}}
+    {{/if}}
+  </div>
+  {{/if}}
   {{/if}}
 
   {{!-- Hero abilities --}}

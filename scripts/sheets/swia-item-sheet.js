@@ -55,7 +55,11 @@ export class SWIAItemSheet extends BaseItemSheet {
       removeAbility: SWIAItemSheet.#onRemoveAbility,
       toggleEdit: SWIAItemSheet.#onToggleEdit,
       saveItem: SWIAItemSheet.#onSaveItem,
-      cycleCardState: SWIAItemSheet.#onCycleCardState
+      cycleCardState: SWIAItemSheet.#onCycleCardState,
+      addFormSurgeAbility: SWIAItemSheet.#onAddFormSurgeAbility,
+      removeFormSurgeAbility: SWIAItemSheet.#onRemoveFormSurgeAbility,
+      addFormSpecialAbility: SWIAItemSheet.#onAddFormSpecialAbility,
+      removeFormSpecialAbility: SWIAItemSheet.#onRemoveFormSpecialAbility
     }
   };
 
@@ -259,11 +263,17 @@ export class SWIAItemSheet extends BaseItemSheet {
   static async #onSaveItem(event, target) {
     if (event?.preventDefault) event.preventDefault();
 
-    const update = this._collectUpdateFromForm(target?.closest?.("form") ?? null);
+    const formEl = target?.closest?.("form") ?? null;
+    const update = this._collectUpdateFromForm(formEl);
     const item = resolveItemDocument(this);
     if (!item) {
       ui.notifications?.error("SWIA | Unable to resolve item document for save.");
       return;
+    }
+
+    // For formcard, scrape array fields from DOM to avoid expandObject plain-object bug
+    if (item.type === "formcard") {
+      Object.assign(update, this._collectFormcardArrayUpdate(formEl));
     }
 
     if (!Object.keys(update).length) {
@@ -278,6 +288,42 @@ export class SWIAItemSheet extends BaseItemSheet {
       console.error("SWIA | Manual save failed", error);
       ui.notifications?.error(game.i18n.localize("SWIA.Item.SaveFailed"));
     }
+  }
+
+  // Add surge ability to formcard (V2)
+  static async #onAddFormSurgeAbility(event, target) {
+    const item = resolveItemDocument(this);
+    if (!item || item.type !== "formcard") return;
+    const surgeAbilities = Array.isArray(item.system.surgeAbilities) ? item.system.surgeAbilities : [];
+    await item.update({ "system.surgeAbilities": [...surgeAbilities, { cost: 1, effectText: "" }] });
+  }
+
+  // Remove surge ability from formcard (V2)
+  static async #onRemoveFormSurgeAbility(event, target) {
+    const item = resolveItemDocument(this);
+    if (!item || item.type !== "formcard") return;
+    const index = parseInt(target.dataset.index);
+    if (isNaN(index)) return;
+    const surgeAbilities = Array.isArray(item.system.surgeAbilities) ? item.system.surgeAbilities : [];
+    await item.update({ "system.surgeAbilities": surgeAbilities.filter((_, i) => i !== index) });
+  }
+
+  // Add special ability to formcard (V2)
+  static async #onAddFormSpecialAbility(event, target) {
+    const item = resolveItemDocument(this);
+    if (!item || item.type !== "formcard") return;
+    const specialAbilities = Array.isArray(item.system.specialAbilities) ? item.system.specialAbilities : [];
+    await item.update({ "system.specialAbilities": [...specialAbilities, { name: "", description: "" }] });
+  }
+
+  // Remove special ability from formcard (V2)
+  static async #onRemoveFormSpecialAbility(event, target) {
+    const item = resolveItemDocument(this);
+    if (!item || item.type !== "formcard") return;
+    const index = parseInt(target.dataset.index);
+    if (isNaN(index)) return;
+    const specialAbilities = Array.isArray(item.system.specialAbilities) ? item.system.specialAbilities : [];
+    await item.update({ "system.specialAbilities": specialAbilities.filter((_, i) => i !== index) });
   }
 
   // Cycle card state: ready → exhausted → depleted → ready (V2)
@@ -460,6 +506,10 @@ export class SWIAItemSheet extends BaseItemSheet {
     html.find("[data-action='removeAbility']").on("click", this._onRemoveAbility.bind(this));
     html.find("[data-action='toggleEdit']").on("click", this._onToggleEdit.bind(this));
     html.find("[data-action='saveItem']").on("click", this._onSaveItem.bind(this));
+    html.find("[data-action='addFormSurgeAbility']").on("click", this._onAddFormSurgeAbility.bind(this));
+    html.find("[data-action='removeFormSurgeAbility']").on("click", this._onRemoveFormSurgeAbility.bind(this));
+    html.find("[data-action='addFormSpecialAbility']").on("click", this._onAddFormSpecialAbility.bind(this));
+    html.find("[data-action='removeFormSpecialAbility']").on("click", this._onRemoveFormSpecialAbility.bind(this));
 
   }
 
@@ -539,11 +589,17 @@ export class SWIAItemSheet extends BaseItemSheet {
   async _onSaveItem(event) {
     event.preventDefault();
 
-    const update = this._collectUpdateFromForm(event.currentTarget?.closest?.("form") ?? null);
+    const formEl = event.currentTarget?.closest?.("form") ?? null;
+    const update = this._collectUpdateFromForm(formEl);
     const item = resolveItemDocument(this);
     if (!item) {
       ui.notifications?.error("SWIA | Unable to resolve item document for save.");
       return;
+    }
+
+    // For formcard, scrape array fields from DOM to avoid expandObject plain-object bug
+    if (item.type === "formcard") {
+      Object.assign(update, this._collectFormcardArrayUpdate(formEl));
     }
 
     if (!Object.keys(update).length) {
@@ -558,6 +614,46 @@ export class SWIAItemSheet extends BaseItemSheet {
       console.error("SWIA | Manual save failed", error);
       ui.notifications?.error(game.i18n.localize("SWIA.Item.SaveFailed"));
     }
+  }
+
+  // Add surge ability to formcard (V1)
+  async _onAddFormSurgeAbility(event) {
+    event.preventDefault();
+    const item = resolveItemDocument(this);
+    if (!item || item.type !== "formcard") return;
+    const surgeAbilities = Array.isArray(item.system.surgeAbilities) ? item.system.surgeAbilities : [];
+    await item.update({ "system.surgeAbilities": [...surgeAbilities, { cost: 1, effectText: "" }] });
+  }
+
+  // Remove surge ability from formcard (V1)
+  async _onRemoveFormSurgeAbility(event) {
+    event.preventDefault();
+    const item = resolveItemDocument(this);
+    if (!item || item.type !== "formcard") return;
+    const index = parseInt(event.currentTarget.dataset.index);
+    if (isNaN(index)) return;
+    const surgeAbilities = Array.isArray(item.system.surgeAbilities) ? item.system.surgeAbilities : [];
+    await item.update({ "system.surgeAbilities": surgeAbilities.filter((_, i) => i !== index) });
+  }
+
+  // Add special ability to formcard (V1)
+  async _onAddFormSpecialAbility(event) {
+    event.preventDefault();
+    const item = resolveItemDocument(this);
+    if (!item || item.type !== "formcard") return;
+    const specialAbilities = Array.isArray(item.system.specialAbilities) ? item.system.specialAbilities : [];
+    await item.update({ "system.specialAbilities": [...specialAbilities, { name: "", description: "" }] });
+  }
+
+  // Remove special ability from formcard (V1)
+  async _onRemoveFormSpecialAbility(event) {
+    event.preventDefault();
+    const item = resolveItemDocument(this);
+    if (!item || item.type !== "formcard") return;
+    const index = parseInt(event.currentTarget.dataset.index);
+    if (isNaN(index)) return;
+    const specialAbilities = Array.isArray(item.system.specialAbilities) ? item.system.specialAbilities : [];
+    await item.update({ "system.specialAbilities": specialAbilities.filter((_, i) => i !== index) });
   }
 
   // Cycle card state: ready → exhausted → depleted → ready (V1)
@@ -610,6 +706,38 @@ export class SWIAItemSheet extends BaseItemSheet {
     }
 
     return update;
+  }
+
+  // Scrape formcard surge/special ability rows directly from the DOM.
+  // Foundry's expandObject turns flat keys like "system.surgeAbilities.0.cost" into
+  // plain JS objects ({ "0": {…} }) that have no .length, breaking array checks.
+  // Calling this and merging into the update object bypasses that bug.
+  _collectFormcardArrayUpdate(formEl) {
+    const root = formEl
+      ?? this.element?.querySelector?.('[data-application-part="form"]')
+      ?? this.element
+      ?? null;
+
+    if (!(root instanceof HTMLElement)) return {};
+
+    const surgeAbilities = [];
+    root.querySelectorAll(".surge-ability-entry[data-index]").forEach((li) => {
+      const cost = parseInt(li.querySelector(".surge-cost-input")?.value) || 1;
+      const effectText = li.querySelector(".surge-effect-input")?.value ?? "";
+      surgeAbilities.push({ cost, effectText });
+    });
+
+    const specialAbilities = [];
+    root.querySelectorAll(".special-ability-entry[data-index]").forEach((li) => {
+      const name = li.querySelector(".special-ability-name")?.value ?? "";
+      const description = li.querySelector(".special-ability-desc")?.value ?? "";
+      specialAbilities.push({ name, description });
+    });
+
+    return {
+      "system.surgeAbilities": surgeAbilities,
+      "system.specialAbilities": specialAbilities
+    };
   }
 
   _collectUpdateFromForm(formEl) {

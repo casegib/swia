@@ -318,5 +318,14 @@
   "SWIA.HeroAbility.AbilityText": "Ability Text",
   "SWIA.HeroAbility.AbilityTextPlaceholder": "Describe what this hero ability does.",
   "SWIA.HeroAbility.NoText": "No ability text defined.",
-  "SWIA.HeroAbility.DropHint": "Drop a Hero Ability item here"
+  "SWIA.HeroAbility.DropHint": "Drop a Hero Ability item here",
+  "SWIA.Villain.HasShift": "Shift (Form Cards)",
+  "SWIA.Villain.FormCard.Label": "Form",
+  "SWIA.Villain.FormCard.None": "— No Form —",
+  "SWIA.Villain.FormCard.Hint": "Add Form Card items to this actor to populate the selector.",
+  "SWIA.Villain.FormCard.SelectPrompt": "Select a Form above.",
+  "SWIA.Villain.FormCard.NoCards": "No Form Card items found. Drop formcard items onto this actor.",
+  "SWIA.Villain.FormCard.Remove": "Remove Form Card",
+  "SWIA.Item.FormCard.SurgeAbilities": "Surge Abilities",
+  "SWIA.Item.FormCard.SpecialAbilities": "Special Abilities"
 }

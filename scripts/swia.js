@@ -166,7 +166,8 @@ Hooks.once("init", async function initSWIA() {
     "systems/swia/templates/items/weaponmod-sheet.hbs",
     "systems/swia/templates/items/armor-sheet.hbs",
     "systems/swia/templates/items/gear-sheet.hbs",
-    "systems/swia/templates/items/heroability-sheet.hbs"
+    "systems/swia/templates/items/heroability-sheet.hbs",
+    "systems/swia/templates/items/formcard-sheet.hbs"
   ]);
 
   // Register actor sheets for hero, imperial, and ally types
@@ -179,7 +180,7 @@ Hooks.once("init", async function initSWIA() {
   // Register item sheets
   ItemsCollection.unregisterSheet("core", BaseItemSheet);
   ItemsCollection.registerSheet("swia", SWIAItemSheet, {
-    types: ["classcard", "agendacard", "imperialclasscard", "weapon", "weaponmod", "armor", "gear", "heroability"],
+    types: ["classcard", "agendacard", "imperialclasscard", "weapon", "weaponmod", "armor", "gear", "heroability", "formcard"],
     makeDefault: true
   });
 });

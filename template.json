@@ -87,6 +87,8 @@
       "reinforceCost": 1,
       "reward": "",
       "specialAbilities": [],
+      "hasShift": false,
+      "activeFormId": "",
       "attributes": {
         "attackType": "ranged",
         "attack": {
@@ -130,7 +132,7 @@
     }
   },
   "Item": {
-    "types": ["weapon", "weaponmod", "armor", "gear", "classcard", "agendacard", "imperialclasscard", "heroability"],
+    "types": ["weapon", "weaponmod", "armor", "gear", "classcard", "agendacard", "imperialclasscard", "heroability", "formcard"],
     "templates": {
       "base": {
         "description": "",
@@ -220,6 +222,11 @@
     "heroability": {
       "templates": ["base"],
       "abilityText": ""
+    },
+    "formcard": {
+      "templates": ["base"],
+      "surgeAbilities": [],
+      "specialAbilities": []
     }
   }
 }

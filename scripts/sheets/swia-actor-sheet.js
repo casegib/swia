@@ -22,12 +22,87 @@ export class SWIAActorSheet extends BaseActorSheet {
     specialAbilities: false
   };
 
+  static _diceArray(n) {
+    return Array.from({ length: n || 0 }, (_, i) => i);
+  }
+
   // Track whether the sheet is in edit mode (GM only)
   constructor(...args) {
     super(...args);
     this._editMode = false;
     this._activeInventoryPanel = null;
     this._collapsedSections = foundry.utils.mergeObject({}, SWIAActorSheet.EDIT_COLLAPSE_DEFAULTS);
+    this._enrichCache = new Map();
+    this._enrichCacheMaxEntries = 256;
+  }
+
+  _hashContent(content) {
+    const text = `${content ?? ""}`;
+    let hash = 5381;
+    for (let i = 0; i < text.length; i += 1) {
+      hash = ((hash << 5) + hash) ^ text.charCodeAt(i);
+    }
+    return (hash >>> 0).toString(36);
+  }
+
+  _buildEnrichCacheKey({ actorId, fieldKey, contentHash, ownerFlag, relativeId }) {
+    return [
+      actorId || "unknown-actor",
+      fieldKey || "unknown-field",
+      contentHash,
+      ownerFlag ? "owner" : "public",
+      relativeId || "no-relative"
+    ].join(":");
+  }
+
+  _getCachedEnrichment(cacheKey) {
+    if (!this._enrichCache.has(cacheKey)) return undefined;
+    const cached = this._enrichCache.get(cacheKey);
+    // Touch key to keep most recently used entries.
+    this._enrichCache.delete(cacheKey);
+    this._enrichCache.set(cacheKey, cached);
+    return cached;
+  }
+
+  _setCachedEnrichment(cacheKey, html) {
+    if (this._enrichCache.has(cacheKey)) this._enrichCache.delete(cacheKey);
+    this._enrichCache.set(cacheKey, html);
+
+    if (this._enrichCache.size <= this._enrichCacheMaxEntries) return;
+    const oldestKey = this._enrichCache.keys().next().value;
+    if (oldestKey !== undefined) this._enrichCache.delete(oldestKey);
+  }
+
+  async _enrichWithCache(TextEditorClass, {
+    actor,
+    fieldKey,
+    text,
+    relativeTo,
+    secrets
+  }) {
+    const normalizedText = `${text ?? ""}`;
+    if (!normalizedText) return "";
+
+    const ownerFlag = Boolean(secrets);
+    const target = relativeTo ?? actor;
+    const cacheKey = this._buildEnrichCacheKey({
+      actorId: actor?.id,
+      fieldKey,
+      contentHash: this._hashContent(normalizedText),
+      ownerFlag,
+      relativeId: target?.id
+    });
+
+    const cached = this._getCachedEnrichment(cacheKey);
+    if (cached !== undefined) return cached;
+
+    const enriched = await TextEditorClass.enrichHTML(normalizedText, {
+      async: true,
+      secrets: ownerFlag,
+      relativeTo: target
+    });
+    this._setCachedEnrichment(cacheKey, enriched);
+    return enriched;
   }
 
   // Configuration for V2: sheet layout, position, and action handlers
@@ -68,7 +143,14 @@ export class SWIAActorSheet extends BaseActorSheet {
       removeSpecialAbility: SWIAActorSheet.prototype._onRemoveSpecialAbility,
       // Hero ability list management
       addHeroAbility: SWIAActorSheet.prototype._onAddHeroAbility,
-      removeHeroAbility: SWIAActorSheet.prototype._onRemoveHeroAbility
+      removeHeroAbility: SWIAActorSheet.prototype._onRemoveHeroAbility,
+      // Villain form card (Shift) management
+      toggleShift: SWIAActorSheet.prototype._onToggleShift,
+      setActiveForm: SWIAActorSheet.prototype._onSetActiveForm,
+      addFormCardSurgeAbility: SWIAActorSheet.prototype._onAddFormCardSurgeAbility,
+      removeFormCardSurgeAbility: SWIAActorSheet.prototype._onRemoveFormCardSurgeAbility,
+      addFormCardSpecialAbility: SWIAActorSheet.prototype._onAddFormCardSpecialAbility,
+      removeFormCardSpecialAbility: SWIAActorSheet.prototype._onRemoveFormCardSpecialAbility
     }
   };
 
@@ -210,8 +292,8 @@ export class SWIAActorSheet extends BaseActorSheet {
 
   // Prepare rendering context for both V1 and V2
   // Converts dice counts to arrays for template iteration and handles wounded state
-  async _prepareContext(options) {
-    const context = isV2 ? await super._prepareContext(options) : {};
+  async _prepareContext(options, baseContext = null) {
+    const context = baseContext ?? (isV2 ? await super._prepareContext(options) : {});
     const actor = this.document ?? this.actor;
     const system = actor.system;
     // Determine which attribute set to display based on wounded state
@@ -239,8 +321,10 @@ export class SWIAActorSheet extends BaseActorSheet {
     const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
     
     // Enrich biography HTML
-    const enrichedBiography = await TextEditorClass.enrichHTML(system.biography || "", {
-      async: true,
+    const enrichedBiography = await this._enrichWithCache(TextEditorClass, {
+      actor,
+      fieldKey: "biography",
+      text: system.biography,
       secrets: actor.isOwner,
       relativeTo: actor
     });
@@ -249,22 +333,36 @@ export class SWIAActorSheet extends BaseActorSheet {
     let enrichedHeroAbilities = [];
     let enrichedWoundedHeroAbilities = [];
     if (actor.type === "hero") {
-      enrichedWoundedBiography = await TextEditorClass.enrichHTML(system.woundedBiography || "", {
-        async: true,
+      enrichedWoundedBiography = await this._enrichWithCache(TextEditorClass, {
+        actor,
+        fieldKey: "woundedBiography",
+        text: system.woundedBiography,
         secrets: actor.isOwner,
         relativeTo: actor
       });
       enrichedHeroAbilities = await Promise.all(
         (Array.isArray(system.heroAbilities) ? system.heroAbilities : Object.values(system.heroAbilities ?? {})).map(async (a, i) => ({
           ...a,
-          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
+          enrichedDescription: await this._enrichWithCache(TextEditorClass, {
+            actor,
+            fieldKey: `heroAbilities.${i}.description`,
+            text: a.description,
+            secrets: actor.isOwner,
+            relativeTo: actor
+          }),
           index: i
         }))
       );
       enrichedWoundedHeroAbilities = await Promise.all(
         (Array.isArray(system.woundedHeroAbilities) ? system.woundedHeroAbilities : Object.values(system.woundedHeroAbilities ?? {})).map(async (a, i) => ({
           ...a,
-          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
+          enrichedDescription: await this._enrichWithCache(TextEditorClass, {
+            actor,
+            fieldKey: `woundedHeroAbilities.${i}.description`,
+            text: a.description,
+            secrets: actor.isOwner,
+            relativeTo: actor
+          }),
           index: i
         }))
       );
@@ -276,7 +374,13 @@ export class SWIAActorSheet extends BaseActorSheet {
       enrichedSurgeAbilities = await Promise.all(
         (Array.isArray(system.attributes?.surgeAbilities) ? system.attributes.surgeAbilities : Object.values(system.attributes?.surgeAbilities ?? {})).map(async (a, i) => ({
           ...a,
-          enrichedEffectText: await TextEditorClass.enrichHTML(a.effectText || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
+          enrichedEffectText: await this._enrichWithCache(TextEditorClass, {
+            actor,
+            fieldKey: `surgeAbilities.${i}.effectText`,
+            text: a.effectText,
+            secrets: actor.isOwner,
+            relativeTo: actor
+          }),
           index: i
         }))
       );
@@ -285,8 +389,20 @@ export class SWIAActorSheet extends BaseActorSheet {
       enrichedSpecialAbilities = await Promise.all(
         (Array.isArray(system.specialAbilities) ? system.specialAbilities : Object.values(system.specialAbilities ?? {})).map(async (a, i) => ({
           ...a,
-          enrichedName: await TextEditorClass.enrichHTML(a.name || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
-          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: actor.isOwner, relativeTo: actor }),
+          enrichedName: await this._enrichWithCache(TextEditorClass, {
+            actor,
+            fieldKey: `specialAbilities.${i}.name`,
+            text: a.name,
+            secrets: actor.isOwner,
+            relativeTo: actor
+          }),
+          enrichedDescription: await this._enrichWithCache(TextEditorClass, {
+            actor,
+            fieldKey: `specialAbilities.${i}.description`,
+            text: a.description,
+            secrets: actor.isOwner,
+            relativeTo: actor
+          }),
           index: i
         }))
       );
@@ -302,10 +418,12 @@ export class SWIAActorSheet extends BaseActorSheet {
           ? w.system.abilities
           : Object.values(w.system?.abilities || {});
         const enrichedAbilities = await Promise.all(
-          abilitiesRaw.map(async a => ({
+          abilitiesRaw.map(async (a, i) => ({
             ...a,
-            enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", {
-              async: true,
+            enrichedDescription: await this._enrichWithCache(TextEditorClass, {
+              actor,
+              fieldKey: `weapon.${w.id}.abilities.${i}.description`,
+              text: a.description,
               secrets: actor.isOwner,
               relativeTo: w
             })
@@ -317,14 +435,65 @@ export class SWIAActorSheet extends BaseActorSheet {
           img: w.img,
           system: w.system,
           enrichedAbilities,
-          attackRedDice: Array.from({ length: dice.red || 0 }),
-          attackBlueDice: Array.from({ length: dice.blue || 0 }),
-          attackGreenDice: Array.from({ length: dice.green || 0 }),
-          attackYellowDice: Array.from({ length: dice.yellow || 0 }),
+          attackRedDice: SWIAActorSheet._diceArray(dice.red),
+          attackBlueDice: SWIAActorSheet._diceArray(dice.blue),
+          attackGreenDice: SWIAActorSheet._diceArray(dice.green),
+          attackYellowDice: SWIAActorSheet._diceArray(dice.yellow),
         };
       })
     );
     const gear = ownedItems.filter(i => i.type === "gear");
+
+    // Form card (Shift) context — villain only
+    let formCards = [];
+    let activeForm = null;
+    let enrichedFormSurgeAbilities = [];
+    let enrichedFormSpecialAbilities = [];
+    if (actor.type === "villain" && system.hasShift) {
+      formCards = ownedItems.filter(i => i.type === "formcard");
+      activeForm = system.activeFormId ? (actor.items.get(system.activeFormId) ?? null) : null;
+      if (activeForm) {
+        const fSurge = Array.isArray(activeForm.system?.surgeAbilities)
+          ? activeForm.system.surgeAbilities
+          : Object.values(activeForm.system?.surgeAbilities ?? {});
+        enrichedFormSurgeAbilities = await Promise.all(
+          fSurge.map(async (a, i) => ({
+            ...a,
+            enrichedEffectText: await this._enrichWithCache(TextEditorClass, {
+              actor,
+              fieldKey: `form.${activeForm.id}.surgeAbilities.${i}.effectText`,
+              text: a.effectText,
+              secrets: actor.isOwner,
+              relativeTo: actor
+            }),
+            index: i
+          }))
+        );
+        const fSpecial = Array.isArray(activeForm.system?.specialAbilities)
+          ? activeForm.system.specialAbilities
+          : Object.values(activeForm.system?.specialAbilities ?? {});
+        enrichedFormSpecialAbilities = await Promise.all(
+          fSpecial.map(async (a, i) => ({
+            ...a,
+            enrichedName: await this._enrichWithCache(TextEditorClass, {
+              actor,
+              fieldKey: `form.${activeForm.id}.specialAbilities.${i}.name`,
+              text: a.name,
+              secrets: actor.isOwner,
+              relativeTo: actor
+            }),
+            enrichedDescription: await this._enrichWithCache(TextEditorClass, {
+              actor,
+              fieldKey: `form.${activeForm.id}.specialAbilities.${i}.description`,
+              text: a.description,
+              secrets: actor.isOwner,
+              relativeTo: actor
+            }),
+            index: i
+          }))
+        );
+      }
+    }
 
     return foundry.utils.mergeObject(context, {
       actor: actor,
@@ -354,191 +523,38 @@ export class SWIAActorSheet extends BaseActorSheet {
       hasItems: ownedItems.length > 0,
       activeInventoryPanel: this._activeInventoryPanel,
       sectionCollapse: this._collapsedSections,
+      formCards: formCards,
+      activeForm: activeForm,
+      enrichedFormSurgeAbilities: enrichedFormSurgeAbilities,
+      enrichedFormSpecialAbilities: enrichedFormSpecialAbilities,
       // Convert dice counts to arrays for Handlebars iteration (each loop)
       // This allows displaying individual dice blocks in the template
-      defenseBlackDice: Array.from({ length: defense.black || 0 }, (_, i) => i),
-      defenseWhiteDice: Array.from({ length: defense.white || 0 }, (_, i) => i),
-      attackRedDice: Array.from({ length: attack.red || 0 }, (_, i) => i),
-      attackBlueDice: Array.from({ length: attack.blue || 0 }, (_, i) => i),
-      attackGreenDice: Array.from({ length: attack.green || 0 }, (_, i) => i),
-      attackYellowDice: Array.from({ length: attack.yellow || 0 }, (_, i) => i),
-      strengthRedDice: Array.from({ length: woundedStrength.red || 0 }, (_, i) => i),
-      strengthBlueDice: Array.from({ length: woundedStrength.blue || 0 }, (_, i) => i),
-      strengthGreenDice: Array.from({ length: woundedStrength.green || 0 }, (_, i) => i),
-      strengthYellowDice: Array.from({ length: woundedStrength.yellow || 0 }, (_, i) => i),
-      insightRedDice: Array.from({ length: woundedInsight.red || 0 }, (_, i) => i),
-      insightBlueDice: Array.from({ length: woundedInsight.blue || 0 }, (_, i) => i),
-      insightGreenDice: Array.from({ length: woundedInsight.green || 0 }, (_, i) => i),
-      insightYellowDice: Array.from({ length: woundedInsight.yellow || 0 }, (_, i) => i),
-      techRedDice: Array.from({ length: woundedTech.red || 0 }, (_, i) => i),
-      techBlueDice: Array.from({ length: woundedTech.blue || 0 }, (_, i) => i),
-      techGreenDice: Array.from({ length: woundedTech.green || 0 }, (_, i) => i),
-      techYellowDice: Array.from({ length: woundedTech.yellow || 0 }, (_, i) => i)
+      defenseBlackDice: SWIAActorSheet._diceArray(defense.black),
+      defenseWhiteDice: SWIAActorSheet._diceArray(defense.white),
+      attackRedDice: SWIAActorSheet._diceArray(attack.red),
+      attackBlueDice: SWIAActorSheet._diceArray(attack.blue),
+      attackGreenDice: SWIAActorSheet._diceArray(attack.green),
+      attackYellowDice: SWIAActorSheet._diceArray(attack.yellow),
+      strengthRedDice: SWIAActorSheet._diceArray(woundedStrength.red),
+      strengthBlueDice: SWIAActorSheet._diceArray(woundedStrength.blue),
+      strengthGreenDice: SWIAActorSheet._diceArray(woundedStrength.green),
+      strengthYellowDice: SWIAActorSheet._diceArray(woundedStrength.yellow),
+      insightRedDice: SWIAActorSheet._diceArray(woundedInsight.red),
+      insightBlueDice: SWIAActorSheet._diceArray(woundedInsight.blue),
+      insightGreenDice: SWIAActorSheet._diceArray(woundedInsight.green),
+      insightYellowDice: SWIAActorSheet._diceArray(woundedInsight.yellow),
+      techRedDice: SWIAActorSheet._diceArray(woundedTech.red),
+      techBlueDice: SWIAActorSheet._diceArray(woundedTech.blue),
+      techGreenDice: SWIAActorSheet._diceArray(woundedTech.green),
+      techYellowDice: SWIAActorSheet._diceArray(woundedTech.yellow)
     });
   }
 
   async getData(options) {
     if (isV2) return this._prepareContext(options);
-    
+
     const data = await super.getData(options);
-    const system = data.actor.system;
-    const isWounded = system.state?.wounded ?? false;
-    const currentAttrPath = isWounded ? "woundedAttributes" : "attributes";
-    const tokenSrc = data.actor?.prototypeToken?.texture?.src ?? "";
-    const profileSrc = data.actor?.img || tokenSrc || "";
-    const tokenPreviewSrc = this._getTokenPreviewSrc(data.actor, isWounded) || profileSrc;
-    const woundedTokenPreviewSrc = data.actor?.system?.woundedTokenImage || tokenPreviewSrc;
-    const tokenFootprint = this._getTokenFootprint(data.actor);
-
-    // Create arrays for dice block rendering
-    const defense = system.attributes?.defense || { black: 0, white: 0 };
-    const attack = system.attributes?.attack || { red: 0, blue: 0, green: 0, yellow: 0 };
-    const strength = system.attributes?.strength || { red: 0, blue: 0, green: 0, yellow: 0 };
-    const insight = system.attributes?.insight || { red: 0, blue: 0, green: 0, yellow: 0 };
-    const tech = system.attributes?.tech || { red: 0, blue: 0, green: 0, yellow: 0 };
-
-    // Get wounded dice if wounded
-    const woundedStrength = isWounded && system.woundedAttributes?.strength ? system.woundedAttributes.strength : strength;
-    const woundedInsight = isWounded && system.woundedAttributes?.insight ? system.woundedAttributes.insight : insight;
-    const woundedTech = isWounded && system.woundedAttributes?.tech ? system.woundedAttributes.tech : tech;
-
-    // Get TextEditor with fallback for V1/V2 compatibility
-    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
-    
-    // Enrich biography HTML
-    const enrichedBiography = await TextEditorClass.enrichHTML(system.biography || "", {
-      async: true,
-      secrets: data.actor.isOwner,
-      relativeTo: data.actor
-    });
-
-    let enrichedWoundedBiography = "";
-    let enrichedHeroAbilities = [];
-    let enrichedWoundedHeroAbilities = [];
-    if (data.actor.type === "hero") {
-      enrichedWoundedBiography = await TextEditorClass.enrichHTML(system.woundedBiography || "", {
-        async: true,
-        secrets: data.actor.isOwner,
-        relativeTo: data.actor
-      });
-      enrichedHeroAbilities = await Promise.all(
-        (Array.isArray(system.heroAbilities) ? system.heroAbilities : Object.values(system.heroAbilities ?? {})).map(async (a, i) => ({
-          ...a,
-          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
-          index: i
-        }))
-      );
-      enrichedWoundedHeroAbilities = await Promise.all(
-        (Array.isArray(system.woundedHeroAbilities) ? system.woundedHeroAbilities : Object.values(system.woundedHeroAbilities ?? {})).map(async (a, i) => ({
-          ...a,
-          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
-          index: i
-        }))
-      );
-    }
-
-    let enrichedSurgeAbilities = [];
-    let enrichedSpecialAbilities = [];
-    if (data.actor.type === "villain" || data.actor.type === "ally") {
-      enrichedSurgeAbilities = await Promise.all(
-        (Array.isArray(system.attributes?.surgeAbilities) ? system.attributes.surgeAbilities : Object.values(system.attributes?.surgeAbilities ?? {})).map(async (a, i) => ({
-          ...a,
-          enrichedEffectText: await TextEditorClass.enrichHTML(a.effectText || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
-          index: i
-        }))
-      );
-    }
-    if (data.actor.type === "villain" || data.actor.type === "ally") {
-      enrichedSpecialAbilities = await Promise.all(
-        (Array.isArray(system.specialAbilities) ? system.specialAbilities : Object.values(system.specialAbilities ?? {})).map(async (a, i) => ({
-          ...a,
-          enrichedName: await TextEditorClass.enrichHTML(a.name || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
-          enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", { async: true, secrets: data.actor.isOwner, relativeTo: data.actor }),
-          index: i
-        }))
-      );
-    }
-
-    // Collect owned items grouped by type
-    const ownedItems = data.actor.items?.contents ?? [];
-    const abilities = ownedItems.filter(i => i.type === "classcard");
-    const weapons = await Promise.all(
-      ownedItems.filter(i => i.type === "weapon").map(async w => {
-        const dice = w.system?.attackDice || {};
-        const abilitiesRaw = Array.isArray(w.system?.abilities)
-          ? w.system.abilities
-          : Object.values(w.system?.abilities || {});
-        const enrichedAbilities = await Promise.all(
-          abilitiesRaw.map(async a => ({
-            ...a,
-            enrichedDescription: await TextEditorClass.enrichHTML(a.description || "", {
-              async: true,
-              secrets: data.actor.isOwner,
-              relativeTo: w
-            })
-          }))
-        );
-        return {
-          id: w.id,
-          name: w.name,
-          img: w.img,
-          system: w.system,
-          enrichedAbilities,
-          attackRedDice: Array.from({ length: dice.red || 0 }),
-          attackBlueDice: Array.from({ length: dice.blue || 0 }),
-          attackGreenDice: Array.from({ length: dice.green || 0 }),
-          attackYellowDice: Array.from({ length: dice.yellow || 0 }),
-        };
-      })
-    );
-    const gear = ownedItems.filter(i => i.type === "gear");
-
-    data.systemData = system;
-    data.isWounded = isWounded;
-    data.isDefeated = system.state?.defeated ?? false;
-    data.isActivated = system.state?.activated ?? false;
-    data.isGM = game.user?.isGM ?? false;
-    data.editMode = this._editMode ?? false;
-    data.isEditable = data.actor.isOwner ?? true;
-    data.currentAttrPath = currentAttrPath;
-    data.currentAttributes = system[currentAttrPath] ?? system.attributes;
-    data.config = CONFIG.SWIA ?? {};
-    data.profileSrc = profileSrc;
-    data.tokenPreviewSrc = tokenPreviewSrc;
-    data.woundedTokenPreviewSrc = woundedTokenPreviewSrc;
-    data.tokenFootprint = tokenFootprint;
-    data.enrichedBiography = enrichedBiography;
-    data.enrichedWoundedBiography = enrichedWoundedBiography;
-    data.enrichedHeroAbilities = enrichedHeroAbilities;
-    data.enrichedWoundedHeroAbilities = enrichedWoundedHeroAbilities;
-    data.enrichedSurgeAbilities = enrichedSurgeAbilities;
-    data.enrichedSpecialAbilities = enrichedSpecialAbilities;
-    data.abilities = abilities;
-    data.weapons = weapons;
-    data.gear = gear;
-    data.hasItems = ownedItems.length > 0;
-    data.activeInventoryPanel = this._activeInventoryPanel;
-    data.sectionCollapse = this._collapsedSections;
-    // Dice arrays for rendering blocks
-    data.defenseBlackDice = Array.from({ length: defense.black || 0 }, (_, i) => i);
-    data.defenseWhiteDice = Array.from({ length: defense.white || 0 }, (_, i) => i);
-    data.attackRedDice = Array.from({ length: attack.red || 0 }, (_, i) => i);
-    data.attackBlueDice = Array.from({ length: attack.blue || 0 }, (_, i) => i);
-    data.attackGreenDice = Array.from({ length: attack.green || 0 }, (_, i) => i);
-    data.attackYellowDice = Array.from({ length: attack.yellow || 0 }, (_, i) => i);
-    data.strengthRedDice = Array.from({ length: woundedStrength.red || 0 }, (_, i) => i);
-    data.strengthBlueDice = Array.from({ length: woundedStrength.blue || 0 }, (_, i) => i);
-    data.strengthGreenDice = Array.from({ length: woundedStrength.green || 0 }, (_, i) => i);
-    data.strengthYellowDice = Array.from({ length: woundedStrength.yellow || 0 }, (_, i) => i);
-    data.insightRedDice = Array.from({ length: woundedInsight.red || 0 }, (_, i) => i);
-    data.insightBlueDice = Array.from({ length: woundedInsight.blue || 0 }, (_, i) => i);
-    data.insightGreenDice = Array.from({ length: woundedInsight.green || 0 }, (_, i) => i);
-    data.insightYellowDice = Array.from({ length: woundedInsight.yellow || 0 }, (_, i) => i);
-    data.techRedDice = Array.from({ length: woundedTech.red || 0 }, (_, i) => i);
-    data.techBlueDice = Array.from({ length: woundedTech.blue || 0 }, (_, i) => i);
-    data.techGreenDice = Array.from({ length: woundedTech.green || 0 }, (_, i) => i);
-    data.techYellowDice = Array.from({ length: woundedTech.yellow || 0 }, (_, i) => i);
-    return data;
+    return this._prepareContext(options, data);
   }
 
   activateListeners(html) {
@@ -584,6 +600,15 @@ export class SWIAActorSheet extends BaseActorSheet {
     // Surge/special ability field editing (V1) - bypass form submission for array fields
     html.on("change", ".surge-ability-entry input", this._onSurgeAbilityChange.bind(this));
     html.on("change", ".special-ability-entry input, .special-ability-entry textarea", this._onSpecialAbilityChange.bind(this));
+    // Form card (Shift) ability editing (V1)
+    html.find("[data-action='toggleShift']").on("change", this._onToggleShift.bind(this));
+    html.find("[data-action='setActiveForm']").on("change", this._onSetActiveForm.bind(this));
+    html.find("[data-action='addFormCardSurgeAbility']").on("click", this._onAddFormCardSurgeAbility.bind(this));
+    html.find("[data-action='removeFormCardSurgeAbility']").on("click", this._onRemoveFormCardSurgeAbility.bind(this));
+    html.find("[data-action='addFormCardSpecialAbility']").on("click", this._onAddFormCardSpecialAbility.bind(this));
+    html.find("[data-action='removeFormCardSpecialAbility']").on("click", this._onRemoveFormCardSpecialAbility.bind(this));
+    html.on("change", ".form-surge-ability-entry input", this._onFormCardSurgeAbilityChange.bind(this));
+    html.on("change", ".form-special-ability-entry input, .form-special-ability-entry textarea", this._onFormCardSpecialAbilityChange.bind(this));
     // Inventory panel tab switching (V1)
     html.find(".inv-tab-btn").on("click", this._onToggleInventoryPanel.bind(this));
   }
@@ -602,8 +627,23 @@ export class SWIAActorSheet extends BaseActorSheet {
     const targetWidth = this._activeInventoryPanel ? 900 : 620;
     try { this.setPosition({ width: targetWidth }); } catch (e) { /* noop */ }
 
-    // Re-render so the template applies the correct form classes and active tab state
-    this.render(false);
+    // Update panel/toggle classes directly to avoid re-running full sheet context preparation.
+    const root = this.element?.[0] ?? this.element;
+    if (!(root instanceof HTMLElement)) return;
+
+    const panelClasses = ["inv-open-abilities", "inv-open-gear", "inv-open-weapons"];
+    root.classList.remove(...panelClasses);
+    root.classList.toggle("inv-panel-open", Boolean(this._activeInventoryPanel));
+    if (this._activeInventoryPanel) {
+      root.classList.add(`inv-open-${this._activeInventoryPanel}`);
+    }
+
+    const tabButtons = root.querySelectorAll(".inv-tab-btn[data-panel]");
+    for (const tab of tabButtons) {
+      const isActive = tab.dataset.panel === this._activeInventoryPanel;
+      tab.classList.toggle("active", isActive);
+      tab.setAttribute("aria-pressed", isActive ? "true" : "false");
+    }
   }
 
   // Toggle hero wounded state (heroes only)
@@ -683,8 +723,25 @@ export class SWIAActorSheet extends BaseActorSheet {
     if (!section) return;
 
     const current = Boolean(this._collapsedSections?.[section]);
-    this._collapsedSections[section] = !current;
-    this.render(false);
+    const isCollapsed = !current;
+    this._collapsedSections[section] = isCollapsed;
+
+    const root = this.element?.[0] ?? this.element;
+    const sectionEl = toggle?.closest?.(".collapsible-section")
+      ?? (root instanceof HTMLElement
+        ? root.querySelector(`.collapsible-section [data-action='toggleSectionCollapse'][data-section='${section}']`)?.closest(".collapsible-section")
+        : null);
+
+    if (sectionEl instanceof HTMLElement) {
+      sectionEl.classList.toggle("collapsed", isCollapsed);
+      sectionEl.classList.toggle("expanded", !isCollapsed);
+    }
+
+    if (toggle instanceof HTMLElement) {
+      toggle.setAttribute("aria-expanded", isCollapsed ? "false" : "true");
+      const indicator = toggle.querySelector(".section-toggle-indicator");
+      if (indicator) indicator.textContent = isCollapsed ? "+" : "-";
+    }
   }
 
   async _onApplyTokenFootprintPreset(event, target) {
@@ -919,6 +976,11 @@ export class SWIAActorSheet extends BaseActorSheet {
     return this._updateObject(event, formData);
   }
 
+  async close(options) {
+    this._enrichCache?.clear?.();
+    return super.close(options);
+  }
+
   /**
    * Collect current form data and persist key fields, even if submit is skipped.
    */
@@ -956,6 +1018,11 @@ export class SWIAActorSheet extends BaseActorSheet {
       // Only for actor types that own these fields.
       if (actor.type === "villain" || actor.type === "ally") await this._onSurgeAbilityChange(null);
       if (actor.type === "villain" || actor.type === "ally") await this._onSpecialAbilityChange(null);
+      // Save active form card abilities if Shift is enabled
+      if (actor.type === "villain" && actor.system.hasShift && actor.system.activeFormId) {
+        await this._onFormCardSurgeAbilityChange(null);
+        await this._onFormCardSpecialAbilityChange(null);
+      }
     } catch (err) {
       console.error("SWIA: Failed to save form data", err);
     }
@@ -1042,6 +1109,14 @@ export class SWIAActorSheet extends BaseActorSheet {
   // V2: Intercept change events for surge/special ability inputs and save directly
   // This bypasses V2's native form submission which can fail for nested array fields
   _onChangeForm(formConfig, event) {
+    if (event.target?.closest(".form-surge-ability-entry")) {
+      this._onFormCardSurgeAbilityChange(event);
+      return;
+    }
+    if (event.target?.closest(".form-special-ability-entry")) {
+      this._onFormCardSpecialAbilityChange(event);
+      return;
+    }
     if (event.target?.closest(".surge-ability-entry")) {
       this._onSurgeAbilityChange(event);
       return;
@@ -1209,5 +1284,130 @@ export class SWIAActorSheet extends BaseActorSheet {
     const current = Array.isArray(raw) ? raw : Object.values(raw);
     current.splice(idx, 1);
     await actor.update({ "system.specialAbilities": current });
+  }
+
+  // ── Form Card (Shift) methods ────────────────────────────────────────────
+
+  // Resolve the currently active form card item document
+  _getActiveFormItem() {
+    const actor = this.document ?? this.actor;
+    if (!actor || actor.type !== "villain") return null;
+    const formId = actor.system.activeFormId;
+    if (!formId) return null;
+    return actor.items.get(formId) ?? null;
+  }
+
+  // Toggle the hasShift flag on the villain
+  async _onToggleShift(event, target) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor || actor.type !== "villain") return;
+    const el = target ?? event?.currentTarget;
+    const checked = Boolean(el?.checked ?? false);
+    const update = { "system.hasShift": checked };
+    if (!checked) update["system.activeFormId"] = "";
+    await actor.update(update);
+  }
+
+  // Set the active form card from the dropdown
+  async _onSetActiveForm(event, target) {
+    event?.preventDefault?.();
+    const actor = this.document ?? this.actor;
+    if (!actor || actor.type !== "villain") return;
+    const el = target ?? event?.currentTarget;
+    const formId = el?.value ?? "";
+    await actor.update({ "system.activeFormId": formId });
+  }
+
+  // Add a blank surge ability to the active form card
+  async _onAddFormCardSurgeAbility(event, target) {
+    event?.preventDefault?.();
+    const formItem = this._getActiveFormItem();
+    if (!formItem) return;
+    const raw = Array.isArray(formItem.system.surgeAbilities)
+      ? formItem.system.surgeAbilities
+      : Object.values(formItem.system.surgeAbilities ?? {});
+    await formItem.update({ "system.surgeAbilities": [...raw, { cost: 1, effectText: "" }] });
+  }
+
+  // Remove a surge ability by index from the active form card
+  async _onRemoveFormCardSurgeAbility(event, target) {
+    event?.preventDefault?.();
+    const formItem = this._getActiveFormItem();
+    if (!formItem) return;
+    const el = target ?? event?.currentTarget;
+    const idx = parseInt(el?.dataset?.index ?? "-1", 10);
+    if (idx < 0) return;
+    const raw = Array.isArray(formItem.system.surgeAbilities)
+      ? formItem.system.surgeAbilities
+      : Object.values(formItem.system.surgeAbilities ?? {});
+    await formItem.update({ "system.surgeAbilities": raw.filter((_, i) => i !== idx) });
+  }
+
+  // Add a blank special ability to the active form card
+  async _onAddFormCardSpecialAbility(event, target) {
+    event?.preventDefault?.();
+    const formItem = this._getActiveFormItem();
+    if (!formItem) return;
+    const raw = Array.isArray(formItem.system.specialAbilities)
+      ? formItem.system.specialAbilities
+      : Object.values(formItem.system.specialAbilities ?? {});
+    await formItem.update({ "system.specialAbilities": [...raw, { name: "", description: "" }] });
+  }
+
+  // Remove a special ability by index from the active form card
+  async _onRemoveFormCardSpecialAbility(event, target) {
+    event?.preventDefault?.();
+    const formItem = this._getActiveFormItem();
+    if (!formItem) return;
+    const el = target ?? event?.currentTarget;
+    const idx = parseInt(el?.dataset?.index ?? "-1", 10);
+    if (idx < 0) return;
+    const raw = Array.isArray(formItem.system.specialAbilities)
+      ? formItem.system.specialAbilities
+      : Object.values(formItem.system.specialAbilities ?? {});
+    await formItem.update({ "system.specialAbilities": raw.filter((_, i) => i !== idx) });
+  }
+
+  // Scrape form-surge-ability-entry rows from DOM and save to the active form card
+  async _onFormCardSurgeAbilityChange(event) {
+    event?.preventDefault?.();
+    const formItem = this._getActiveFormItem();
+    if (!formItem) return;
+    const sheetEl = this.element instanceof Element ? this.element : this.element?.[0];
+    const container = event?.target?.closest("form") ?? this.form ?? sheetEl;
+    if (!container) return;
+    const entries = container.querySelectorAll(".form-surge-ability-entry");
+    const updated = [];
+    entries.forEach(entry => {
+      const costInput = entry.querySelector("input.surge-cost-input");
+      const effectInput = entry.querySelector("input.surge-effect-input");
+      updated.push({
+        cost: costInput ? (Number(costInput.value) || 1) : 1,
+        effectText: effectInput?.value ?? ""
+      });
+    });
+    await formItem.update({ "system.surgeAbilities": updated });
+  }
+
+  // Scrape form-special-ability-entry rows from DOM and save to the active form card
+  async _onFormCardSpecialAbilityChange(event) {
+    event?.preventDefault?.();
+    const formItem = this._getActiveFormItem();
+    if (!formItem) return;
+    const sheetEl = this.element instanceof Element ? this.element : this.element?.[0];
+    const container = event?.target?.closest("form") ?? this.form ?? sheetEl;
+    if (!container) return;
+    const entries = container.querySelectorAll(".form-special-ability-entry");
+    const updated = [];
+    entries.forEach(entry => {
+      const nameInput = entry.querySelector("input.special-ability-name");
+      const descInput = entry.querySelector("textarea.special-ability-desc");
+      updated.push({
+        name: nameInput?.value ?? "",
+        description: descInput?.value ?? ""
+      });
+    });
+    await formItem.update({ "system.specialAbilities": updated });
   }
 }
