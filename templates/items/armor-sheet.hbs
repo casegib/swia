@@ -1,0 +1,105 @@
+<form class="swia-sheet item-sheet card-sheet gear-sheet armor-sheet {{#if editMode}}editing{{/if}}" autocomplete="off">
+  <div class="item-sheet-toolbar">
+    {{#if isGM}}
+    <button type="button" class="item-edit-toggle {{#if editMode}}active{{/if}}" data-action="toggleEdit">
+      {{#if editMode}}{{localize "SWIA.Item.ViewMode"}}{{else}}{{localize "SWIA.EditMode"}}{{/if}}
+    </button>
+    {{#if editMode}}
+    <button type="button" class="item-save-btn" data-action="saveItem">
+      {{localize "SWIA.Item.Save"}}
+    </button>
+    {{/if}}
+    {{/if}}
+  </div>
+
+  <div class="card-image-container">
+    <img class="card-image {{systemData.cardState}}" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" alt="{{item.name}}" />
+    {{#unless hasCardImage}}
+    <div class="card-placeholder">
+      <i class="fas fa-image"></i>
+      <p>{{localize "SWIA.Item.ClickToUploadCard"}}</p>
+    </div>
+    {{/unless}}
+    <button type="button" class="card-state-btn {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
+      {{cardStateLabel}}
+    </button>
+  </div>
+
+  <div class="item-sheet-body">
+    <div class="item-name-row">
+      <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'SWIA.Item.Name'}}" {{#unless editMode}}disabled{{/unless}} />
+    </div>
+
+    <section class="item-description-section">
+      <h3>{{localize "SWIA.Item.Armor.ArmorClassLabel"}}</h3>
+      {{#if editMode}}
+      <select name="system.armorClass" data-dtype="String">
+        <option value="" {{#if (eq systemData.armorClass "")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.None"}}</option>
+        <option value="light" {{#if (eq systemData.armorClass "light")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.Light"}}</option>
+        <option value="medium" {{#if (eq systemData.armorClass "medium")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.Medium"}}</option>
+        <option value="heavy" {{#if (eq systemData.armorClass "heavy")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.Heavy"}}</option>
+      </select>
+      {{else}}
+      <div class="weapon-view-badges">
+        <span class="weapon-range-pill">
+          {{#if (eq systemData.armorClass "light")}}{{localize "SWIA.Item.Armor.ArmorClass.Light"}}{{/if}}
+          {{#if (eq systemData.armorClass "medium")}}{{localize "SWIA.Item.Armor.ArmorClass.Medium"}}{{/if}}
+          {{#if (eq systemData.armorClass "heavy")}}{{localize "SWIA.Item.Armor.ArmorClass.Heavy"}}{{/if}}
+          {{#if (eq systemData.armorClass "")}}{{localize "SWIA.Item.Armor.ArmorClass.None"}}{{/if}}
+        </span>
+      </div>
+      {{/if}}
+    </section>
+
+    <section class="item-description-section">
+      <h3>{{localize "SWIA.Item.Armor.DefenseDice"}}</h3>
+      {{#if editMode}}
+      <div class="defense">
+        <label>{{localize "SWIA.Defense.Black"}}</label>
+        <input name="system.defenseDice.black" type="number" value="{{systemData.defenseDice.black}}" data-dtype="Number" min="0" />
+        <label>{{localize "SWIA.Defense.White"}}</label>
+        <input name="system.defenseDice.white" type="number" value="{{systemData.defenseDice.white}}" data-dtype="Number" min="0" />
+      </div>
+      {{else}}
+      <div class="attribute-row">
+        <div class="dice-display">
+          <div class="dice-blocks">
+            {{#each (range systemData.defenseDice.black)}}
+            <span class="dice-block black"></span>
+            {{/each}}
+            {{#each (range systemData.defenseDice.white)}}
+            <span class="dice-block white"></span>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </section>
+
+    <section class="item-description-section">
+      <h3>{{localize "SWIA.Item.Description"}}</h3>
+      <div class="editor-container">
+        {{#if editMode}}
+        <div class="html-editor">
+          <label class="editor-label">{{localize "SWIA.Item.Description"}} (HTML)</label>
+          <textarea name="system.description" data-dtype="String" rows="8">{{systemData.description}}</textarea>
+          <div class="editor-hint">{{localize "SWIA.BiographyHint"}}</div>
+        </div>
+        {{else}}
+        <div class="editor">
+          <div class="editor-content">{{{ enrichedDescription }}}</div>
+        </div>
+        {{/if}}
+      </div>
+    </section>
+
+    <section class="item-description-section">
+      <h3>{{localize "SWIA.Item.Weapon.Cost"}}</h3>
+      {{#if editMode}}
+      <input name="system.cost" type="number" value="{{systemData.cost}}" data-dtype="Number" min="0" />
+      {{else}}
+      <div>{{systemData.cost}}</div>
+      {{/if}}
+    </section>
+  </div>
+</form>

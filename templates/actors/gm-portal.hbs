@@ -1,0 +1,202 @@
+<section class="swia-gm-portal">
+
+  <header class="round-tracker">
+    <div class="round-info">
+      <span class="round-label">Round</span>
+      <span class="round-number">{{roundState.round}}</span>
+    </div>
+    <div class="phase-info">
+      <span class="phase-label">{{roundState.phaseLabel}}</span>
+    </div>
+    <div class="threat-level-info">
+      <span class="threat-level-label">{{localize "SWIA.Portal.GM.ThreatLevel"}}</span>
+      <span class="threat-level-value">{{threatLevel}}</span>
+    </div>
+    <div class="threat-info">
+      <span class="threat-label">{{localize "SWIA.Portal.GM.Threat"}}</span>
+      <span class="threat-value">{{threat}}</span>
+    </div>
+    {{#if isGM}}
+    <div class="round-controls">
+      <button type="button" data-action="togglePhase" class="swia-btn">Toggle Phase</button>
+      <button type="button" data-action="resetActivations" class="swia-btn">Reset Activations</button>
+      <button type="button" data-action="resetRound" class="swia-btn">Reset Round</button>
+      <button type="button" data-action="endRound" class="swia-btn swia-btn-primary">End Round</button>
+    </div>
+    {{/if}}
+  </header>
+
+  {{#if hasAnyActors}}
+    <div class="gm-sections">
+      {{#if hasPlayers}}
+        <section class="gm-section">
+          <header class="gm-section-header">
+            <h2>{{localize "SWIA.Portal.GM.SectionPlayers"}}</h2>
+          </header>
+          <div class="portal-grid">
+            {{#each playerActors as |actor|}}
+              <article class="portal-card type-{{actor.type}} {{#if actor.isWounded}}is-wounded{{/if}} {{#if actor.isDefeated}}is-defeated{{/if}} {{#if actor.isActivated}}is-activated{{/if}}">
+                <div class="identity">
+                  <img src="{{actor.tokenImage}}" alt="{{actor.name}}" loading="lazy">
+                  <div class="identity-text">
+                    <h3>
+                      <button
+                        type="button"
+                        class="actor-name-link"
+                        data-action="openActor"
+                        data-actor-id="{{actor.id}}"
+                        title="{{localize 'SWIA.Portal.OpenSheet'}}"
+                      >
+                        {{actor.name}}
+                      </button>
+                    </h3>
+                    <div class="type-row">
+                      <span>{{actor.typeLabel}}</span>
+                    </div>
+                    <div class="status-row">
+                      <div class="activation-row {{#if actor.canManage}}is-clickable{{/if}}" title="{{actor.activationTokenLabel}}">
+                        <img
+                          src="{{actor.activationTokenIcon}}"
+                          alt="{{actor.activationTokenLabel}}"
+                          class="activation-token"
+                          loading="lazy"
+                          data-action="toggleActivated"
+                          data-actor-id="{{actor.id}}"
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="health-bar-row">
+                  <span class="health-label">{{actor.health.value}} / {{actor.health.max}}</span>
+                  <div class="health-bar-wrap">
+                    <div class="health-bar" style="width: {{actor.health.pct}}%"></div>
+                  </div>
+                </div>
+              </article>
+            {{/each}}
+          </div>
+        </section>
+      {{/if}}
+
+      {{#if hasImperials}}
+        <section class="gm-section">
+          <header class="gm-section-header">
+            <h2>{{localize "SWIA.Portal.GM.SectionImperials"}}</h2>
+          </header>
+          <div class="portal-grid">
+            {{#each imperialActors as |actor|}}
+              <article class="portal-card type-{{actor.type}} {{#if actor.isWounded}}is-wounded{{/if}} {{#if actor.isActivated}}is-activated{{/if}}">
+                <div class="identity">
+                  <img src="{{actor.tokenImage}}" alt="{{actor.name}}" loading="lazy">
+                  <div class="identity-text">
+                    <h3>
+                      <button
+                        type="button"
+                        class="actor-name-link"
+                        data-action="openActor"
+                        data-actor-id="{{actor.id}}"
+                        title="{{localize 'SWIA.Portal.OpenSheet'}}"
+                      >
+                        {{actor.name}}
+                      </button>
+                    </h3>
+                    <div class="type-row">
+                      <span>{{actor.typeLabel}}</span>
+                    </div>
+                    <div class="status-row">
+                      <div class="activation-row {{#if actor.canManage}}is-clickable{{/if}}" title="{{actor.activationTokenLabel}}">
+                        <img
+                          src="{{actor.activationTokenIcon}}"
+                          alt="{{actor.activationTokenLabel}}"
+                          class="activation-token"
+                          loading="lazy"
+                          data-action="toggleActivated"
+                          data-actor-id="{{actor.id}}"
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="group-size-row">
+                  <span class="group-size-label">{{localize "SWIA.Imperial.TokenCount"}}: {{actor.sceneTokens.length}} / {{actor.groupSize}}</span>
+                </div>
+                {{#if actor.sceneTokens.length}}
+                <div class="token-health-list">
+                  {{#each actor.sceneTokens as |token|}}
+                  <div class="token-health-row {{#if token.isDefeated}}is-defeated{{/if}}">
+                    <img src="{{token.img}}" class="token-mini-img" alt="{{token.name}}" loading="lazy" title="{{token.name}}">
+                    <div class="token-health-info">
+                      <span class="token-name">{{token.name}}</span>
+                      <div class="token-health-bar-row">
+                        <span class="token-health-label">{{token.health.value}}/{{token.health.max}}</span>
+                        <div class="health-bar-wrap">
+                          <div class="health-bar" style="width: {{token.health.pct}}%"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {{/each}}
+                </div>
+                {{/if}}
+              </article>
+            {{/each}}
+          </div>
+        </section>
+      {{/if}}
+
+      {{#if hasCompanions}}
+        <section class="gm-section">
+          <header class="gm-section-header">
+            <h2>{{localize "SWIA.Portal.GM.SectionCompanions"}}</h2>
+          </header>
+          <div class="portal-grid">
+            {{#each companionActors as |actor|}}
+              <article class="portal-card type-{{actor.type}} {{#if actor.isWounded}}is-wounded{{/if}} {{#if actor.isActivated}}is-activated{{/if}}">
+                <div class="identity">
+                  <img src="{{actor.tokenImage}}" alt="{{actor.name}}" loading="lazy">
+                  <div class="identity-text">
+                    <h3>
+                      <button
+                        type="button"
+                        class="actor-name-link"
+                        data-action="openActor"
+                        data-actor-id="{{actor.id}}"
+                        title="{{localize 'SWIA.Portal.OpenSheet'}}"
+                      >
+                        {{actor.name}}
+                      </button>
+                    </h3>
+                    <div class="type-row">
+                      <span>{{actor.typeLabel}}</span>
+                    </div>
+                    <div class="status-row">
+                      <div class="activation-row {{#if actor.canManage}}is-clickable{{/if}}" title="{{actor.activationTokenLabel}}">
+                        <img
+                          src="{{actor.activationTokenIcon}}"
+                          alt="{{actor.activationTokenLabel}}"
+                          class="activation-token"
+                          loading="lazy"
+                          data-action="toggleActivated"
+                          data-actor-id="{{actor.id}}"
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="health-bar-row">
+                  <span class="health-label">{{actor.health.value}} / {{actor.health.max}}</span>
+                  <div class="health-bar-wrap">
+                    <div class="health-bar" style="width: {{actor.health.pct}}%"></div>
+                  </div>
+                </div>
+              </article>
+            {{/each}}
+          </div>
+        </section>
+      {{/if}}
+    </div>
+  {{else}}
+    <p class="portal-empty">{{localize "SWIA.Portal.GM.Empty"}}</p>
+  {{/if}}
+</section>

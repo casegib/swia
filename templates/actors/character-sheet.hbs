@@ -1,0 +1,108 @@
+<form class="swia-sheet type-character {{dispositionClass}} {{#if systemData.affiliation}}affiliation-{{systemData.affiliation}}{{/if}} {{#if editMode}}editing{{/if}}" autocomplete="off">
+  <div class="sheet-body">
+    <div class="sheet-main">
+      <header class="sheet-header">
+        {{#if isGM}}
+        <div class="edit-toggle">
+          <label for="edit-mode">{{localize "SWIA.EditMode"}}</label>
+          <input id="edit-mode" type="checkbox" data-action="toggleEdit" {{#if editMode}}checked{{/if}} />
+        </div>
+        {{/if}}
+        
+        <div class="image-section">
+          <div class="image-container {{#if editMode}}editing{{/if}}">
+            <img class="profile-image {{#if editMode}}clickable{{/if}}" src="{{profileSrc}}" {{#if editMode}}data-action="editImage" data-path="img"{{/if}} title="{{actor.name}}" />
+            <img class="token-image {{#if editMode}}clickable{{/if}}" src="{{tokenPreviewSrc}}" {{#if editMode}}data-action="editImage" data-path="prototypeToken.texture.src"{{/if}} title="Token" />
+          </div>
+        </div>
+
+        <div class="header-fields">
+          <div class="name-row">
+            <h1 class="actor-name">
+              {{#if editMode}}
+              <input type="text" name="name" value="{{actor.name}}" placeholder="Character Name" />
+              {{else}}
+              {{actor.name}}
+              {{/if}}
+            </h1>
+            {{#unless editMode}}
+            {{#if affiliation}}
+            <span class="affiliation-badge affiliation-{{affiliation}}" title="{{affiliationLabel}}">
+              {{#if (eq affiliation "imperial")}}<i class="fa-brands fa-empire"></i>{{/if}}
+              {{#if (eq affiliation "rebel")}}<i class="fa-brands fa-rebel"></i>{{/if}}
+              {{#if (eq affiliation "mercenary")}}<i class="fa-brands fa-mandalorian"></i>{{/if}}
+              {{#if (eq affiliation "civilian")}}<i class="fa-solid fa-user"></i>{{/if}}
+            </span>
+            {{/if}}
+            {{/unless}}
+          </div>
+          <div class="biography-section">
+            <label>{{localize "SWIA.Biography"}}</label>
+            {{#if editMode}}
+            <textarea name="system.biography" class="biography-input" rows="4">{{systemData.biography}}</textarea>
+            <span class="editor-hint">{{localize "SWIA.BiographyHint"}}</span>
+            {{else}}
+            <div class="biography-display">{{{systemData.biography}}}</div>
+            {{/if}}
+          </div>
+        </div>
+      </header>
+
+      <div class="sheet-content">
+        <section class="resource-grid">
+          <div class="stat-chips-row">
+            <div class="resource">
+              <label>{{localize "SWIA.Attributes.Health"}}</label>
+              {{#if editMode}}
+              <div class="pair">
+                <input name="system.attributes.health.value" type="number" min="0" value="{{currentAttributes.health.value}}" />
+                <span>/</span>
+                <input name="system.attributes.health.max" type="number" min="1" value="{{currentAttributes.health.max}}" />
+              </div>
+              {{else}}
+              <input type="number" value="{{currentAttributes.health.value}}" disabled />
+              {{/if}}
+            </div>
+            <div class="resource">
+              <label>{{localize "SWIA.Attributes.Speed"}}</label>
+              <input name="system.attributes.speed" type="number" min="0" value="{{currentAttributes.speed}}" {{#unless editMode}}disabled{{/unless}} />
+            </div>
+            <div class="resource disposition-stat">
+              {{#if editMode}}
+              <label>{{localize "SWIA.Character.PreferredDisposition"}}</label>
+              <select name="system.preferredDisposition">
+                <option value="friendly" {{#if (eq preferredDisposition "friendly")}}selected{{/if}}>{{localize "SWIA.Character.Disposition.Friendly"}}</option>
+                <option value="neutral" {{#if (eq preferredDisposition "neutral")}}selected{{/if}}>{{localize "SWIA.Character.Disposition.Neutral"}}</option>
+                <option value="hostile" {{#if (eq preferredDisposition "hostile")}}selected{{/if}}>{{localize "SWIA.Character.Disposition.Hostile"}}</option>
+              </select>
+              <span class="editor-hint">{{localize "SWIA.Character.PreferredDispositionHint"}}</span>
+              {{else}}
+              <div class="disposition-display">
+                <input type="text" value="{{effectiveDispositionLabel}}" disabled />
+                {{#if isGM}}
+                <button type="button" class="disposition-toggle" data-action="toggleDispositionShown"
+                        title="{{#if dispositionShown}}{{localize "SWIA.Character.HideDisposition"}}{{else}}{{localize "SWIA.Character.ShowDisposition"}}{{/if}}">
+                  <i class="fa-solid {{#if dispositionShown}}fa-eye-slash{{else}}fa-eye{{/if}}"></i>
+                </button>
+                {{/if}}
+              </div>
+              {{/if}}
+            </div>
+            {{#if editMode}}
+            <div class="resource affiliation-stat">
+              <label>{{localize "SWIA.Villain.AffiliationLabel"}}</label>
+              <select name="system.affiliation">
+                <option value="" {{#unless affiliation}}selected{{/unless}}>{{localize "SWIA.Villain.Affiliation.None"}}</option>
+                <option value="imperial" {{#if (eq affiliation "imperial")}}selected{{/if}}>{{localize "SWIA.Villain.Affiliation.Imperial"}}</option>
+                <option value="rebel" {{#if (eq affiliation "rebel")}}selected{{/if}}>{{localize "SWIA.Villain.Affiliation.Rebel"}}</option>
+                <option value="mercenary" {{#if (eq affiliation "mercenary")}}selected{{/if}}>{{localize "SWIA.Villain.Affiliation.Mercenary"}}</option>
+                <option value="civilian" {{#if (eq affiliation "civilian")}}selected{{/if}}>{{localize "SWIA.Villain.Affiliation.Civilian"}}</option>
+              </select>
+            </div>
+            {{/if}}
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</form>

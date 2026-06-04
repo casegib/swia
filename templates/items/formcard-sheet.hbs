@@ -1,0 +1,74 @@
+<form class="swia-sheet item-sheet card-sheet formcard-sheet" autocomplete="off">
+  <div class="card-image-container">
+    <img class="card-image {{systemData.cardState}}" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" alt="{{item.name}}" />
+    {{#unless hasCardImage}}
+    <div class="card-placeholder">
+      <i class="fas fa-image"></i>
+      <p>{{localize "SWIA.Item.ClickToUploadCard"}}</p>
+    </div>
+    {{/unless}}
+    <button type="button" class="card-state-btn {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
+      {{cardStateLabel}}
+    </button>
+  </div>
+
+  <div class="formcard-body">
+    <div class="formcard-name-row">
+      <input name="name" type="text" value="{{item.name}}" placeholder="Form Name" class="formcard-name-input" />
+    </div>
+
+    {{!-- Surge Abilities --}}
+    <div class="formcard-section">
+      <div class="formcard-section-header">
+        <span class="formcard-section-label">{{localize "SWIA.Villain.SurgeAbilities"}}</span>
+        <button type="button" class="add-row-btn" data-action="addFormSurgeAbility" title="{{localize 'SWIA.Villain.AddSurgeAbility'}}">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+      {{#if systemData.surgeAbilities.length}}
+      <ol class="surge-abilities-list ability-list edit-list formcard-surge-list">
+        {{#each systemData.surgeAbilities}}
+        <li class="surge-ability-entry ability-entry" data-index="{{@index}}">
+          <input class="surge-cost-input" name="system.surgeAbilities.{{@index}}.cost" type="number" min="1" value="{{this.cost}}" placeholder="1" />
+          <input class="surge-effect-input" name="system.surgeAbilities.{{@index}}.effectText" type="text" value="{{this.effectText}}" placeholder="e.g., +2 Damage" />
+          <button type="button" class="remove-row-btn" data-action="removeFormSurgeAbility" data-index="{{@index}}" title="{{localize 'SWIA.Villain.RemoveSurgeAbility'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </li>
+        {{/each}}
+      </ol>
+      {{else}}
+      <p class="list-empty">{{localize "SWIA.Villain.NoSurgeAbilities"}}</p>
+      {{/if}}
+    </div>
+
+    {{!-- Special Abilities --}}
+    <div class="formcard-section">
+      <div class="formcard-section-header">
+        <span class="formcard-section-label">{{localize "SWIA.Villain.SpecialAbilities"}}</span>
+        <button type="button" class="add-row-btn" data-action="addFormSpecialAbility" title="{{localize 'SWIA.Villain.AddSpecialAbility'}}">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+      {{#if systemData.specialAbilities.length}}
+      <ol class="special-abilities-list ability-list edit-list formcard-special-list">
+        {{#each systemData.specialAbilities}}
+        <li class="special-ability-entry ability-entry" data-index="{{@index}}">
+          <input class="special-ability-name" name="system.specialAbilities.{{@index}}.name" type="text" value="{{this.name}}" placeholder="Ability Name" />
+          <textarea class="special-ability-desc" name="system.specialAbilities.{{@index}}.description" placeholder="Description" rows="2">{{this.description}}</textarea>
+          <button type="button" class="remove-row-btn" data-action="removeFormSpecialAbility" data-index="{{@index}}" title="{{localize 'SWIA.Villain.RemoveSpecialAbility'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </li>
+        {{/each}}
+      </ol>
+      {{else}}
+      <p class="list-empty">{{localize "SWIA.Villain.NoSpecialAbilities"}}</p>
+      {{/if}}
+    </div>
+
+    <div class="formcard-footer">
+      <button type="button" class="save-btn" data-action="saveItem">{{localize "SWIA.Item.Save"}}</button>
+    </div>
+  </div>
+</form>
