@@ -8,7 +8,7 @@ const BaseApplication = BaseApplicationV2 && HandlebarsApplicationMixin
 
 const isV2 = !!(BaseApplicationV2 && HandlebarsApplicationMixin);
 
-const CAMPAIGN_RESOURCES_KEY = "campaignResources";
+export const CAMPAIGN_RESOURCES_KEY = "campaignResources";
 const HERO_XP_FIELD_PREFIX = "heroXp.";
 const DEFAULT_CAMPAIGN_RESOURCES = Object.freeze({
   credits: 0,
@@ -214,7 +214,9 @@ export class SWIACampaignTracker extends BaseApplication {
       heroUpdates.push(hero.update({ "system.xp": nextXp }));
     }
 
-    await game.settings.set("swia", CAMPAIGN_RESOURCES_KEY, resources);
+    // Merge with the stored setting so non-form fields (e.g. missions) are preserved.
+    const existing = game.settings.get("swia", CAMPAIGN_RESOURCES_KEY) ?? {};
+    await game.settings.set("swia", CAMPAIGN_RESOURCES_KEY, { ...existing, ...resources });
 
     const heroUpdateResults = await Promise.allSettled(heroUpdates);
     const failedHeroUpdates = heroUpdateResults.filter((result) => result.status === "rejected");

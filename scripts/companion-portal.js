@@ -543,7 +543,8 @@ export class SWIACompanionPortal extends BaseApplication {
     const actor = game.actors?.get(actorId);
     if (!actor) return;
 
-    const dropped = TextEditor.getDragEventData(event.originalEvent ?? event);
+    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
+    const dropped = TextEditorClass.getDragEventData(event.originalEvent ?? event);
     if (!dropped) return;
 
     let sourceItem = null;

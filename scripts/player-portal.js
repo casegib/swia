@@ -1,3 +1,5 @@
+import { CAMPAIGN_RESOURCES_KEY } from "./campaign-tracker.js";
+
 const BaseApplicationV2 = foundry.applications?.api?.ApplicationV2;
 const HandlebarsApplicationMixin = foundry.applications?.api?.HandlebarsApplicationMixin;
 const BaseApplicationV1 = foundry.appv1?.api?.Application ?? Application;
@@ -574,7 +576,8 @@ export class SWIAPlayerPortal extends BaseApplication {
     const actor = game.actors?.get(actorId);
     if (!actor) return;
 
-    const dropped = TextEditor.getDragEventData(event.originalEvent ?? event);
+    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
+    const dropped = TextEditorClass.getDragEventData(event.originalEvent ?? event);
     if (!dropped) return;
 
     let sourceItem = null;

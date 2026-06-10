@@ -41,21 +41,21 @@ const DEFAULT_CAMPAIGN_RESOURCES = {
 // ensuring it survives any module init hooks that overwrite CONFIG.statusEffects.
 const SWIA_STATUS_EFFECTS = [
   // Combat Conditions
-  { id: "weakened", name: "SWIA.Conditions.Weakened", icon: "systems/swia/icons/Weaken.png" },
-  { id: "stunned",  name: "SWIA.Conditions.Stunned",  icon: "systems/swia/icons/Stunned.png" },
-  { id: "bleeding", name: "SWIA.Conditions.Bleeding", icon: "systems/swia/icons/Bleeding.png" },
-  { id: "focused",  name: "SWIA.Conditions.Focused",  icon: "systems/swia/icons/Focused.png" },
-  { id: "hidden",   name: "SWIA.Conditions.Hidden",   icon: "systems/swia/icons/Hidden.png" },
-  { id: "blind",    name: "SWIA.Conditions.Blind",    icon: "systems/swia/icons/Blind.png" },
-  { id: "scanned",  name: "SWIA.Conditions.Scanned",  icon: "systems/swia/icons/Scanned.png" },
-  { id: "recon",    name: "SWIA.Conditions.Recon",    icon: "systems/swia/icons/Recon.png" },
-  { id: "wanted",   name: "SWIA.Conditions.Wanted",   icon: "systems/swia/icons/Wanted.png" },
+  { id: "weakened", name: "SWIA.Conditions.Weakened", img: "systems/swia/icons/Weaken.png" },
+  { id: "stunned",  name: "SWIA.Conditions.Stunned",  img: "systems/swia/icons/Stunned.png" },
+  { id: "bleeding", name: "SWIA.Conditions.Bleeding", img: "systems/swia/icons/Bleeding.png" },
+  { id: "focused",  name: "SWIA.Conditions.Focused",  img: "systems/swia/icons/Focused.png" },
+  { id: "hidden",   name: "SWIA.Conditions.Hidden",   img: "systems/swia/icons/Hidden.png" },
+  { id: "blind",    name: "SWIA.Conditions.Blind",    img: "systems/swia/icons/Blind.png" },
+  { id: "scanned",  name: "SWIA.Conditions.Scanned",  img: "systems/swia/icons/Scanned.png" },
+  { id: "recon",    name: "SWIA.Conditions.Recon",    img: "systems/swia/icons/Recon.png" },
+  { id: "wanted",   name: "SWIA.Conditions.Wanted",   img: "systems/swia/icons/Wanted.png" },
   // Power Tokens
-  { id: "power-block",  name: "SWIA.PowerTokens.BlockToken",  icon: "systems/swia/icons/Power Block Token.png" },
-  { id: "power-damage", name: "SWIA.PowerTokens.DamageToken", icon: "systems/swia/icons/Power Damage Token.png" },
-  { id: "power-evade",  name: "SWIA.PowerTokens.EvadeToken",  icon: "systems/swia/icons/Power Evade Token.png" },
-  { id: "power-surge",  name: "SWIA.PowerTokens.SurgeToken",  icon: "systems/swia/icons/Power Surge Token.png" },
-  { id: "power-any",    name: "SWIA.PowerTokens.AnyToken",    icon: "systems/swia/icons/Power Any Token.png" }
+  { id: "power-block",  name: "SWIA.PowerTokens.BlockToken",  img: "systems/swia/icons/Power Block Token.png" },
+  { id: "power-damage", name: "SWIA.PowerTokens.DamageToken", img: "systems/swia/icons/Power Damage Token.png" },
+  { id: "power-evade",  name: "SWIA.PowerTokens.EvadeToken",  img: "systems/swia/icons/Power Evade Token.png" },
+  { id: "power-surge",  name: "SWIA.PowerTokens.SurgeToken",  img: "systems/swia/icons/Power Surge Token.png" },
+  { id: "power-any",    name: "SWIA.PowerTokens.AnyToken",    img: "systems/swia/icons/Power Any Token.png" }
 ];
 
 async function migrateLegacyAbilityItems() {

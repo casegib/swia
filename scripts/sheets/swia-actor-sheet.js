@@ -946,13 +946,6 @@ export class SWIAActorSheet extends BaseActorSheet {
 
   /**
    * Ensure name and system data persist when the form is submitted.
-  }
-
-  /**
-   * Ensure name and system data persist when the form is submitted.
-   */
-  /**
-   * Ensure name and system data persist when the form is submitted.
    */
   async _updateObject(event, formData) {
     const expanded = foundry.utils.expandObject(formData ?? {});
@@ -983,9 +976,6 @@ export class SWIAActorSheet extends BaseActorSheet {
 
   /**
    * Collect current form data and persist key fields, even if submit is skipped.
-   */
-  /**
-   * Explicitly submit data to ensure name/system changes save across V1/V2.
    */
   async _saveFormData() {
     const formData = this._collectFormData();
@@ -1028,9 +1018,6 @@ export class SWIAActorSheet extends BaseActorSheet {
     }
   }
 
-  /**
-   * Gather form data safely across V1/V2 without relying on _getSubmitData.
-   */
   /**
    * Gather form data safely across V1/V2 without relying on _getSubmitData.
    * Handles disabled inputs which are normally skipped by FormData API.

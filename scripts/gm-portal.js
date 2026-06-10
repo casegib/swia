@@ -228,6 +228,11 @@ export class SWIAGMPortal extends BaseApplication {
       ? (system.woundedTokenImage || actor.prototypeToken?.texture?.src || actor.img)
       : (actor.prototypeToken?.texture?.src || actor.img);
 
+    // Wounded heroes use the wounded attribute pool (matches actor sheet and player portal).
+    const activePool = isWounded ? (system.woundedAttributes ?? system.attributes) : system.attributes;
+    const healthValue = activePool?.health?.value ?? 0;
+    const healthMax = activePool?.health?.max ?? 0;
+
     return {
       id: actor.id,
       name: actor.name,
@@ -242,10 +247,10 @@ export class SWIAGMPortal extends BaseApplication {
       activationTokenIcon: `systems/swia/icons/${isActivated ? "Token Hero Turn Over.png" : "Token Hero Turn Start.png"}`,
       activationTokenLabel: game.i18n.localize(isActivated ? "SWIA.ActivationToken.Activated" : "SWIA.ActivationToken.Ready"),
       health: {
-        value: system.attributes?.health?.value ?? 0,
-        max: system.attributes?.health?.max ?? 0,
+        value: healthValue,
+        max: healthMax,
         pct: Math.clamp(
-          Math.round(((system.attributes?.health?.value ?? 0) / (system.attributes?.health?.max ?? 1)) * 100),
+          Math.round((healthValue / (healthMax || 1)) * 100),
           0, 100
         )
       },
@@ -314,7 +319,9 @@ export class SWIAGMPortal extends BaseApplication {
     event.preventDefault();
     if (!game.user?.isGM) return;
 
-    const updates = (game.actors?.contents ?? []).map(a => ({ _id: a.id, "system.state.activated": false }));
+    const updates = (game.actors?.contents ?? [])
+      .filter(a => this._isPortalActor(a))
+      .map(a => ({ _id: a.id, "system.state.activated": false }));
     if (updates.length) await Actor.updateDocuments(updates);
 
     const roundState = game.settings.get("swia", "roundState");
@@ -326,7 +333,9 @@ export class SWIAGMPortal extends BaseApplication {
     event.preventDefault();
     if (!game.user?.isGM) return;
 
-    const updates = (game.actors?.contents ?? []).map(a => ({ _id: a.id, "system.state.activated": false }));
+    const updates = (game.actors?.contents ?? [])
+      .filter(a => this._isPortalActor(a))
+      .map(a => ({ _id: a.id, "system.state.activated": false }));
     if (updates.length) await Actor.updateDocuments(updates);
 
     const roundState = game.settings.get("swia", "roundState");
@@ -343,13 +352,26 @@ export class SWIAGMPortal extends BaseApplication {
     event.preventDefault();
     if (!game.user?.isGM) return;
 
-    const confirmed = await Dialog.confirm({
-      title: "Reset Round",
-      content: "<p>Reset the round counter to 1 and clear all activations?</p>"
-    });
+    const DialogClass = foundry?.applications?.api?.DialogV2;
+    let confirmed = false;
+    if (DialogClass?.confirm) {
+      confirmed = await DialogClass.confirm({
+        window: { title: "Reset Round" },
+        content: "<p>Reset the round counter to 1 and clear all activations?</p>",
+        rejectClose: false
+      });
+    } else {
+      confirmed = await Dialog.confirm({
+        title: "Reset Round",
+        content: "<p>Reset the round counter to 1 and clear all activations?</p>",
+        defaultYes: false
+      });
+    }
     if (!confirmed) return;
 
-    const updates = (game.actors?.contents ?? []).map(a => ({ _id: a.id, "system.state.activated": false }));
+    const updates = (game.actors?.contents ?? [])
+      .filter(a => this._isPortalActor(a))
+      .map(a => ({ _id: a.id, "system.state.activated": false }));
     if (updates.length) await Actor.updateDocuments(updates);
 
     const roundState = game.settings.get("swia", "roundState");

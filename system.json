@@ -17,7 +17,7 @@
   "manifest": "https://raw.githubusercontent.com/CaseGib/swia/master/system.json",
   "download": "https://github.com/casegib/swia/releases/download/v0.1.0/swia.zip",
   "readme": "README.md",
-  "primaryTokenAttribute": "system.attributes.health.value",
+  "primaryTokenAttribute": "attributes.health",
   "grid": {
     "distance": 1,
     "units": "square"
