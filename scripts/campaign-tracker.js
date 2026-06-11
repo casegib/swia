@@ -1,12 +1,6 @@
-const BaseApplicationV2 = foundry.applications?.api?.ApplicationV2;
-const HandlebarsApplicationMixin = foundry.applications?.api?.HandlebarsApplicationMixin;
-const BaseApplicationV1 = foundry.appv1?.api?.Application ?? Application;
-
-const BaseApplication = BaseApplicationV2 && HandlebarsApplicationMixin
-  ? HandlebarsApplicationMixin(BaseApplicationV2)
-  : BaseApplicationV1;
-
-const isV2 = !!(BaseApplicationV2 && HandlebarsApplicationMixin);
+// Foundry v13+ ApplicationV2 base
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const BaseApplication = HandlebarsApplicationMixin(ApplicationV2);
 
 export const CAMPAIGN_RESOURCES_KEY = "campaignResources";
 const HERO_XP_FIELD_PREFIX = "heroXp.";
@@ -85,40 +79,14 @@ export class SWIACampaignTracker extends BaseApplication {
     this._registerSyncHooks();
   }
 
-  static get defaultOptions() {
-    if (isV2) return {};
-
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      id: "swia-campaign-tracker",
-      title: game.i18n.localize("SWIA.CampaignTracker.Title"),
-      template: "systems/swia/templates/campaign/campaign-tracker.hbs",
-      width: 520,
-      height: 560,
-      resizable: true,
-      classes: ["swia-campaign-tracker-window"]
-    });
-  }
-
   get title() {
     return game.i18n.localize("SWIA.CampaignTracker.Title");
   }
 
-  get template() {
-    return "systems/swia/templates/campaign/campaign-tracker.hbs";
-  }
-
   async _prepareContext(options) {
-    const context = isV2 ? await super._prepareContext(options) : {};
+    const context = await super._prepareContext(options);
     const trackerContext = await this._buildContext();
     return foundry.utils.mergeObject(context, trackerContext);
-  }
-
-  async getData(options) {
-    if (isV2) return this._prepareContext(options);
-
-    const data = await super.getData(options);
-    const trackerContext = await this._buildContext();
-    return foundry.utils.mergeObject(data, trackerContext);
   }
 
   async _buildContext() {
@@ -170,11 +138,6 @@ export class SWIACampaignTracker extends BaseApplication {
       this._refreshHandle = null;
       this.render(false);
     }, 50);
-  }
-
-  activateListeners(html) {
-    super.activateListeners?.(html);
-    html.find("[data-action='saveResources']").on("click", this._onSaveResources.bind(this));
   }
 
   async _onSaveResources(event, target) {

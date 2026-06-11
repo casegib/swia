@@ -24,7 +24,7 @@ Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor shee
 
 ## File Map
 - `system.json` – system manifest; update `manifest`, `download`, `url` when publishing.
-- `template.json` – actor/item templates and defaults.
+- `scripts/data/` – actor and item data models (schemas and defaults); document types are declared in `system.json` under `documentTypes`.
 - `scripts/swia.js` – system entry point; registers sheets, status effects, settings, and Handlebars helpers.
 - `scripts/campaign-tracker.js` – Campaign Tracker application and shared resource helpers.
 - `scripts/companion-portal.js` – Companion Portal application.

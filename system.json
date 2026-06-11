@@ -6,7 +6,7 @@
   "compatibility": {
     "minimum": "13",
     "verified": "13.351"
-  },  
+  },
   "authors": [
     {
       "name": "CaseGib",
@@ -18,6 +18,25 @@
   "download": "https://github.com/casegib/swia/releases/download/v0.1.0/swia.zip",
   "readme": "README.md",
   "primaryTokenAttribute": "attributes.health",
+  "documentTypes": {
+    "Actor": {
+      "hero": {},
+      "villain": {},
+      "ally": {},
+      "character": {}
+    },
+    "Item": {
+      "weapon": {},
+      "weaponmod": {},
+      "armor": {},
+      "gear": {},
+      "classcard": {},
+      "agendacard": {},
+      "imperialclasscard": {},
+      "heroability": {},
+      "formcard": {}
+    }
+  },
   "grid": {
     "distance": 1,
     "units": "square"

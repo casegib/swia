@@ -1,13 +1,6 @@
-// Import base classes for V1/V2 compatibility
-const BaseItemSheetV2 = foundry.applications?.sheets?.ItemSheetV2;
-const BaseItemSheetV1 = foundry.appv1?.sheets?.ItemSheet ?? ItemSheet;
-const HandlebarsApplicationMixin = foundry.applications?.api?.HandlebarsApplicationMixin;
-
-// Create V2 base with Handlebars mixin if available, otherwise use V1
-const BaseItemSheet = BaseItemSheetV2 && HandlebarsApplicationMixin 
-  ? HandlebarsApplicationMixin(BaseItemSheetV2)
-  : BaseItemSheetV1;
-const isV2 = !!BaseItemSheetV2;
+// Foundry v13+ ApplicationV2 item sheet
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const BaseItemSheet = HandlebarsApplicationMixin(foundry.applications.sheets.ItemSheetV2);
 
 function resolveItemDocument(ctx) {
   return ctx?.document ?? ctx?.item ?? ctx?.object ?? ctx?.options?.document ?? null;
@@ -75,11 +68,9 @@ export class SWIAItemSheet extends BaseItemSheet {
   constructor(...args) {
     super(...args);
 
-    if (isV2) {
-      this.options.form ??= {};
-      this.options.form.submitOnChange = false;
-      this.options.form.handler = this._onSubmitItemForm.bind(this);
-    }
+    this.options.form ??= {};
+    this.options.form.submitOnChange = false;
+    this.options.form.handler = this._onSubmitItemForm.bind(this);
   }
 
   // Override V2's template loading to use the correct template based on item type
@@ -134,14 +125,7 @@ export class SWIAItemSheet extends BaseItemSheet {
 
   }
 
-  // V1 template getter
-  get template() {
-    const sourceType = this.document?.type ?? this.item?.type ?? "classcard";
-    const itemType = mapItemSheetType(sourceType);
-    return `systems/swia/templates/items/${itemType}-sheet.hbs`;
-  }
-
-  // Handle form submission in V2
+  // Handle form submission
   async _onSubmitItemForm(event, form, formData) {
     const raw = formData?.object ?? formData ?? {};
     const normalized = foundry.utils.flattenObject(foundry.utils.expandObject(raw));
@@ -335,25 +319,14 @@ export class SWIAItemSheet extends BaseItemSheet {
     await item.update({ "system.cardState": cycle[current] || "ready" });
   }
 
-  static get defaultOptions() {
-    if (isV2) return {};
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["swia", "sheet", "item"],
-      width: 420,
-      height: 580,
-      resizable: true,
-      submitOnChange: false
-    });
-  }
-
   get title() {
     const name = this.document?.name ?? this.item?.name ?? "";
     return name || "Item";
   }
 
-  // Prepare rendering context for both V1 and V2
+  // Prepare rendering context
   async _prepareContext(options) {
-    const context = isV2 ? await super._prepareContext(options) : {};
+    const context = await super._prepareContext(options);
     const item = resolveItemDocument(this);
     if (!item) return context;
     const system = item.system;
@@ -423,277 +396,6 @@ export class SWIAItemSheet extends BaseItemSheet {
     }
     
     return context;
-  }
-
-  async getData(options) {
-    if (isV2) return this._prepareContext(options);
-    
-    const data = await super.getData(options);
-    const system = data.item.system;
-
-    // Get TextEditor with fallback for V1/V2 compatibility
-    const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
-
-    // Enrich HTML for description
-    const enrichedDescription = await TextEditorClass.enrichHTML(system.description || "", {
-      async: true,
-      secrets: data.item.isOwner,
-      relativeTo: data.item
-    });
-
-    const enrichedAbilityText = data.item.type === "heroability"
-      ? await TextEditorClass.enrichHTML(system.abilityText || "", { async: true, secrets: data.item.isOwner, relativeTo: data.item })
-      : "";
-
-    // Determine if a real card image has been uploaded
-    const defaultImages = ["icons/svg/item-bag.svg", "icons/svg/sword.svg", "icons/svg/mystery-man.svg"];
-    const hasCardImage = data.item.img && !defaultImages.includes(data.item.img);
-
-    // Card state label for display
-    const stateLabels = { ready: "SWIA.Item.CardState.Ready", exhausted: "SWIA.Item.CardState.Exhausted", depleted: "SWIA.Item.CardState.Depleted" };
-    const cardState = system.cardState || "ready";
-    const cardStateLabel = game.i18n.localize(stateLabels[cardState] || stateLabels.ready);
-    const weaponmodAttachedWeaponName = resolveWeaponmodAttachmentName(data.item);
-
-    // Enrich weapon abilities (V1 path)
-    // Normalize to array — Foundry can store new array fields as {} on existing documents
-    const abilitiesRaw = Array.isArray(system.abilities)
-      ? system.abilities
-      : Object.values(system.abilities || {});
-    const enrichedAbilities = await Promise.all(
-      abilitiesRaw.map(async (ability) => ({
-        ...ability,
-        enrichedDescription: await TextEditorClass.enrichHTML(ability.description || "", {
-          async: true,
-          secrets: data.item.isOwner,
-          relativeTo: data.item
-        })
-      }))
-    );
-
-    data.systemData = system;
-    data.enrichedDescription = enrichedDescription;
-    data.enrichedAbilityText = enrichedAbilityText;
-    data.enrichedAbilities = enrichedAbilities;
-    data.editMode = this.editMode ?? false;
-    data.isEditable = this.isEditable !== false;
-    data.isGM = game.user?.isGM ?? false;
-    data.hasCardImage = hasCardImage;
-    data.cardStateLabel = cardStateLabel;
-    data.weaponmodAttachedWeaponName = weaponmodAttachedWeaponName;
-    data.config = CONFIG.SWIA ?? {};
-    
-    return data;
-  }
-
-  activateListeners(html) {
-    super.activateListeners(html);
-
-    if (isV2) return;
-
-    // Card image click to edit (V1 only)
-    html.find(".card-image[data-edit]").on("click", this._onEditImage.bind(this));
-
-    // Card state cycling (V1 only)
-    html.find("[data-action='cycleCardState']").on("click", this._onCycleCardState.bind(this));
-
-    // Weapon-specific listeners (V1 only)
-    html.find("[data-action='addSurgeAbility']").on("click", this._onAddSurgeAbility.bind(this));
-    html.find("[data-action='removeSurgeAbility']").on("click", this._onRemoveSurgeAbility.bind(this));
-    html.find("[data-action='addExhaustAbility']").on("click", this._onAddExhaustAbility.bind(this));
-    html.find("[data-action='removeExhaustAbility']").on("click", this._onRemoveExhaustAbility.bind(this));
-    html.find("[data-action='addAbility']").on("click", this._onAddAbility.bind(this));
-    html.find("[data-action='removeAbility']").on("click", this._onRemoveAbility.bind(this));
-    html.find("[data-action='toggleEdit']").on("click", this._onToggleEdit.bind(this));
-    html.find("[data-action='saveItem']").on("click", this._onSaveItem.bind(this));
-    html.find("[data-action='addFormSurgeAbility']").on("click", this._onAddFormSurgeAbility.bind(this));
-    html.find("[data-action='removeFormSurgeAbility']").on("click", this._onRemoveFormSurgeAbility.bind(this));
-    html.find("[data-action='addFormSpecialAbility']").on("click", this._onAddFormSpecialAbility.bind(this));
-    html.find("[data-action='removeFormSpecialAbility']").on("click", this._onRemoveFormSpecialAbility.bind(this));
-
-  }
-
-  // Add surge ability to weapon (V1)
-  async _onAddSurgeAbility(event) {
-    event.preventDefault();
-    if (!["weapon", "weaponmod"].includes(this.item.type)) return;
-    
-    const surgeAbilities = this.item.system.surgeAbilities || [];
-    const newSurgeAbilities = [...surgeAbilities, { cost: 1, effectType: "damage", effectValue: 0, effectText: "" }];
-    
-    await this.item.update({ "system.surgeAbilities": newSurgeAbilities });
-  }
-
-  // Remove surge ability from weapon (V1)
-  async _onRemoveSurgeAbility(event) {
-    event.preventDefault();
-    const index = parseInt(event.currentTarget.dataset.index);
-    if (isNaN(index) || !["weapon", "weaponmod"].includes(this.item.type)) return;
-    
-    const surgeAbilities = this.item.system.surgeAbilities || [];
-    const newSurgeAbilities = surgeAbilities.filter((_, i) => i !== index);
-    
-    await this.item.update({ "system.surgeAbilities": newSurgeAbilities });
-  }
-
-  // Add exhaust ability to weapon (V1)
-  async _onAddExhaustAbility(event) {
-    event.preventDefault();
-    if (this.item.type !== "weapon") return;
-
-    const exhaustAbilities = this.item.system.exhaustAbilities || [];
-    const newExhaustAbilities = [...exhaustAbilities, { trigger: "action", effect: "" }];
-
-    await this.item.update({ "system.exhaustAbilities": newExhaustAbilities });
-  }
-
-  // Remove exhaust ability from weapon (V1)
-  async _onRemoveExhaustAbility(event) {
-    event.preventDefault();
-    const index = parseInt(event.currentTarget.dataset.index);
-    if (isNaN(index) || this.item.type !== "weapon") return;
-
-    const exhaustAbilities = this.item.system.exhaustAbilities || [];
-    const newExhaustAbilities = exhaustAbilities.filter((_, i) => i !== index);
-
-    await this.item.update({ "system.exhaustAbilities": newExhaustAbilities });
-  }
-
-  // Add ability to weapon (V1)
-  async _onAddAbility(event) {
-    event.preventDefault();
-    if (this.item.type !== "weapon") return;
-    const abilities = Array.isArray(this.item.system.abilities) ? this.item.system.abilities : Object.values(this.item.system.abilities || {});
-    await this.item.update({ "system.abilities": [...abilities, { prefix: "none", description: "" }] });
-  }
-
-  // Remove ability from weapon (V1)
-  async _onRemoveAbility(event) {
-    event.preventDefault();
-    const index = parseInt(event.currentTarget.dataset.index);
-    if (isNaN(index) || this.item.type !== "weapon") return;
-    const abilities = Array.isArray(this.item.system.abilities) ? this.item.system.abilities : Object.values(this.item.system.abilities || {});
-    await this.item.update({ "system.abilities": abilities.filter((_, i) => i !== index) });
-  }
-
-  // Toggle edit mode (V1)
-  async _onToggleEdit(event) {
-    event.preventDefault();
-
-    const currentEditMode = this.editMode ?? false;
-    this.editMode = !currentEditMode;
-    this.render();
-  }
-
-  // Explicit save action (V1)
-  async _onSaveItem(event) {
-    event.preventDefault();
-
-    const formEl = event.currentTarget?.closest?.("form") ?? null;
-    const update = this._collectUpdateFromForm(formEl);
-    const item = resolveItemDocument(this);
-    if (!item) {
-      ui.notifications?.error("SWIA | Unable to resolve item document for save.");
-      return;
-    }
-
-    // For formcard, scrape array fields from DOM to avoid expandObject plain-object bug
-    if (item.type === "formcard") {
-      Object.assign(update, this._collectFormcardArrayUpdate(formEl));
-    }
-
-    if (!Object.keys(update).length) {
-      ui.notifications?.warn(game.i18n.localize("SWIA.Item.NoChangesToSave"));
-      return;
-    }
-
-    try {
-      await item.update(update);
-      ui.notifications?.info(game.i18n.localize("SWIA.Item.Saved"));
-    } catch (error) {
-      console.error("SWIA | Manual save failed", error);
-      ui.notifications?.error(game.i18n.localize("SWIA.Item.SaveFailed"));
-    }
-  }
-
-  // Add surge ability to formcard (V1)
-  async _onAddFormSurgeAbility(event) {
-    event.preventDefault();
-    const item = resolveItemDocument(this);
-    if (!item || item.type !== "formcard") return;
-    const surgeAbilities = Array.isArray(item.system.surgeAbilities) ? item.system.surgeAbilities : [];
-    await item.update({ "system.surgeAbilities": [...surgeAbilities, { cost: 1, effectText: "" }] });
-  }
-
-  // Remove surge ability from formcard (V1)
-  async _onRemoveFormSurgeAbility(event) {
-    event.preventDefault();
-    const item = resolveItemDocument(this);
-    if (!item || item.type !== "formcard") return;
-    const index = parseInt(event.currentTarget.dataset.index);
-    if (isNaN(index)) return;
-    const surgeAbilities = Array.isArray(item.system.surgeAbilities) ? item.system.surgeAbilities : [];
-    await item.update({ "system.surgeAbilities": surgeAbilities.filter((_, i) => i !== index) });
-  }
-
-  // Add special ability to formcard (V1)
-  async _onAddFormSpecialAbility(event) {
-    event.preventDefault();
-    const item = resolveItemDocument(this);
-    if (!item || item.type !== "formcard") return;
-    const specialAbilities = Array.isArray(item.system.specialAbilities) ? item.system.specialAbilities : [];
-    await item.update({ "system.specialAbilities": [...specialAbilities, { name: "", description: "" }] });
-  }
-
-  // Remove special ability from formcard (V1)
-  async _onRemoveFormSpecialAbility(event) {
-    event.preventDefault();
-    const item = resolveItemDocument(this);
-    if (!item || item.type !== "formcard") return;
-    const index = parseInt(event.currentTarget.dataset.index);
-    if (isNaN(index)) return;
-    const specialAbilities = Array.isArray(item.system.specialAbilities) ? item.system.specialAbilities : [];
-    await item.update({ "system.specialAbilities": specialAbilities.filter((_, i) => i !== index) });
-  }
-
-  // Cycle card state: ready → exhausted → depleted → ready (V1)
-  async _onCycleCardState(event) {
-    event.preventDefault();
-    const item = this.document ?? this.item;
-    const current = item.system.cardState || "ready";
-    const cycle = { ready: "exhausted", exhausted: "depleted", depleted: "ready" };
-    await item.update({ "system.cardState": cycle[current] || "ready" });
-  }
-
-  // Handle image editing (V1)
-  _onEditImage(event) {
-    event.preventDefault();
-    const attr = event.currentTarget.dataset.edit;
-    const item = resolveItemDocument(this);
-    if (!item) return;
-    const current = foundry.utils.getProperty(item, attr);
-    const FilePickerClass = foundry?.applications?.apps?.FilePicker?.implementation
-      ?? foundry?.applications?.api?.FilePicker;
-    const fp = new FilePickerClass({
-      type: "image",
-      current: current,
-      callback: path => {
-        event.currentTarget.src = path;
-        item.update({ [attr]: path });
-      }
-    });
-    return fp.browse();
-  }
-
-  async _updateObject(event, formData) {
-    const normalized = foundry.utils.flattenObject(foundry.utils.expandObject(formData ?? {}));
-    const update = this._extractItemUpdate(normalized);
-
-    if (!Object.keys(update).length) return;
-
-    const item = resolveItemDocument(this);
-    if (!item) return;
-    return item.update(update);
   }
 
   _extractItemUpdate(source) {

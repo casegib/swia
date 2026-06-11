@@ -98,18 +98,32 @@
 ## Phase 5 — Dice Roll Dialog (new feature)
 *Highest value; depends on Phase 1 schema for surge ability reading.*
 
-17. **Create roll dialog** — new file `scripts/dice/roll-dialog.js`:
+*Prior art: the **swia-dice module** (`Data/modules/swia-dice`) already implements custom d6 terms for all six IA dice, DSN presets with face art, and chat face rendering. Phase 5 absorbs it into the system rather than building from scratch, then retires the module.*
+
+17. **Absorb dice terms from swia-dice module** — new file `scripts/dice/dice-terms.js`:
+    - Port the six `Die` subclasses from `swia-dice/modules/die.js`, registered in `CONFIG.Dice.terms`
+    - **Keep the module's denominations** to preserve existing macros/chat history: `r` red, `n` blue, `g` green, `y` yellow (attack); `b` black, `w` white (defense). All d6.
+    - Add a structured `SYMBOLS` table per die: `{face: {damage, surge, accuracy}}` for attack, `{face: {block, evade, dodge}}` for defense — the module only has display labels/filenames; the roll dialog needs machine-readable symbols to total results
+    - Copy face art from `swia-dice/images/` into the system (`icons/dice/`); keep `getResultLabel` face images and the chat-render styling fix from `swia-dice/modules/swia.js`
+    - Pools remain real Roll formulas (e.g. `2dr + 1dy` vs `1db`)
+
+18. **Dice So Nice integration** — in `scripts/dice/dice-terms.js` (or a small `dsn.js`):
+    - Port `addSystem` + `addDicePreset` registration from the module's `diceSoNiceReady` hook, pointed at the system's copied face art
+    - **Fix the hard dependency**: the module does a top-level `import` from `dice-so-nice/api.js`, so the whole script (terms included) dies if DSN is disabled. Instead, do all DSN work inside the `diceSoNiceReady` hook (use `dice3d` API / `game.modules.get("dice-so-nice")` — no static import)
+    - Detect the swia-dice module at startup; if active, warn GM to disable it (duplicate denomination registration)
+
+19. **Create roll dialog** — new file `scripts/dice/roll-dialog.js`:
     - Pool builder: select attack dice (from actor/weapon) + defense dice (from target)
-    - On roll: use Foundry `Roll` API with custom dice (map d8 faces to IA results: damage/surge/accuracy/blank)
-    - Result display: total damage, total surge, total accuracy, total block — net damage
+    - On roll: evaluate via Foundry `Roll` API using the custom dice terms from step 17
+    - Result display via the `SYMBOLS` table: total damage, total surge, total accuracy, total block — net damage *(the gap the module never filled; its totaling code is commented-out leftovers from another system)*
     - Surge spending panel: list eligible surge abilities (actor + weapon); clicking one deducts surge and applies effect
     - Keyword automation: Pierce reduces block, Blast creates adjacent damage rolls, Cleave overflow
 
-18. **Wire roll dialog to actor sheet**:
+20. **Wire roll dialog to actor sheet**:
     - Clickable dice blocks on actor sheet trigger roll (attribute test or attack)
     - Files: actor-sheet.hbs (`data-action="rollDice"` on dice block containers), swia-actor-sheet.js (`_onRollDice` action)
 
-19. **Wire roll dialog to portals**:
+21. **Wire roll dialog to portals**:
     - Player Portal and Companion Portal: clicking dice blocks triggers the same roll dialog
     - Files: scripts/player-portal.js, scripts/companion-portal.js
 
@@ -121,7 +135,7 @@
 - **Phase 2**: Open each actor type sheet; confirm new fields render in both view and edit mode; test wounded toggle health reset
 - **Phase 3**: Open weapon item; verify accuracy/keyword fields appear; test adding a surge ability with effectType dropdown
 - **Phase 4**: Open Campaign Tracker as GM; add a mission row; save; reopen to verify persistence
-- **Phase 5**: Roll an attack from the actor sheet; verify dice results dialog opens with correct pool; spend a surge ability and verify it deducts correctly
+- **Phase 5**: Disable the swia-dice module first. Roll an attack from the actor sheet; verify dice results dialog opens with correct pool; spend a surge ability and verify it deducts correctly; with DSN enabled, confirm 3D dice show IA faces; with DSN disabled, confirm rolls still resolve (terms must not depend on DSN); confirm old chat messages and macros using `r/n/g/y/b/w` formulas still render
 
 ---
 
@@ -144,4 +158,7 @@
 - `scripts/sheets/swia-item-sheet.js` — updated save/collect logic (Phase 3)
 - `templates/campaign/campaign-tracker.hbs` — missions section (Phase 4)
 - `scripts/campaign-tracker.js` — missions persistence (Phase 4)
+- `scripts/dice/dice-terms.js` — NEW file: IA die terms + SYMBOLS table + DSN presets, ported from swia-dice module (Phase 5)
 - `scripts/dice/roll-dialog.js` — NEW file (Phase 5)
+- `icons/dice/` — face art copied from `Data/modules/swia-dice/images/` (Phase 5)
+- `Data/modules/swia-dice` — RETIRED once Phase 5 ships (system absorbs terms, chat rendering, and DSN presets)

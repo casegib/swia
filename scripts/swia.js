@@ -9,13 +9,19 @@ import { SWIACompanionPortal } from "./companion-portal.js";
 import { SWIAImperialPortal } from "./imperial-portal.js";
 import { SWIAGMPortal } from "./gm-portal.js";
 import { SWIACampaignTracker } from "./campaign-tracker.js";
+import { HeroData, VillainData, AllyData, CharacterData } from "./data/actors.js";
+import {
+  WeaponData, WeaponmodData, ArmorData, GearData, ClasscardData,
+  AgendacardData, ImperialclasscardData, HeroabilityData, FormcardData
+} from "./data/items.js";
 
-// Get appropriate base class for V1/V2 compatibility
-const BaseActorSheet = foundry.appv1?.sheets?.ActorSheet ?? ActorSheet;
-const BaseItemSheet = foundry.appv1?.sheets?.ItemSheet ?? ItemSheet;
-const loadTemplatesFn = foundry?.applications?.handlebars?.loadTemplates ?? loadTemplates;
-const ActorsCollection = foundry?.documents?.collections?.Actors ?? Actors;
-const ItemsCollection = foundry?.documents?.collections?.Items ?? Items;
+// Foundry v13+ namespaced APIs (system.json minimum is v13)
+// The appv1 sheet classes are referenced only to unregister the core-registered defaults.
+const CoreActorSheet = foundry.appv1.sheets.ActorSheet;
+const CoreItemSheet = foundry.appv1.sheets.ItemSheet;
+const loadTemplatesFn = foundry.applications.handlebars.loadTemplates;
+const ActorsCollection = foundry.documents.collections.Actors;
+const ItemsCollection = foundry.documents.collections.Items;
 const LEGACY_ABILITY_MIGRATION_KEY = "schemaMigration";
 const LEGACY_ABILITY_MIGRATION_VERSION = "0.0.5-ability-to-classcard";
 const ROUND_STATE_KEY = "roundState";
@@ -99,6 +105,25 @@ async function migrateLegacyAbilityItems() {
 Hooks.once("init", async function initSWIA() {
   console.log("SWIA | Initializing Star Wars Imperial Assault system");
 
+  // Register system data models (schemas live here; document types are declared in system.json)
+  Object.assign(CONFIG.Actor.dataModels, {
+    hero: HeroData,
+    villain: VillainData,
+    ally: AllyData,
+    character: CharacterData
+  });
+  Object.assign(CONFIG.Item.dataModels, {
+    weapon: WeaponData,
+    weaponmod: WeaponmodData,
+    armor: ArmorData,
+    gear: GearData,
+    classcard: ClasscardData,
+    agendacard: AgendacardData,
+    imperialclasscard: ImperialclasscardData,
+    heroability: HeroabilityData,
+    formcard: FormcardData
+  });
+
   // Register custom Handlebars helpers for template rendering
   Handlebars.registerHelper("capitalize", (value) => {
     if (typeof value !== "string") return "";
@@ -173,7 +198,7 @@ Hooks.once("init", async function initSWIA() {
   ]);
 
   // Register actor sheets for hero, villain, and ally types
-  ActorsCollection.unregisterSheet("core", BaseActorSheet);
+  ActorsCollection.unregisterSheet("core", CoreActorSheet);
   ActorsCollection.registerSheet("swia", SWIAActorSheet, {
     types: ["hero", "villain", "ally"],
     makeDefault: true
@@ -186,7 +211,7 @@ Hooks.once("init", async function initSWIA() {
   });
 
   // Register item sheets
-  ItemsCollection.unregisterSheet("core", BaseItemSheet);
+  ItemsCollection.unregisterSheet("core", CoreItemSheet);
   ItemsCollection.registerSheet("swia", SWIAItemSheet, {
     types: ["classcard", "agendacard", "imperialclasscard", "weapon", "weaponmod", "armor", "gear", "heroability", "formcard"],
     makeDefault: true

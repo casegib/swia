@@ -1,14 +1,8 @@
 import { getCampaignResources } from "./campaign-tracker.js";
 
-const BaseApplicationV2 = foundry.applications?.api?.ApplicationV2;
-const HandlebarsApplicationMixin = foundry.applications?.api?.HandlebarsApplicationMixin;
-const BaseApplicationV1 = foundry.appv1?.api?.Application ?? Application;
-
-const BaseApplication = BaseApplicationV2 && HandlebarsApplicationMixin
-  ? HandlebarsApplicationMixin(BaseApplicationV2)
-  : BaseApplicationV1;
-
-const isV2 = !!(BaseApplicationV2 && HandlebarsApplicationMixin);
+// Foundry v13+ ApplicationV2 base
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const BaseApplication = HandlebarsApplicationMixin(ApplicationV2);
 
 export class SWIAGMPortal extends BaseApplication {
   static DEFAULT_OPTIONS = {
@@ -46,44 +40,14 @@ export class SWIAGMPortal extends BaseApplication {
     this._registerSyncHooks();
   }
 
-  static get defaultOptions() {
-    if (isV2) return {};
-
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      id: "swia-gm-portal",
-      title: game.i18n.localize("SWIA.Portal.GM.Title"),
-      template: "systems/swia/templates/actors/gm-portal.hbs",
-      width: 1500,
-      height: 900,
-      resizable: true,
-      classes: ["swia-gm-portal-window"]
-    });
-  }
-
   get title() {
     return game.i18n.localize("SWIA.Portal.GM.Title");
   }
 
-  get template() {
-    return "systems/swia/templates/actors/gm-portal.hbs";
-  }
-
-  render(...args) {
-    return super.render(...args);
-  }
-
   async _prepareContext(options) {
-    const context = isV2 ? await super._prepareContext(options) : {};
+    const context = await super._prepareContext(options);
     const portalContext = await this._buildContext();
     return foundry.utils.mergeObject(context, portalContext);
-  }
-
-  async getData(options) {
-    if (isV2) return this._prepareContext(options);
-
-    const data = await super.getData(options);
-    const portalContext = await this._buildContext();
-    return foundry.utils.mergeObject(data, portalContext);
   }
 
   async _buildContext() {
@@ -278,13 +242,6 @@ export class SWIAGMPortal extends BaseApplication {
     });
   }
 
-  activateListeners(html) {
-    super.activateListeners?.(html);
-
-    html.find("[data-action='openActor']").on("click", this._onOpenActor.bind(this));
-    html.find("[data-action='toggleActivated']").on("click", this._onToggleActivated.bind(this));
-  }
-
   async _onOpenActor(event, target) {
     event.preventDefault();
 
@@ -352,21 +309,11 @@ export class SWIAGMPortal extends BaseApplication {
     event.preventDefault();
     if (!game.user?.isGM) return;
 
-    const DialogClass = foundry?.applications?.api?.DialogV2;
-    let confirmed = false;
-    if (DialogClass?.confirm) {
-      confirmed = await DialogClass.confirm({
-        window: { title: "Reset Round" },
-        content: "<p>Reset the round counter to 1 and clear all activations?</p>",
-        rejectClose: false
-      });
-    } else {
-      confirmed = await Dialog.confirm({
-        title: "Reset Round",
-        content: "<p>Reset the round counter to 1 and clear all activations?</p>",
-        defaultYes: false
-      });
-    }
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: { title: "Reset Round" },
+      content: "<p>Reset the round counter to 1 and clear all activations?</p>",
+      rejectClose: false
+    });
     if (!confirmed) return;
 
     const updates = (game.actors?.contents ?? [])

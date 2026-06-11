@@ -1,13 +1,6 @@
-// Import base classes for V1/V2 compatibility (same pattern as SWIAActorSheet)
-const BaseActorSheetV2 = foundry.applications?.sheets?.ActorSheetV2;
-const BaseActorSheetV1 = foundry.appv1?.sheets?.ActorSheet ?? ActorSheet;
-const HandlebarsApplicationMixin = foundry.applications?.api?.HandlebarsApplicationMixin;
-
-// Create V2 base with Handlebars mixin if available, otherwise use V1
-const BaseActorSheet = BaseActorSheetV2 && HandlebarsApplicationMixin 
-  ? HandlebarsApplicationMixin(BaseActorSheetV2)
-  : BaseActorSheetV1;
-const isV2 = !!BaseActorSheetV2;
+// Foundry v13+ ApplicationV2 actor sheet (same pattern as SWIAActorSheet)
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const BaseActorSheet = HandlebarsApplicationMixin(foundry.applications.sheets.ActorSheetV2);
 
 // Character sheet class - simplified for non-combat NPCs
 export class SWIACharacterSheet extends BaseActorSheet {
@@ -37,35 +30,17 @@ export class SWIACharacterSheet extends BaseActorSheet {
     }
   };
 
-  static get defaultOptions() {
-    if (isV2) return {};
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["swia", "sheet", "actor", "character"],
-      template: "systems/swia/templates/actors/character-sheet.hbs",
-      width: 600,
-      height: 500,
-      resizable: true,
-      submitOnChange: true
-    });
-  }
-
   static PARTS = {
     form: {
       template: "systems/swia/templates/actors/character-sheet.hbs"
     }
   };
 
-  // Return the template for Character sheets
-  get template() {
-    return "systems/swia/templates/actors/character-sheet.hbs";
-  }
-
   /**
    * Prepare data context for template rendering.
-   * Called on both V1 and V2 during render.
    */
-  async _prepareContext(options = {}, baseContext = null) {
-    const context = baseContext ?? (isV2 ? await super._prepareContext(options) : {});
+  async _prepareContext(options = {}) {
+    const context = await super._prepareContext(options);
     const actor = this.actor;
     const systemData = actor.system;
     const isGM = game.user.isGM;
@@ -110,31 +85,6 @@ export class SWIACharacterSheet extends BaseActorSheet {
   }
 
   /**
-   * V1 API: Get sheet data for the template.
-   * Merge our custom context prep into getData.
-   */
-  async getData(options = {}) {
-    if (isV2) return this._prepareContext(options);
-
-    const data = await super.getData(options);
-    return this._prepareContext(options, data);
-  }
-
-  /**
-   * Activate event listeners (V1 only; V2 uses actions)
-   */
-  activateListeners(html) {
-    super.activateListeners(html);
-
-    if (!isV2) {
-      // V1: Manual event binding
-      html.find('[data-action="toggleEdit"]').on("change", this._onToggleEdit.bind(this));
-      html.find('[data-action="editImage"]').on("click", this._onEditImage.bind(this));
-      html.find('[data-action="toggleDispositionShown"]').on("click", this._onToggleDispositionShown.bind(this));
-    }
-  }
-
-  /**
    * Toggle edit mode for GM only
    */
   async _onToggleEdit(event, target) {
@@ -164,40 +114,21 @@ export class SWIACharacterSheet extends BaseActorSheet {
     await this.actor.setFlag("swia", "dispositionShown", !current);
   }
 
-  async _updateObject(event, formData) {
-    const expanded = foundry.utils.expandObject(formData ?? {});
-    const update = {};
-
-    if (formData?.name !== undefined) update.name = formData.name;
-    else if (expanded.name !== undefined) update.name = expanded.name;
-
-    if (expanded.system !== undefined) update.system = expanded.system;
-
-    return this.actor.update(update);
-  }
-
-  async _onSubmit(event) {
-    event?.preventDefault?.();
-    const formData = this._collectFormData();
-    return this._updateObject(event, formData);
-  }
-
   async _saveFormData() {
     const formData = this._collectFormData();
     if (!formData || Object.keys(formData).length === 0) return;
-    await this._updateObject(null, formData);
+
+    const expanded = foundry.utils.expandObject(formData);
+    const update = {};
+    if (expanded.name !== undefined) update.name = expanded.name;
+    if (expanded.system !== undefined) update.system = expanded.system;
+    if (Object.keys(update).length === 0) return;
+
+    await this.actor.update(update);
   }
 
   _collectFormData() {
-    if (typeof this._getSubmitData === "function") {
-      try {
-        return this._getSubmitData({ updateData: true });
-      } catch (e) {
-        console.warn("SWIA: Character sheet _getSubmitData failed, falling back to manual", e);
-      }
-    }
-
-    const searchRoot = isV2 ? this.element : (this.element?.[0] ?? this.form);
+    const searchRoot = this.element;
     let formElem = null;
     if (searchRoot?.tagName === "FORM") formElem = searchRoot;
     else if (searchRoot) formElem = searchRoot.querySelector("form[data-application-part='form']") || searchRoot.querySelector("form");

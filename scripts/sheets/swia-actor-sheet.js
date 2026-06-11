@@ -1,15 +1,7 @@
-// Import base classes for V1/V2 compatibility
-const BaseActorSheetV2 = foundry.applications?.sheets?.ActorSheetV2;
-const BaseActorSheetV1 = foundry.appv1?.sheets?.ActorSheet ?? ActorSheet;
-const HandlebarsApplicationMixin = foundry.applications?.api?.HandlebarsApplicationMixin;
+// Foundry v13+ ApplicationV2 actor sheet
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const BaseActorSheet = HandlebarsApplicationMixin(foundry.applications.sheets.ActorSheetV2);
 
-// Create V2 base with Handlebars mixin if available, otherwise use V1
-const BaseActorSheet = BaseActorSheetV2 && HandlebarsApplicationMixin 
-  ? HandlebarsApplicationMixin(BaseActorSheetV2)
-  : BaseActorSheetV1;
-const isV2 = !!BaseActorSheetV2;
-
-// Main actor sheet class supporting both V1 and V2 Foundry versions
 export class SWIAActorSheet extends BaseActorSheet {
   static EDIT_COLLAPSE_DEFAULTS = {
     biography: true,
@@ -154,27 +146,11 @@ export class SWIAActorSheet extends BaseActorSheet {
     }
   };
 
-  static get defaultOptions() {
-    if (isV2) return {};
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["swia", "sheet", "actor"],
-      template: "systems/swia/templates/actors/actor-sheet.hbs",
-      width: 980,
-      height: 700,
-      resizable: true,
-      submitOnChange: true
-    });
-  }
-
   static PARTS = {
     form: {
       template: "systems/swia/templates/actors/actor-sheet.hbs"
     }
   };
-
-  get template() {
-    return "systems/swia/templates/actors/actor-sheet.hbs";
-  }
 
   get title() {
     const name = this.document?.name ?? this.actor?.name ?? "";
@@ -290,10 +266,10 @@ export class SWIAActorSheet extends BaseActorSheet {
     if (updates.length) await Promise.allSettled(updates);
   }
 
-  // Prepare rendering context for both V1 and V2
+  // Prepare rendering context
   // Converts dice counts to arrays for template iteration and handles wounded state
-  async _prepareContext(options, baseContext = null) {
-    const context = baseContext ?? (isV2 ? await super._prepareContext(options) : {});
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
     const actor = this.document ?? this.actor;
     const system = actor.system;
     // Determine which attribute set to display based on wounded state
@@ -550,69 +526,6 @@ export class SWIAActorSheet extends BaseActorSheet {
     });
   }
 
-  async getData(options) {
-    if (isV2) return this._prepareContext(options);
-
-    const data = await super.getData(options);
-    return this._prepareContext(options, data);
-  }
-
-  activateListeners(html) {
-    super.activateListeners(html);
-
-    // Always bind name change (both V1 and V2) so the actor name persists immediately
-    html.find("input[name='name']").on("change blur input", this._onChangeName.bind(this));
-
-    if (isV2) return;
-    // Bind wounded toggle for all users
-    html.find("[data-action='toggleWounded']").on("change", this._onToggleWounded.bind(this));
-    html.find("[data-action='toggleDefeated']").on("change", this._onToggleDefeated.bind(this));
-    // Bind activation token click for all users
-    html.find("[data-action='toggleActivated']").on("click", this._onToggleActivated.bind(this));
-    // Bind edit toggle only for GM
-    if (game.user?.isGM) {
-      html.find("[data-action='toggleEdit']").on("change", this._onToggleEdit.bind(this));
-    }
-    html.find("[data-action='toggleSectionCollapse']").on("click", this._onToggleSectionCollapse.bind(this));
-    html.find("[data-action='applyTokenFootprintPreset']").on("click", this._onApplyTokenFootprintPreset.bind(this));
-
-    // Use event delegation for image clicks to handle edit mode changes
-    html.on("click", ".profile-image.clickable, .token-image.clickable", (event) => {
-      console.log("SWIA: Image clicked");
-      this._onEditImageInstance(event, event.currentTarget);
-    });
-
-    html.find("[data-action='addEquipment']").on("click", this._onAddEquipment.bind(this));
-    html.find("[data-action='removeRow']").on("click", this._onRemoveRow.bind(this));
-
-    // Item management (V1)
-    html.find("[data-action='openItem']").on("click", this._onOpenItem.bind(this));
-    html.find("[data-action='deleteItem']").on("click", this._onDeleteItem.bind(this));
-    html.find("[data-action='cycleItemState']").on("click", this._onCycleItemState.bind(this));
-    html.find("[data-action='setAttackType']").on("click", this._onSetAttackType.bind(this));
-    // Imperial/ally list actions (V1)
-    html.find("[data-action='addSurgeAbility']").on("click", this._onAddSurgeAbility.bind(this));
-    html.find("[data-action='removeSurgeAbility']").on("click", this._onRemoveSurgeAbility.bind(this));
-    html.find("[data-action='addSpecialAbility']").on("click", this._onAddSpecialAbility.bind(this));
-    html.find("[data-action='removeSpecialAbility']").on("click", this._onRemoveSpecialAbility.bind(this));
-    html.find("[data-action='addHeroAbility']").on("click", this._onAddHeroAbility.bind(this));
-    html.find("[data-action='removeHeroAbility']").on("click", this._onRemoveHeroAbility.bind(this));
-    // Surge/special ability field editing (V1) - bypass form submission for array fields
-    html.on("change", ".surge-ability-entry input", this._onSurgeAbilityChange.bind(this));
-    html.on("change", ".special-ability-entry input, .special-ability-entry textarea", this._onSpecialAbilityChange.bind(this));
-    // Form card (Shift) ability editing (V1)
-    html.find("[data-action='toggleShift']").on("change", this._onToggleShift.bind(this));
-    html.find("[data-action='setActiveForm']").on("change", this._onSetActiveForm.bind(this));
-    html.find("[data-action='addFormCardSurgeAbility']").on("click", this._onAddFormCardSurgeAbility.bind(this));
-    html.find("[data-action='removeFormCardSurgeAbility']").on("click", this._onRemoveFormCardSurgeAbility.bind(this));
-    html.find("[data-action='addFormCardSpecialAbility']").on("click", this._onAddFormCardSpecialAbility.bind(this));
-    html.find("[data-action='removeFormCardSpecialAbility']").on("click", this._onRemoveFormCardSpecialAbility.bind(this));
-    html.on("change", ".form-surge-ability-entry input", this._onFormCardSurgeAbilityChange.bind(this));
-    html.on("change", ".form-special-ability-entry input, .form-special-ability-entry textarea", this._onFormCardSpecialAbilityChange.bind(this));
-    // Inventory panel tab switching (V1)
-    html.find(".inv-tab-btn").on("click", this._onToggleInventoryPanel.bind(this));
-  }
-
   // Toggle active inventory panel (Abilities / Items / Weapons)
   _onToggleInventoryPanel(event, target) {
     event?.preventDefault?.();
@@ -628,7 +541,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     try { this.setPosition({ width: targetWidth }); } catch (e) { /* noop */ }
 
     // Update panel/toggle classes directly to avoid re-running full sheet context preparation.
-    const root = this.element?.[0] ?? this.element;
+    const root = this.element;
     if (!(root instanceof HTMLElement)) return;
 
     const panelClasses = ["inv-open-abilities", "inv-open-gear", "inv-open-weapons"];
@@ -726,7 +639,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const isCollapsed = !current;
     this._collapsedSections[section] = isCollapsed;
 
-    const root = this.element?.[0] ?? this.element;
+    const root = this.element;
     const sectionEl = toggle?.closest?.(".collapsible-section")
       ?? (root instanceof HTMLElement
         ? root.querySelector(`.collapsible-section [data-action='toggleSectionCollapse'][data-section='${section}']`)?.closest(".collapsible-section")
@@ -814,66 +727,6 @@ export class SWIAActorSheet extends BaseActorSheet {
     await item.update({ "system.cardState": cycle[current] || "ready" });
   }
 
-  // Open file picker for image selection (edit mode only)
-  // Updates both profile and token images simultaneously
-  async _onEditImageInstance(event, target) {
-    event.preventDefault();
-    if (!game.user?.isGM || !this._editMode) return;
-    const path = target?.dataset?.path;
-    if (!path) return;
-    
-    // Use this.actor for V1 compatibility
-    const actor = this.actor || this.document;
-    if (!actor) {
-      console.error("SWIA: No actor found", { actor: this.actor, document: this.document });
-      return;
-    }
-    
-    const current = foundry.utils.getProperty(actor, path) || "";
-    console.log(`SWIA: FilePicker opened for path: ${path}, current: ${current}`);
-
-    // Use namespaced FilePicker to avoid deprecated global
-    const FilePickerClass = foundry?.applications?.apps?.FilePicker?.implementation
-      ?? foundry?.applications?.api?.FilePicker;
-    const sheet = this;
-    const callback = async (url) => {
-      console.log(`SWIA: FilePicker selected URL: ${url}`);
-      const updateObj = {};
-      // Portrait and healthy token images stay in sync unless editing wounded art.
-      if (path === "system.woundedTokenImage") {
-        updateObj[path] = url;
-        if (actor.type === "hero" && (actor.system?.state?.wounded ?? false)) {
-          updateObj["prototypeToken.texture.src"] = url;
-        }
-      } else if (path === "img" || path === "prototypeToken.texture.src") {
-        updateObj.img = url;
-        updateObj["prototypeToken.texture.src"] = url;
-      } else {
-        updateObj[path] = url;
-      }
-      console.log(`SWIA: Calling actor.update() with:`, updateObj);
-      
-      try {
-        const result = await actor.update(updateObj);
-        console.log(`SWIA: Update result:`, result);
-        if (path === "system.woundedTokenImage" && actor.type === "hero" && (actor.system?.state?.wounded ?? false)) {
-          await sheet._syncActiveTokenTextures(actor, url);
-        }
-        // Ensure the sheet reflects the new image
-        try { sheet.render(false); } catch (e) { /* noop */ }
-      } catch (err) {
-        console.error(`SWIA: Update error:`, err);
-      }
-    };
-
-    const fp = new FilePickerClass({
-      type: "image",
-      current: current,
-      callback: callback
-    });
-    fp.render(true);
-  }
-
   async _onEditImage(event, target) {
     if (!game.user?.isGM || !this._editMode) return;
     const path = target?.dataset?.path || target?.dataset?.edit;
@@ -944,31 +797,6 @@ export class SWIAActorSheet extends BaseActorSheet {
     }
   }
 
-  /**
-   * Ensure name and system data persist when the form is submitted.
-   */
-  async _updateObject(event, formData) {
-    const expanded = foundry.utils.expandObject(formData ?? {});
-    const update = {};
-
-    // Prefer direct formData name if present; fall back to expanded
-    if (formData?.name !== undefined) update.name = formData.name;
-    else if (expanded.name !== undefined) update.name = expanded.name;
-
-    if (expanded.system !== undefined) update.system = expanded.system;
-
-    return this.actor.update(update);
-  }
-
-  /**
-   * Explicitly submit data to ensure name/system changes save across V1/V2.
-   */
-  async _onSubmit(event) {
-    event?.preventDefault?.();
-    const formData = this._collectFormData();
-    return this._updateObject(event, formData);
-  }
-
   async close(options) {
     this._enrichCache?.clear?.();
     return super.close(options);
@@ -1019,28 +847,11 @@ export class SWIAActorSheet extends BaseActorSheet {
   }
 
   /**
-   * Gather form data safely across V1/V2 without relying on _getSubmitData.
-   * Handles disabled inputs which are normally skipped by FormData API.
+   * Gather form data directly from the DOM.
+   * Handles disabled inputs which are normally skipped by the FormData API.
    */
   _collectFormData() {
-    if (typeof this._getSubmitData === "function") {
-      try {
-        return this._getSubmitData({ updateData: true });
-      } catch (e) {
-        console.warn("SWIA: _getSubmitData failed, falling back to manual", e);
-      }
-    }
-
-    // Find the actual form element - V2 uses this.element directly, V1 uses jQuery collection
-    let searchRoot = null;
-    if (isV2) {
-      // V2: this.element is a DOM element
-      searchRoot = this.element;
-    } else {
-      // V1: this.element is a jQuery collection
-      searchRoot = this.element?.[0] ?? this.form;
-    }
-    
+    const searchRoot = this.element;
     let formElem = null;
     if (searchRoot?.tagName === "FORM") {
       formElem = searchRoot;
@@ -1087,14 +898,14 @@ export class SWIAActorSheet extends BaseActorSheet {
     return result;
   }
 
-  // V1: Intercept item drops dispatched by ActorSheet._onDrop
+  // Intercept item drops dispatched by core sheet drop handling
   async _onDropItem(event, data) {
     if (await this._interceptHeroAbilityDrop(data)) return;
-    return super._onDropItem(event, data);
+    return super._onDropItem?.(event, data);
   }
 
-  // V2: Intercept change events for surge/special ability inputs and save directly
-  // This bypasses V2's native form submission which can fail for nested array fields
+  // Intercept change events for surge/special ability inputs and save directly.
+  // This bypasses native form submission which can fail for nested array fields.
   _onChangeForm(formConfig, event) {
     if (event.target?.closest(".form-surge-ability-entry")) {
       this._onFormCardSurgeAbilityChange(event);
@@ -1115,10 +926,9 @@ export class SWIAActorSheet extends BaseActorSheet {
     super._onChangeForm(formConfig, event);
   }
 
-  // V2: Attach a native drop listener after each render
+  // Attach a native drop listener after each render
   _onRender(context, options) {
     if (typeof super._onRender === "function") super._onRender(context, options);
-    if (!isV2) return;
     const el = this.element;
     if (!el || el._swiaHeroDropBound) return;
     el._swiaHeroDropBound = true;
@@ -1205,14 +1015,12 @@ export class SWIAActorSheet extends BaseActorSheet {
     await actor.update({ "system.attributes.surgeAbilities": current });
   }
 
-  // Save surge ability fields when any input changes (V1 + V2 fallback)
+  // Save surge ability fields when any input changes
   async _onSurgeAbilityChange(event) {
     event?.preventDefault?.();
     const actor = this.document ?? this.actor;
     if (!actor) return;
-    // V2: this.element is a raw DOM element; V1: this.element is a jQuery collection
-    const sheetEl = this.element instanceof Element ? this.element : this.element?.[0];
-    const container = event?.target?.closest("form") ?? this.form ?? sheetEl;
+    const container = event?.target?.closest("form") ?? this.form ?? this.element;
     if (!container) return;
     const entries = container.querySelectorAll(".surge-ability-entry");
     const updated = [];
@@ -1227,13 +1035,12 @@ export class SWIAActorSheet extends BaseActorSheet {
     await actor.update({ "system.attributes.surgeAbilities": updated });
   }
 
-  // Save special ability fields when any input changes (V1 + V2 fallback)
+  // Save special ability fields when any input changes
   async _onSpecialAbilityChange(event) {
     event?.preventDefault?.();
     const actor = this.document ?? this.actor;
     if (!actor) return;
-    const sheetEl = this.element instanceof Element ? this.element : this.element?.[0];
-    const container = event?.target?.closest("form") ?? this.form ?? sheetEl;
+    const container = event?.target?.closest("form") ?? this.form ?? this.element;
     if (!container) return;
     const entries = container.querySelectorAll(".special-ability-entry");
     const updated = [];
@@ -1361,8 +1168,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     event?.preventDefault?.();
     const formItem = this._getActiveFormItem();
     if (!formItem) return;
-    const sheetEl = this.element instanceof Element ? this.element : this.element?.[0];
-    const container = event?.target?.closest("form") ?? this.form ?? sheetEl;
+    const container = event?.target?.closest("form") ?? this.form ?? this.element;
     if (!container) return;
     const entries = container.querySelectorAll(".form-surge-ability-entry");
     const updated = [];
@@ -1382,8 +1188,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     event?.preventDefault?.();
     const formItem = this._getActiveFormItem();
     if (!formItem) return;
-    const sheetEl = this.element instanceof Element ? this.element : this.element?.[0];
-    const container = event?.target?.closest("form") ?? this.form ?? sheetEl;
+    const container = event?.target?.closest("form") ?? this.form ?? this.element;
     if (!container) return;
     const entries = container.querySelectorAll(".form-special-ability-entry");
     const updated = [];

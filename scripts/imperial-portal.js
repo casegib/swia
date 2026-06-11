@@ -1,14 +1,8 @@
 import { CAMPAIGN_RESOURCES_KEY } from "./campaign-tracker.js";
 
-const BaseApplicationV2 = foundry.applications?.api?.ApplicationV2;
-const HandlebarsApplicationMixin = foundry.applications?.api?.HandlebarsApplicationMixin;
-const BaseApplicationV1 = foundry.appv1?.api?.Application ?? Application;
-
-const BaseApplication = BaseApplicationV2 && HandlebarsApplicationMixin
-  ? HandlebarsApplicationMixin(BaseApplicationV2)
-  : BaseApplicationV1;
-
-const isV2 = !!(BaseApplicationV2 && HandlebarsApplicationMixin);
+// Foundry v13+ ApplicationV2 base
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const BaseApplication = HandlebarsApplicationMixin(ApplicationV2);
 const IMPERIAL_PORTAL_WORLD_ITEM_TYPES = ["agendacard", "imperialclasscard"];
 
 export class SWIAImperialPortal extends BaseApplication {
@@ -50,40 +44,14 @@ export class SWIAImperialPortal extends BaseApplication {
     this._registerSyncHooks();
   }
 
-  static get defaultOptions() {
-    if (isV2) return {};
-
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      id: "swia-imperial-portal",
-      title: game.i18n.localize("SWIA.Portal.Imperial.Title"),
-      template: "systems/swia/templates/actors/imperial-portal.hbs",
-      width: 1500,
-      height: 900,
-      resizable: true,
-      classes: ["swia-imperial-portal-window"]
-    });
-  }
-
   get title() {
     return game.i18n.localize("SWIA.Portal.Imperial.Title");
   }
 
-  get template() {
-    return "systems/swia/templates/actors/imperial-portal.hbs";
-  }
-
   async _prepareContext(options) {
-    const context = isV2 ? await super._prepareContext(options) : {};
+    const context = await super._prepareContext(options);
     const portalContext = await this._buildContext();
     return foundry.utils.mergeObject(context, portalContext);
-  }
-
-  async getData(options) {
-    if (isV2) return this._prepareContext(options);
-
-    const data = await super.getData(options);
-    const portalContext = await this._buildContext();
-    return foundry.utils.mergeObject(data, portalContext);
   }
 
   async _buildContext() {
@@ -325,23 +293,6 @@ export class SWIAImperialPortal extends BaseApplication {
     });
   }
 
-  activateListeners(html) {
-    super.activateListeners?.(html);
-
-    html.find("[data-action='openActor']").on("click", this._onOpenActor.bind(this));
-    html.find("[data-action='toggleActivated']").on("click", this._onToggleActivated.bind(this));
-    html.find("[data-action='openItem']").on("click", this._onOpenItem.bind(this));
-    html.find("[data-action='cycleItemState']").on("click", this._onCycleItemState.bind(this));
-    html.find("[data-action='removeImperialCard']").on("click", this._onRemoveImperialCard.bind(this));
-
-    html.find(".portal-drop-zone")
-      .on("dragover", this._onPortalDragOver.bind(this))
-      .on("drop", this._onPortalDrop.bind(this));
-
-    const root = html?.[0] ?? html;
-    this._bindCardPreviewListeners(root);
-  }
-
   async _onRender(context, options) {
     await super._onRender?.(context, options);
     const root = this.element?.[0] ?? this.element;
@@ -375,6 +326,9 @@ export class SWIAImperialPortal extends BaseApplication {
     const dropZones = root.querySelectorAll(".portal-drop-zone");
     for (const dropZone of dropZones) {
       dropZone.addEventListener("scroll", this._onHideCardPreview.bind(this), { signal });
+      // Item drag-and-drop onto portal panels (rebound on each render).
+      dropZone.addEventListener("dragover", this._onPortalDragOver.bind(this), { signal });
+      dropZone.addEventListener("drop", this._onPortalDrop.bind(this), { signal });
     }
   }
 
@@ -576,26 +530,14 @@ export class SWIAImperialPortal extends BaseApplication {
     const item = game.items?.get(itemId);
     if (!item || !IMPERIAL_PORTAL_WORLD_ITEM_TYPES.includes(item.type)) return;
 
-    const DialogClass = foundry?.applications?.api?.DialogV2;
     const title = game.i18n.localize("SWIA.Portal.Imperial.RemoveCardTitle");
     const message = game.i18n.format("SWIA.Portal.Imperial.RemoveCardPrompt", { name: item.name });
 
-    let confirmed = false;
-    if (DialogClass?.confirm) {
-      confirmed = await DialogClass.confirm({
-        window: { title },
-        content: `<p>${message}</p>`,
-        rejectClose: false
-      });
-    } else {
-      confirmed = await Dialog.confirm({
-        title,
-        content: `<p>${message}</p>`,
-        yes: () => true,
-        no: () => false,
-        defaultYes: false
-      });
-    }
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: { title },
+      content: `<p>${message}</p>`,
+      rejectClose: false
+    });
 
     if (!confirmed) return;
     await item.delete();
