@@ -20,12 +20,14 @@ Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor shee
 - Campaign Tracker with shared resource tracking (credits, XP, imperial influence, threat, requisition) and per-hero XP.
 - Round state tracking: current round, phase (`activation` / `status`), and ordered activation queue.
 - Custom status effects (weakened, stunned, bleeding, focused, hidden, blind, scanned, recon, wanted) and power token icons (block, damage, evade, surge, any) registered in the system.
-- Foundry v13 compatibility with V1/V2 sheet support.
+- Foundry v13+ ApplicationV2 sheets with TypeDataModel schemas.
 
 ## File Map
-- `system.json` – system manifest; update `manifest`, `download`, `url` when publishing.
-- `scripts/data/` – actor and item data models (schemas and defaults); document types are declared in `system.json` under `documentTypes`.
-- `scripts/swia.js` – system entry point; registers sheets, status effects, settings, and Handlebars helpers.
+- `system.json` – system manifest; update `manifest`, `download`, `url` when publishing. Document types declared under `documentTypes`.
+- `scripts/data/actors.js` – TypeDataModel schemas for actor types: `hero`, `villain`, `ally`, `character`.
+- `scripts/data/items.js` – TypeDataModel schemas for item types: `weapon`, `weaponmod`, `armor`, `gear`, `classcard`, `agendacard`, `imperialclasscard`, `heroability`, `formcard`.
+- `scripts/data/common.js` – Shared field builders and helpers for data model definitions.
+- `scripts/swia.js` – system entry point; registers data models, sheets, status effects, settings, and Handlebars helpers.
 - `scripts/campaign-tracker.js` – Campaign Tracker application and shared resource helpers.
 - `scripts/companion-portal.js` – Companion Portal application.
 - `scripts/gm-portal.js` – GM Portal application.
