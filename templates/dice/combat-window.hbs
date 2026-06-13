@@ -1,0 +1,229 @@
+<div class="swia-combat-body">
+  {{#if hasCombat}}
+  <header class="combat-header">
+    <div class="combatant attacker">
+      <img src="{{attacker.img}}" alt="{{attacker.name}}" />
+      <span class="combatant-name">{{attacker.name}}</span>
+    </div>
+    <span class="combat-vs">{{localize "SWIA.Combat.VS"}}</span>
+    <div class="combatant defender">
+      <span class="combatant-name">{{defender.name}}</span>
+      <img src="{{defender.img}}" alt="{{defender.name}}" />
+    </div>
+  </header>
+
+  <div class="combat-panels">
+    <section class="combat-panel attacker-panel">
+      <h3>{{localize "SWIA.Combat.Attacker"}}</h3>
+      {{#if attacker.showWeaponSelect}}
+      <div class="combat-weapon-row">
+        <label>{{localize "SWIA.Roll.Weapon"}}</label>
+        <select class="combat-weapon-select" {{#unless canAttacker}}disabled{{/unless}} {{#unless isSetup}}disabled{{/unless}}>
+          {{#each attacker.weapons}}
+          <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}{{#unless (eq cardState "ready")}} ({{cardState}}){{/unless}}</option>
+          {{/each}}
+        </select>
+      </div>
+      {{/if}}
+      {{#if attacker.accuracy}}
+      <p class="combat-meta">{{localize "SWIA.Item.Weapon.Accuracy"}}: {{attacker.accuracy}}</p>
+      {{/if}}
+      {{#if attacker.keywordsLine}}
+      <p class="combat-meta combat-keywords">{{attacker.keywordsLine}}</p>
+      {{/if}}
+      {{#if isSetup}}
+      <div class="combat-pool-grid">
+        {{#each attackRows}}
+        <div class="roll-pool-row">
+          <span class="dice-block {{color}}"></span>
+          <button type="button" class="pool-adjust" data-action="combatAdjustDie" data-side="{{side}}" data-color="{{color}}" data-delta="-1" {{#unless ../canAttacker}}disabled{{/unless}}>&minus;</button>
+          <span class="pool-count">{{count}}</span>
+          <button type="button" class="pool-adjust" data-action="combatAdjustDie" data-side="{{side}}" data-color="{{color}}" data-delta="1" {{#unless ../canAttacker}}disabled{{/unless}}>+</button>
+        </div>
+        {{/each}}
+      </div>
+      <div class="combat-pre-bonus">
+        <span class="combat-pre-bonus-label">{{localize "SWIA.Combat.ManualBonus"}}</span>
+        {{#each attacker.preBonusRows}}
+        <div class="roll-pool-row">
+          <span class="pool-label">{{label}}</span>
+          <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="attacker" data-stat="{{stat}}" data-delta="-1" {{#unless ../canAttacker}}disabled{{/unless}}>&minus;</button>
+          <span class="pool-count {{#if count}}has-bonus{{/if}}">{{count}}</span>
+          <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="attacker" data-stat="{{stat}}" data-delta="1" {{#unless ../canAttacker}}disabled{{/unless}}>+</button>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+    </section>
+
+    <section class="combat-panel defender-panel">
+      <h3>{{localize "SWIA.Combat.Defender"}}</h3>
+      <p class="combat-meta">
+        {{localize "SWIA.Combat.PowerTokens"}}:
+        {{localize "SWIA.Dice.Block"}} {{defender.tokens.block}} &middot;
+        {{localize "SWIA.Dice.Evade"}} {{defender.tokens.evade}}
+      </p>
+      {{#if isSetup}}
+      <div class="combat-pool-grid">
+        {{#each defenseRows}}
+        <div class="roll-pool-row">
+          <span class="dice-block {{color}}"></span>
+          <button type="button" class="pool-adjust" data-action="combatAdjustDie" data-side="{{side}}" data-color="{{color}}" data-delta="-1" {{#unless ../canDefender}}disabled{{/unless}}>&minus;</button>
+          <span class="pool-count">{{count}}</span>
+          <button type="button" class="pool-adjust" data-action="combatAdjustDie" data-side="{{side}}" data-color="{{color}}" data-delta="1" {{#unless ../canDefender}}disabled{{/unless}}>+</button>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+      {{#if showDefenderBonus}}
+      <div class="combat-pre-bonus">
+        <span class="combat-pre-bonus-label">{{localize "SWIA.Combat.ManualBonus"}}</span>
+        {{#each defender.preBonusRows}}
+        <div class="roll-pool-row">
+          <span class="pool-label">{{label}}</span>
+          <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="defender" data-stat="{{stat}}" data-delta="-1" {{#unless ../canDefender}}disabled{{/unless}}>&minus;</button>
+          <span class="pool-count {{#if count}}has-bonus{{/if}}">{{count}}</span>
+          <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="defender" data-stat="{{stat}}" data-delta="1" {{#unless ../canDefender}}disabled{{/unless}}>+</button>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+    </section>
+  </div>
+
+  {{#if isSetup}}
+  <footer class="combat-actions">
+    <button type="button" class="combat-roll-btn" data-action="combatRollAttack" {{#unless canAttacker}}disabled{{/unless}}>
+      <i class="fas fa-dice"></i> {{localize "SWIA.Combat.RollAttack"}}
+    </button>
+    {{#if canCancel}}
+    <button type="button" class="combat-cancel-btn" data-action="combatCancel">{{localize "SWIA.Combat.Cancel"}}</button>
+    {{/if}}
+  </footer>
+  {{/if}}
+
+  {{#if isAttackRolled}}
+  <section class="combat-results">
+    {{#if result.attackFaces.length}}
+    <div class="roll-card-faces">
+      {{#each result.attackFaces}}
+      <div class="swia-die-reroll-wrapper">
+        <img class="swia-card-die {{color}}{{#if rerolled}} rerolled{{/if}}" src="{{img}}" title="{{label}}" alt="{{label}}" />
+        {{#if ../canAttackerReroll}}{{#unless rerolled}}
+        <button type="button" class="die-reroll-btn" data-action="combatRerollDie" data-side="attack" data-index="{{@index}}" title="{{localize 'SWIA.Combat.Reroll'}}">↺</button>
+        {{/unless}}{{/if}}
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+    <div class="roll-card-totals">
+      <span class="total damage">{{localize "SWIA.Dice.Damage"}} {{result.damage}}</span>
+      <span class="total surge">{{localize "SWIA.Dice.Surge"}} {{result.surge}}</span>
+      <span class="total accuracy">{{localize "SWIA.Dice.Accuracy"}} {{result.totalAccuracy}}</span>
+    </div>
+    <footer class="combat-actions">
+      <button type="button" class="combat-roll-btn" data-action="combatRollDefense" {{#unless canDefender}}disabled{{/unless}}>
+        <i class="fas fa-shield-alt"></i> {{localize "SWIA.Combat.RollDefense"}}
+      </button>
+      {{#if canCancel}}
+      <button type="button" class="combat-cancel-btn" data-action="combatCancel">{{localize "SWIA.Combat.Cancel"}}</button>
+      {{/if}}
+    </footer>
+  </section>
+  {{/if}}
+
+  {{#if isRolled}}
+  <section class="combat-results">
+    {{#if result.attackFaces.length}}
+    <div class="roll-card-faces">
+      {{#each result.attackFaces}}
+      <div class="swia-die-reroll-wrapper">
+        <img class="swia-card-die {{color}}{{#if rerolled}} rerolled{{/if}}" src="{{img}}" title="{{label}}" alt="{{label}}" />
+        {{#if ../canAttackerReroll}}{{#unless rerolled}}
+        <button type="button" class="die-reroll-btn" data-action="combatRerollDie" data-side="attack" data-index="{{@index}}" title="{{localize 'SWIA.Combat.Reroll'}}">↺</button>
+        {{/unless}}{{/if}}
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+    {{#if result.defenseFaces.length}}
+    <div class="roll-card-faces defense">
+      {{#each result.defenseFaces}}
+      <div class="swia-die-reroll-wrapper">
+        <img class="swia-card-die {{color}}{{#if rerolled}} rerolled{{/if}}" src="{{img}}" title="{{label}}" alt="{{label}}" />
+        {{#if ../canDefenderReroll}}{{#unless rerolled}}
+        <button type="button" class="die-reroll-btn" data-action="combatRerollDie" data-side="defense" data-index="{{@index}}" title="{{localize 'SWIA.Combat.Reroll'}}">↺</button>
+        {{/unless}}{{/if}}
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <div class="roll-card-totals">
+      <span class="total damage">{{localize "SWIA.Dice.Damage"}} {{result.totalDamage}}</span>
+      <span class="total surge">{{localize "SWIA.Dice.Surge"}} {{result.usableSurge}}</span>
+      <span class="total accuracy">{{localize "SWIA.Dice.Accuracy"}} {{result.totalAccuracy}}</span>
+      <span class="total block">{{localize "SWIA.Dice.Block"}} {{#if result.pierceTotal}}{{result.effectiveBlock}} ({{result.block}}+{{result.bonusBlock}}&minus;{{result.pierceTotal}}){{else}}{{result.effectiveBlock}}{{/if}}</span>
+      {{#if result.evade}}<span class="total evade">{{localize "SWIA.Dice.Evade"}} {{result.evade}}</span>{{/if}}
+      {{#if result.dodged}}<span class="total dodge">{{localize "SWIA.Dice.Dodge"}}!</span>{{/if}}
+    </div>
+
+    <div class="roll-card-result {{#if result.dodged}}dodged{{/if}}">
+      {{#if result.dodged}}
+      <span class="roll-card-net">{{localize "SWIA.Roll.Dodged"}}</span>
+      {{else}}
+      <span class="roll-card-net">{{localize "SWIA.Roll.NetDamage"}}: {{result.netDamage}}</span>
+      {{/if}}
+    </div>
+
+    {{#if result.blast}}
+    <p class="roll-card-keyword">{{localize "SWIA.Keywords.Blast"}} {{result.blast}} &mdash; {{localize "SWIA.Roll.BlastHint"}}</p>
+    {{/if}}
+    {{#if result.cleave}}
+    <p class="roll-card-keyword">{{localize "SWIA.Keywords.Cleave"}} &mdash; {{localize "SWIA.Roll.CleaveHint"}}</p>
+    {{/if}}
+
+    <div class="combat-reactions">
+      {{#if result.surgeAbilities.length}}
+      <div class="combat-reaction-column">
+        <span class="roll-card-surges-title">{{localize "SWIA.Roll.SurgeAbilities"}}</span>
+        {{#each result.surgeAbilities}}
+        <button type="button" class="roll-card-surge-btn {{#if spent}}spent{{/if}}" data-action="combatSpendSurge" data-index="{{@index}}"
+          {{#if spent}}disabled{{else}}{{#unless affordable}}disabled{{/unless}}{{#unless ../canAttacker}}disabled{{/unless}}{{/if}}>
+          <span class="surge-cost">{{cost}}&times;</span>
+          <span class="surge-label">{{{label}}}</span>
+          {{#if spent}}<i class="fas fa-check"></i>{{/if}}
+        </button>
+        {{/each}}
+      </div>
+      {{/if}}
+      <div class="combat-reaction-column">
+        <span class="roll-card-surges-title">{{localize "SWIA.Combat.PowerTokens"}}</span>
+        <button type="button" class="combat-token-btn" data-action="combatSpendToken" data-token="block"
+          {{#unless canDefender}}disabled{{/unless}} {{#unless defender.tokens.block}}disabled{{/unless}}>
+          {{localize "SWIA.Combat.SpendBlock"}} ({{defender.tokens.block}})
+        </button>
+        <button type="button" class="combat-token-btn" data-action="combatSpendToken" data-token="evade"
+          {{#unless canDefender}}disabled{{/unless}} {{#unless defender.tokens.evade}}disabled{{/unless}}>
+          {{localize "SWIA.Combat.SpendEvade"}} ({{defender.tokens.evade}})
+        </button>
+        {{#if result.spentTokens.block}}<p class="combat-meta">+{{result.spentTokens.block}} {{localize "SWIA.Dice.Block"}}</p>{{/if}}
+        {{#if result.spentTokens.evade}}<p class="combat-meta">+{{result.spentTokens.evade}} {{localize "SWIA.Dice.Evade"}}</p>{{/if}}
+      </div>
+    </div>
+
+    <footer class="combat-actions">
+      <button type="button" class="combat-apply-btn" data-action="combatApplyDamage" {{#unless canAttacker}}disabled{{/unless}}>
+        <i class="fas fa-heart-broken"></i> {{localize "SWIA.Combat.ApplyDamage"}} ({{result.netDamage}})
+      </button>
+      {{#if canCancel}}
+      <button type="button" class="combat-cancel-btn" data-action="combatCancel">{{localize "SWIA.Combat.Cancel"}}</button>
+      {{/if}}
+    </footer>
+  </section>
+  {{/if}}
+
+  {{else}}
+  <p class="combat-empty">{{localize "SWIA.Combat.NoActive"}}</p>
+  {{/if}}
+</div>

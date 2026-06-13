@@ -56,6 +56,10 @@
         <li class="special-ability-entry ability-entry" data-index="{{@index}}">
           <input class="special-ability-name" name="system.specialAbilities.{{@index}}.name" type="text" value="{{this.name}}" placeholder="Ability Name" />
           <textarea class="special-ability-desc" name="system.specialAbilities.{{@index}}.description" placeholder="Description" rows="2">{{this.description}}</textarea>
+          <label class="special-ability-surge-cost-field" title="{{localize 'SWIA.Villain.SpecialAbilitySurgeCostHint'}}">
+            <span>{{localize "SWIA.Villain.SpecialAbilitySurgeCost"}}</span>
+            <input class="special-ability-surge-cost-input" type="number" min="0" value="{{this.surgeCost}}" />
+          </label>
           <button type="button" class="remove-row-btn" data-action="removeFormSpecialAbility" data-index="{{@index}}" title="{{localize 'SWIA.Villain.RemoveSpecialAbility'}}">
             <i class="fas fa-trash"></i>
           </button>

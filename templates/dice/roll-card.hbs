@@ -1,0 +1,70 @@
+<div class="swia-roll-card">
+  <header class="roll-card-header">
+    <span class="roll-card-title">{{title}}</span>
+    {{#if subtitle}}<span class="roll-card-subtitle">{{subtitle}}</span>{{/if}}
+    {{#if targetName}}<span class="roll-card-target">{{localize "SWIA.Roll.Target"}}: {{targetName}}</span>{{/if}}
+  </header>
+
+  {{#if attackFaces.length}}
+  <div class="roll-card-faces">
+    {{#each attackFaces}}
+    <img class="swia-card-die {{color}}" src="{{img}}" title="{{label}}" alt="{{label}}" />
+    {{/each}}
+  </div>
+  {{/if}}
+  {{#if defenseFaces.length}}
+  <div class="roll-card-faces defense">
+    {{#each defenseFaces}}
+    <img class="swia-card-die {{color}}" src="{{img}}" title="{{label}}" alt="{{label}}" />
+    {{/each}}
+  </div>
+  {{/if}}
+
+  {{#if isTest}}
+  <div class="roll-card-result">
+    <span class="roll-card-net">{{localize "SWIA.Roll.TestSurges"}}: {{usableSurge}}</span>
+  </div>
+  {{else}}
+  <div class="roll-card-totals">
+    {{#if isAttack}}
+    <span class="total damage" title="{{localize 'SWIA.Dice.Damage'}}">{{localize "SWIA.Dice.Damage"}} {{totalDamage}}</span>
+    <span class="total surge" title="{{localize 'SWIA.Roll.SurgesAvailable'}}">{{localize "SWIA.Dice.Surge"}} {{usableSurge}}</span>
+    <span class="total accuracy" title="{{localize 'SWIA.Roll.TotalAccuracy'}}">{{localize "SWIA.Dice.Accuracy"}} {{totalAccuracy}}</span>
+    {{/if}}
+    {{#if defenseFaces.length}}
+    <span class="total block" title="{{localize 'SWIA.Dice.Block'}}">{{localize "SWIA.Dice.Block"}} {{#if pierceTotal}}{{effectiveBlock}} ({{block}}&minus;{{pierceTotal}}){{else}}{{block}}{{/if}}</span>
+    {{#if evade}}<span class="total evade">{{localize "SWIA.Dice.Evade"}} {{evade}}</span>{{/if}}
+    {{#if dodged}}<span class="total dodge">{{localize "SWIA.Dice.Dodge"}}!</span>{{/if}}
+    {{/if}}
+  </div>
+
+  {{#if isAttack}}
+  <div class="roll-card-result {{#if dodged}}dodged{{/if}}">
+    {{#if dodged}}
+    <span class="roll-card-net">{{localize "SWIA.Roll.Dodged"}}</span>
+    {{else}}
+    <span class="roll-card-net">{{localize "SWIA.Roll.NetDamage"}}: {{netDamage}}</span>
+    {{/if}}
+  </div>
+  {{#if blast}}
+  <p class="roll-card-keyword">{{localize "SWIA.Keywords.Blast"}} {{blast}} &mdash; {{localize "SWIA.Roll.BlastHint"}}</p>
+  {{/if}}
+  {{#if cleave}}
+  <p class="roll-card-keyword">{{localize "SWIA.Keywords.Cleave"}} &mdash; {{localize "SWIA.Roll.CleaveHint"}}</p>
+  {{/if}}
+  {{/if}}
+  {{/if}}
+
+  {{#if surgeAbilities.length}}
+  <div class="roll-card-surges">
+    <span class="roll-card-surges-title">{{localize "SWIA.Roll.SurgeAbilities"}}</span>
+    {{#each surgeAbilities}}
+    <button type="button" class="roll-card-surge-btn {{#if spent}}spent{{/if}}" data-swia-surge-index="{{@index}}" {{#unless affordable}}{{#unless spent}}disabled{{/unless}}{{/unless}} {{#if spent}}disabled{{/if}}>
+      <span class="surge-cost">{{cost}}&times;</span>
+      <span class="surge-label">{{{label}}}</span>
+      {{#if spent}}<i class="fas fa-check"></i>{{/if}}
+    </button>
+    {{/each}}
+  </div>
+  {{/if}}
+</div>

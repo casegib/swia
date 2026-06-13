@@ -60,6 +60,43 @@
       {{/if}}
     </section>
 
+    <section class="tracker-missions">
+      <div class="tracker-missions-header">
+        <h2>{{localize "SWIA.CampaignTracker.Missions"}}</h2>
+        {{#if canEdit}}
+        <button type="button" class="add-row-btn" data-action="addMission" title="{{localize 'SWIA.CampaignTracker.AddMission'}}">
+          <i class="fas fa-plus"></i>
+        </button>
+        {{/if}}
+      </div>
+      {{#if missions.length}}
+      <ol class="tracker-missions-list">
+        {{#each missions}}
+        <li class="tracker-mission-row" data-mission-id="{{id}}">
+          <input class="mission-name" type="text" value="{{name}}" placeholder="{{localize 'SWIA.CampaignTracker.MissionNamePlaceholder'}}" {{#unless ../canEdit}}readonly{{/unless}} />
+          <select class="mission-type" {{#unless ../canEdit}}disabled{{/unless}}>
+            <option value="story" {{#if (eq type "story")}}selected{{/if}}>{{localize "SWIA.CampaignTracker.MissionType.Story"}}</option>
+            <option value="side" {{#if (eq type "side")}}selected{{/if}}>{{localize "SWIA.CampaignTracker.MissionType.Side"}}</option>
+          </select>
+          <select class="mission-outcome outcome-{{outcome}}" {{#unless ../canEdit}}disabled{{/unless}}>
+            <option value="pending" {{#if (eq outcome "pending")}}selected{{/if}}>{{localize "SWIA.CampaignTracker.MissionOutcome.Pending"}}</option>
+            <option value="rebels" {{#if (eq outcome "rebels")}}selected{{/if}}>{{localize "SWIA.CampaignTracker.MissionOutcome.Rebels"}}</option>
+            <option value="imperials" {{#if (eq outcome "imperials")}}selected{{/if}}>{{localize "SWIA.CampaignTracker.MissionOutcome.Imperials"}}</option>
+          </select>
+          <input class="mission-ally" type="text" value="{{allyUnlocked}}" placeholder="{{localize 'SWIA.CampaignTracker.AllyUnlockedPlaceholder'}}" {{#unless ../canEdit}}readonly{{/unless}} />
+          {{#if ../canEdit}}
+          <button type="button" class="remove-row-btn" data-action="removeMission" data-mission-id="{{id}}" title="{{localize 'SWIA.CampaignTracker.RemoveMission'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+          {{/if}}
+        </li>
+        {{/each}}
+      </ol>
+      {{else}}
+      <p class="tracker-missions-empty">{{localize "SWIA.CampaignTracker.NoMissions"}}</p>
+      {{/if}}
+    </section>
+
     {{#if canEdit}}
       <footer class="tracker-actions">
         <button type="button" data-action="saveResources">{{localize "SWIA.CampaignTracker.Save"}}</button>

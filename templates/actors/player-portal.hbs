@@ -75,7 +75,7 @@
             <div class="dice-list hero-dice-row">
               <div class="dice-line hero-dice-line">
                 <label>{{localize "SWIA.Attributes.Defense"}}</label>
-                <span class="dice-blocks">
+                <span class="dice-blocks rollable" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="defense" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
                   {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
                   {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
                 </span>
@@ -84,7 +84,7 @@
                 <label class="dice-attr-icon" title="{{localize 'SWIA.Attributes.Strength'}}">
                   <img src="systems/swia/icons/Might.png" alt="{{localize 'SWIA.Attributes.Strength'}}" loading="lazy">
                 </label>
-                <span class="dice-blocks">
+                <span class="dice-blocks rollable" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="test" data-attribute="strength" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
                   {{#each actor.strengthRedDice}}<span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
                   {{#each actor.strengthBlueDice}}<span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
                   {{#each actor.strengthGreenDice}}<span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
@@ -95,7 +95,7 @@
                 <label class="dice-attr-icon" title="{{localize 'SWIA.Attributes.Insight'}}">
                   <img src="systems/swia/icons/Insight.png" alt="{{localize 'SWIA.Attributes.Insight'}}" loading="lazy">
                 </label>
-                <span class="dice-blocks">
+                <span class="dice-blocks rollable" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="test" data-attribute="insight" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
                   {{#each actor.insightRedDice}}<span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
                   {{#each actor.insightBlueDice}}<span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
                   {{#each actor.insightGreenDice}}<span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
@@ -106,11 +106,17 @@
                 <label class="dice-attr-icon" title="{{localize 'SWIA.Attributes.Tech'}}">
                   <img src="systems/swia/icons/Tech.png" alt="{{localize 'SWIA.Attributes.Tech'}}" loading="lazy">
                 </label>
-                <span class="dice-blocks">
+                <span class="dice-blocks rollable" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="test" data-attribute="tech" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
                   {{#each actor.techRedDice}}<span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
                   {{#each actor.techBlueDice}}<span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
                   {{#each actor.techGreenDice}}<span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
                   {{#each actor.techYellowDice}}<span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
+                </span>
+              </div>
+              <div class="dice-line hero-dice-line">
+                <label>{{localize "SWIA.Roll.WeaponAttack"}}</label>
+                <span class="dice-blocks rollable hero-attack-roll" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="attack" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
+                  <i class="fas fa-dice"></i>
                 </span>
               </div>
             </div>
@@ -118,14 +124,14 @@
             <div class="dice-list">
               <div class="dice-line">
                 <label>{{localize "SWIA.Attributes.Defense"}}</label>
-                <span class="dice-blocks">
+                <span class="dice-blocks rollable" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="defense" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
                   {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
                   {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
                 </span>
               </div>
               <div class="dice-line">
                 <label>{{localize "SWIA.Attributes.Attack"}}</label>
-                <span class="dice-blocks">
+                <span class="dice-blocks rollable" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="attack" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
                   {{#each actor.attackRedDice}}<span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
                   {{#each actor.attackBlueDice}}<span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
                   {{#each actor.attackGreenDice}}<span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}

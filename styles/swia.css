@@ -4646,3 +4646,805 @@ input:checked + .defeated-label { color: #8b0000; }
 .inline-dice-group .dice-block.blue   { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border-color: #1c5d8f; }
 .inline-dice-group .dice-block.green  { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); border-color: #1e8449; }
 .inline-dice-group .dice-block.yellow { background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); border-color: #c87f0a; }
+
+/* ============================================================
+   Phase 3 — Item Sheet UI: accuracy, keywords, structured surges,
+   class card fields
+   ============================================================ */
+
+/* Weapon: accuracy on the attack badge */
+.swia-sheet.weapon-sheet .attack-badge-accuracy {
+  margin-top: 4px;
+  text-align: center;
+  line-height: 1.1;
+}
+.swia-sheet.weapon-sheet .attack-badge-accuracy .accuracy-value {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+}
+.swia-sheet.weapon-sheet .attack-badge-accuracy .accuracy-label {
+  display: block;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+/* Weapon: keywords line (view mode) */
+.swia-sheet.weapon-sheet .weapon-keywords-line {
+  margin: 2px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+/* Weapon: keywords edit grid */
+.swia-sheet.weapon-sheet .keywords-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 8px;
+}
+.swia-sheet.weapon-sheet .keywords-edit-grid label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  font-size: 11px;
+}
+.swia-sheet.weapon-sheet .keywords-edit-grid input[type="number"] {
+  width: 48px;
+}
+.swia-sheet.weapon-sheet .keywords-edit-grid input[type="checkbox"] {
+  margin: 0;
+}
+
+/* Weapon: structured surge abilities section */
+.swia-sheet.weapon-sheet .weapon-surge-section {
+  border-top: 1px solid rgba(95, 67, 35, 0.3);
+  padding-top: 8px;
+}
+.swia-sheet.weapon-sheet .weapon-surge-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.swia-sheet.weapon-sheet .weapon-surge-entry {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 64px minmax(0, 1.4fr) 28px;
+  gap: 6px;
+  align-items: end;
+}
+.swia-sheet.weapon-sheet .weapon-surge-entry .surge-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.swia-sheet.weapon-sheet .weapon-surge-entry .weapon-surge-text {
+  align-self: end;
+}
+.swia-sheet.weapon-sheet .weapon-surge-entry-view {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 2px 0;
+}
+.swia-sheet.weapon-sheet .weapon-surge-entry-view .surge-cost-label {
+  flex: 0 0 auto;
+  font-weight: 700;
+  font-size: 12px;
+}
+.swia-sheet.weapon-sheet .weapon-surge-entry-view .surge-effect {
+  font-size: 13px;
+}
+
+/* Class card: edit fields + view details */
+.swia-sheet.classcard-sheet .classcard-fields-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+}
+.swia-sheet.classcard-sheet .classcard-fields-edit .meta-edit-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.swia-sheet.classcard-sheet .classcard-fields-edit .edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.swia-sheet.classcard-sheet .classcard-fields-edit .edit-field label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+}
+.swia-sheet.classcard-sheet .classcard-details {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.swia-sheet.classcard-sheet .classcard-meta-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.swia-sheet.classcard-sheet .classcard-class {
+  font-weight: 700;
+  font-size: 13px;
+}
+.swia-sheet.classcard-sheet .classcard-xp {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+.swia-sheet.classcard-sheet .classcard-ability-text {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+/* ============================================================
+   Phase 4 — Campaign Tracker missions section
+   ============================================================ */
+.swia-campaign-tracker .tracker-missions {
+  margin-top: 12px;
+  border-top: 1px solid rgba(95, 67, 35, 0.3);
+  padding-top: 8px;
+}
+.swia-campaign-tracker .tracker-missions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.swia-campaign-tracker .tracker-missions-header h2 {
+  margin: 0;
+  font-size: 14px;
+}
+.swia-campaign-tracker .tracker-missions-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.swia-campaign-tracker .tracker-mission-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) 76px 130px minmax(0, 1fr) 28px;
+  gap: 6px;
+  align-items: center;
+}
+.swia-campaign-tracker .tracker-mission-row input,
+.swia-campaign-tracker .tracker-mission-row select {
+  min-width: 0;
+}
+.swia-campaign-tracker .mission-outcome.outcome-rebels {
+  color: #1e8449;
+  font-weight: 600;
+}
+.swia-campaign-tracker .mission-outcome.outcome-imperials {
+  color: #a12a1f;
+  font-weight: 600;
+}
+.swia-campaign-tracker .mission-outcome.outcome-pending {
+  opacity: 0.85;
+}
+.swia-campaign-tracker .tracker-missions-empty {
+  margin: 4px 0;
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* ============================================================
+   Phase 5 — Dice roller: rollable blocks, roll dialog, chat card
+   ============================================================ */
+
+/* Clickable dice blocks on sheets and portals */
+.rollable {
+  cursor: pointer;
+  border-radius: 4px;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.rollable:hover {
+  box-shadow: 0 0 6px 2px rgba(212, 175, 55, 0.6);
+  transform: translateY(-1px);
+}
+
+/* Roll dialog */
+.swia-roll-dialog .swia-roll-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+.swia-roll-dialog .roll-dialog-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+.swia-roll-dialog .roll-actor-name {
+  font-weight: 700;
+  font-size: 15px;
+}
+.swia-roll-dialog .roll-attribute-label {
+  font-style: italic;
+  opacity: 0.85;
+}
+.swia-roll-dialog .roll-target {
+  margin-left: auto;
+  font-size: 12px;
+  opacity: 0.85;
+}
+.swia-roll-dialog .roll-weapon-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.swia-roll-dialog .roll-weapon-row label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.swia-roll-dialog .roll-weapon-row select {
+  flex: 1;
+}
+.swia-roll-dialog .roll-weapon-meta {
+  margin: -4px 0 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+.swia-roll-dialog .roll-pool {
+  border: 1px solid rgba(95, 67, 35, 0.35);
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+.swia-roll-dialog .roll-pool legend {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 4px;
+}
+.swia-roll-dialog .roll-pool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 14px;
+}
+.swia-roll-dialog .roll-pool-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.swia-roll-dialog .roll-pool-row .pool-count {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+.swia-roll-dialog .pool-adjust {
+  width: 24px;
+  height: 24px;
+  line-height: 1;
+  padding: 0;
+  font-weight: 700;
+}
+.swia-roll-dialog .roll-dialog-actions {
+  display: flex;
+}
+.swia-roll-dialog .roll-execute-btn {
+  flex: 1;
+  font-weight: 700;
+  padding: 6px 0;
+}
+
+/* Die faces inside chat (default roll tooltips + custom card) */
+.swia-die-face {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.swia-die-face .swia-die-result,
+.swia-card-die {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.swia-roll-total-labels {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Roll chat card */
+.swia-roll-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.swia-roll-card .roll-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  border-bottom: 1px solid rgba(95, 67, 35, 0.3);
+  padding-bottom: 4px;
+}
+.swia-roll-card .roll-card-title {
+  font-weight: 700;
+}
+.swia-roll-card .roll-card-subtitle {
+  font-style: italic;
+  font-size: 12px;
+  opacity: 0.85;
+}
+.swia-roll-card .roll-card-target {
+  margin-left: auto;
+  font-size: 11px;
+  opacity: 0.8;
+}
+.swia-roll-card .roll-card-faces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.swia-roll-card .roll-card-faces.defense {
+  border-top: 1px dashed rgba(95, 67, 35, 0.25);
+  padding-top: 4px;
+}
+.swia-roll-card .roll-card-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: 12px;
+}
+.swia-roll-card .roll-card-totals .total {
+  font-weight: 600;
+}
+.swia-roll-card .roll-card-totals .dodge {
+  color: #a12a1f;
+}
+.swia-roll-card .roll-card-result {
+  text-align: center;
+  padding: 4px;
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.15);
+}
+.swia-roll-card .roll-card-result.dodged {
+  background: rgba(161, 42, 31, 0.15);
+}
+.swia-roll-card .roll-card-net {
+  font-size: 15px;
+  font-weight: 700;
+}
+.swia-roll-card .roll-card-keyword {
+  margin: 0;
+  font-size: 11px;
+  font-style: italic;
+  opacity: 0.85;
+}
+.swia-roll-card .roll-card-surges {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px solid rgba(95, 67, 35, 0.3);
+  padding-top: 4px;
+}
+.swia-roll-card .roll-card-surges-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+}
+.swia-roll-card .roll-card-surge-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: left;
+  font-size: 12px;
+  padding: 3px 6px;
+}
+.swia-roll-card .roll-card-surge-btn .surge-cost {
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+.swia-roll-card .roll-card-surge-btn .surge-label {
+  flex: 1;
+}
+.swia-roll-card .roll-card-surge-btn.spent {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+.swia-roll-card .roll-card-surge-btn:disabled:not(.spent) {
+  opacity: 0.5;
+}
+
+.hero-attack-roll {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid rgba(95, 67, 35, 0.4);
+}
+.hero-attack-roll-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Roll dialog: dice color chips (the sheet .dice-block styles are container-scoped) */
+.swia-roll-dialog .dice-block {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  flex: 0 0 auto;
+}
+.swia-roll-dialog .dice-block.red    { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-color: #a12a1f; }
+.swia-roll-dialog .dice-block.blue   { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border-color: #1c5d8f; }
+.swia-roll-dialog .dice-block.green  { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); border-color: #1e8449; }
+.swia-roll-dialog .dice-block.yellow { background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); border-color: #c87f0a; }
+.swia-roll-dialog .dice-block.black  { background: linear-gradient(135deg, #4a4a4a 0%, #1f1f1f 100%); border-color: #000000; }
+.swia-roll-dialog .dice-block.white  { background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%); border-color: #b0b0b0; }
+
+/* Roll card: constrain inline icons embedded in surge effect text */
+.swia-roll-card .surge-label img,
+.swia-roll-card .roll-card-totals img,
+.swia-roll-card .roll-card-keyword img {
+  height: 14px;
+  width: auto;
+  vertical-align: middle;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* Roll card: keep effect-text icons inline with their text (core chat CSS
+   can make imgs block-level, which split each label across lines) */
+.swia-roll-card .surge-label img {
+  display: inline-block;
+  margin: 0 1px;
+}
+.swia-roll-card .roll-card-surge-btn {
+  line-height: 1.3;
+  min-height: 0;
+  height: auto;
+}
+.swia-roll-card .surge-label {
+  white-space: normal;
+}
+
+/* Special ability surge cost (sheet edit rows + view badge) */
+.special-ability-surge-cost-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex: 0 0 auto;
+}
+.special-ability-surge-cost-input {
+  width: 44px;
+}
+.special-ability-surge-badge {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.25);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Phase 6 — Shared combat window
+   ============================================================ */
+.swia-combat-window .swia-combat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+.swia-combat-window .combat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 2px solid rgba(95, 67, 35, 0.4);
+  padding-bottom: 6px;
+}
+.swia-combat-window .combatant {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.swia-combat-window .combatant img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid rgba(95, 67, 35, 0.4);
+}
+.swia-combat-window .combatant-name {
+  font-weight: 700;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.swia-combat-window .combat-vs {
+  font-size: 12px;
+  font-style: italic;
+  opacity: 0.7;
+  flex: 0 0 auto;
+}
+.swia-combat-window .combat-panels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.swia-combat-window .combat-panel {
+  border: 1px solid rgba(95, 67, 35, 0.35);
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.swia-combat-window .combat-panel h3 {
+  margin: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(95, 67, 35, 0.25);
+  padding-bottom: 3px;
+}
+.swia-combat-window .combat-meta {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.85;
+}
+.swia-combat-window .combat-keywords {
+  font-weight: 600;
+  font-style: italic;
+}
+.swia-combat-window .combat-weapon-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.swia-combat-window .combat-weapon-row label {
+  font-size: 10px;
+  text-transform: uppercase;
+}
+.swia-combat-window .combat-weapon-row select {
+  flex: 1;
+}
+.swia-combat-window .combat-pool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+.swia-combat-window .dice-block {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  flex: 0 0 auto;
+}
+.swia-combat-window .dice-block.red    { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-color: #a12a1f; }
+.swia-combat-window .dice-block.blue   { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border-color: #1c5d8f; }
+.swia-combat-window .dice-block.green  { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); border-color: #1e8449; }
+.swia-combat-window .dice-block.yellow { background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); border-color: #c87f0a; }
+.swia-combat-window .dice-block.black  { background: linear-gradient(135deg, #4a4a4a 0%, #1f1f1f 100%); border-color: #000000; }
+.swia-combat-window .dice-block.white  { background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%); border-color: #b0b0b0; }
+.swia-combat-window .roll-pool-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.swia-combat-window .pool-count {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+.swia-combat-window .pool-adjust {
+  width: 24px;
+  height: 24px;
+  line-height: 1;
+  padding: 0;
+  font-weight: 700;
+}
+.swia-combat-window .combat-results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.swia-combat-window .roll-card-faces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.swia-combat-window .roll-card-faces.defense {
+  border-top: 1px dashed rgba(95, 67, 35, 0.25);
+  padding-top: 4px;
+}
+.swia-combat-window .swia-card-die {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border: 0;
+}
+.swia-combat-window .roll-card-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 13px;
+}
+.swia-combat-window .roll-card-totals .total {
+  font-weight: 600;
+}
+.swia-combat-window .roll-card-totals .dodge {
+  color: #a12a1f;
+}
+.swia-combat-window .roll-card-result {
+  text-align: center;
+  padding: 6px;
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.15);
+}
+.swia-combat-window .roll-card-result.dodged {
+  background: rgba(161, 42, 31, 0.15);
+}
+.swia-combat-window .roll-card-net {
+  font-size: 16px;
+  font-weight: 700;
+}
+.swia-combat-window .roll-card-keyword {
+  margin: 0;
+  font-size: 11px;
+  font-style: italic;
+  opacity: 0.85;
+}
+.swia-combat-window .combat-reactions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 10px;
+}
+.swia-combat-window .combat-reaction-column {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.swia-combat-window .roll-card-surges-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+}
+.swia-combat-window .roll-card-surge-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: left;
+  font-size: 12px;
+  padding: 3px 6px;
+  line-height: 1.3;
+  min-height: 0;
+  height: auto;
+}
+.swia-combat-window .roll-card-surge-btn .surge-label img {
+  height: 14px;
+  width: auto;
+  display: inline-block;
+  margin: 0 1px;
+  vertical-align: middle;
+  border: 0;
+}
+.swia-combat-window .roll-card-surge-btn.spent {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+.swia-combat-window .combat-token-btn {
+  font-size: 12px;
+  padding: 3px 6px;
+}
+.swia-combat-window .combat-actions {
+  display: flex;
+  gap: 8px;
+}
+.swia-combat-window .combat-roll-btn,
+.swia-combat-window .combat-apply-btn {
+  flex: 1;
+  font-weight: 700;
+  padding: 6px 0;
+}
+.swia-combat-window .combat-empty {
+  margin: 20px;
+  text-align: center;
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* Manual bonus section in combat window */
+.swia-combat-window .combat-pre-bonus {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(95, 67, 35, 0.25);
+}
+.swia-combat-window .combat-pre-bonus-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.65;
+  margin-bottom: 4px;
+}
+/* Fixed-width label keeps −/0/+ controls in a column */
+.swia-combat-window .pool-label {
+  min-width: 58px;
+  font-size: 12px;
+}
+.swia-combat-window .pool-count.has-bonus {
+  color: #2e7d32;
+  font-weight: 900;
+}
+
+/* Reroll wrapper and button */
+.swia-combat-window .swia-die-reroll-wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.swia-combat-window .die-reroll-btn {
+  font-size: 12px;
+  line-height: 1;
+  padding: 1px 4px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+.swia-combat-window .die-reroll-btn:hover {
+  opacity: 1;
+}
+.swia-combat-window .swia-card-die.rerolled {
+  outline: 2px solid rgba(212, 175, 55, 0.7);
+  border-radius: 3px;
+}
+
+/* Hero attack roll button — explicit text color so it reads on dark stat-bg */
+.hero-attack-roll {
+  color: var(--stat-text, #fff);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(212, 175, 55, 0.55);
+  border-radius: 4px;
+}
+.hero-attack-roll i {
+  color: #d4af37;
+}
+.hero-attack-roll:hover {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: rgba(212, 175, 55, 0.85);
+}

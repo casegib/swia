@@ -1,4 +1,6 @@
 // Foundry v13+ ApplicationV2 actor sheet
+import { SWIARollDialog } from "../dice/roll-dialog.js";
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseActorSheet = HandlebarsApplicationMixin(foundry.applications.sheets.ActorSheetV2);
 
@@ -112,6 +114,8 @@ export class SWIAActorSheet extends BaseActorSheet {
       submitOnChange: true
     },
     actions: {
+      // Dice rolling (Phase 5)
+      rollDice: SWIAActorSheet.prototype._onRollDice,
       // Combat state toggles
       toggleWounded: SWIAActorSheet.prototype._onToggleWounded,
       toggleDefeated: SWIAActorSheet.prototype._onToggleDefeated,
@@ -155,6 +159,14 @@ export class SWIAActorSheet extends BaseActorSheet {
   get title() {
     const name = this.document?.name ?? this.actor?.name ?? "";
     return name || "";
+  }
+
+  // Open the roll dialog from a clicked dice block (Phase 5)
+  _onRollDice(event, target) {
+    event.preventDefault();
+    const rollType = target?.dataset?.rollType || "attack";
+    const attribute = target?.dataset?.attribute || null;
+    SWIARollDialog.open({ actor: this.document ?? this.actor, rollType, attribute });
   }
 
   _getHealthyTokenSrc(actor) {
@@ -1062,7 +1074,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     if (!actor || (actor.type !== "villain" && actor.type !== "ally")) return;
     const raw = foundry.utils.deepClone(actor.system.specialAbilities ?? []);
     const current = Array.isArray(raw) ? raw : Object.values(raw);
-    current.push({ name: "", description: "" });
+    current.push({ name: "", description: "", surgeCost: 0 });
     await actor.update({ "system.specialAbilities": current });
   }
 

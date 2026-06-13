@@ -84,7 +84,8 @@ class UnitData extends SWIAActorBase {
       traits: str(),
       reinforceCost: int(1),
       reward: str(),
-      specialAbilities: abilityList(),
+      // surgeCost > 0 marks an ability that is spent as a surge during attacks
+      specialAbilities: abilityList({ surgeCost: int() }),
       state: new fields.SchemaField({
         activated: bool()
       })

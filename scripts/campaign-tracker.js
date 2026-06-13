@@ -20,6 +20,25 @@ function normalizeResourceValue(value) {
   return Math.floor(numericValue);
 }
 
+const MISSION_TYPES = ["story", "side"];
+const MISSION_OUTCOMES = ["pending", "rebels", "imperials"];
+
+function normalizeMission(mission) {
+  const m = mission && typeof mission === "object" ? mission : {};
+  return {
+    id: typeof m.id === "string" && m.id ? m.id : foundry.utils.randomID(),
+    name: typeof m.name === "string" ? m.name : "",
+    type: MISSION_TYPES.includes(m.type) ? m.type : "story",
+    outcome: MISSION_OUTCOMES.includes(m.outcome) ? m.outcome : "pending",
+    allyUnlocked: typeof m.allyUnlocked === "string" ? m.allyUnlocked : ""
+  };
+}
+
+function normalizeMissions(value) {
+  const arr = Array.isArray(value) ? value : Object.values(value ?? {});
+  return arr.map(normalizeMission);
+}
+
 export function getCampaignResources() {
   const storedResources = game.settings.get("swia", CAMPAIGN_RESOURCES_KEY) ?? {};
   return {
@@ -29,7 +48,8 @@ export function getCampaignResources() {
     threat: normalizeResourceValue(storedResources.threat ?? DEFAULT_CAMPAIGN_RESOURCES.threat),
     imperialXp: normalizeResourceValue(storedResources.imperialXp ?? DEFAULT_CAMPAIGN_RESOURCES.imperialXp),
     xp: normalizeResourceValue(storedResources.xp ?? DEFAULT_CAMPAIGN_RESOURCES.xp),
-    requisition: normalizeResourceValue(storedResources.requisition ?? DEFAULT_CAMPAIGN_RESOURCES.requisition)
+    requisition: normalizeResourceValue(storedResources.requisition ?? DEFAULT_CAMPAIGN_RESOURCES.requisition),
+    missions: normalizeMissions(storedResources.missions)
   };
 }
 
@@ -62,7 +82,9 @@ export class SWIACampaignTracker extends BaseApplication {
       icon: "fas fa-coins"
     },
     actions: {
-      saveResources: SWIACampaignTracker.prototype._onSaveResources
+      saveResources: SWIACampaignTracker.prototype._onSaveResources,
+      addMission: SWIACampaignTracker.prototype._onAddMission,
+      removeMission: SWIACampaignTracker.prototype._onRemoveMission
     }
   };
 
@@ -90,10 +112,12 @@ export class SWIACampaignTracker extends BaseApplication {
   }
 
   async _buildContext() {
+    const resources = getCampaignResources();
     return {
       title: game.i18n.localize("SWIA.CampaignTracker.Title"),
       subtitle: game.i18n.localize("SWIA.CampaignTracker.Subtitle"),
-      resources: getCampaignResources(),
+      resources,
+      missions: resources.missions,
       heroXpEntries: getHeroXpEntries(),
       canEdit: Boolean(game.user?.isGM)
     };
@@ -140,6 +164,58 @@ export class SWIACampaignTracker extends BaseApplication {
     }, 50);
   }
 
+  /**
+   * Scrape mission rows from the rendered form. Returns null when the missions
+   * section isn't present (so callers can fall back to stored data) and an
+   * array otherwise — including [] when all rows were removed.
+   */
+  _collectMissionsFromForm(form) {
+    const root = form ?? this.element?.querySelector?.("form") ?? null;
+    if (!root || !root.querySelector(".tracker-missions")) return null;
+
+    const missions = [];
+    root.querySelectorAll(".tracker-mission-row[data-mission-id]").forEach((row) => {
+      missions.push(normalizeMission({
+        id: row.dataset.missionId,
+        name: row.querySelector(".mission-name")?.value ?? "",
+        type: row.querySelector(".mission-type")?.value,
+        outcome: row.querySelector(".mission-outcome")?.value,
+        allyUnlocked: row.querySelector(".mission-ally")?.value ?? ""
+      }));
+    });
+    return missions;
+  }
+
+  async _saveMissions(missions) {
+    const existing = game.settings.get("swia", CAMPAIGN_RESOURCES_KEY) ?? {};
+    await game.settings.set("swia", CAMPAIGN_RESOURCES_KEY, { ...existing, missions });
+  }
+
+  async _onAddMission(event, target) {
+    event.preventDefault();
+    if (!game.user?.isGM) return;
+
+    const trigger = target ?? event.currentTarget;
+    const form = trigger?.closest?.("form") ?? null;
+    // Preserve unsaved edits in existing rows before adding the new one.
+    const missions = this._collectMissionsFromForm(form) ?? getCampaignResources().missions;
+    missions.push(normalizeMission({}));
+    await this._saveMissions(missions);
+  }
+
+  async _onRemoveMission(event, target) {
+    event.preventDefault();
+    if (!game.user?.isGM) return;
+
+    const trigger = target ?? event.currentTarget;
+    const missionId = trigger?.dataset?.missionId;
+    if (!missionId) return;
+
+    const form = trigger?.closest?.("form") ?? null;
+    const missions = this._collectMissionsFromForm(form) ?? getCampaignResources().missions;
+    await this._saveMissions(missions.filter((mission) => mission.id !== missionId));
+  }
+
   async _onSaveResources(event, target) {
     event.preventDefault();
 
@@ -177,9 +253,15 @@ export class SWIACampaignTracker extends BaseApplication {
       heroUpdates.push(hero.update({ "system.xp": nextXp }));
     }
 
-    // Merge with the stored setting so non-form fields (e.g. missions) are preserved.
+    // Merge with the stored setting so unknown fields are preserved.
+    // Missions are scraped from the rendered rows when the section is present.
+    const missions = this._collectMissionsFromForm(form);
     const existing = game.settings.get("swia", CAMPAIGN_RESOURCES_KEY) ?? {};
-    await game.settings.set("swia", CAMPAIGN_RESOURCES_KEY, { ...existing, ...resources });
+    await game.settings.set("swia", CAMPAIGN_RESOURCES_KEY, {
+      ...existing,
+      ...resources,
+      ...(missions !== null ? { missions } : {})
+    });
 
     const heroUpdateResults = await Promise.allSettled(heroUpdates);
     const failedHeroUpdates = heroUpdateResults.filter((result) => result.status === "rejected");

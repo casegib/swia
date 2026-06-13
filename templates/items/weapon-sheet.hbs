@@ -47,6 +47,12 @@
           {{#each (range systemData.attackDice.green)}}<span class="attack-pip green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
           {{#each (range systemData.attackDice.yellow)}}<span class="attack-pip yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
         </div>
+        {{#if systemData.accuracy}}
+        <div class="attack-badge-accuracy" title="{{localize 'SWIA.Item.Weapon.Accuracy'}}">
+          <span class="accuracy-value">{{systemData.accuracy}}</span>
+          <span class="accuracy-label">{{localize "SWIA.Item.Weapon.Accuracy"}}</span>
+        </div>
+        {{/if}}
       </aside>
 
       <button type="button" class="card-state-btn {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
@@ -69,6 +75,7 @@
       {{#if systemData.weaponClass}}
       <p class="weapon-type-line">{{systemData.weaponClass}}{{#if systemData.weaponSubtype}} - {{systemData.weaponSubtype}}{{/if}}</p>
       {{/if}}
+      {{#if keywordsLine}}<p class="weapon-keywords-line">{{keywordsLine}}</p>{{/if}}
       {{/if}}
     </div>
 
@@ -128,6 +135,21 @@
           <input name="system.attachmentSlots" type="number" value="{{systemData.attachmentSlots}}" data-dtype="Number" min="0" max="5" />
         </div>
       </div>
+      <div class="meta-edit-row">
+        <div class="edit-field">
+          <label>{{localize "SWIA.Item.Weapon.Accuracy"}}</label>
+          <input name="system.accuracy" type="number" value="{{systemData.accuracy}}" data-dtype="Number" min="0" />
+        </div>
+        <div class="edit-field keywords-edit-field">
+          <label>{{localize "SWIA.Item.Weapon.Keywords"}}</label>
+          <div class="keywords-edit-grid">
+            <label>{{localize "SWIA.Keywords.Pierce"}} <input name="system.keywords.pierce" type="number" value="{{systemData.keywords.pierce}}" data-dtype="Number" min="0" /></label>
+            <label>{{localize "SWIA.Keywords.Blast"}} <input name="system.keywords.blast" type="number" value="{{systemData.keywords.blast}}" data-dtype="Number" min="0" /></label>
+            <label class="keyword-checkbox">{{localize "SWIA.Keywords.Cleave"}} <input name="system.keywords.cleave" type="checkbox" {{#if systemData.keywords.cleave}}checked{{/if}} /></label>
+            <label class="keyword-checkbox">{{localize "SWIA.Keywords.Reach"}} <input name="system.keywords.reach" type="checkbox" {{#if systemData.keywords.reach}}checked{{/if}} /></label>
+          </div>
+        </div>
+      </div>
       <div class="meta-edit-row image-position-row">
         <div class="edit-field image-position-field">
           <label>{{localize "SWIA.Item.Weapon.ImagePositionX"}}</label>
@@ -171,6 +193,56 @@
         <li class="empty-message">{{localize "SWIA.Item.Weapon.NoAbilities"}}</li>
         {{/each}}
       </ol>
+    </section>
+
+    <section class="weapon-surge-section">
+      {{#if editMode}}
+      <div class="section-header">
+        <h3>{{localize "SWIA.Item.Weapon.SurgeAbilities"}}</h3>
+        <button type="button" data-action="addSurgeAbility">{{localize "SWIA.Item.Weapon.AddSurge"}}</button>
+      </div>
+      <ol class="weapon-surge-list edit-list">
+        {{#each weaponSurgeRows as |surge index|}}
+        <li class="weapon-surge-entry" data-index="{{index}}">
+          <label class="surge-field surge-cost-field">
+            <span>{{localize "SWIA.Item.Weapon.SurgeCost"}}</span>
+            <input class="weapon-surge-cost" type="number" min="1" value="{{surge.cost}}" />
+          </label>
+          <label class="surge-field surge-type-field">
+            <span>{{localize "SWIA.Item.Weapon.SurgeEffectTypeLabel"}}</span>
+            <select class="weapon-surge-type">
+              <option value="damage" {{#if (eq surge.effectType "damage")}}selected{{/if}}>{{localize "SWIA.Item.Weapon.SurgeEffectType.Damage"}}</option>
+              <option value="accuracy" {{#if (eq surge.effectType "accuracy")}}selected{{/if}}>{{localize "SWIA.Item.Weapon.SurgeEffectType.Accuracy"}}</option>
+              <option value="pierce" {{#if (eq surge.effectType "pierce")}}selected{{/if}}>{{localize "SWIA.Item.Weapon.SurgeEffectType.Pierce"}}</option>
+              <option value="condition" {{#if (eq surge.effectType "condition")}}selected{{/if}}>{{localize "SWIA.Item.Weapon.SurgeEffectType.Condition"}}</option>
+              <option value="special" {{#if (eq surge.effectType "special")}}selected{{/if}}>{{localize "SWIA.Item.Weapon.SurgeEffectType.Special"}}</option>
+            </select>
+          </label>
+          <label class="surge-field surge-value-field">
+            <span>{{localize "SWIA.Item.Weapon.SurgeEffectValue"}}</span>
+            <input class="weapon-surge-value" type="number" min="0" value="{{surge.effectValue}}" />
+          </label>
+          <input class="weapon-surge-text" type="text" value="{{surge.effectText}}" placeholder="{{localize 'SWIA.Item.Weapon.SurgeEffectPlaceholder'}}" />
+          <button type="button" class="remove-row-btn" data-action="removeSurgeAbility" data-index="{{index}}" title="{{localize 'SWIA.Item.Weapon.RemoveSurge'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </li>
+        {{else}}
+        <li class="empty-message">{{localize "SWIA.Item.Weapon.NoSurgeAbilities"}}</li>
+        {{/each}}
+      </ol>
+      {{else}}
+      {{#if weaponSurgeRows.length}}
+      <ol class="weapon-surge-list view-list">
+        {{#each weaponSurgeRows}}
+        <li class="weapon-surge-entry-view">
+          <span class="surge-cost-label" title="{{localize 'SWIA.Item.Weapon.SurgeCost'}}">{{this.cost}}&times; {{localize "SWIA.Surge"}}</span>
+          <span class="surge-effect">{{this.displayEffect}}</span>
+        </li>
+        {{/each}}
+      </ol>
+      {{/if}}
+      {{/if}}
     </section>
 
     <section class="weapon-flavor-section">

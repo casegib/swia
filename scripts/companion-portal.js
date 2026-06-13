@@ -1,3 +1,5 @@
+import { SWIARollDialog } from "./dice/roll-dialog.js";
+
 // Foundry v13+ ApplicationV2 base
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseApplication = HandlebarsApplicationMixin(ApplicationV2);
@@ -19,9 +21,24 @@ export class SWIACompanionPortal extends BaseApplication {
       openActor: SWIACompanionPortal.prototype._onOpenActor,
       toggleActivated: SWIACompanionPortal.prototype._onToggleActivated,
       openItem: SWIACompanionPortal.prototype._onOpenItem,
-      cycleItemState: SWIACompanionPortal.prototype._onCycleItemState
+      cycleItemState: SWIACompanionPortal.prototype._onCycleItemState,
+      rollDice: SWIACompanionPortal.prototype._onRollDice
     }
   };
+
+  // Open the roll dialog from a clicked dice block (Phase 5)
+  _onRollDice(event, target) {
+    event.preventDefault();
+    const actorId = target?.dataset?.actorId
+      ?? target?.closest?.("[data-actor-id]")?.dataset?.actorId;
+    const actor = game.actors?.get(actorId);
+    if (!actor) return;
+    SWIARollDialog.open({
+      actor,
+      rollType: target?.dataset?.rollType || "attack",
+      attribute: target?.dataset?.attribute || null
+    });
+  }
 
   static PARTS = {
     main: {

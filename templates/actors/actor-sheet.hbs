@@ -272,9 +272,14 @@
         {{#if ../editMode}}
         <input class="special-ability-name" name="system.specialAbilities.{{@index}}.name" type="text" value="{{this.name}}" placeholder="{{localize 'SWIA.Villain.SpecialAbilities'}}" />
         <textarea class="special-ability-desc" name="system.specialAbilities.{{@index}}.description" placeholder="Description" rows="2">{{this.description}}</textarea>
+        <label class="special-ability-surge-cost-field" title="{{localize 'SWIA.Villain.SpecialAbilitySurgeCostHint'}}">
+          <span>{{localize "SWIA.Villain.SpecialAbilitySurgeCost"}}</span>
+          <input class="special-ability-surge-cost-input" name="system.specialAbilities.{{@index}}.surgeCost" type="number" min="0" value="{{this.surgeCost}}" data-dtype="Number" />
+        </label>
         <button type="button" class="remove-row-btn" data-action="removeSpecialAbility" data-index="{{@index}}" title="{{localize 'SWIA.Villain.RemoveSpecialAbility'}}"><i class="fas fa-trash"></i></button>
         {{else}}
         <div class="special-ability-view">
+          {{#if this.surgeCost}}<span class="special-ability-surge-badge" title="{{localize 'SWIA.Villain.SpecialAbilitySurgeCost'}}">{{this.surgeCost}}&times; {{localize "SWIA.Surge"}}</span>{{/if}}
           {{#if this.name}}<strong class="special-ability-view-name">{{{this.enrichedName}}}:</strong>{{/if}}
           <span class="special-ability-view-desc">{{{this.enrichedDescription}}}</span>
         </div>
@@ -525,7 +530,7 @@
         {{else}}
         <div class="attribute-row">
           <label class="dice-attr-label">{{localize "SWIA.Attributes.Defense"}}</label>
-          <div class="dice-display">
+          <div class="dice-display rollable" data-action="rollDice" data-roll-type="defense" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
             <div class="dice-blocks">
               {{#each defenseBlackDice}}
               <span class="dice-block black"></span>
@@ -567,7 +572,7 @@
                src="systems/swia/icons/{{#if (eq systemData.attributes.attackType 'melee')}}Melee.png{{else}}Ranged.png{{/if}}"
                alt="{{systemData.attributes.attackType}}"
                title="{{#if (eq systemData.attributes.attackType 'melee')}}{{localize 'SWIA.AttackType.Melee'}}{{else}}{{localize 'SWIA.AttackType.Ranged'}}{{/if}}" />
-          <div class="dice-display">
+          <div class="dice-display rollable" data-action="rollDice" data-roll-type="attack" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
             <div class="dice-blocks">
               {{#each attackRedDice}}
               <span class="dice-block red"></span>
@@ -603,7 +608,7 @@
         {{else}}
         <div class="attribute-row">
           <label class="dice-attr-label">{{localize "SWIA.Attributes.Defense"}}</label>
-          <div class="dice-display">
+          <div class="dice-display rollable" data-action="rollDice" data-roll-type="defense" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
             <div class="dice-blocks">
               {{#each defenseBlackDice}}
               <span class="dice-block black"></span>
@@ -644,7 +649,7 @@
             {{/if}}
           </div>
           {{else}}
-          <div class="dice-display">
+          <div class="dice-display rollable" data-action="rollDice" data-roll-type="test" data-attribute="strength" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
             <div class="dice-blocks">
               {{#each strengthRedDice}}
               <span class="dice-block red"></span>
@@ -689,7 +694,7 @@
             {{/if}}
           </div>
           {{else}}
-          <div class="dice-display">
+          <div class="dice-display rollable" data-action="rollDice" data-roll-type="test" data-attribute="insight" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
             <div class="dice-blocks">
               {{#each insightRedDice}}
               <span class="dice-block red"></span>
@@ -734,7 +739,7 @@
             {{/if}}
           </div>
           {{else}}
-          <div class="dice-display">
+          <div class="dice-display rollable" data-action="rollDice" data-roll-type="test" data-attribute="tech" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
             <div class="dice-blocks">
               {{#each techRedDice}}
               <span class="dice-block red"></span>
@@ -753,6 +758,16 @@
           {{/if}}
         </div>
       </div>
+      {{#unless editMode}}
+      <div class="resource">
+        <div class="attribute-row">
+          <div class="dice-display rollable hero-attack-roll" data-action="rollDice" data-roll-type="attack" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
+            <i class="fas fa-dice"></i>
+            <span class="hero-attack-roll-label">{{localize "SWIA.Roll.WeaponAttack"}}</span>
+          </div>
+        </div>
+      </div>
+      {{/unless}}
       {{/if}}
     </div>
   </section>

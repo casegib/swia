@@ -1,0 +1,61 @@
+<div class="swia-roll-dialog-body">
+  <header class="roll-dialog-header">
+    <span class="roll-actor-name">{{actorName}}</span>
+    {{#if attributeLabel}}<span class="roll-attribute-label">{{attributeLabel}}</span>{{/if}}
+    {{#if targetName}}
+    <span class="roll-target">{{localize "SWIA.Roll.Target"}}: {{targetName}}</span>
+    {{/if}}
+  </header>
+
+  {{#if showWeaponSelect}}
+  <div class="roll-weapon-row">
+    <label>{{localize "SWIA.Roll.Weapon"}}</label>
+    <select class="roll-weapon-select">
+      {{#each weapons}}
+      <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}{{#unless (eq cardState "ready")}} ({{cardState}}){{/unless}}</option>
+      {{/each}}
+    </select>
+  </div>
+  {{#if weaponAccuracy}}
+  <p class="roll-weapon-meta">{{localize "SWIA.Item.Weapon.Accuracy"}}: {{weaponAccuracy}}</p>
+  {{/if}}
+  {{/if}}
+
+  {{#if showAttack}}
+  <fieldset class="roll-pool">
+    <legend>{{localize "SWIA.Roll.AttackPool"}}</legend>
+    <div class="roll-pool-grid">
+      {{#each attackRows}}
+      <div class="roll-pool-row">
+        <span class="dice-block {{color}}" title="{{label}}"></span>
+        <button type="button" class="pool-adjust" data-action="adjustDie" data-color="{{color}}" data-delta="-1">&minus;</button>
+        <span class="pool-count">{{count}}</span>
+        <button type="button" class="pool-adjust" data-action="adjustDie" data-color="{{color}}" data-delta="1">+</button>
+      </div>
+      {{/each}}
+    </div>
+  </fieldset>
+  {{/if}}
+
+  {{#if showDefense}}
+  <fieldset class="roll-pool">
+    <legend>{{localize "SWIA.Roll.DefensePool"}}</legend>
+    <div class="roll-pool-grid">
+      {{#each defenseRows}}
+      <div class="roll-pool-row">
+        <span class="dice-block {{color}}" title="{{label}}"></span>
+        <button type="button" class="pool-adjust" data-action="adjustDie" data-color="{{color}}" data-delta="-1">&minus;</button>
+        <span class="pool-count">{{count}}</span>
+        <button type="button" class="pool-adjust" data-action="adjustDie" data-color="{{color}}" data-delta="1">+</button>
+      </div>
+      {{/each}}
+    </div>
+  </fieldset>
+  {{/if}}
+
+  <footer class="roll-dialog-actions">
+    <button type="button" class="roll-execute-btn" data-action="executeRoll">
+      <i class="fas fa-dice"></i> {{localize "SWIA.Roll.RollButton"}}
+    </button>
+  </footer>
+</div>

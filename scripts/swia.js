@@ -14,6 +14,11 @@ import {
   WeaponData, WeaponmodData, ArmorData, GearData, ClasscardData,
   AgendacardData, ImperialclasscardData, HeroabilityData, FormcardData
 } from "./data/items.js";
+import {
+  registerDiceTerms, registerDiceSoNice, registerChatRenderHooks, checkLegacyDiceModule
+} from "./dice/dice-terms.js";
+import { registerRollCardHooks } from "./dice/roll-dialog.js";
+import { registerCombatHooks, SWIACombatWindow } from "./dice/combat-window.js";
 
 // Foundry v13+ namespaced APIs (system.json minimum is v13)
 // The appv1 sheet classes are referenced only to unregister the core-registered defaults.
@@ -105,6 +110,14 @@ async function migrateLegacyAbilityItems() {
 Hooks.once("init", async function initSWIA() {
   console.log("SWIA | Initializing Star Wars Imperial Assault system");
 
+  // Register IA dice terms + chat/DSN/roll-card hooks (Phase 5)
+  registerDiceTerms();
+  registerDiceSoNice();
+  registerChatRenderHooks();
+  registerRollCardHooks();
+  checkLegacyDiceModule();
+  registerCombatHooks();
+
   // Register system data models (schemas live here; document types are declared in system.json)
   Object.assign(CONFIG.Actor.dataModels, {
     hero: HeroData,
@@ -194,7 +207,10 @@ Hooks.once("init", async function initSWIA() {
     "systems/swia/templates/items/armor-sheet.hbs",
     "systems/swia/templates/items/gear-sheet.hbs",
     "systems/swia/templates/items/heroability-sheet.hbs",
-    "systems/swia/templates/items/formcard-sheet.hbs"
+    "systems/swia/templates/items/formcard-sheet.hbs",
+    "systems/swia/templates/dice/roll-dialog.hbs",
+    "systems/swia/templates/dice/roll-card.hbs",
+    "systems/swia/templates/dice/combat-window.hbs"
   ]);
 
   // Register actor sheets for hero, villain, and ally types
@@ -262,7 +278,7 @@ Hooks.on("renderActorDirectory", (app, html) => {
   if (!game.user) return;
 
   const root = html instanceof jQuery ? html : $(html);
-  if (root.find(".swia-gm-portal-btn, .swia-player-portal-btn, .swia-companion-portal-btn, .swia-imperial-portal-btn, .swia-campaign-tracker-btn").length) return;
+  if (root.find(".swia-gm-portal-btn, .swia-player-portal-btn, .swia-companion-portal-btn, .swia-imperial-portal-btn, .swia-campaign-tracker-btn, .swia-combat-window-btn").length) return;
 
   const buttons = [];
 
@@ -355,6 +371,24 @@ Hooks.on("renderActorDirectory", (app, html) => {
   });
 
   buttons.push(campaignTrackerButton);
+
+  const combatLabel = game.i18n.localize("SWIA.Combat.Button");
+  const combatButton = $(
+    `<button
+      type="button"
+      class="swia-combat-window-btn"
+      aria-label="${combatLabel}"
+      title="${combatLabel}"
+    >
+      <i class="fa-solid fa-crosshairs" aria-hidden="true"></i>
+    </button>`
+  );
+
+  combatButton.on("click", () => {
+    SWIACombatWindow.show();
+  });
+
+  buttons.push(combatButton);
 
   const headerActions = root.find(".header-actions").first();
   if (headerActions.length) {

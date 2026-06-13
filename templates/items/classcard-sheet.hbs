@@ -1,4 +1,17 @@
-<form class="swia-sheet item-sheet card-sheet classcard-sheet" autocomplete="off">
+<form class="swia-sheet item-sheet card-sheet classcard-sheet {{#if editMode}}editing{{/if}}" autocomplete="off">
+  <div class="item-sheet-toolbar">
+    {{#if isGM}}
+    <button type="button" class="item-edit-toggle {{#if editMode}}active{{/if}}" data-action="toggleEdit">
+      {{#if editMode}}{{localize "SWIA.Item.ViewMode"}}{{else}}{{localize "SWIA.EditMode"}}{{/if}}
+    </button>
+    {{#if editMode}}
+    <button type="button" class="item-save-btn" data-action="saveItem">
+      {{localize "SWIA.Item.Save"}}
+    </button>
+    {{/if}}
+    {{/if}}
+  </div>
+
   <div class="card-image-container">
     <img class="card-image {{systemData.cardState}}" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" alt="{{item.name}}" />
     {{#unless hasCardImage}}
@@ -11,4 +24,41 @@
       {{cardStateLabel}}
     </button>
   </div>
+
+  {{#if editMode}}
+  <div class="classcard-fields-edit">
+    <div class="edit-field">
+      <label>{{localize "SWIA.Item.Name"}}</label>
+      <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'SWIA.Item.Name'}}" />
+    </div>
+    {{#if (eq item.type "classcard")}}
+    <div class="meta-edit-row">
+      <div class="edit-field">
+        <label>{{localize "SWIA.Item.ClassCard.XpCost"}}</label>
+        <input name="system.xpCost" type="number" value="{{systemData.xpCost}}" data-dtype="Number" min="0" />
+      </div>
+      <div class="edit-field">
+        <label>{{localize "SWIA.Item.ClassCard.HeroClass"}}</label>
+        <input name="system.heroClass" type="text" value="{{systemData.heroClass}}" placeholder="{{localize 'SWIA.Item.ClassCard.HeroClassPlaceholder'}}" />
+      </div>
+    </div>
+    <div class="edit-field">
+      <label>{{localize "SWIA.Item.ClassCard.AbilityText"}}</label>
+      <textarea name="system.abilityText" data-dtype="String" rows="4" placeholder="{{localize 'SWIA.Item.ClassCard.Description'}}">{{systemData.abilityText}}</textarea>
+    </div>
+    {{/if}}
+  </div>
+  {{else}}
+  {{#if hasClasscardDetails}}
+  <div class="classcard-details">
+    <div class="classcard-meta-line">
+      {{#if systemData.heroClass}}<span class="classcard-class">{{systemData.heroClass}}</span>{{/if}}
+      {{#if systemData.xpCost}}<span class="classcard-xp">{{systemData.xpCost}} {{localize "SWIA.Item.ClassCard.XP"}}</span>{{/if}}
+    </div>
+    {{#if systemData.abilityText}}
+    <div class="classcard-ability-text">{{{enrichedAbilityText}}}</div>
+    {{/if}}
+  </div>
+  {{/if}}
+  {{/if}}
 </form>

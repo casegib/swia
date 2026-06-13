@@ -11,6 +11,35 @@ function mapItemSheetType(sourceType) {
   return sourceType;
 }
 
+/** Build a human-readable effect label for a structured weapon surge entry. */
+function weaponSurgeDisplayEffect(surge) {
+  const value = Number(surge.effectValue) || 0;
+  switch (surge.effectType) {
+    case "damage":
+      return `+${value} ${game.i18n.localize("SWIA.Item.Weapon.SurgeEffectType.Damage")}`;
+    case "accuracy":
+      return `+${value} ${game.i18n.localize("SWIA.Item.Weapon.SurgeEffectType.Accuracy")}`;
+    case "pierce":
+      return `${game.i18n.localize("SWIA.Item.Weapon.SurgeEffectType.Pierce")} ${value}`;
+    case "condition":
+    case "special":
+      return surge.effectText || game.i18n.localize(`SWIA.Item.Weapon.SurgeEffectType.${surge.effectType === "condition" ? "Condition" : "Special"}`);
+    default:
+      return surge.effectText || "";
+  }
+}
+
+/** Build a "Pierce 2 · Blast 1 · Cleave · Reach" line from a keywords block. */
+function buildKeywordsLine(keywords) {
+  if (!keywords) return "";
+  const parts = [];
+  if (keywords.pierce > 0) parts.push(`${game.i18n.localize("SWIA.Keywords.Pierce")} ${keywords.pierce}`);
+  if (keywords.blast > 0) parts.push(`${game.i18n.localize("SWIA.Keywords.Blast")} ${keywords.blast}`);
+  if (keywords.cleave) parts.push(game.i18n.localize("SWIA.Keywords.Cleave"));
+  if (keywords.reach) parts.push(game.i18n.localize("SWIA.Keywords.Reach"));
+  return parts.join(" · ");
+}
+
 function resolveWeaponmodAttachmentName(item) {
   if (!item || item.type !== "weaponmod") return "";
 
@@ -136,10 +165,15 @@ export class SWIAItemSheet extends BaseItemSheet {
       update = this._collectUpdateFromForm(form);
     }
 
-    if (!Object.keys(update).length) return;
-
     const item = resolveItemDocument(this);
     if (!item) return;
+
+    // Structured weapon/weaponmod surge rows are unnamed inputs; scrape them.
+    if (["weapon", "weaponmod"].includes(item.type)) {
+      Object.assign(update, this._collectWeaponSurgeUpdate(form));
+    }
+
+    if (!Object.keys(update).length) return;
     await item.update(update);
   }
 
@@ -260,6 +294,11 @@ export class SWIAItemSheet extends BaseItemSheet {
       Object.assign(update, this._collectFormcardArrayUpdate(formEl));
     }
 
+    // Same for structured weapon/weaponmod surge abilities
+    if (["weapon", "weaponmod"].includes(item.type)) {
+      Object.assign(update, this._collectWeaponSurgeUpdate(formEl));
+    }
+
     if (!Object.keys(update).length) {
       ui.notifications?.warn(game.i18n.localize("SWIA.Item.NoChangesToSave"));
       return;
@@ -341,9 +380,22 @@ export class SWIAItemSheet extends BaseItemSheet {
       relativeTo: item
     });
 
-    const enrichedAbilityText = item.type === "heroability"
+    const enrichedAbilityText = ["heroability", "classcard"].includes(item.type)
       ? await TextEditorClass.enrichHTML(system.abilityText || "", { async: true, secrets: item.isOwner, relativeTo: item })
       : "";
+
+    // Structured weapon/weaponmod surge abilities with display labels for view mode.
+    // Normalize to array — Foundry can store new array fields as {} on existing documents.
+    const isWeaponLike = ["weapon", "weaponmod"].includes(item.type);
+    const surgeRaw = Array.isArray(system.surgeAbilities)
+      ? system.surgeAbilities
+      : Object.values(system.surgeAbilities || {});
+    const weaponSurgeRows = isWeaponLike
+      ? surgeRaw.map((surge) => ({ ...surge, displayEffect: weaponSurgeDisplayEffect(surge) }))
+      : [];
+    const keywordsLine = isWeaponLike ? buildKeywordsLine(system.keywords) : "";
+    const hasClasscardDetails = item.type === "classcard"
+      && Boolean(system.heroClass || system.xpCost > 0 || system.abilityText);
 
     // Enrich weapon abilities (free-form ability rows with optional prefix icons)
     // Normalize to array — Foundry can store new array fields as {} on existing documents
@@ -382,6 +434,9 @@ export class SWIAItemSheet extends BaseItemSheet {
       isGM: game.user?.isGM ?? false,
       hasCardImage: hasCardImage,
       cardStateLabel: cardStateLabel,
+      weaponSurgeRows: weaponSurgeRows,
+      keywordsLine: keywordsLine,
+      hasClasscardDetails: hasClasscardDetails,
       weaponmodAttachedWeaponName: weaponmodAttachedWeaponName,
       config: CONFIG.SWIA ?? {}
     });
@@ -410,6 +465,34 @@ export class SWIAItemSheet extends BaseItemSheet {
     return update;
   }
 
+  // Scrape structured weapon/weaponmod surge rows directly from the DOM.
+  // Same rationale as _collectFormcardArrayUpdate: bypasses the expandObject
+  // plain-object bug for indexed array paths. Inputs intentionally have no
+  // name attributes so _collectUpdateFromForm doesn't double-collect them.
+  _collectWeaponSurgeUpdate(formEl) {
+    const root = formEl
+      ?? this.element?.querySelector?.('[data-application-part="form"]')
+      ?? this.element
+      ?? null;
+
+    if (!(root instanceof HTMLElement)) return {};
+
+    // Only scrape when the edit-mode list is rendered; otherwise an empty
+    // query would wipe the stored array.
+    if (!root.querySelector(".weapon-surge-list.edit-list")) return {};
+
+    const surgeAbilities = [];
+    root.querySelectorAll(".weapon-surge-entry[data-index]").forEach((li) => {
+      const cost = parseInt(li.querySelector(".weapon-surge-cost")?.value) || 1;
+      const effectType = li.querySelector(".weapon-surge-type")?.value || "damage";
+      const effectValue = Number(li.querySelector(".weapon-surge-value")?.value) || 0;
+      const effectText = li.querySelector(".weapon-surge-text")?.value ?? "";
+      surgeAbilities.push({ cost, effectType, effectValue, effectText });
+    });
+
+    return { "system.surgeAbilities": surgeAbilities };
+  }
+
   // Scrape formcard surge/special ability rows directly from the DOM.
   // Foundry's expandObject turns flat keys like "system.surgeAbilities.0.cost" into
   // plain JS objects ({ "0": {…} }) that have no .length, breaking array checks.
@@ -433,7 +516,8 @@ export class SWIAItemSheet extends BaseItemSheet {
     root.querySelectorAll(".special-ability-entry[data-index]").forEach((li) => {
       const name = li.querySelector(".special-ability-name")?.value ?? "";
       const description = li.querySelector(".special-ability-desc")?.value ?? "";
-      specialAbilities.push({ name, description });
+      const surgeCost = Math.max(0, parseInt(li.querySelector(".special-ability-surge-cost-input")?.value) || 0);
+      specialAbilities.push({ name, description, surgeCost });
     });
 
     return {

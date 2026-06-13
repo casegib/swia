@@ -139,7 +139,8 @@ export class FormcardData extends SWIAItemBase {
     return {
       ...super.defineSchema(),
       surgeAbilities: surgeList(),
-      specialAbilities: abilityList()
+      // surgeCost > 0 marks an ability that is spent as a surge during attacks
+      specialAbilities: abilityList({ surgeCost: int() })
     };
   }
 
