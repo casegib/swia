@@ -132,3 +132,24 @@ export class CharacterData extends SWIAActorBase {
     };
   }
 }
+
+/** General-purpose map object: destructible props and/or interactive mission tokens. */
+export class ObjectData extends SWIAActorBase {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      objectType: str(),
+      traits: str(),
+      interactable: bool(false),
+      interactionText: html(),
+      objectState: str("default")
+    };
+  }
+
+  static defineAttributes() {
+    return {
+      health: resource(0, 0),
+      defense: defenseDice()
+    };
+  }
+}

@@ -3,13 +3,14 @@
 
 import { SWIAActorSheet } from "./sheets/swia-actor-sheet.js";
 import { SWIACharacterSheet } from "./sheets/swia-character-sheet.js";
+import { SWIAObjectSheet } from "./sheets/swia-object-sheet.js";
 import { SWIAItemSheet } from "./sheets/swia-item-sheet.js";
 import { SWIAPlayerPortal } from "./player-portal.js";
 import { SWIACompanionPortal } from "./companion-portal.js";
 import { SWIAImperialPortal } from "./imperial-portal.js";
 import { SWIAGMPortal } from "./gm-portal.js";
 import { SWIACampaignTracker } from "./campaign-tracker.js";
-import { HeroData, VillainData, AllyData, CharacterData } from "./data/actors.js";
+import { HeroData, VillainData, AllyData, CharacterData, ObjectData } from "./data/actors.js";
 import {
   WeaponData, WeaponmodData, ArmorData, GearData, ClasscardData,
   AgendacardData, ImperialclasscardData, HeroabilityData, FormcardData
@@ -123,7 +124,8 @@ Hooks.once("init", async function initSWIA() {
     hero: HeroData,
     villain: VillainData,
     ally: AllyData,
-    character: CharacterData
+    character: CharacterData,
+    object: ObjectData
   });
   Object.assign(CONFIG.Item.dataModels, {
     weapon: WeaponData,
@@ -196,6 +198,7 @@ Hooks.once("init", async function initSWIA() {
   await loadTemplatesFn([
     "systems/swia/templates/actors/actor-sheet.hbs",
     "systems/swia/templates/actors/character-sheet.hbs",
+    "systems/swia/templates/actors/object-sheet.hbs",
     "systems/swia/templates/actors/gm-portal.hbs",
     "systems/swia/templates/actors/player-portal.hbs",
     "systems/swia/templates/actors/companion-portal.hbs",
@@ -223,6 +226,12 @@ Hooks.once("init", async function initSWIA() {
   // Register separate sheet for Character type
   ActorsCollection.registerSheet("swia", SWIACharacterSheet, {
     types: ["character"],
+    makeDefault: true
+  });
+
+  // Register separate sheet for Object type
+  ActorsCollection.registerSheet("swia", SWIAObjectSheet, {
+    types: ["object"],
     makeDefault: true
   });
 

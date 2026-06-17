@@ -176,10 +176,77 @@
 
 ## Deliberately Out of Scope (this plan)
 - Initiative / Foundry Combat tracker integration (combat *resolution* is now Phase 6)
-- Token HUD controls
-- Automated condition enforcement (bleeding damage per round, etc.)
+- ~~Token HUD controls~~ → Phase 7
+- ~~Automated condition enforcement (bleeding damage per round, etc.)~~ → partial manual trigger in Phase 7C
 - ~~Power token spending in roll dialog~~ → defender power tokens land in Phase 6
 - Campaign log / session notes field
+
+---
+
+## Phase 7 — Token HUD Controls (new feature)
+*Prerequisite: Phase 6 verified stable in play. Power token storage (stackable `ActiveEffect` per token, counted by `power-block`/`power-evade` status) is already established by Phase 6 — Phase 7 surfaces it in the HUD rather than reinventing it.*
+
+> **What's already working before Phase 7 starts:** IA conditions (Weakened, Stunned, Bleeding, Focused, Hidden) are already registered in `CONFIG.statusEffects` and already appear in Foundry's built-in HUD effect ring — no work needed there. Power tokens are registered too, but the ring only toggles one instance at a time, which doesn't support multiple block/evade tokens.
+
+---
+
+### Phase 7A — Power Token Counter HUD
+
+27. **Subclass `TokenHUD` as `SWIATokenHUD`** — new file `scripts/hud/token-hud.js`:
+    - Register via `CONFIG.Token.hudClass = SWIATokenHUD` in `swia.js` (init hook, after `ready`)
+    - Override `getData()` to inject `powerTokens: { block: N, evade: N }` counts — read from actor effects using the same `statuses.has("power-block")` loop already in `combat-window.js`; extract into a shared util (`scripts/hud/count-power-tokens.js`) so both files import it
+    - Add a `<div class="swia-power-tokens">` section to the HUD template (override `template` getter, or inject via `renderTokenHUD` hook — hook is simpler and avoids overriding core template path)
+    - Each token type shows its icon, a count, and `+` / `−` buttons; `−` is disabled at 0
+    - **Visibility**: hide section entirely for villain/ally/imperial actors; show for hero/character actors only — check `token.actor.type`
+
+28. **Wire +/− to socket relay** — new intent `managePowerToken` handled by GM client:
+    - `action: "add"` → create one `ActiveEffect` with `statuses: ["power-block"]` (or `power-evade`) on the target actor; use `Actor.createEmbeddedDocuments("ActiveEffect", [...])`
+    - `action: "remove"` → delete one matching effect; mirrors what Phase 6 `spendPowerToken` already does (extract that delete logic into the shared util so Phase 6 imports it instead of duplicating)
+    - Validation: only owner or GM may add/remove tokens on a given actor
+    - No GM online → same warning as Phase 6
+
+29. **Register additional power token status effects** — in `SWIA_STATUS_EFFECTS` in `swia.js`:
+    - Add `power-surge` (`icons/Power Surge Token.png`) and `power-damage` (`icons/Power Damage Token.png`) — icons already exist; these are less common but GMs can apply them via the HUD ring manually; no counter UI needed (no mechanical spend automation planned here)
+    - Note: `power-dodge` is a die-face result, not a held token in IA rules — do not add
+
+---
+
+### Phase 7B — Activation State Toggle
+
+30. **Activation status effect** — add to `SWIA_STATUS_EFFECTS` in `swia.js`:
+    - `{ id: "activated", name: "SWIA.Conditions.Activated", img: "systems/swia/icons/Token Hero Turn Over.png" }`
+    - Icon already exists; `Token Hero Turn Start.png` reserved for a "ready to activate" marker if needed later
+
+31. **Sync status effect to actor data** — hook `createActiveEffect` / `deleteActiveEffect` in `swia.js`:
+    - When an `activated` effect is created on an actor, also set `system.activated = true` (and vice versa on delete)
+    - This keeps `system.activated` (used by portals and any future combat logic) in sync with the visible HUD state
+    - All writes go through the GM relay if the current user isn't the owner/GM
+    - Players may toggle their own hero; GM may toggle any token
+
+32. **Auto-clear activations on new round** — in `swia.js`, hook `updateCombat`:
+    - When `data.round` increments (new round), delete all `activated` ActiveEffects from actors on the current scene (GM-only operation, no relay needed)
+    - Fallback: if no Combat Tracker is active (IA doesn't require one), add a "New Round" button to the GM portal and Imperial portal that fires the same cleanup
+    - Files: `scripts/swia.js` (hook), `templates/gm-portal.hbs` + `scripts/gm-portal.js` (fallback button), `templates/imperial-portal.hbs` + `scripts/imperial-portal.js` (fallback button)
+
+---
+
+### Phase 7C — Bleeding: Manual Damage Trigger
+
+*Full automation (damage on round start) requires Combat Tracker integration and stays out of scope. This phase adds a one-click manual trigger that's still faster than opening the actor sheet.*
+
+33. **"Apply Bleeding" button in the custom HUD section** — in the `SWIATokenHUD` template (Phase 7A):
+    - Shown only when the token's actor has the `bleeding` status effect active
+    - Click → GM relay intent `applyBleedingDamage`: decrement `system.attributes.health.value` by 1 on the target actor; if health hits 0, post a chat message flagging the figure as defeated
+    - This is a GM or owner action; no automation — the user decides when in the round to apply it
+    - Files: `scripts/hud/token-hud.js`, `templates/hud/token-hud.hbs`, `scripts/swia.js` (relay handler)
+
+---
+
+### Verification (Phase 7)
+
+- **7A**: Right-click a hero token → custom HUD section shows block/evade counts. Click `+` twice on block → actor has 2 `power-block` effects. Click `−` → one removed. Click `−` at 0 → button disabled, no error. Right-click a villain token → power token section absent. Open Phase 6 combat window → block count matches HUD. No GM online → warning fires, count unchanged.
+- **7B**: Click `activated` toggle on a hero token → `system.activated` is `true`, icon appears on token. Click again → clears. Advance a round in Combat Tracker → all `activated` effects cleared automatically. Test "New Round" button in GM portal when no Combat is active → same result.
+- **7C**: Apply `bleeding` condition to a token → "Apply Bleeding" button appears in HUD. Click → health decrements by 1. Health at 0 → defeat chat message posted.
 
 ---
 
@@ -198,3 +265,6 @@
 - `templates/dice/roll-dialog.hbs` / `templates/dice/roll-card.hbs` — dialog + chat card templates (Phase 5 ✅)
 - `icons/dice/` — face art copied from `Data/modules/swia-dice/images/` (Phase 5 ✅)
 - `Data/modules/swia-dice` — **RETIRE NOW**: system absorbs terms, chat rendering, and DSN presets; GM warning fires if both are active
+- `scripts/hud/token-hud.js` — `SWIATokenHUD` subclass: power token counter UI, bleeding trigger (Phase 7)
+- `scripts/hud/count-power-tokens.js` — shared util: count `power-block`/`power-evade` effects on an actor; imported by token-hud.js and combat-window.js (Phase 7)
+- `templates/hud/token-hud.hbs` — HUD partial: power token +/− section + bleeding button (Phase 7)
