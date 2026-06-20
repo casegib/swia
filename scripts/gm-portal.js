@@ -44,13 +44,28 @@ export class SWIAGMPortal extends BaseApplication {
     return game.i18n.localize("SWIA.Portal.GM.Title");
   }
 
+  _assertGmAccess() {
+    if (game.user?.isGM) return;
+    throw new Error("SWIA | GM Portal is GM-only.");
+  }
+
+  render(force, options) {
+    if (!game.user?.isGM) {
+      ui.notifications?.warn("Only the GM can open the GM Portal.");
+      return this;
+    }
+    return super.render(force, options);
+  }
+
   async _prepareContext(options) {
+    this._assertGmAccess();
     const context = await super._prepareContext(options);
     const portalContext = await this._buildContext();
     return foundry.utils.mergeObject(context, portalContext);
   }
 
   async _buildContext() {
+    this._assertGmAccess();
     const [playerActors, imperialActors, companionActors] = await Promise.all([
       Promise.all(this._getOrderedPlayerActors().map(actor => this._toPortalActor(actor))),
       Promise.all(this._getOrderedImperialActors().map(actor => this._toPortalActor(actor))),

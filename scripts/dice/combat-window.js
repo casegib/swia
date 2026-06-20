@@ -11,6 +11,7 @@ import {
   gatherSurgeAbilities, setCombatStarter
 } from "./roll-dialog.js";
 import { COLOR_TO_DENOM, totalSymbols, rollFaces, faceData, SWIA_DICE, symbolsLabel, dieImgPath } from "./dice-terms.js";
+import { escapeHTML } from "../data/common.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseApplication = HandlebarsApplicationMixin(ApplicationV2);
@@ -74,6 +75,17 @@ async function dispatchIntent(intent, payload = {}) {
 function onSocketMessage(payload) {
   if (payload?.type !== "combatIntent") return;
   if (game.user !== game.users?.activeGM) return;
+  // The acting identity in `payload.userId` is self-asserted by the sender and
+  // cannot be verified — Foundry's socket exposes no authenticated sender id on
+  // the client. The local GM never relays (it calls execIntent directly in
+  // dispatchIntent), so any intent arriving here is from a remote, non-GM client.
+  // Reject relayed intents that claim a GM (or an unknown) user: otherwise a
+  // malicious client could spoof the GM's id and bypass every ownership check via
+  // canControl/userOwnsActor (which honor isGM). Non-GM intents remain authorized
+  // by actor ownership in execIntent, which bounds any residual spoofing to the
+  // combat actors a claimed owner already controls.
+  const claimed = game.users?.get(payload.userId);
+  if (!claimed || claimed.isGM) return;
   execIntent(payload.intent, payload.payload ?? {}, payload.userId);
 }
 
@@ -197,8 +209,8 @@ async function execRollAttack(_payload, user) {
     speaker: ChatMessage.getSpeaker({ actor: attacker }),
     rolls: [attackRoll],
     flavor: game.i18n.format("SWIA.Combat.AttackRollFlavor", {
-      attacker: combat.attacker.name,
-      defender: combat.defender.name
+      attacker: escapeHTML(combat.attacker.name),
+      defender: escapeHTML(combat.defender.name)
     }),
     sound: CONFIG.sounds.dice
   });
@@ -259,7 +271,7 @@ async function execRollDefense(_payload, user) {
     speaker: ChatMessage.getSpeaker({ actor: defender }),
     rolls: [defenseRoll].filter(Boolean),
     flavor: game.i18n.format("SWIA.Combat.DefenseRollFlavor", {
-      defender: combat.defender.name
+      defender: escapeHTML(combat.defender.name)
     }),
     sound: CONFIG.sounds.dice
   });
@@ -300,7 +312,7 @@ async function execRerollDie({ side, index }, user) {
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: attacker }),
       rolls: [roll],
-      flavor: game.i18n.format("SWIA.Combat.RerollFlavor", { name: combat.attacker.name }),
+      flavor: game.i18n.format("SWIA.Combat.RerollFlavor", { name: escapeHTML(combat.attacker.name) }),
       sound: CONFIG.sounds.dice
     });
 
@@ -344,7 +356,7 @@ async function execRerollDie({ side, index }, user) {
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: defender }),
       rolls: [roll],
-      flavor: game.i18n.format("SWIA.Combat.RerollFlavor", { name: combat.defender.name }),
+      flavor: game.i18n.format("SWIA.Combat.RerollFlavor", { name: escapeHTML(combat.defender.name) }),
       sound: CONFIG.sounds.dice
     });
 
@@ -647,7 +659,7 @@ export class SWIACombatWindow extends BaseApplication {
       window: { title: game.i18n.localize("SWIA.Combat.ApplyDamage") },
       content: `<p>${game.i18n.format("SWIA.Combat.ApplyConfirm", {
         damage: combat.result.netDamage,
-        name: combat.defender.name
+        name: escapeHTML(combat.defender.name)
       })}</p>`
     });
     if (!confirmed) return;

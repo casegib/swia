@@ -758,6 +758,55 @@
           {{/if}}
         </div>
       </div>
+      {{!-- Custom user-defined attribute slots (toggle-able, free-text label) --}}
+      {{#each customSlots}}
+      {{#if (or ../editMode this.enabled)}}
+      <div class="resource custom-attr-slot">
+        <div class="attribute-row">
+          {{#if this.icon}}
+          <img class="attribute-icon attribute-icon-small {{#if ../editMode}}clickable{{/if}}" src="{{this.icon}}" alt="{{this.label}}" title="{{#if ../editMode}}{{localize 'SWIA.Attributes.CustomIconHint'}}{{else}}{{#if this.label}}{{this.label}}{{else}}{{localize 'SWIA.Attributes.CustomSlot'}}{{/if}}{{/if}}" {{#if ../editMode}}data-action="editImage" data-path="system.{{../currentAttrPath}}.{{this.key}}.icon"{{/if}} />
+          {{else}}
+          <i class="fas fa-star attribute-icon attribute-icon-small custom-attr-icon {{#if ../editMode}}clickable{{/if}}" title="{{#if ../editMode}}{{localize 'SWIA.Attributes.CustomIconHint'}}{{else}}{{#if this.label}}{{this.label}}{{else}}{{localize 'SWIA.Attributes.CustomSlot'}}{{/if}}{{/if}}" {{#if ../editMode}}data-action="editImage" data-path="system.{{../currentAttrPath}}.{{this.key}}.icon"{{/if}}></i>
+          {{/if}}
+          {{#if ../editMode}}
+          <div class="custom-attr {{this.key}}">
+            <label class="custom-attr-enable">
+              <input type="checkbox" name="system.{{../currentAttrPath}}.{{this.key}}.enabled" {{#if this.enabled}}checked{{/if}} />
+              {{localize "SWIA.Attributes.CustomEnable"}}
+            </label>
+            <input class="custom-attr-label-input" type="text" name="system.{{../currentAttrPath}}.{{this.key}}.label" value="{{this.label}}" placeholder="{{localize 'SWIA.Attributes.CustomLabelPlaceholder'}}" />
+            <span class="editor-hint custom-attr-icon-hint">{{localize "SWIA.Attributes.CustomIconHint"}}</span>
+            <label>{{localize "SWIA.Attack.Red"}}</label>
+            <input name="system.{{../currentAttrPath}}.{{this.key}}.red" type="number" value="{{this.red}}" />
+            <label>{{localize "SWIA.Attack.Blue"}}</label>
+            <input name="system.{{../currentAttrPath}}.{{this.key}}.blue" type="number" value="{{this.blue}}" />
+            <label>{{localize "SWIA.Attack.Green"}}</label>
+            <input name="system.{{../currentAttrPath}}.{{this.key}}.green" type="number" value="{{this.green}}" />
+            <label>{{localize "SWIA.Attack.Yellow"}}</label>
+            <input name="system.{{../currentAttrPath}}.{{this.key}}.yellow" type="number" value="{{this.yellow}}" />
+          </div>
+          {{else}}
+          <div class="dice-display rollable" data-action="rollDice" data-roll-type="test" data-attribute="{{this.key}}" title="{{#if this.label}}{{this.label}}{{else}}{{localize 'SWIA.Roll.ClickToRoll'}}{{/if}}">
+            <div class="dice-blocks">
+              {{#each this.redDice}}
+              <span class="dice-block red"></span>
+              {{/each}}
+              {{#each this.blueDice}}
+              <span class="dice-block blue"></span>
+              {{/each}}
+              {{#each this.greenDice}}
+              <span class="dice-block green"></span>
+              {{/each}}
+              {{#each this.yellowDice}}
+              <span class="dice-block yellow"></span>
+              {{/each}}
+            </div>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+      {{/if}}
+      {{/each}}
       {{#unless editMode}}
       <div class="resource">
         <div class="attribute-row">

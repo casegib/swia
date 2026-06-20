@@ -1059,6 +1059,38 @@
   filter: brightness(0) invert(1);
 }
 
+/* Custom user-defined attribute slots */
+.swia-sheet .resource .custom-attr-icon {
+  width: auto;
+  font-size: 20px;
+  text-align: center;
+  color: var(--stat-text);
+  filter: none;
+}
+
+.swia-sheet .custom-attr .custom-attr-enable {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.swia-sheet .custom-attr .custom-attr-enable input {
+  width: auto;
+  margin: 0;
+}
+
+.swia-sheet .custom-attr .custom-attr-label-input {
+  margin-bottom: 6px;
+}
+
+.swia-sheet .custom-attr .custom-attr-icon-hint {
+  display: block;
+  margin-bottom: 6px;
+}
+
 .swia-sheet .resource label {
   display: block;
   font-weight: 700;

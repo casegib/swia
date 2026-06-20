@@ -7,6 +7,7 @@
 //   attack target    -> first targeted token's attributes.defense (manual fallback)
 
 import { COLOR_TO_DENOM, totalSymbols, rollFaces } from "./dice-terms.js";
+import { escapeHTML, sanitizeLabelHTML } from "../data/common.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseApplication = HandlebarsApplicationMixin(ApplicationV2);
@@ -201,7 +202,7 @@ export function gatherSurgeAbilities(actor, weaponId = null) {
     out.push({
       cost: Math.max(1, Number(entry.cost) || 1),
       effects: parseTextEffects(entry.effectText),
-      label: entry.effectText || game.i18n.localize("SWIA.Item.Weapon.SurgeEffectType.Special"),
+      label: sanitizeLabelHTML(entry.effectText || game.i18n.localize("SWIA.Item.Weapon.SurgeEffectType.Special")),
       source,
       spent: false
     });
@@ -212,7 +213,7 @@ export function gatherSurgeAbilities(actor, weaponId = null) {
     out.push({
       cost: Math.max(1, Number(entry.cost) || 1),
       effects: ["damage", "accuracy", "pierce"].includes(type) ? [{ type, value }] : [],
-      label: surgeLabel(entry),
+      label: sanitizeLabelHTML(surgeLabel(entry)),
       source,
       spent: false
     });
@@ -220,24 +221,24 @@ export function gatherSurgeAbilities(actor, weaponId = null) {
   const pushSpecial = (entry, source) => {
     const cost = Math.max(0, Number(entry.surgeCost) || 0);
     if (!cost) return;
-    const name = entry.name ? `<strong>${entry.name}:</strong> ` : "";
+    const name = entry.name ? `<strong>${escapeHTML(entry.name)}:</strong> ` : "";
     out.push({
       cost,
       effects: parseTextEffects(entry.description),
-      label: `${name}${entry.description ?? ""}`,
+      label: sanitizeLabelHTML(`${name}${entry.description ?? ""}`),
       source,
       spent: false
     });
   };
 
-  for (const entry of toList(sys.attributes?.surgeAbilities)) pushText(entry, actor.name);
-  for (const entry of toList(sys.specialAbilities)) pushSpecial(entry, actor.name);
+  for (const entry of toList(sys.attributes?.surgeAbilities)) pushText(entry, escapeHTML(actor.name));
+  for (const entry of toList(sys.specialAbilities)) pushSpecial(entry, escapeHTML(actor.name));
 
   if (actor.type === "villain" && sys.hasShift && sys.activeFormId) {
     const formCard = actor.items.get(sys.activeFormId);
     if (formCard) {
-      for (const entry of toList(formCard.system?.surgeAbilities)) pushText(entry, formCard.name);
-      for (const entry of toList(formCard.system?.specialAbilities)) pushSpecial(entry, formCard.name);
+      for (const entry of toList(formCard.system?.surgeAbilities)) pushText(entry, escapeHTML(formCard.name));
+      for (const entry of toList(formCard.system?.specialAbilities)) pushSpecial(entry, escapeHTML(formCard.name));
     }
   }
 
@@ -245,15 +246,15 @@ export function gatherSurgeAbilities(actor, weaponId = null) {
     const weapon = actor.items.get(weaponId);
     if (weapon) {
       for (const item of [weapon, ...weaponModsFor(actor, weapon)]) {
-        for (const entry of toList(item.system?.surgeAbilities)) pushStructured(entry, item.name);
+        for (const entry of toList(item.system?.surgeAbilities)) pushStructured(entry, escapeHTML(item.name));
         for (const entry of toList(item.system?.abilities)) {
           const cost = parseLeadingSurgeCost(entry.description);
           if (!cost) continue;
           out.push({
             cost,
             effects: parseTextEffects(entry.description),
-            label: entry.description,
-            source: item.name,
+            label: sanitizeLabelHTML(entry.description),
+            source: escapeHTML(item.name),
             spent: false
           });
         }
@@ -322,6 +323,22 @@ export class SWIARollDialog extends BaseApplication {
       test: "SWIA.Roll.TestTitle"
     }[this.rollType] ?? "SWIA.Roll.Title";
     return `${game.i18n.localize(key)}: ${this.actor?.name ?? ""}`;
+  }
+
+  /**
+   * Display label for the rolled attribute. Custom slots use their free-text
+   * label; built-in attributes use their localized name.
+   */
+  get attributeLabel() {
+    if (!this.attribute) return "";
+    if (this.attribute.startsWith("custom")) {
+      const sys = this.actor?.system ?? {};
+      const wounded = sys.state?.wounded ?? false;
+      const attrs = wounded ? (sys.woundedAttributes ?? sys.attributes) : sys.attributes;
+      const label = attrs?.[this.attribute]?.label;
+      return label || game.i18n.localize("SWIA.Attributes.CustomSlot");
+    }
+    return game.i18n.localize(`SWIA.Attributes.${this.attribute.charAt(0).toUpperCase()}${this.attribute.slice(1)}`);
   }
 
   get showAttack() {
@@ -403,9 +420,7 @@ export class SWIARollDialog extends BaseApplication {
     return foundry.utils.mergeObject(context, {
       actorName: this.actor?.name ?? "",
       rollType: this.rollType,
-      attributeLabel: this.attribute
-        ? game.i18n.localize(`SWIA.Attributes.${this.attribute.charAt(0).toUpperCase()}${this.attribute.slice(1)}`)
-        : "",
+      attributeLabel: this.attributeLabel,
       showAttack: this.showAttack,
       showDefense: this.showDefense,
       showWeaponSelect: weapons.length > 0,
@@ -482,7 +497,7 @@ export class SWIARollDialog extends BaseApplication {
       title: this.title,
       subtitle: this.rollType === "attack"
         ? (this.selectedWeapon?.name ?? "")
-        : (this.attribute ? game.i18n.localize(`SWIA.Attributes.${this.attribute.charAt(0).toUpperCase()}${this.attribute.slice(1)}`) : ""),
+        : this.attributeLabel,
       targetName: this.targetActor?.name ?? "",
       attackFaces: rollFaces(attackRoll),
       defenseFaces: rollFaces(defenseRoll),
@@ -592,7 +607,7 @@ async function onSpendSurge(message, event) {
       ui.notifications?.warn(game.i18n.localize("SWIA.Roll.NoGMForSurge"));
       return;
     }
-    game.socket?.emit(SOCKET_NAME, { type: "spendSurge", messageId: message.id, index });
+    game.socket?.emit(SOCKET_NAME, { type: "spendSurge", messageId: message.id, index, userId: game.user.id });
   }
 }
 
@@ -602,6 +617,14 @@ function onSocketMessage(payload) {
   if (game.user !== game.users?.activeGM) return;
   const message = game.messages?.get(payload.messageId);
   if (!message) return;
+  // The spender id is self-asserted — Foundry exposes no verified socket sender on
+  // the client. The local GM applies spends directly and never relays, and the
+  // click handler only relays for a card's own author, so a legitimate relayed
+  // spend always comes from the message author. Require exactly that: reject any
+  // spend whose claimed user is missing, a GM, or not this card's author, so a
+  // client can't drive surge spends on cards it doesn't own.
+  const user = game.users?.get(payload.userId);
+  if (!user || user.isGM || message.author?.id !== user.id) return;
   applySurgeSpend(message, Number(payload.index));
 }
 
