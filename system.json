@@ -2,7 +2,7 @@
   "id": "swia",
   "title": "Star Wars Imperial Assault",
   "description": "Foundry VTT system scaffold for Star Wars: Imperial Assault (unofficial).",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "compatibility": {
     "minimum": "13",
     "verified": "13.351"

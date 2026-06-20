@@ -1,4 +1,5 @@
 import { CAMPAIGN_RESOURCES_KEY } from "./campaign-tracker.js";
+import { escapeHTML } from "./data/common.js";
 
 // Foundry v13+ ApplicationV2 base
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -48,13 +49,28 @@ export class SWIAImperialPortal extends BaseApplication {
     return game.i18n.localize("SWIA.Portal.Imperial.Title");
   }
 
+  _assertGmAccess() {
+    if (game.user?.isGM) return;
+    throw new Error("SWIA | Imperial Portal is GM-only.");
+  }
+
+  render(force, options) {
+    if (!game.user?.isGM) {
+      ui.notifications?.warn("Only the GM can open the Imperial Portal.");
+      return this;
+    }
+    return super.render(force, options);
+  }
+
   async _prepareContext(options) {
+    this._assertGmAccess();
     const context = await super._prepareContext(options);
     const portalContext = await this._buildContext();
     return foundry.utils.mergeObject(context, portalContext);
   }
 
   async _buildContext() {
+    this._assertGmAccess();
     const orderedActors = this._getOrderedImperialActors();
     const actors = await Promise.all(orderedActors.map(actor => this._toPortalActor(actor)));
     const worldItems = game.items?.contents ?? [];
@@ -531,7 +547,7 @@ export class SWIAImperialPortal extends BaseApplication {
     if (!item || !IMPERIAL_PORTAL_WORLD_ITEM_TYPES.includes(item.type)) return;
 
     const title = game.i18n.localize("SWIA.Portal.Imperial.RemoveCardTitle");
-    const message = game.i18n.format("SWIA.Portal.Imperial.RemoveCardPrompt", { name: item.name });
+    const message = game.i18n.format("SWIA.Portal.Imperial.RemoveCardPrompt", { name: escapeHTML(item.name) });
 
     const confirmed = await foundry.applications.api.DialogV2.confirm({
       window: { title },

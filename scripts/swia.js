@@ -290,114 +290,67 @@ Hooks.on("renderActorDirectory", (app, html) => {
   if (root.find(".swia-gm-portal-btn, .swia-player-portal-btn, .swia-companion-portal-btn, .swia-imperial-portal-btn, .swia-campaign-tracker-btn, .swia-combat-window-btn").length) return;
 
   const buttons = [];
+  const buildDirectoryButton = ({ buttonClass, label, iconClass, onClick }) => {
+    const button = $("<button>")
+      .attr({
+        type: "button",
+        class: buttonClass,
+        "aria-label": label,
+        title: label
+      });
+    $("<i>")
+      .addClass(iconClass)
+      .attr("aria-hidden", "true")
+      .appendTo(button);
+    button.on("click", onClick);
+    return button;
+  };
 
-  const gmLabel = game.i18n.localize("SWIA.Portal.GM.Button");
-  const gmButton = $(
-    `<button
-      type="button"
-      class="swia-gm-portal-btn"
-      aria-label="${gmLabel}"
-      title="${gmLabel}"
-    >
-      <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
-    </button>`
-  );
+  if (game.user.isGM) {
+    buttons.push(buildDirectoryButton({
+      buttonClass: "swia-gm-portal-btn",
+      label: game.i18n.localize("SWIA.Portal.GM.Button"),
+      iconClass: "fa-solid fa-user-shield",
+      onClick: () => new SWIAGMPortal().render(true)
+    }));
+  }
 
-  gmButton.on("click", () => {
-    new SWIAGMPortal().render(true);
-  });
+  buttons.push(buildDirectoryButton({
+    buttonClass: "swia-player-portal-btn",
+    label: game.i18n.localize("SWIA.Portal.Button"),
+    iconClass: "fa-brands fa-rebel",
+    onClick: () => new SWIAPlayerPortal().render(true)
+  }));
 
-  buttons.push(gmButton);
+  buttons.push(buildDirectoryButton({
+    buttonClass: "swia-companion-portal-btn",
+    label: game.i18n.localize("SWIA.Portal.Companion.Button"),
+    iconClass: "fa-solid fa-robot-astromech",
+    onClick: () => new SWIACompanionPortal().render(true)
+  }));
 
-  const playerLabel = game.i18n.localize("SWIA.Portal.Button");
-  const playerButton = $(
-    `<button
-      type="button"
-      class="swia-player-portal-btn"
-      aria-label="${playerLabel}"
-      title="${playerLabel}"
-    >
-      <i class="fa-brands fa-rebel" aria-hidden="true"></i>
-    </button>`
-  );
+  if (game.user.isGM) {
+    buttons.push(buildDirectoryButton({
+      buttonClass: "swia-imperial-portal-btn",
+      label: game.i18n.localize("SWIA.Portal.Imperial.Button"),
+      iconClass: "fa-brands fa-empire",
+      onClick: () => new SWIAImperialPortal().render(true)
+    }));
+  }
 
-  playerButton.on("click", () => {
-    new SWIAPlayerPortal().render(true);
-  });
+  buttons.push(buildDirectoryButton({
+    buttonClass: "swia-campaign-tracker-btn",
+    label: game.i18n.localize("SWIA.CampaignTracker.Button"),
+    iconClass: "fa-solid fa-coins",
+    onClick: () => new SWIACampaignTracker().render(true)
+  }));
 
-  buttons.push(playerButton);
-
-  const companionLabel = game.i18n.localize("SWIA.Portal.Companion.Button");
-  const companionButton = $(
-    `<button
-      type="button"
-      class="swia-companion-portal-btn"
-      aria-label="${companionLabel}"
-      title="${companionLabel}"
-    >
-      <i class="fa-solid fa-robot-astromech" aria-hidden="true"></i>
-    </button>`
-  );
-
-  companionButton.on("click", () => {
-    new SWIACompanionPortal().render(true);
-  });
-
-  buttons.push(companionButton);
-
-  const imperialLabel = game.i18n.localize("SWIA.Portal.Imperial.Button");
-  const imperialButton = $(
-    `<button
-      type="button"
-      class="swia-imperial-portal-btn"
-      aria-label="${imperialLabel}"
-      title="${imperialLabel}"
-    >
-      <i class="fa-brands fa-empire" aria-hidden="true"></i>
-    </button>`
-  );
-
-  imperialButton.on("click", () => {
-    new SWIAImperialPortal().render(true);
-  });
-
-  buttons.push(imperialButton);
-
-  const campaignTrackerLabel = game.i18n.localize("SWIA.CampaignTracker.Button");
-  const campaignTrackerButton = $(
-    `<button
-      type="button"
-      class="swia-campaign-tracker-btn"
-      aria-label="${campaignTrackerLabel}"
-      title="${campaignTrackerLabel}"
-    >
-      <i class="fa-solid fa-coins" aria-hidden="true"></i>
-    </button>`
-  );
-
-  campaignTrackerButton.on("click", () => {
-    new SWIACampaignTracker().render(true);
-  });
-
-  buttons.push(campaignTrackerButton);
-
-  const combatLabel = game.i18n.localize("SWIA.Combat.Button");
-  const combatButton = $(
-    `<button
-      type="button"
-      class="swia-combat-window-btn"
-      aria-label="${combatLabel}"
-      title="${combatLabel}"
-    >
-      <i class="fa-solid fa-crosshairs" aria-hidden="true"></i>
-    </button>`
-  );
-
-  combatButton.on("click", () => {
-    SWIACombatWindow.show();
-  });
-
-  buttons.push(combatButton);
+  buttons.push(buildDirectoryButton({
+    buttonClass: "swia-combat-window-btn",
+    label: game.i18n.localize("SWIA.Combat.Button"),
+    iconClass: "fa-solid fa-crosshairs",
+    onClick: () => SWIACombatWindow.show()
+  }));
 
   const headerActions = root.find(".header-actions").first();
   if (headerActions.length) {

@@ -1,6 +1,6 @@
 // SWIA actor data models (Foundry v13+ TypeDataModel).
 // Schemas mirror the legacy template.json structure so existing world data loads unchanged.
-import { int, str, html, bool, resource, attackDice, defenseDice, abilityList, surgeList, toArray } from "./common.js";
+import { int, str, html, bool, resource, attackDice, defenseDice, customAttr, abilityList, surgeList, toArray } from "./common.js";
 
 const fields = foundry.data.fields;
 const { TypeDataModel } = foundry.abstract;
@@ -42,7 +42,10 @@ export class HeroData extends SWIAActorBase {
         speed: int(3),
         strength: attackDice(),
         insight: attackDice(),
-        tech: attackDice()
+        tech: attackDice(),
+        custom1: customAttr(),
+        custom2: customAttr(),
+        custom3: customAttr()
       }),
       state: new fields.SchemaField({
         wounded: bool(),
@@ -60,7 +63,10 @@ export class HeroData extends SWIAActorBase {
       threat: int(),
       strength: attackDice(),
       insight: attackDice(),
-      tech: attackDice()
+      tech: attackDice(),
+      custom1: customAttr(),
+      custom2: customAttr(),
+      custom3: customAttr()
     };
   }
 

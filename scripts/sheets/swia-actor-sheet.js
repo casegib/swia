@@ -1,5 +1,6 @@
 // Foundry v13+ ApplicationV2 actor sheet
 import { SWIARollDialog } from "../dice/roll-dialog.js";
+import { escapeHTML, sanitizeLabelHTML } from "../data/common.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseActorSheet = HandlebarsApplicationMixin(foundry.applications.sheets.ActorSheetV2);
@@ -72,7 +73,8 @@ export class SWIAActorSheet extends BaseActorSheet {
     fieldKey,
     text,
     relativeTo,
-    secrets
+    secrets,
+    sanitize = false
   }) {
     const normalizedText = `${text ?? ""}`;
     if (!normalizedText) return "";
@@ -81,7 +83,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     const target = relativeTo ?? actor;
     const cacheKey = this._buildEnrichCacheKey({
       actorId: actor?.id,
-      fieldKey,
+      fieldKey: sanitize ? `${fieldKey}::sanitized` : fieldKey,
       contentHash: this._hashContent(normalizedText),
       ownerFlag,
       relativeId: target?.id
@@ -95,8 +97,14 @@ export class SWIAActorSheet extends BaseActorSheet {
       secrets: ownerFlag,
       relativeTo: target
     });
-    this._setCachedEnrichment(cacheKey, enriched);
-    return enriched;
+    // enrichHTML resolves @-links/inline-rolls but trusts the stored HTML and does
+    // not strip scripts. For attacker-controlled fields rendered raw via {{{ }}}
+    // (notably names), run the enriched output through the label sanitizer so a
+    // stored payload can't execute in the GM's session. Drops <a>/inline-roll
+    // markup down to plain text, which is an acceptable tradeoff for name fields.
+    const result = sanitize ? sanitizeLabelHTML(enriched) : enriched;
+    this._setCachedEnrichment(cacheKey, result);
+    return result;
   }
 
   // Configuration for V2: sheet layout, position, and action handlers
@@ -304,7 +312,30 @@ export class SWIAActorSheet extends BaseActorSheet {
     const woundedStrength = isWounded && system.woundedAttributes?.strength ? system.woundedAttributes.strength : strength;
     const woundedInsight = isWounded && system.woundedAttributes?.insight ? system.woundedAttributes.insight : insight;
     const woundedTech = isWounded && system.woundedAttributes?.tech ? system.woundedAttributes.tech : tech;
-    
+
+    // Custom user-defined attribute slots (hero only). Resolve wounded-or-healthy
+    // source per slot and build both raw values (edit inputs) and dice arrays (display).
+    const customSlotKeys = ["custom1", "custom2", "custom3"];
+    const customDefault = { enabled: false, label: "", icon: "", red: 0, blue: 0, green: 0, yellow: 0 };
+    const attrSet = isWounded ? (system.woundedAttributes ?? system.attributes) : system.attributes;
+    const customSlots = customSlotKeys.map((key) => {
+      const slot = attrSet?.[key] ?? customDefault;
+      return {
+        key,
+        enabled: !!slot.enabled,
+        label: slot.label ?? "",
+        icon: slot.icon ?? "",
+        red: slot.red ?? 0,
+        blue: slot.blue ?? 0,
+        green: slot.green ?? 0,
+        yellow: slot.yellow ?? 0,
+        redDice: SWIAActorSheet._diceArray(slot.red),
+        blueDice: SWIAActorSheet._diceArray(slot.blue),
+        greenDice: SWIAActorSheet._diceArray(slot.green),
+        yellowDice: SWIAActorSheet._diceArray(slot.yellow)
+      };
+    });
+
     // Get TextEditor with fallback for V1/V2 compatibility
     const TextEditorClass = foundry?.applications?.ux?.TextEditor?.implementation ?? TextEditor;
     
@@ -382,7 +413,8 @@ export class SWIAActorSheet extends BaseActorSheet {
             fieldKey: `specialAbilities.${i}.name`,
             text: a.name,
             secrets: actor.isOwner,
-            relativeTo: actor
+            relativeTo: actor,
+            sanitize: true
           }),
           enrichedDescription: await this._enrichWithCache(TextEditorClass, {
             actor,
@@ -468,7 +500,8 @@ export class SWIAActorSheet extends BaseActorSheet {
               fieldKey: `form.${activeForm.id}.specialAbilities.${i}.name`,
               text: a.name,
               secrets: actor.isOwner,
-              relativeTo: actor
+              relativeTo: actor,
+              sanitize: true
             }),
             enrichedDescription: await this._enrichWithCache(TextEditorClass, {
               actor,
@@ -534,7 +567,8 @@ export class SWIAActorSheet extends BaseActorSheet {
       techRedDice: SWIAActorSheet._diceArray(woundedTech.red),
       techBlueDice: SWIAActorSheet._diceArray(woundedTech.blue),
       techGreenDice: SWIAActorSheet._diceArray(woundedTech.green),
-      techYellowDice: SWIAActorSheet._diceArray(woundedTech.yellow)
+      techYellowDice: SWIAActorSheet._diceArray(woundedTech.yellow),
+      customSlots
     });
   }
 
@@ -717,9 +751,11 @@ export class SWIAActorSheet extends BaseActorSheet {
     const actor = this.document ?? this.actor;
     const item = actor.items.get(itemId);
     if (!item) return;
+    const safeItemName = escapeHTML(item.name);
+    const safeActorName = escapeHTML(actor.name);
     const confirmed = await foundry.applications.api.DialogV2.confirm({
-      window: { title: `Delete ${item.name}` },
-      content: `<p>Remove <strong>${item.name}</strong> from ${actor.name}?</p>`,
+      window: { title: `Delete ${safeItemName}` },
+      content: `<p>Remove <strong>${safeItemName}</strong> from ${safeActorName}?</p>`,
       rejectClose: false
     });
     if (confirmed) await item.delete();
