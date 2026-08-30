@@ -109,9 +109,9 @@
       {{#each result.attackFaces}}
       <div class="swia-die-reroll-wrapper">
         <img class="swia-card-die {{color}}{{#if rerolled}} rerolled{{/if}}" src="{{img}}" title="{{label}}" alt="{{label}}" />
-        {{#if ../canAttackerReroll}}{{#unless rerolled}}
+        {{#if ../canAttackerReroll}}
         <button type="button" class="die-reroll-btn" data-action="combatRerollDie" data-side="attack" data-index="{{@index}}" title="{{localize 'SWIA.Combat.Reroll'}}">↺</button>
-        {{/unless}}{{/if}}
+        {{/if}}
       </div>
       {{/each}}
     </div>
@@ -139,9 +139,9 @@
       {{#each result.attackFaces}}
       <div class="swia-die-reroll-wrapper">
         <img class="swia-card-die {{color}}{{#if rerolled}} rerolled{{/if}}" src="{{img}}" title="{{label}}" alt="{{label}}" />
-        {{#if ../canAttackerReroll}}{{#unless rerolled}}
+        {{#if ../canAttackerReroll}}
         <button type="button" class="die-reroll-btn" data-action="combatRerollDie" data-side="attack" data-index="{{@index}}" title="{{localize 'SWIA.Combat.Reroll'}}">↺</button>
-        {{/unless}}{{/if}}
+        {{/if}}
       </div>
       {{/each}}
     </div>
@@ -151,9 +151,9 @@
       {{#each result.defenseFaces}}
       <div class="swia-die-reroll-wrapper">
         <img class="swia-card-die {{color}}{{#if rerolled}} rerolled{{/if}}" src="{{img}}" title="{{label}}" alt="{{label}}" />
-        {{#if ../canDefenderReroll}}{{#unless rerolled}}
+        {{#if ../canDefenderReroll}}
         <button type="button" class="die-reroll-btn" data-action="combatRerollDie" data-side="defense" data-index="{{@index}}" title="{{localize 'SWIA.Combat.Reroll'}}">↺</button>
-        {{/unless}}{{/if}}
+        {{/if}}
       </div>
       {{/each}}
     </div>
@@ -188,12 +188,20 @@
       <div class="combat-reaction-column">
         <span class="roll-card-surges-title">{{localize "SWIA.Roll.SurgeAbilities"}}</span>
         {{#each result.surgeAbilities}}
-        <button type="button" class="roll-card-surge-btn {{#if spent}}spent{{/if}}" data-action="combatSpendSurge" data-index="{{@index}}"
-          {{#if spent}}disabled{{else}}{{#unless affordable}}disabled{{/unless}}{{#unless ../canAttacker}}disabled{{/unless}}{{/if}}>
+        {{#if spent}}
+        <button type="button" class="roll-card-surge-btn spent" data-action="combatUnspendSurge" data-index="{{@index}}"
+          title="{{localize 'SWIA.Combat.UnspendHint'}}" {{#unless ../canAttacker}}disabled{{/unless}}>
           <span class="surge-cost">{{cost}}&times;</span>
           <span class="surge-label">{{{label}}}</span>
-          {{#if spent}}<i class="fas fa-check"></i>{{/if}}
+          <i class="fas fa-undo"></i>
         </button>
+        {{else}}
+        <button type="button" class="roll-card-surge-btn" data-action="combatSpendSurge" data-index="{{@index}}"
+          {{#unless affordable}}disabled{{/unless}} {{#unless ../canAttacker}}disabled{{/unless}}>
+          <span class="surge-cost">{{cost}}&times;</span>
+          <span class="surge-label">{{{label}}}</span>
+        </button>
+        {{/if}}
         {{/each}}
       </div>
       {{/if}}

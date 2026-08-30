@@ -141,7 +141,7 @@
           <option value="Technician" {{#if (eq systemData.archetype "Technician")}}selected{{/if}}>{{localize "SWIA.Hero.Archetype.Technician"}}</option>
         </select>
         {{else}}
-        <span class="archetype-view {{#unless systemData.archetype}}archetype-empty{{/unless}}">{{#if systemData.archetype}}{{systemData.archetype}}{{else}}—{{/if}}</span>
+        <span class="archetype-view {{#unless systemData.archetype}}archetype-empty{{/unless}}">{{#if systemData.archetype}}<span class="trait-label">{{localize "SWIA.Hero.TraitLabel"}}:</span> {{systemData.archetype}}{{else}}—{{/if}}</span>
         {{/if}}
       </div>
       {{#if editMode}}
@@ -194,20 +194,20 @@
       {{/if}}
       {{#if (eq actor.type "hero")}}
       <div class="state-toggle">
-        <label for="state-wounded">{{localize "SWIA.StateLabel"}}</label>
-        <label class="toggle">
-          <input id="state-wounded" type="checkbox" data-action="toggleWounded" {{#if isWounded}}checked{{/if}} />
-          <span class="toggle-label">
-            {{#if isWounded}}{{localize "SWIA.State.Wounded"}}{{else}}{{localize "SWIA.State.Healthy"}}{{/if}}
-          </span>
-        </label>
+        <label>{{localize "SWIA.StateLabel"}}</label>
+        <button type="button" class="state-pill {{#if isWounded}}pill-wounded{{else}}pill-healthy{{/if}}"
+                data-action="toggleWounded"
+                title="{{#if isWounded}}{{localize 'SWIA.State.WoundedHint'}}{{else}}{{localize 'SWIA.State.HealthyHint'}}{{/if}}">
+          <i class="fas {{#if isWounded}}fa-heart-crack{{else}}fa-heart{{/if}}"></i>
+          {{#if isWounded}}{{localize "SWIA.State.Wounded"}}{{else}}{{localize "SWIA.State.Healthy"}}{{/if}}
+        </button>
         {{#if isWounded}}
-        <label class="toggle toggle-defeated">
-          <input id="state-defeated" type="checkbox" data-action="toggleDefeated" {{#if isDefeated}}checked{{/if}} />
-          <span class="toggle-label defeated-label">
-            {{#if isDefeated}}{{localize "SWIA.State.Defeated"}}{{else}}{{localize "SWIA.State.Active"}}{{/if}}
-          </span>
-        </label>
+        <button type="button" class="state-pill {{#if isDefeated}}pill-defeated{{else}}pill-active{{/if}}"
+                data-action="toggleDefeated"
+                title="{{#if isDefeated}}{{localize 'SWIA.State.DefeatedHint'}}{{else}}{{localize 'SWIA.State.ActiveHint'}}{{/if}}">
+          <i class="fas {{#if isDefeated}}fa-skull{{else}}fa-person-running{{/if}}"></i>
+          {{#if isDefeated}}{{localize "SWIA.State.Defeated"}}{{else}}{{localize "SWIA.State.Active"}}{{/if}}
+        </button>
         {{/if}}
       </div>
       {{/if}}
@@ -490,7 +490,13 @@
           <input name="system.{{currentAttrPath}}.health.max" type="number" value="{{currentAttributes.health.max}}" />
         </div>
         {{else}}
-        <input type="number" value="{{currentAttributes.health.value}}" disabled />
+        <div class="stat-stepper">
+          <button type="button" class="stat-step" data-action="adjustHealth" data-delta="-1" title="{{localize 'SWIA.Attributes.HealthMinus'}}">&minus;</button>
+          <span class="stat-current">{{currentAttributes.health.value}}</span>
+          <span class="stat-sep">/</span>
+          <span class="stat-max">{{currentAttributes.health.max}}</span>
+          <button type="button" class="stat-step" data-action="adjustHealth" data-delta="1" title="{{localize 'SWIA.Attributes.HealthPlus'}}">+</button>
+        </div>
         {{/if}}
       </div>
       {{#if (eq actor.type "hero")}}

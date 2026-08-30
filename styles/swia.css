@@ -532,6 +532,15 @@
   opacity: 0.85;
 }
 
+.swia-sheet .character-title .archetype-view .trait-label {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
 .swia-sheet .character-title .archetype-view.archetype-empty {
   opacity: 0.35;
 }
@@ -562,40 +571,59 @@
   color: var(--label);
 }
 
-.swia-sheet .state-toggle .toggle {
-  display: flex;
+/* Status pills: readouts that happen to be clickable. The pill always names
+   the CURRENT state; the tooltip names the transition. */
+.swia-sheet .state-toggle .state-pill {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  cursor: pointer;
-}
-
-.swia-sheet .state-toggle input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--accent);
-  transition: accent-color 0.3s ease;
-}
-
-.swia-sheet .state-toggle input[type="checkbox"]:checked {
-  accent-color: #a82323;
-}
-
-.swia-sheet .state-toggle .toggle-label {
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 11px;
   font-weight: 700;
-  font-size: 12px;
-  color: var(--label);
-  transition: color 0.3s ease;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: filter 0.12s ease, box-shadow 0.12s ease, transform 0.08s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.swia-sheet .state-toggle .state-pill:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.swia-sheet .state-toggle .state-pill:active {
+  transform: translateY(0);
+}
+.swia-sheet .state-toggle .state-pill i {
+  font-size: 10px;
+}
+
+.swia-sheet .state-toggle .state-pill.pill-healthy {
+  background: linear-gradient(135deg, #3f9e58 0%, #27722c 100%);
+  border-color: #1e5a23;
+  color: #fff;
+}
+.swia-sheet .state-toggle .state-pill.pill-wounded {
+  background: linear-gradient(135deg, #c0392b 0%, #8f1f14 100%);
+  border-color: #6e150c;
+  color: #fff;
+}
+.swia-sheet .state-toggle .state-pill.pill-active {
+  background: linear-gradient(135deg, #7a7a7a 0%, #555555 100%);
+  border-color: #3d3d3d;
+  color: #fff;
+}
+.swia-sheet .state-toggle .state-pill.pill-defeated {
+  background: linear-gradient(135deg, #2b2b2b 0%, #0d0d0d 100%);
+  border-color: #000;
+  color: #d9d9d9;
 }
 
 .swia-sheet.wounded .state-toggle {
   background: rgba(168, 35, 35, 0.15);
   border-color: rgba(168, 35, 35, 0.4);
-}
-
-.swia-sheet.wounded .state-toggle .toggle-label {
-  color: #a82323;
 }
 
 .swia-sheet.type-villain .sheet-header,
@@ -901,10 +929,12 @@
 }
 
 .swia-sheet .stat-chips-row .resource {
-  flex: 0 1 auto;
+  flex: 1 1 0;
+  min-width: 130px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   padding: 6px 10px;
 }
@@ -945,6 +975,39 @@
 .swia-sheet .stat-chips-row .resource input[type="number"] {
   width: 50px;
   min-width: 0;
+}
+
+.swia-sheet .stat-stepper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.swia-sheet .stat-stepper .stat-step {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  line-height: 1;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--stat-text, #fff);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.swia-sheet .stat-stepper .stat-step:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+.swia-sheet .stat-stepper .stat-current {
+  font-weight: 700;
+  color: var(--stat-text, #fff);
+}
+.swia-sheet .stat-stepper .stat-sep,
+.swia-sheet .stat-stepper .stat-max {
+  opacity: 0.65;
+  font-size: 12px;
+  color: var(--stat-text, #fff);
 }
 
 .swia-sheet .stat-chips-row .resource .pair {
@@ -998,7 +1061,8 @@
 }
 
 .swia-sheet .dice-attributes-row .resource {
-  flex: 0 1 auto;
+  flex: 1 1 0;
+  min-width: 130px;
   padding: 6px 10px;
 }
 
@@ -1027,12 +1091,17 @@
 
 .swia-sheet .resource {
   background: var(--stat-bg);
-  border: 3px solid var(--accent);
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
   border-radius: 6px;
   padding: 10px;
   transition: all 0.3s ease;
   box-sizing: border-box;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Edit mode: the red border signals "this box is editable" */
+.swia-sheet.editing .resource {
+  border: 3px solid var(--accent);
 }
 
 .swia-sheet.wounded .resource {
@@ -1231,8 +1300,12 @@
 }
 
 .swia-sheet .dice-block.black {
-  background: linear-gradient(135deg, #3a3a3a 0%, #1a1a1a 100%);
-  border-color: #0a0a0a;
+  background: linear-gradient(135deg, #4d4d4d 0%, #1f1f1f 100%);
+  border-color: #9a9a9a;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
 }
 
 .swia-sheet .dice-block.white {
@@ -2565,7 +2638,7 @@
 
 .swia-sheet .inventory-sections {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 12px;
   padding: 0 16px 16px;
   align-items: start;
@@ -5106,9 +5179,38 @@ input:checked + .defeated-label { color: #8b0000; }
 .hero-attack-roll {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 3px 8px;
-  border: 1px solid rgba(95, 67, 35, 0.4);
+  width: 100%;
+  padding: 8px 14px;
+  border: 1px solid #8a6508;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #e0b23e 0%, #b8860b 100%);
+  color: #1a1200;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: filter 0.12s ease, transform 0.08s ease, box-shadow 0.12s ease;
+}
+.hero-attack-roll:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.hero-attack-roll:active {
+  transform: translateY(0);
+  filter: brightness(0.96);
+}
+/* Its wrapper chip loses the stat-box chrome — the button IS the element */
+.swia-sheet .dice-attributes-row .resource:has(.hero-attack-roll) {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+}
+.swia-sheet .dice-attributes-row .resource:has(.hero-attack-roll) .attribute-row {
+  flex: 1;
 }
 .hero-attack-roll-label {
   font-size: 11px;

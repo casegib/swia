@@ -124,6 +124,8 @@ export class SWIAActorSheet extends BaseActorSheet {
     actions: {
       // Dice rolling (Phase 5)
       rollDice: SWIAActorSheet.prototype._onRollDice,
+      // Health stepper (display mode)
+      adjustHealth: SWIAActorSheet.prototype._onAdjustHealth,
       // Combat state toggles
       toggleWounded: SWIAActorSheet.prototype._onToggleWounded,
       toggleDefeated: SWIAActorSheet.prototype._onToggleDefeated,
@@ -167,6 +169,24 @@ export class SWIAActorSheet extends BaseActorSheet {
   get title() {
     const name = this.document?.name ?? this.actor?.name ?? "";
     return name || "";
+  }
+
+  // Health +/- stepper in display mode. Uses the wounded attribute set when a
+  // wounded hero, mirroring healthPath() in combat-window.js. Clamped to [0, max].
+  async _onAdjustHealth(event, target) {
+    event.preventDefault();
+    const actor = this.document ?? this.actor;
+    if (!actor) return;
+    const delta = Number(target?.dataset?.delta) || 0;
+    const wounded = actor.type === "hero" && actor.system?.state?.wounded;
+    const path = wounded ? "system.woundedAttributes.health" : "system.attributes.health";
+    const current = Number(foundry.utils.getProperty(actor, `${path}.value`)) || 0;
+    const max = Number(foundry.utils.getProperty(actor, `${path}.max`));
+    let next = current + delta;
+    if (Number.isFinite(max) && max > 0) next = Math.min(max, next);
+    next = Math.max(0, next);
+    if (next === current) return;
+    await actor.update({ [`${path}.value`]: next });
   }
 
   // Open the roll dialog from a clicked dice block (Phase 5)
@@ -610,8 +630,10 @@ export class SWIAActorSheet extends BaseActorSheet {
     const actor = this.document ?? this.actor;
     if (!actor || actor.type !== "hero") return;
 
-    const checkbox = target ?? event?.currentTarget;
-    const isChecked = Boolean(checkbox?.checked);
+    // Works from either a checkbox (reads .checked) or the state pill button
+    // (flips the current state).
+    const el = target ?? event?.currentTarget;
+    const isChecked = el?.type === "checkbox" ? Boolean(el.checked) : !actor.system.state?.wounded;
     const nextTokenSrc = isChecked ? this._getWoundedTokenSrc(actor) : this._getHealthyTokenSrc(actor);
     const update = { "system.state.wounded": isChecked };
     if (!isChecked) update["system.state.defeated"] = false;
@@ -648,8 +670,8 @@ export class SWIAActorSheet extends BaseActorSheet {
     if (!actor || actor.type !== "hero") return;
     if (!actor.system.state?.wounded) return;
 
-    const checkbox = target ?? event?.currentTarget;
-    const isChecked = Boolean(checkbox?.checked);
+    const el = target ?? event?.currentTarget;
+    const isChecked = el?.type === "checkbox" ? Boolean(el.checked) : !actor.system.state?.defeated;
     await actor.update({ "system.state.defeated": isChecked });
   }
 

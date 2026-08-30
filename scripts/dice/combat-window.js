@@ -106,6 +106,7 @@ async function execIntent(intent, payload, userId) {
       case "rollDefense": return await execRollDefense(payload, user);
       case "rerollDie": return await execRerollDie(payload, user);
       case "spendSurge": return await execSpendSurge(payload, user);
+      case "unspendSurge": return await execUnspendSurge(payload, user);
       case "spendToken": return await execSpendToken(payload, user);
       case "applyDamage": return await execApplyDamage(payload, user);
       case "cancel": return await execCancel(payload, user);
@@ -304,7 +305,7 @@ async function execRerollDie({ side, index }, user) {
     if (!["attackRolled", "rolled"].includes(combat.phase)) return;
     if (!canControl(user, combat, "attacker")) return;
     const faces = state.attackFaces;
-    if (!faces?.[idx] || faces[idx].rerolled || !faces[idx].denom) return;
+    if (!faces?.[idx] || !faces[idx].denom) return;
 
     const face = faces[idx];
     const roll = await new Roll(`1d${face.denom}`).evaluate();
@@ -348,7 +349,7 @@ async function execRerollDie({ side, index }, user) {
     if (combat.phase !== "rolled") return;
     if (!canControl(user, combat, "defender")) return;
     const faces = state.defenseFaces;
-    if (!faces?.[idx] || faces[idx].rerolled || !faces[idx].denom) return;
+    if (!faces?.[idx] || !faces[idx].denom) return;
 
     const face = faces[idx];
     const roll = await new Roll(`1d${face.denom}`).evaluate();
@@ -408,6 +409,35 @@ async function execSpendSurge({ index }, user) {
     else if (fx.type === "accuracy") state.bonusAccuracy += fx.value;
     else if (fx.type === "pierce") state.bonusPierce += fx.value;
   }
+  recomputeCard(state);
+  await setCombat(combat);
+}
+
+// Rerolls stay available until something irreversible-by-reroll is committed:
+// a spent surge ability or a consumed power token. Unspending a surge rechecks
+// this so rerolls come back when nothing else is still locked in.
+function hasCommittedSpends(state) {
+  return (state.surgeAbilities ?? []).some((a) => a.spent)
+    || (state.spentTokens?.block ?? 0) > 0
+    || (state.spentTokens?.evade ?? 0) > 0;
+}
+
+async function execUnspendSurge({ index }, user) {
+  const combat = getCombat();
+  if (!combat || combat.phase !== "rolled" || combat.applied) return;
+  if (!canControl(user, combat, "attacker")) return;
+  const state = combat.result;
+  const ability = state?.surgeAbilities?.[Number(index)];
+  if (!ability?.spent) return;
+
+  ability.spent = false;
+  state.spentSurge = Math.max(0, state.spentSurge - ability.cost);
+  for (const fx of ability.effects ?? []) {
+    if (fx.type === "damage") state.bonusDamage = Math.max(0, state.bonusDamage - fx.value);
+    else if (fx.type === "accuracy") state.bonusAccuracy = Math.max(0, state.bonusAccuracy - fx.value);
+    else if (fx.type === "pierce") state.bonusPierce = Math.max(0, state.bonusPierce - fx.value);
+  }
+  state.rerollLocked = hasCommittedSpends(state);
   recomputeCard(state);
   await setCombat(combat);
 }
@@ -511,6 +541,7 @@ export class SWIACombatWindow extends BaseApplication {
       combatRollDefense: SWIACombatWindow.prototype._onRollDefense,
       combatRerollDie: SWIACombatWindow.prototype._onRerollDie,
       combatSpendSurge: SWIACombatWindow.prototype._onSpendSurge,
+      combatUnspendSurge: SWIACombatWindow.prototype._onUnspendSurge,
       combatSpendToken: SWIACombatWindow.prototype._onSpendToken,
       combatApplyDamage: SWIACombatWindow.prototype._onApplyDamage,
       combatCancel: SWIACombatWindow.prototype._onCancel
@@ -649,6 +680,11 @@ export class SWIACombatWindow extends BaseApplication {
     dispatchIntent("spendSurge", { index: Number(target?.dataset?.index) });
   }
 
+  async _onUnspendSurge(event, target) {
+    event.preventDefault();
+    dispatchIntent("unspendSurge", { index: Number(target?.dataset?.index) });
+  }
+
   async _onSpendToken(event, target) {
     event.preventDefault();
     dispatchIntent("spendToken", { token: target?.dataset?.token });
@@ -700,7 +736,9 @@ export function registerCombatHooks() {
     game.socket?.on?.(SOCKET_NAME, onSocketMessage);
   });
 
-  // Live sync + auto-open for involved users
+  // Live sync + auto-open for all connected users. Spectators get a
+  // view-only window: every action is permission-gated per user via
+  // canAttacker/canDefender/canCancel in _prepareContext and execIntent.
   Hooks.on("updateSetting", (setting) => {
     if (setting?.key !== `swia.${ACTIVE_COMBAT_KEY}`) return;
     const combat = getCombat();
@@ -713,9 +751,6 @@ export function registerCombatHooks() {
       win.render(false);
       return;
     }
-    const involved = game.user.isGM
-      || canControl(game.user, combat, "attacker")
-      || canControl(game.user, combat, "defender");
-    if (involved) SWIACombatWindow.show();
+    SWIACombatWindow.show();
   });
 }

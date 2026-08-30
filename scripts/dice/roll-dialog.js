@@ -328,10 +328,71 @@ export class SWIARollDialog extends BaseApplication {
         combatStarter(config.actor, target);
         return null;
       }
+      // No target set: prompt to pick one before falling back to a solo roll.
+      SWIARollDialog._promptForTarget(config);
+      return null;
     }
     const dialog = new SWIARollDialog(config);
     dialog.render(true);
     return dialog;
+  }
+
+  /**
+   * Attack started with no targeted token: offer the visible tokens on the
+   * current scene as targets. Picking one marks it as the user's target and
+   * starts shared combat; "Roll Without Target" opens the solo dialog;
+   * closing the prompt cancels the attack entirely.
+   */
+  static async _promptForTarget(config) {
+    const candidates = (canvas?.tokens?.placeables ?? [])
+      .filter((t) => t.actor && t.visible && t.actor.id !== config.actor.id)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    // Empty scene (or only the attacker) — nothing to pick, roll solo.
+    if (!candidates.length) {
+      new SWIARollDialog(config).render(true);
+      return;
+    }
+
+    const options = candidates
+      .map((t, i) => `<option value="${t.id}"${i === 0 ? " selected" : ""}>${escapeHTML(t.name)}</option>`)
+      .join("");
+    const content = `
+      <p>${game.i18n.format("SWIA.Roll.PickTargetHint", { name: escapeHTML(config.actor.name) })}</p>
+      <div class="form-group">
+        <select name="swiaTarget" style="width: 100%;">${options}</select>
+      </div>`;
+
+    const choice = await foundry.applications.api.DialogV2.wait({
+      window: { title: game.i18n.localize("SWIA.Roll.PickTargetTitle"), icon: "fas fa-crosshairs" },
+      content,
+      buttons: [
+        {
+          action: "attack",
+          label: game.i18n.localize("SWIA.Roll.PickTargetAttack"),
+          icon: "fas fa-crosshairs",
+          default: true,
+          callback: (event, button) => button.form.elements.swiaTarget.value
+        },
+        {
+          action: "solo",
+          label: game.i18n.localize("SWIA.Roll.PickTargetSolo"),
+          icon: "fas fa-dice"
+        }
+      ],
+      rejectClose: false
+    });
+
+    if (!choice) return;
+    if (choice === "solo") {
+      new SWIARollDialog(config).render(true);
+      return;
+    }
+    const token = canvas?.tokens?.get(choice);
+    if (!token?.actor) return;
+    // Mark it as the user's target too, so the reticle shows on the map.
+    token.setTarget(true, { releaseOthers: true });
+    combatStarter(config.actor, token);
   }
 
   get title() {
