@@ -152,10 +152,28 @@ export function buildAttackPool(actor, weaponId = null) {
   return pool;
 }
 
-/** Defense pool {black, white} for an actor. */
+/** Owned armor items currently equipped. */
+export function equippedArmorFor(actor) {
+  return (actor?.items ?? []).filter(
+    (i) => i.type === "armor" && (i.system?.equipped ?? true)
+  );
+}
+
+/**
+ * Defense pool {black, white} for an actor: the actor's own defense attribute
+ * plus the dice from every equipped armor item, added on top.
+ *
+ * Single chokepoint — the combat window's defender panel, the solo defense
+ * roll and the targeted-defense path all resolve their pool through here.
+ */
 export function buildDefensePool(actor) {
   const d = actor?.system?.attributes?.defense ?? {};
-  return { black: clampCount(d.black), white: clampCount(d.white) };
+  const pool = { black: clampCount(d.black), white: clampCount(d.white) };
+  for (const armor of equippedArmorFor(actor)) {
+    const ad = armor.system?.defenseDice ?? {};
+    for (const c of DEFENSE_POOL_COLORS) pool[c] = clampCount(pool[c] + clampCount(ad[c]));
+  }
+  return pool;
 }
 
 /** Accumulated keyword block: weapon + attached mods (heroes only). */

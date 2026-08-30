@@ -175,8 +175,25 @@ export class SWIACompanionPortal extends BaseApplication {
   }
 
   _getOrderedCompanionActors() {
+    const currentUser = game.user;
+    const observerLevel = CONST.DOCUMENT_OWNERSHIP_LEVELS?.OBSERVER ?? 2;
+
+    // Players only see allies they have been granted access to, so an ally the
+    // GM has not yet revealed (a mission reward, say) stays hidden until they
+    // grant permission. The GM sees every ally.
+    const canObserve = (actor) => {
+      if (currentUser?.isGM) return true;
+      if (!currentUser) return false;
+      if (typeof actor.testUserPermission === "function") {
+        return actor.testUserPermission(currentUser, "OBSERVER");
+      }
+      const ownership = actor.ownership ?? {};
+      return (ownership[currentUser.id] ?? ownership.default ?? 0) >= observerLevel;
+    };
+
     return (game.actors?.contents ?? [])
       .filter(actor => actor.type === "ally")
+      .filter(canObserve)
       .sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang, { sensitivity: "base" }));
   }
 

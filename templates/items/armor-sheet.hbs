@@ -52,6 +52,22 @@
     </section>
 
     <section class="item-description-section">
+      <h3>{{localize "SWIA.Item.Armor.Equipped"}}</h3>
+      {{#if editMode}}
+      <label class="keyword-checkbox">
+        <input name="system.equipped" type="checkbox" {{#if systemData.equipped}}checked{{/if}} />
+        {{localize "SWIA.Item.Armor.EquippedHint"}}
+      </label>
+      {{else}}
+      <div class="weapon-view-badges">
+        <span class="weapon-range-pill">
+          {{#if systemData.equipped}}{{localize "SWIA.Item.Armor.Equipped"}}{{else}}{{localize "SWIA.Item.Armor.NotEquipped"}}{{/if}}
+        </span>
+      </div>
+      {{/if}}
+    </section>
+
+    <section class="item-description-section">
       <h3>{{localize "SWIA.Item.Armor.DefenseDice"}}</h3>
       {{#if editMode}}
       <div class="defense">

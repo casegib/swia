@@ -480,6 +480,9 @@ async function execCancel(_payload, user) {
 
 export function startCombat(attacker, targetToken) {
   if (getCombat()) {
+    // Reopen the in-progress combat window (it may have been closed) so the
+    // user can resolve or cancel it instead of being stranded.
+    SWIACombatWindow.show();
     ui.notifications?.warn(game.i18n.localize("SWIA.Combat.ActiveExists"));
     return;
   }

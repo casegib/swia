@@ -169,12 +169,26 @@ export class SWIAPlayerPortal extends BaseApplication {
     const observerLevel = CONST.DOCUMENT_OWNERSHIP_LEVELS?.OBSERVER ?? 2;
     const ownerLevel = CONST.DOCUMENT_OWNERSHIP_LEVELS?.OWNER ?? 3;
 
-    const isPlayerActor = (actor) => {
+    // Can a specific user observe this actor? Prefers the document API and
+    // falls back to reading ownership directly.
+    const canObserve = (actor, user) => {
+      if (!user) return false;
+      if (typeof actor.testUserPermission === "function") {
+        return actor.testUserPermission(user, "OBSERVER");
+      }
       const ownership = actor.ownership ?? {};
-      return nonGmUsers.some((user) => {
-        const userPermission = ownership[user.id] ?? ownership.default ?? 0;
-        return userPermission >= observerLevel;
-      });
+      return (ownership[user.id] ?? ownership.default ?? 0) >= observerLevel;
+    };
+
+    // Any actor some player can observe — the GM's view of the player roster.
+    const hasPlayerAccess = (actor) => nonGmUsers.some((user) => canObserve(actor, user));
+
+    // A player only sees actors they themselves can observe; the GM keeps the
+    // full player-facing roster. Without this, every client renders every
+    // player's hero because Foundry ships all world actors to all clients.
+    const isPlayerActor = (actor) => {
+      if (currentUser?.isGM) return hasPlayerAccess(actor);
+      return canObserve(actor, currentUser);
     };
 
     const isMine = (actor) => {

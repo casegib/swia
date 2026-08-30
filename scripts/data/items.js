@@ -1,6 +1,6 @@
 // SWIA item data models (Foundry v13+ TypeDataModel).
 // Schemas mirror the legacy template.json structure so existing world data loads unchanged.
-import { int, num, str, html, attackDice, defenseDice, abilityList, surgeList, weaponSurgeList, keywords, toArray } from "./common.js";
+import { int, num, str, html, bool, attackDice, defenseDice, abilityList, surgeList, weaponSurgeList, keywords, toArray } from "./common.js";
 
 const fields = foundry.data.fields;
 const { TypeDataModel } = foundry.abstract;
@@ -78,7 +78,11 @@ export class ArmorData extends SWIAItemBase {
     return {
       ...super.defineSchema(),
       armorClass: str(),
-      defenseDice: defenseDice()
+      defenseDice: defenseDice(),
+      // Equipped armor contributes its defense dice to the wearer's defense
+      // pool (see buildDefensePool). Defaults true so armor that predates this
+      // field keeps working without a migration.
+      equipped: bool(true)
     };
   }
 }
