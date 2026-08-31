@@ -409,6 +409,19 @@ async function execSpendSurge({ index }, user) {
     else if (fx.type === "accuracy") state.bonusAccuracy += fx.value;
     else if (fx.type === "pierce") state.bonusPierce += fx.value;
   }
+  // Exhaust-to-use: spending consumes the source card; undo readies it back.
+  if (ability.exhaustToUse && ability.sourceItemId) {
+    try {
+      const attackerActor = game.actors?.get(combat.attacker.actorId);
+      const sourceItem = attackerActor?.items?.get(ability.sourceItemId);
+      if (sourceItem && (sourceItem.system?.cardState ?? "ready") === "ready") {
+        await sourceItem.update({ "system.cardState": "exhausted" });
+        ability.exhaustedItemId = sourceItem.id;
+      }
+    } catch (err) {
+      console.warn("SWIA | could not exhaust surge source", err);
+    }
+  }
   recomputeCard(state);
   await setCombat(combat);
 }
@@ -436,6 +449,15 @@ async function execUnspendSurge({ index }, user) {
     if (fx.type === "damage") state.bonusDamage = Math.max(0, state.bonusDamage - fx.value);
     else if (fx.type === "accuracy") state.bonusAccuracy = Math.max(0, state.bonusAccuracy - fx.value);
     else if (fx.type === "pierce") state.bonusPierce = Math.max(0, state.bonusPierce - fx.value);
+  }
+  // Undo the auto-exhaust that this spend caused (if any)
+  if (ability.exhaustedItemId) {
+    const attackerActor = game.actors?.get(combat.attacker.actorId);
+    const sourceItem = attackerActor?.items?.get(ability.exhaustedItemId);
+    if (sourceItem && sourceItem.system?.cardState === "exhausted") {
+      await sourceItem.update({ "system.cardState": "ready" });
+    }
+    ability.exhaustedItemId = null;
   }
   state.rerollLocked = hasCommittedSpends(state);
   recomputeCard(state);
@@ -574,7 +596,9 @@ export class SWIACombatWindow extends BaseApplication {
     const canAttacker = canControl(game.user, combat, "attacker");
     const canDefender = canControl(game.user, combat, "defender");
     const attackerActor = game.actors?.get(combat.attacker.actorId);
-    const weapons = attackerActor?.type === "hero" ? heroWeapons(attackerActor) : [];
+    const weapons = attackerActor?.type === "hero"
+      ? heroWeapons(attackerActor).filter((w) => (w.system?.cardState ?? "ready") !== "depleted")
+      : [];
     const kw = combat.attacker.keywords ?? {};
     const keywordParts = [];
     if (kw.pierce > 0) keywordParts.push(`${game.i18n.localize("SWIA.Keywords.Pierce")} ${kw.pierce}`);

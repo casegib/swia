@@ -62,6 +62,7 @@
     <button type="button" class="roll-card-surge-btn {{#if spent}}spent{{/if}}" data-swia-surge-index="{{@index}}" {{#unless affordable}}{{#unless spent}}disabled{{/unless}}{{/unless}} {{#if spent}}disabled{{/if}}>
       <span class="surge-cost">{{cost}}&times;</span>
       <span class="surge-label">{{{label}}}</span>
+      {{#if exhaustToUse}}<span class="surge-exhaust-flag" title="{{localize 'SWIA.Combat.ExhaustsSource'}}">&#9889;</span>{{/if}}
       {{#if spent}}<i class="fas fa-check"></i>{{/if}}
     </button>
     {{/each}}

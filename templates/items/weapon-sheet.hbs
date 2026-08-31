@@ -223,6 +223,10 @@
             <input class="weapon-surge-value" type="number" min="0" value="{{surge.effectValue}}" />
           </label>
           <input class="weapon-surge-text" type="text" value="{{surge.effectText}}" placeholder="{{localize 'SWIA.Item.Weapon.SurgeEffectPlaceholder'}}" />
+          <label class="surge-field surge-exhaust-field" title="{{localize 'SWIA.Item.Weapon.ExhaustToUseHint'}}">
+            <input class="weapon-surge-exhaust" type="checkbox" {{#if surge.exhaustToUse}}checked{{/if}} />
+            <span>{{localize "SWIA.Item.Weapon.ExhaustToUse"}}</span>
+          </label>
           <button type="button" class="remove-row-btn" data-action="removeSurgeAbility" data-index="{{index}}" title="{{localize 'SWIA.Item.Weapon.RemoveSurge'}}">
             <i class="fas fa-trash"></i>
           </button>
@@ -238,6 +242,7 @@
         <li class="weapon-surge-entry-view">
           <span class="surge-cost-label" title="{{localize 'SWIA.Item.Weapon.SurgeCost'}}">{{this.cost}}&times; {{localize "SWIA.Surge"}}</span>
           <span class="surge-effect">{{this.displayEffect}}</span>
+          {{#if this.exhaustToUse}}<span class="surge-exhaust-tag" title="{{localize 'SWIA.Item.Weapon.ExhaustToUseHint'}}">&#9889; {{localize "SWIA.Item.Weapon.ExhaustToUse"}}</span>{{/if}}
         </li>
         {{/each}}
       </ol>

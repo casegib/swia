@@ -80,7 +80,9 @@ export function weaponSurgeList() {
     cost: int(1),
     effectType: str("damage"),
     effectValue: num(0),
-    effectText: str()
+    effectText: str(),
+    // Spending this surge exhausts the owning weapon/mod (pass 2)
+    exhaustToUse: bool()
   }));
 }
 

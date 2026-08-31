@@ -203,7 +203,7 @@ export class SWIAItemSheet extends BaseItemSheet {
     if (!["weapon", "weaponmod"].includes(item.type)) return;
     
     const surgeAbilities = item.system.surgeAbilities || [];
-    const newSurgeAbilities = [...surgeAbilities, { cost: 1, effectType: "damage", effectValue: 0, effectText: "" }];
+    const newSurgeAbilities = [...surgeAbilities, { cost: 1, effectType: "damage", effectValue: 0, effectText: "", exhaustToUse: false }];
     
     await item.update({ "system.surgeAbilities": newSurgeAbilities });
   }
@@ -487,7 +487,8 @@ export class SWIAItemSheet extends BaseItemSheet {
       const effectType = li.querySelector(".weapon-surge-type")?.value || "damage";
       const effectValue = Number(li.querySelector(".weapon-surge-value")?.value) || 0;
       const effectText = li.querySelector(".weapon-surge-text")?.value ?? "";
-      surgeAbilities.push({ cost, effectType, effectValue, effectText });
+      const exhaustToUse = li.querySelector(".weapon-surge-exhaust")?.checked ?? false;
+      surgeAbilities.push({ cost, effectType, effectValue, effectText, exhaustToUse });
     });
 
     return { "system.surgeAbilities": surgeAbilities };

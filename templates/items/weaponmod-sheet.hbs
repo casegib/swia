@@ -164,6 +164,10 @@
           {{#if (eq surge.effectType "special")}}
           <input class="surge-effect-input" name="system.surgeAbilities.{{index}}.effectText" type="text" value="{{surge.effectText}}" placeholder="{{localize 'SWIA.Item.Weapon.SurgeEffectText'}}" />
           {{/if}}
+          <label class="surge-exhaust-field" title="{{localize 'SWIA.Item.Weapon.ExhaustToUseHint'}}">
+            <input type="checkbox" name="system.surgeAbilities.{{index}}.exhaustToUse" data-dtype="Boolean" {{#if surge.exhaustToUse}}checked{{/if}} />
+            <span>{{localize "SWIA.Item.Weapon.ExhaustToUse"}}</span>
+          </label>
           <button type="button" class="surge-delete" data-action="removeSurgeAbility" data-index="{{index}}" title="{{localize 'SWIA.Item.Weapon.RemoveSurge'}}">
             <i class="fas fa-trash"></i>
           </button>

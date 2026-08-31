@@ -67,16 +67,21 @@ export function parseLeadingSurgeCost(text) {
 /** Build a localized label for a structured surge effect. */
 function surgeLabel({ effectType, effectValue, effectText }) {
   const value = Number(effectValue) || 0;
+  const text = (effectText ?? "").trim();
+  let base = "";
   switch (effectType) {
     case "damage":
-      return `+${value} ${game.i18n.localize("SWIA.Dice.Damage")}`;
+      base = `+${value} ${game.i18n.localize("SWIA.Dice.Damage")}`; break;
     case "accuracy":
-      return `+${value} ${game.i18n.localize("SWIA.Dice.Accuracy")}`;
+      base = `+${value} ${game.i18n.localize("SWIA.Dice.Accuracy")}`; break;
     case "pierce":
-      return `${game.i18n.localize("SWIA.Keywords.Pierce")} ${value}`;
+      base = `${game.i18n.localize("SWIA.Keywords.Pierce")} ${value}`; break;
     default:
-      return effectText || game.i18n.localize("SWIA.Item.Weapon.SurgeEffectType.Special");
+      return text || game.i18n.localize("SWIA.Item.Weapon.SurgeEffectType.Special");
   }
+  // Keep any accompanying text (matches _surgeEntryLabel on the actor sheet,
+  // so the sheet and the roll card describe the ability identically).
+  return text ? `${base}, ${text}` : base;
 }
 
 /** Recompute all derived numbers on a roll-card state object. */
@@ -120,14 +125,23 @@ export function heroWeapons(actor) {
 
 export function weaponModsFor(actor, weapon) {
   if (!weapon) return [];
+  // Depleted mods contribute nothing at all (dice, keywords, accuracy,
+  // surges) until readied; exhausted mods keep their passive stats.
   return (actor?.items ?? []).filter(
-    (i) => i.type === "weaponmod" && i.system?.attachedWeaponId === weapon.id
+    (i) => i.type === "weaponmod"
+      && i.system?.attachedWeaponId === weapon.id
+      && (i.system?.cardState ?? "ready") !== "depleted"
   );
 }
 
-/** Default weapon for a hero: first ready weapon, else first weapon. */
+/** Hero weapons that can currently attack (depleted weapons are out). */
+export function usableHeroWeapons(actor) {
+  return heroWeapons(actor).filter((w) => (w.system?.cardState ?? "ready") !== "depleted");
+}
+
+/** Default weapon for a hero: first ready usable weapon, else first usable. */
 export function defaultWeaponId(actor) {
-  const weapons = heroWeapons(actor);
+  const weapons = usableHeroWeapons(actor);
   const ready = weapons.find((w) => w.system?.cardState === "ready") ?? weapons[0] ?? null;
   return ready?.id ?? null;
 }
@@ -225,7 +239,7 @@ export function gatherSurgeAbilities(actor, weaponId = null) {
       spent: false
     });
   };
-  const pushStructured = (entry, source) => {
+  const pushStructured = (entry, source, sourceItemId = null) => {
     const type = entry.effectType ?? "special";
     const value = Number(entry.effectValue) || 0;
     out.push({
@@ -233,6 +247,8 @@ export function gatherSurgeAbilities(actor, weaponId = null) {
       effects: ["damage", "accuracy", "pierce"].includes(type) ? [{ type, value }] : [],
       label: sanitizeLabelHTML(surgeLabel(entry)),
       source,
+      sourceItemId,
+      exhaustToUse: !!entry.exhaustToUse,
       spent: false
     });
   };
@@ -264,7 +280,14 @@ export function gatherSurgeAbilities(actor, weaponId = null) {
     const weapon = actor.items.get(weaponId);
     if (weapon) {
       for (const item of [weapon, ...weaponModsFor(actor, weapon)]) {
-        for (const entry of toList(item.system?.surgeAbilities)) pushStructured(entry, escapeHTML(item.name));
+        const itemState = item.system?.cardState ?? "ready";
+        if (itemState === "depleted") continue;
+        for (const entry of toList(item.system?.surgeAbilities)) {
+          // Exhaust-to-use surges are only offered while their card is ready;
+          // passive stats stay regardless (exhausted != unusable).
+          if (entry.exhaustToUse && itemState !== "ready") continue;
+          pushStructured(entry, escapeHTML(item.name), item.id);
+        }
         for (const entry of toList(item.system?.abilities)) {
           const cost = parseLeadingSurgeCost(entry.description);
           if (!cost) continue;
@@ -429,7 +452,7 @@ export class SWIARollDialog extends BaseApplication {
   }
 
   _heroWeapons() {
-    return heroWeapons(this.actor);
+    return usableHeroWeapons(this.actor);
   }
 
   get selectedWeapon() {
@@ -646,6 +669,19 @@ async function applySurgeSpend(message, index) {
     content,
     [`flags.${CARD_FLAG_SCOPE}.${CARD_FLAG_KEY}`]: state
   });
+
+  // Exhaust-to-use: flip the source card once the spend has actually landed
+  // (never before — a failed/relayed message update must not strand an
+  // exhausted item). Idempotent via the "ready" guard when the GM re-runs
+  // a relayed spend.
+  if (ability.exhaustToUse && ability.sourceItemId) {
+    const speakerActor = game.actors?.get(message.speaker?.actor);
+    const sourceItem = speakerActor?.items?.get(ability.sourceItemId);
+    if (sourceItem && (sourceItem.system?.cardState ?? "ready") === "ready") {
+      try { await sourceItem.update({ "system.cardState": "exhausted" }); }
+      catch (err) { console.warn("SWIA | could not exhaust surge source", err); }
+    }
+  }
   return true;
 }
 

@@ -193,6 +193,8 @@
           title="{{localize 'SWIA.Combat.UnspendHint'}}" {{#unless ../canAttacker}}disabled{{/unless}}>
           <span class="surge-cost">{{cost}}&times;</span>
           <span class="surge-label">{{{label}}}</span>
+          {{#if exhaustToUse}}<span class="surge-exhaust-flag" title="{{localize 'SWIA.Combat.ExhaustsSource'}}">&#9889;</span>{{/if}}
+          {{#if source}}<span class="surge-source">{{{source}}}</span>{{/if}}
           <i class="fas fa-undo"></i>
         </button>
         {{else}}
@@ -200,6 +202,8 @@
           {{#unless affordable}}disabled{{/unless}} {{#unless ../canAttacker}}disabled{{/unless}}>
           <span class="surge-cost">{{cost}}&times;</span>
           <span class="surge-label">{{{label}}}</span>
+          {{#if exhaustToUse}}<span class="surge-exhaust-flag" title="{{localize 'SWIA.Combat.ExhaustsSource'}}">&#9889;</span>{{/if}}
+          {{#if source}}<span class="surge-source">{{{source}}}</span>{{/if}}
         </button>
         {{/if}}
         {{/each}}

@@ -855,6 +855,11 @@
 
   <section class="inventory-sections">
     {{#unless (or (eq actor.type "ally") (eq actor.type "villain"))}}
+    <div class="inventory-toolbar">
+      <button type="button" class="ready-all-btn" data-action="readyAllItems" title="{{localize 'SWIA.Inventory.ReadyAllHint'}}">
+        <i class="fas fa-rotate-left"></i> {{localize "SWIA.Inventory.ReadyAll"}}
+      </button>
+    </div>
     <div class="inventory-group inventory-group-weapons {{#if editMode}}collapsible-section {{#if sectionCollapse.weapons}}collapsed{{else}}expanded{{/if}}{{/if}}">
       {{#if editMode}}
       <button type="button" class="section-toggle section-toggle-inline inv-panel-header" data-action="toggleSectionCollapse" data-section="weapons" aria-expanded="{{#if sectionCollapse.weapons}}false{{else}}true{{/if}}">
@@ -889,6 +894,12 @@
                 {{#each this.attackBlueDice}}<span class="dice-block blue"></span>{{/each}}
                 {{#each this.attackGreenDice}}<span class="dice-block green"></span>{{/each}}
                 {{#each this.attackYellowDice}}<span class="dice-block yellow"></span>{{/each}}
+                {{#each this.modRedDice}}<span class="dice-block red from-mod" title="{{localize 'SWIA.Inventory.FromMod'}}"></span>{{/each}}
+                {{#each this.modBlueDice}}<span class="dice-block blue from-mod" title="{{localize 'SWIA.Inventory.FromMod'}}"></span>{{/each}}
+                {{#each this.modGreenDice}}<span class="dice-block green from-mod" title="{{localize 'SWIA.Inventory.FromMod'}}"></span>{{/each}}
+                {{#each this.modYellowDice}}<span class="dice-block yellow from-mod" title="{{localize 'SWIA.Inventory.FromMod'}}"></span>{{/each}}
+                {{#each this.modBonusTags}}<span class="mod-bonus-tag">{{this}}</span>{{/each}}
+                {{#if this.showSlots}}<span class="mod-slots {{#if this.slotsFull}}full{{/if}}">{{localize "SWIA.Inventory.ModSlots" used=this.slotsUsed total=this.slotsTotal}}</span>{{/if}}
               </div>
               <div class="weapon-abilities-inline">
                 {{#each this.enrichedAbilities}}
@@ -896,10 +907,121 @@
                 {{/each}}
               </div>
             </div>
+            {{#if this.surgeLines.length}}
+            <div class="weapon-surge-lines">
+              {{#each this.surgeLines}}
+              <div class="weapon-surge-line">
+                <span class="weapon-surge-cost">{{this.cost}}<img class="surge-cost-icon" src="systems/swia/icons/Surge.png" alt="surge" /></span>
+                <span class="weapon-surge-label">{{{this.label}}}</span>
+                {{#if this.exhausts}}<span class="surge-exhaust-flag" title="{{localize 'SWIA.Combat.ExhaustsSource'}}">&#9889;</span>{{/if}}
+                {{#if this.source}}<span class="weapon-surge-source">{{this.source}}</span>{{/if}}
+              </div>
+              {{/each}}
+            </div>
+            {{/if}}
           </div>
           <div class="item-controls">
             <button type="button" class="item-state-btn {{this.system.cardState}}" data-action="cycleItemState" title="{{this.system.cardState}}">
               {{this.system.cardState}}
+            </button>
+            {{#if ../editMode}}
+            <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
+              <i class="fas fa-trash"></i>
+            </button>
+            {{/if}}
+          </div>
+          {{#if this.attachedMods.length}}
+          <div class="weapon-mods">
+            {{#each this.attachedMods}}
+            <div class="weapon-mod-row" data-mod-id="{{this.id}}" data-item-id="{{this.id}}">
+              <span class="mod-lead">&#8627;</span>
+              <span class="mod-name" data-action="openItem">{{this.name}}</span>
+              <span class="mod-dice">
+                {{#each this.bonusRedDice}}<span class="dice-block red"></span>{{/each}}
+                {{#each this.bonusBlueDice}}<span class="dice-block blue"></span>{{/each}}
+                {{#each this.bonusGreenDice}}<span class="dice-block green"></span>{{/each}}
+                {{#each this.bonusYellowDice}}<span class="dice-block yellow"></span>{{/each}}
+              </span>
+              <span class="mod-spacer"></span>
+              <button type="button" class="item-state-btn {{this.cardState}}" data-action="cycleItemState" title="{{this.cardState}}">{{this.cardState}}</button>
+              <button type="button" class="mod-detach-btn" data-action="detachMod" title="{{localize 'SWIA.Inventory.Detach'}}">&times;</button>
+            </div>
+            {{/each}}
+          </div>
+          {{/if}}
+        </li>
+        {{/each}}
+      </ol>
+      {{else}}
+      <div class="inventory-empty">
+        <p>{{localize "SWIA.Inventory.EmptyWeapons"}}</p>
+      </div>
+      {{/if}}
+      {{#if hasUnattachedMods}}
+      <div class="unattached-mods">
+        <span class="unattached-mods-title">{{localize "SWIA.Inventory.UnattachedMods"}}</span>
+        {{#each unattachedMods}}
+        <div class="weapon-mod-row unattached" data-mod-id="{{this.id}}" data-item-id="{{this.id}}">
+          <span class="mod-lead">&bull;</span>
+          <span class="mod-name" data-action="openItem">{{this.name}}</span>
+          <span class="mod-dice">
+            {{#each this.bonusRedDice}}<span class="dice-block red"></span>{{/each}}
+            {{#each this.bonusBlueDice}}<span class="dice-block blue"></span>{{/each}}
+            {{#each this.bonusGreenDice}}<span class="dice-block green"></span>{{/each}}
+            {{#each this.bonusYellowDice}}<span class="dice-block yellow"></span>{{/each}}
+          </span>
+          <span class="mod-spacer"></span>
+          <select class="mod-attach-select">
+            <option value="">{{localize "SWIA.Inventory.AttachTo"}}</option>
+            {{#each this.attachTargets}}
+            <option value="{{this.id}}" {{#if this.disabled}}disabled{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+          {{#if ../editMode}}
+          <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}"><i class="fas fa-trash"></i></button>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+      </div>
+    </div>
+
+    <div class="inventory-group {{#if editMode}}collapsible-section {{#if sectionCollapse.armor}}collapsed{{else}}expanded{{/if}}{{/if}}">
+      {{#if editMode}}
+      <button type="button" class="section-toggle section-toggle-inline inv-panel-header" data-action="toggleSectionCollapse" data-section="armor" aria-expanded="{{#if sectionCollapse.armor}}false{{else}}true{{/if}}">
+        <span class="section-toggle-label">{{localize "SWIA.Inventory.Armor"}}</span>
+        <span class="section-toggle-meta">
+          {{#if armorItems.length}}<span class="group-count">{{armorItems.length}}</span>{{/if}}
+          <span class="section-toggle-indicator">{{#if sectionCollapse.armor}}+{{else}}-{{/if}}</span>
+        </span>
+      </button>
+      {{else}}
+      <header class="inv-panel-header">
+        <h2>{{localize "SWIA.Inventory.Armor"}}</h2>
+        {{#if armorItems.length}}<span class="group-count">{{armorItems.length}}</span>{{/if}}
+      </header>
+      {{/if}}
+      <div class="collapsible-content">
+      {{#if armorItems.length}}
+      <ol class="item-list">
+        {{#each armorItems}}
+        <li class="item-entry armor-entry {{#unless this.equipped}}unequipped{{/unless}}" data-item-id="{{this.id}}">
+          <div class="item-image" data-action="openItem">
+            <img src="{{this.img}}" alt="{{this.name}}" title="{{localize 'SWIA.Inventory.ClickToOpen'}}" />
+          </div>
+          <div class="item-info" data-action="openItem">
+            <span class="item-name">{{this.name}}</span>
+            <div class="armor-dice-inline">
+              {{#each this.defenseBlackDice}}<span class="dice-block black"></span>{{/each}}
+              {{#each this.defenseWhiteDice}}<span class="dice-block white"></span>{{/each}}
+              {{#if this.equipped}}<span class="armor-feeds-tag">{{localize "SWIA.Inventory.FeedsDefense"}}</span>{{/if}}
+            </div>
+          </div>
+          <div class="item-controls">
+            <button type="button" class="armor-equip-btn {{#unless this.equipped}}off{{/unless}}" data-action="toggleEquipArmor"
+              title="{{#if this.equipped}}{{localize 'SWIA.Inventory.UnequipHint'}}{{else}}{{localize 'SWIA.Inventory.EquipHint'}}{{/if}}">
+              <i class="fas fa-shield-halved"></i>
             </button>
             {{#if ../editMode}}
             <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
@@ -912,7 +1034,7 @@
       </ol>
       {{else}}
       <div class="inventory-empty">
-        <p>{{localize "SWIA.Inventory.EmptyWeapons"}}</p>
+        <p>{{localize "SWIA.Inventory.EmptyArmor"}}</p>
       </div>
       {{/if}}
       </div>

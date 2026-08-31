@@ -11,6 +11,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     heroAbilities: true,
     stats: false,
     weapons: true,
+    armor: true,
     abilities: true,
     items: true,
     surgeAbilities: true,
@@ -19,6 +20,31 @@ export class SWIAActorSheet extends BaseActorSheet {
 
   static _diceArray(n) {
     return Array.from({ length: n || 0 }, (_, i) => i);
+  }
+
+  // Display label for a weaponSurgeList entry ({cost, effectType, effectValue,
+  // effectText}). Mirrors surgeLabel() in roll-dialog.js so the sheet and the
+  // combat window describe the same ability the same way.
+  static _surgeEntryLabel(entry) {
+    const type = entry?.effectType ?? "special";
+    const value = Number(entry?.effectValue) || 0;
+    const text = (entry?.effectText ?? "").trim();
+    let base = "";
+    if (type === "damage") base = `+${value} ${game.i18n.localize("SWIA.Dice.Damage")}`;
+    else if (type === "accuracy") base = `+${value} ${game.i18n.localize("SWIA.Dice.Accuracy")}`;
+    else if (type === "pierce") base = `${game.i18n.localize("SWIA.Keywords.Pierce")} ${value}`;
+    if (base) return text ? `${base}, ${text}` : base;
+    return text || game.i18n.localize("SWIA.Item.Weapon.SurgeEffectType.Special");
+  }
+
+  static _surgeLines(item) {
+    const raw = item.system?.surgeAbilities;
+    const list = Array.isArray(raw) ? raw : Object.values(raw ?? {});
+    return list.map((entry) => ({
+      cost: Math.max(1, Number(entry?.cost) || 1),
+      label: sanitizeLabelHTML(SWIAActorSheet._surgeEntryLabel(entry)),
+      exhausts: !!entry?.exhaustToUse
+    }));
   }
 
   // Track whether the sheet is in edit mode (GM only)
@@ -145,6 +171,9 @@ export class SWIAActorSheet extends BaseActorSheet {
       openItem: SWIAActorSheet.prototype._onOpenItem,
       deleteItem: SWIAActorSheet.prototype._onDeleteItem,
       cycleItemState: SWIAActorSheet.prototype._onCycleItemState,
+      toggleEquipArmor: SWIAActorSheet.prototype._onToggleEquipArmor,
+      readyAllItems: SWIAActorSheet.prototype._onReadyAllItems,
+      detachMod: SWIAActorSheet.prototype._onDetachMod,
       setAttackType: SWIAActorSheet.prototype._onSetAttackType,
       // Imperial/ally list management
       addSurgeAbility: SWIAActorSheet.prototype._onAddSurgeAbility,
@@ -488,6 +517,21 @@ export class SWIAActorSheet extends BaseActorSheet {
     // Collect owned items grouped by type
     const ownedItems = actor.items?.contents ?? [];
     const abilities = ownedItems.filter(i => i.type === "classcard");
+    const allMods = ownedItems.filter(i => i.type === "weaponmod");
+    const modContext = (m) => ({
+      id: m.id,
+      name: m.name,
+      img: m.img,
+      cardState: m.system?.cardState ?? "ready",
+      compatType: m.system?.modCompatType || "melee",
+      bonusDamage: Number(m.system?.bonusDamage) || 0,
+      bonusAccuracy: Number(m.system?.bonusAccuracy) || 0,
+      bonusRedDice: SWIAActorSheet._diceArray(m.system?.bonusDice?.red),
+      bonusBlueDice: SWIAActorSheet._diceArray(m.system?.bonusDice?.blue),
+      bonusGreenDice: SWIAActorSheet._diceArray(m.system?.bonusDice?.green),
+      bonusYellowDice: SWIAActorSheet._diceArray(m.system?.bonusDice?.yellow),
+      surgeLines: SWIAActorSheet._surgeLines(m)
+    });
     const weapons = await Promise.all(
       ownedItems.filter(i => i.type === "weapon").map(async w => {
         const dice = w.system?.attackDice || {};
@@ -506,6 +550,25 @@ export class SWIAActorSheet extends BaseActorSheet {
             })
           }))
         );
+        // Attached mods: effective dice + flat-bonus tags + nested rows
+        const attachedMods = allMods
+          .filter((m) => m.system?.attachedWeaponId === w.id)
+          .map(modContext);
+        const modDice = { red: 0, blue: 0, green: 0, yellow: 0 };
+        const modBonusTags = [];
+        for (const m of attachedMods) {
+          modDice.red += m.bonusRedDice.length;
+          modDice.blue += m.bonusBlueDice.length;
+          modDice.green += m.bonusGreenDice.length;
+          modDice.yellow += m.bonusYellowDice.length;
+          if (m.bonusDamage) modBonusTags.push(game.i18n.format("SWIA.Inventory.ModBonusDamage", { value: m.bonusDamage, name: m.name }));
+          if (m.bonusAccuracy) modBonusTags.push(game.i18n.format("SWIA.Inventory.ModBonusAccuracy", { value: m.bonusAccuracy, name: m.name }));
+        }
+        // Mod surge lines join the weapon's list, tagged with their source
+        const surgeLines = SWIAActorSheet._surgeLines(w).concat(
+          attachedMods.flatMap((m) => m.surgeLines.map((s) => ({ ...s, source: m.name })))
+        );
+        const slotsTotal = Math.max(0, Number(w.system?.attachmentSlots) || 0);
         return {
           id: w.id,
           name: w.name,
@@ -516,10 +579,50 @@ export class SWIAActorSheet extends BaseActorSheet {
           attackBlueDice: SWIAActorSheet._diceArray(dice.blue),
           attackGreenDice: SWIAActorSheet._diceArray(dice.green),
           attackYellowDice: SWIAActorSheet._diceArray(dice.yellow),
+          modRedDice: SWIAActorSheet._diceArray(modDice.red),
+          modBlueDice: SWIAActorSheet._diceArray(modDice.blue),
+          modGreenDice: SWIAActorSheet._diceArray(modDice.green),
+          modYellowDice: SWIAActorSheet._diceArray(modDice.yellow),
+          modBonusTags,
+          attachedMods,
+          surgeLines,
+          slotsTotal,
+          slotsUsed: attachedMods.length,
+          showSlots: slotsTotal > 0 || attachedMods.length > 0,
+          // attachmentSlots defaults to 0 = "no slots": such weapons are
+          // always full, and pre-existing over-attachment shows a red badge.
+          slotsFull: attachedMods.length >= slotsTotal
         };
       })
     );
     const gear = ownedItems.filter(i => i.type === "gear");
+
+    // Unattached mods: owned weaponmods pointing at nothing (or a weapon the
+    // actor no longer owns). Each gets an attach-target list with slot and
+    // melee/ranged compatibility baked in.
+    const weaponById = new Map(weapons.map((w) => [w.id, w]));
+    const unattachedMods = allMods
+      .filter((m) => !weaponById.has(m.system?.attachedWeaponId ?? ""))
+      .map((m) => {
+        const ctx = modContext(m);
+        ctx.attachTargets = weapons.map((w) => ({
+          id: w.id,
+          label: `${w.name} (${w.slotsUsed}/${w.slotsTotal})`,
+          disabled: w.slotsFull || (w.system?.range ?? "melee") !== ctx.compatType
+        }));
+        return ctx;
+      });
+
+    // Armor: previously invisible on the sheet despite feeding buildDefensePool
+    const armorItems = ownedItems.filter(i => i.type === "armor").map((a) => ({
+      id: a.id,
+      name: a.name,
+      img: a.img,
+      cardState: a.system?.cardState ?? "ready",
+      equipped: a.system?.equipped ?? true,
+      defenseBlackDice: SWIAActorSheet._diceArray(a.system?.defenseDice?.black),
+      defenseWhiteDice: SWIAActorSheet._diceArray(a.system?.defenseDice?.white)
+    }));
 
     // Form card (Shift) context — villain only
     let formCards = [];
@@ -602,6 +705,9 @@ export class SWIAActorSheet extends BaseActorSheet {
       abilities: abilities,
       weapons: weapons,
       gear: gear,
+      armorItems,
+      unattachedMods,
+      hasUnattachedMods: unattachedMods.length > 0,
       hasItems: ownedItems.length > 0,
       activeInventoryPanel: this._activeInventoryPanel,
       sectionCollapse: this._collapsedSections,
@@ -1038,9 +1144,81 @@ export class SWIAActorSheet extends BaseActorSheet {
   }
 
   // Attach a native drop listener after each render
+  // Armor equip toggle: flips system.equipped, which buildDefensePool reads.
+  async _onToggleEquipArmor(event, target) {
+    event.preventDefault();
+    const actor = this.document ?? this.actor;
+    const itemId = target?.closest?.("[data-item-id]")?.dataset?.itemId;
+    const item = itemId ? actor?.items?.get(itemId) : null;
+    if (!item || item.type !== "armor") return;
+    await item.update({ "system.equipped": !(item.system?.equipped ?? true) });
+  }
+
+  // Status phase helper: ready every exhausted card on this actor in one
+  // click (weapons, mods, armor, class cards, gear). Depleted cards stay.
+  async _onReadyAllItems(event) {
+    event.preventDefault();
+    const actor = this.document ?? this.actor;
+    if (!actor) return;
+    const types = ["weapon", "weaponmod", "armor", "classcard", "gear"];
+    const updates = (actor.items?.contents ?? [])
+      .filter((i) => types.includes(i.type) && i.system?.cardState === "exhausted")
+      .map((i) => ({ _id: i.id, "system.cardState": "ready" }));
+    if (!updates.length) {
+      ui.notifications?.info(game.i18n.localize("SWIA.Inventory.ReadyAllNone"));
+      return;
+    }
+    await actor.updateEmbeddedDocuments("Item", updates);
+    ui.notifications?.info(game.i18n.format("SWIA.Inventory.ReadyAllDone", { count: updates.length }));
+  }
+
+  // Detach a mod from its weapon (clears attachedWeaponId; mod moves to the
+  // unattached pool).
+  async _onDetachMod(event, target) {
+    event.preventDefault();
+    const actor = this.document ?? this.actor;
+    const modId = target?.closest?.("[data-mod-id]")?.dataset?.modId;
+    const mod = modId ? actor?.items?.get(modId) : null;
+    if (!mod || mod.type !== "weaponmod") return;
+    await mod.update({ "system.attachedWeaponId": "" });
+  }
+
+  // Attach a mod to a weapon, re-validating slots and melee/ranged
+  // compatibility (the select already disables invalid targets, but the data
+  // can change between render and change).
+  async _attachMod(modId, weaponId) {
+    const actor = this.document ?? this.actor;
+    const mod = actor?.items?.get(modId);
+    const weapon = actor?.items?.get(weaponId);
+    if (!mod || mod.type !== "weaponmod" || !weapon || weapon.type !== "weapon") return;
+    const compat = mod.system?.modCompatType || "melee";
+    if ((weapon.system?.range ?? "melee") !== compat) {
+      ui.notifications?.warn(game.i18n.format("SWIA.Inventory.ModIncompatible", { mod: mod.name, weapon: weapon.name }));
+      return;
+    }
+    const slots = Math.max(0, Number(weapon.system?.attachmentSlots) || 0);
+    const used = (actor.items?.contents ?? []).filter(
+      (i) => i.type === "weaponmod" && i.system?.attachedWeaponId === weapon.id
+    ).length;
+    if (used >= slots) {
+      ui.notifications?.warn(game.i18n.format("SWIA.Inventory.ModSlotsFull", { weapon: weapon.name }));
+      return;
+    }
+    await mod.update({ "system.attachedWeaponId": weapon.id });
+  }
+
   _onRender(context, options) {
     if (typeof super._onRender === "function") super._onRender(context, options);
     const el = this.element;
+    // Attach-mod selects re-render each pass; bind fresh every time.
+    for (const select of el?.querySelectorAll?.(".mod-attach-select") ?? []) {
+      select.addEventListener("change", (event) => {
+        const weaponId = event.currentTarget.value;
+        const modId = event.currentTarget.closest("[data-mod-id]")?.dataset?.modId;
+        event.currentTarget.value = "";
+        if (weaponId && modId) this._attachMod(modId, weaponId).catch((err) => console.error("SWIA | attach mod failed", err));
+      });
+    }
     if (!el || el._swiaHeroDropBound) return;
     el._swiaHeroDropBound = true;
     el.addEventListener("drop", async (event) => {
