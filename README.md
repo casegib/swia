@@ -21,9 +21,13 @@ Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor shee
 - Round state tracking: current round, phase (`activation` / `status`), and ordered activation queue.
 - Custom status effects (weakened, stunned, bleeding, focused, hidden, blind, scanned, recon, wanted) and power token icons (block, damage, evade, surge, any) registered in the system.
 - Built-in Imperial Assault dice: custom attack dice (red, blue, green, yellow) and defense dice (black, white) registered as `CONFIG.Dice.terms` with per-face symbol tables and face icons.
-- `SWIARollDialog` for attack, attribute test, and defense rolls, building dice pools from weapons, weapon mods, and attributes with keyword and accuracy display.
+- `SWIARollDialog` for attack, attribute test, and defense rolls, building dice pools from weapons, weapon mods, and attributes with keyword and accuracy display. Untargeted attacks open a pick-a-target prompt (with a roll-without-target fallback).
 - Roll chat cards with spendable surge abilities gathered from weapons, weapon mods, form cards, and special abilities.
-- Shared `SWIACombatWindow` attacker-vs-defender flow synced to all clients via the `swia.activeCombat` world setting and the `updateSetting` hook.
+- Shared `SWIACombatWindow` attacker-vs-defender flow synced to all clients via the `swia.activeCombat` world setting and the `updateSetting` hook. Opens for every connected user (view-only for spectators); starting an attack while a combat is active reopens the in-progress window.
+- Unlimited per-die rerolls until a surge or power token is spent; surge spends can be undone (refunding cost, reversing effects, and re-readying any card the spend exhausted).
+- Hero inventory management on the actor sheet: armor section with an equip toggle feeding the defense pool; weapon mods nested under their weapon with attach/detach, attachment-slot limits, and melee/ranged compatibility checks; weapon rows show the effective dice pool (mod dice highlighted) and each item's surge abilities.
+- Card-state automation: an `exhaustToUse` flag on weapon/mod surge abilities auto-exhausts the source card when spent (in the combat window and on chat cards); exhausted cards keep passive stats but withhold flagged abilities; depleted weapons leave the attack dropdowns and depleted mods contribute nothing; a per-hero **Ready All** button readies every exhausted card for the status phase.
+- Hero sheet quality of life: health/endurance current-max steppers, clickable Healthy/Wounded/Defeated state pills, and edit-mode Healthy|Wounded tabs for configuring both attribute sets without toggling actor state.
 - GM socket relay (`system.swia`) for permission-checked surge and power token spends, per-die rerolls, and damage application.
 - Power token (block/evade) consumption and wounded-aware damage application to actor health.
 - Dice So Nice! integration for 3D dice, plus a startup warning if the legacy external `swia-dice` module is still active.
@@ -54,6 +58,7 @@ Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor shee
 - `styles/` – sheet styling.
 - `lang/en.json` – localization strings.
 - `packs/` – placeholder for compendium packs.
+- `BACKLOG.md` – working list of planned improvements (party overview portal, card-art integration, item trading, and more).
 
 ## Next Steps
 - [x] Add dice pool logic and custom roll dialogs matching Imperial Assault dice. - Imperial Assault dice are now built into the system (`scripts/dice/`), with optional Dice So Nice! integration. The standalone [swia-dice](https://github.com/casegib/swia-dice) module is no longer required and is treated as legacy.
@@ -61,6 +66,8 @@ Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor shee
 - [x] Flesh out items with automation hooks (dice rolls, surge spending, keyword effects). - Delivered via `SWIARollDialog`, surge-spending roll cards, and the shared `SWIACombatWindow`.
 - [x] Add token HUD controls and custom status effects.
 - [x] Replace placeholder license/author fields in `system.json`.
+
+See `BACKLOG.md` for the current improvement queue.
 
 ## Recommended Modules
 - [Dice So Nice!](https://foundryvtt.com/packages/dice-so-nice) for immersive 3D dice rolling.
