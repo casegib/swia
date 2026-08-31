@@ -2,9 +2,9 @@
 
 Working list of planned improvements. Items graduate from here into implementation passes.
 
-## In flight
+## DONE
 
-**Pass 1 — Inventory & attachments (hero sheet)** *(in progress)*
+**Pass 1 — Inventory & attachments (hero sheet)** *(DONE)*
 - Armor section with equip toggle (wired to `system.equipped`, feeds `buildDefensePool`)
 - Weapon mods nested under their weapon; unattached-mod pool with "Attach to…" picker writing `attachedWeaponId`
 - Attachment slot display ("Mods 1/2") and enforcement against `attachmentSlots`; compat filtering via `modCompatType`
@@ -12,9 +12,7 @@ Working list of planned improvements. Items graduate from here into implementati
 - Surge/exhaust/action ability lines on weapon rows with cost badges (display only in this pass)
 - Color-coded card-state pills (green ready / amber exhausted / red depleted)
 
-## Next up
-
-**Pass 2 — Exhaust & surge mechanics**
+**Pass 2 — Exhaust & surge mechanics** *(DONE)*
 - `exhaustToUse` flag on the shared weapon/mod surge-entry schema (one checkbox, works for both editors)
 - Combat window: surge buttons tagged with source item id; spending a flagged surge exhausts the source item; surge-undo readies it back
 - Exhausted item semantics (locked in): printed dice/damage/accuracy/keywords always apply; only flagged surge + exhaust abilities are gated; depleted = item fully off (weapon leaves attack dropdowns, mod contributes nothing)
@@ -24,6 +22,8 @@ Working list of planned improvements. Items graduate from here into implementati
 
 **Weapon pool substitution**
 - Optional `poolAttribute` field on weapons ("", strength, insight, tech). When set, `buildAttackPool` substitutes that attribute pool (Ancient Lightsaber: "your attack pool is your Insight pool"). Sheet shows ? dice chips + italic rule text.
+
+## Next up
 
 ## Planned
 
