@@ -441,5 +441,10 @@
   "SWIA.State.HealthyHint": "Click to mark Wounded",
   "SWIA.State.WoundedHint": "Click to return to Healthy",
   "SWIA.State.ActiveHint": "Click to mark Defeated",
-  "SWIA.State.DefeatedHint": "Click to return to Active"
+  "SWIA.State.DefeatedHint": "Click to return to Active",
+  "SWIA.Attributes.EnduranceMinus": "Spend 1 endurance",
+  "SWIA.Attributes.EndurancePlus": "Recover 1 endurance",
+  "SWIA.Attributes.AddCustom": "Add attribute",
+  "SWIA.TokenSetup": "Token Setup",
+  "SWIA.EditStatTabs.Label": "Editing stats for"
 }

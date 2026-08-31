@@ -5176,8 +5176,10 @@ input:checked + .defeated-label { color: #8b0000; }
   opacity: 0.5;
 }
 
+.swia-sheet .dice-display.hero-attack-roll,
 .hero-attack-roll {
   display: inline-flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 6px;
@@ -5191,11 +5193,17 @@ input:checked + .defeated-label { color: #8b0000; }
   cursor: pointer;
   transition: filter 0.12s ease, transform 0.08s ease, box-shadow 0.12s ease;
 }
+.swia-sheet .dice-display.hero-attack-roll i,
+.swia-sheet .dice-display.hero-attack-roll .hero-attack-roll-label {
+  color: #1a1200;
+}
+.swia-sheet .dice-display.hero-attack-roll:hover,
 .hero-attack-roll:hover {
   filter: brightness(1.08);
   transform: translateY(-1px);
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
+.swia-sheet .dice-display.hero-attack-roll:active,
 .hero-attack-roll:active {
   transform: translateY(0);
   filter: brightness(0.96);
@@ -5568,17 +5576,151 @@ input:checked + .defeated-label { color: #8b0000; }
   border-radius: 3px;
 }
 
-/* Hero attack roll button — explicit text color so it reads on dark stat-bg */
-.hero-attack-roll {
+
+
+/* ============================================================
+   Edit-mode density pass: stat tabs, compact dice editors,
+   custom-slot add tile, header select row, token setup disclosure
+   ============================================================ */
+
+/* Healthy | Wounded stat-set tabs (hero edit mode) */
+.swia-sheet .edit-stat-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px 0;
+}
+.swia-sheet .edit-stat-tabs-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--label);
+  opacity: 0.7;
+  margin-right: 2px;
+}
+.swia-sheet .edit-stat-tab {
+  padding: 3px 14px;
+  border-radius: 999px 999px 0 0;
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  border-bottom: none;
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--label);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  opacity: 0.6;
+}
+.swia-sheet .edit-stat-tab:hover {
+  opacity: 0.85;
+}
+.swia-sheet .edit-stat-tab.active {
+  background: var(--stat-bg);
   color: var(--stat-text, #fff);
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(212, 175, 55, 0.55);
+  opacity: 1;
+  border-color: var(--accent);
+}
+.swia-sheet .edit-stat-tab.tab-wounded.active {
+  background: linear-gradient(135deg, #a82323 0%, #6e150c 100%);
+  border-color: #6e150c;
+  color: #fff;
+}
+
+/* Compact dice editors: colored chip + small number input pairs */
+.swia-sheet.editing .resource .dice-edit-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin-top: 4px;
+}
+.swia-sheet.editing .resource .dice-edit-row .dice-block {
+  flex-shrink: 0;
+}
+.swia-sheet.editing .stat-chips-row .resource .dice-edit-row input[type="number"],
+.swia-sheet.editing .dice-attributes-row .resource .dice-edit-row input[type="number"],
+.swia-sheet.editing .resource .dice-edit-row input[type="number"] {
+  width: 44px;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+/* Custom attribute slots: compact head + add tile */
+.swia-sheet.editing .custom-attr .custom-attr-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.swia-sheet.editing .custom-attr .custom-attr-head .custom-attr-label-input {
+  flex: 1;
+  min-width: 0;
+}
+.swia-sheet .custom-attr-add {
+  display: flex;
+  align-items: stretch;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+.swia-sheet .custom-attr-add-btn {
+  flex: 1;
+  min-height: 60px;
+  border: 2px dashed rgba(var(--accent-rgb), 0.4);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--label);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.swia-sheet .custom-attr-add-btn:hover {
+  background: rgba(var(--accent-rgb), 0.08);
+  border-color: var(--accent);
+}
+
+/* Hero edit header: archetype + affiliation share one row */
+.swia-sheet .hero-selects-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 4px;
+}
+.swia-sheet .hero-selects-row select {
+  width: 100%;
+  font-size: 0.85em;
+  padding: 2px 4px;
+  border-radius: 3px;
+  border: 1px solid var(--accent);
+  color: var(--label);
+}
+
+/* Token setup: collapsed by default behind a disclosure */
+.swia-sheet details.token-setup {
+  margin-top: 6px;
+}
+.swia-sheet details.token-setup > summary {
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--label);
+  opacity: 0.75;
+  padding: 3px 4px;
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
   border-radius: 4px;
+  user-select: none;
 }
-.hero-attack-roll i {
-  color: #d4af37;
+.swia-sheet details.token-setup > summary:hover {
+  opacity: 1;
+  border-color: var(--accent);
 }
-.hero-attack-roll:hover {
-  background: rgba(212, 175, 55, 0.18);
-  border-color: rgba(212, 175, 55, 0.85);
+.swia-sheet details.token-setup[open] > summary {
+  margin-bottom: 6px;
 }

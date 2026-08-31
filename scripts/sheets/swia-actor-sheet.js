@@ -8,13 +8,13 @@ const BaseActorSheet = HandlebarsApplicationMixin(foundry.applications.sheets.Ac
 export class SWIAActorSheet extends BaseActorSheet {
   static EDIT_COLLAPSE_DEFAULTS = {
     biography: true,
-    heroAbilities: false,
+    heroAbilities: true,
     stats: false,
-    weapons: false,
+    weapons: true,
     abilities: true,
     items: true,
-    surgeAbilities: false,
-    specialAbilities: false
+    surgeAbilities: true,
+    specialAbilities: true
   };
 
   static _diceArray(n) {
@@ -25,6 +25,7 @@ export class SWIAActorSheet extends BaseActorSheet {
   constructor(...args) {
     super(...args);
     this._editMode = false;
+    this._editStatTab = "healthy";
     this._activeInventoryPanel = null;
     this._collapsedSections = foundry.utils.mergeObject({}, SWIAActorSheet.EDIT_COLLAPSE_DEFAULTS);
     this._enrichCache = new Map();
@@ -124,8 +125,11 @@ export class SWIAActorSheet extends BaseActorSheet {
     actions: {
       // Dice rolling (Phase 5)
       rollDice: SWIAActorSheet.prototype._onRollDice,
-      // Health stepper (display mode)
-      adjustHealth: SWIAActorSheet.prototype._onAdjustHealth,
+      // Health/endurance steppers (display mode)
+      adjustStat: SWIAActorSheet.prototype._onAdjustStat,
+      // Edit-mode stat set tabs (hero) + custom attribute slots
+      setEditStatTab: SWIAActorSheet.prototype._onSetEditStatTab,
+      addCustomAttribute: SWIAActorSheet.prototype._onAddCustomAttribute,
       // Combat state toggles
       toggleWounded: SWIAActorSheet.prototype._onToggleWounded,
       toggleDefeated: SWIAActorSheet.prototype._onToggleDefeated,
@@ -171,15 +175,17 @@ export class SWIAActorSheet extends BaseActorSheet {
     return name || "";
   }
 
-  // Health +/- stepper in display mode. Uses the wounded attribute set when a
-  // wounded hero, mirroring healthPath() in combat-window.js. Clamped to [0, max].
-  async _onAdjustHealth(event, target) {
+  // Health/endurance +/- stepper in display mode. Uses the wounded attribute
+  // set for a wounded hero, mirroring healthPath() in combat-window.js.
+  // Clamped to [0, max].
+  async _onAdjustStat(event, target) {
     event.preventDefault();
     const actor = this.document ?? this.actor;
     if (!actor) return;
+    const stat = target?.dataset?.stat === "endurance" ? "endurance" : "health";
     const delta = Number(target?.dataset?.delta) || 0;
     const wounded = actor.type === "hero" && actor.system?.state?.wounded;
-    const path = wounded ? "system.woundedAttributes.health" : "system.attributes.health";
+    const path = wounded ? `system.woundedAttributes.${stat}` : `system.attributes.${stat}`;
     const current = Number(foundry.utils.getProperty(actor, `${path}.value`)) || 0;
     const max = Number(foundry.utils.getProperty(actor, `${path}.max`));
     let next = current + delta;
@@ -187,6 +193,30 @@ export class SWIAActorSheet extends BaseActorSheet {
     next = Math.max(0, next);
     if (next === current) return;
     await actor.update({ [`${path}.value`]: next });
+  }
+
+  // Edit mode: pick which attribute set (healthy/wounded) the stat editors
+  // write to, without touching the actor's actual wounded state.
+  _onSetEditStatTab(event, target) {
+    event.preventDefault();
+    if (!this._editMode) return;
+    const tab = target?.dataset?.tab === "wounded" ? "wounded" : "healthy";
+    if (tab === this._editStatTab) return;
+    this._editStatTab = tab;
+    this.render(false);
+  }
+
+  // Edit mode: enable the next free custom attribute slot in the active set.
+  async _onAddCustomAttribute(event) {
+    event.preventDefault();
+    const actor = this.document ?? this.actor;
+    if (!actor || !this._editMode) return;
+    const path = (actor.type === "hero" && this._editStatTab === "wounded")
+      ? "woundedAttributes" : "attributes";
+    const set = foundry.utils.getProperty(actor, `system.${path}`) ?? {};
+    const key = ["custom1", "custom2", "custom3"].find((k) => !set?.[k]?.enabled);
+    if (!key) return;
+    await actor.update({ [`system.${path}.${key}.enabled`]: true });
   }
 
   // Open the roll dialog from a clicked dice block (Phase 5)
@@ -315,6 +345,11 @@ export class SWIAActorSheet extends BaseActorSheet {
     // Determine which attribute set to display based on wounded state
     const isWounded = system.state?.wounded ?? false;
     const currentAttrPath = isWounded ? "woundedAttributes" : "attributes";
+    // Edit-mode stat tab (heroes edit healthy/wounded sets via tabs; other
+    // types always edit the base attributes).
+    const editStatTab = actor.type === "hero" ? (this._editStatTab ?? "healthy") : "healthy";
+    const editAttrPath = editStatTab === "wounded" ? "woundedAttributes" : "attributes";
+    const editAttributes = system[editAttrPath] ?? system.attributes;
     const tokenSrc = actor?.prototypeToken?.texture?.src ?? "";
     const profileSrc = actor?.img || tokenSrc || "";
     const tokenPreviewSrc = this._getTokenPreviewSrc(actor, isWounded) || profileSrc;
@@ -338,8 +373,10 @@ export class SWIAActorSheet extends BaseActorSheet {
     const customSlotKeys = ["custom1", "custom2", "custom3"];
     const customDefault = { enabled: false, label: "", icon: "", red: 0, blue: 0, green: 0, yellow: 0 };
     const attrSet = isWounded ? (system.woundedAttributes ?? system.attributes) : system.attributes;
+    // Edit mode reads slots from the tab-selected set; display follows state.
+    const slotSource = this._editMode ? editAttributes : attrSet;
     const customSlots = customSlotKeys.map((key) => {
-      const slot = attrSet?.[key] ?? customDefault;
+      const slot = slotSource?.[key] ?? customDefault;
       return {
         key,
         enabled: !!slot.enabled,
@@ -547,6 +584,10 @@ export class SWIAActorSheet extends BaseActorSheet {
       isEditable: actor.isOwner ?? true,
       currentAttrPath: currentAttrPath,
       currentAttributes: system[currentAttrPath] ?? system.attributes,
+      editStatTab,
+      editAttrPath,
+      editAttributes,
+      hasFreeCustomSlot: customSlots.some((s) => !s.enabled),
       config: CONFIG.SWIA ?? {},
       profileSrc,
       tokenPreviewSrc,
