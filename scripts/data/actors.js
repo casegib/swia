@@ -127,7 +127,17 @@ export class VillainData extends UnitData {
   }
 }
 
-export class AllyData extends UnitData {}
+export class AllyData extends UnitData {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      // Actor id of the hero or villain this ally is a companion of. Blank =
+      // unassigned (lives in the Companion Area). Set explicitly rather than
+      // inferred from ownership, so NPC companions work the same as player ones.
+      companionOf: str()
+    };
+  }
+}
 
 export class CharacterData extends SWIAActorBase {
   static defineSchema() {

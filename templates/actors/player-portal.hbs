@@ -31,20 +31,70 @@
               </div>
               <div class="type-row">
                 <span>{{actor.typeLabel}}</span>
+                {{#if actor.isHero}}
+                <button
+                  type="button"
+                  class="portal-state-pill {{#if actor.isWounded}}pill-wounded{{else}}pill-healthy{{/if}}"
+                  data-action="toggleWounded"
+                  data-actor-id="{{actor.id}}"
+                  title="{{#if actor.isWounded}}{{localize 'SWIA.State.WoundedHint'}}{{else}}{{localize 'SWIA.State.HealthyHint'}}{{/if}}"
+                  {{#unless actor.canManage}}disabled{{/unless}}
+                >
+                  <i class="fas {{#if actor.isWounded}}fa-heart-crack{{else}}fa-heart{{/if}}"></i>
+                  {{#if actor.isWounded}}{{localize "SWIA.State.Wounded"}}{{else}}{{localize "SWIA.State.Healthy"}}{{/if}}
+                </button>
+                {{#if actor.isWounded}}
+                <button
+                  type="button"
+                  class="portal-state-pill {{#if actor.isDefeated}}pill-defeated{{else}}pill-active{{/if}}"
+                  data-action="toggleDefeated"
+                  data-actor-id="{{actor.id}}"
+                  title="{{#if actor.isDefeated}}{{localize 'SWIA.State.DefeatedHint'}}{{else}}{{localize 'SWIA.State.ActiveHint'}}{{/if}}"
+                  {{#unless actor.canManage}}disabled{{/unless}}
+                >
+                  <i class="fas {{#if actor.isDefeated}}fa-skull{{else}}fa-person-running{{/if}}"></i>
+                  {{#if actor.isDefeated}}{{localize "SWIA.State.Defeated"}}{{else}}{{localize "SWIA.State.Active"}}{{/if}}
+                </button>
+                {{/if}}
+                {{/if}}
               </div>
             </div>
+            {{#if actor.isHero}}
+            <div class="portal-xp" title="{{localize 'SWIA.Portal.UnspentXpHint'}}">
+              <span class="xp-row">
+                {{#if actor.canEditXp}}
+                <button type="button" class="xp-step" data-action="adjustXp" data-actor-id="{{actor.id}}" data-delta="-1">&minus;</button>
+                {{/if}}
+                <span class="xp-value">{{actor.xp}}</span>
+                {{#if actor.canEditXp}}
+                <button type="button" class="xp-step" data-action="adjustXp" data-actor-id="{{actor.id}}" data-delta="1">+</button>
+                {{/if}}
+              </span>
+              <span class="xp-label">{{localize "SWIA.Portal.UnspentXp"}}</span>
+            </div>
+            {{/if}}
           </div>
 
           <div class="stats-grid">
             <div class="stat-box">
               <label>{{localize "SWIA.Attributes.Health"}}</label>
-              <strong>{{actor.health.value}}</strong>
+              <div class="portal-stepper">
+                <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{actor.id}}" data-stat="health" data-delta="-1" title="{{localize 'SWIA.Attributes.HealthMinus'}}" {{#unless actor.canManage}}disabled{{/unless}}>&minus;</button>
+                <strong>{{actor.health.value}}</strong>
+                <span class="stat-max">/{{actor.health.max}}</span>
+                <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{actor.id}}" data-stat="health" data-delta="1" title="{{localize 'SWIA.Attributes.HealthPlus'}}" {{#unless actor.canManage}}disabled{{/unless}}>+</button>
+              </div>
             </div>
 
             {{#if actor.isHero}}
               <div class="stat-box">
                 <label>{{localize "SWIA.Attributes.Endurance"}}</label>
-                <strong>{{actor.endurance.value}}</strong>
+                <div class="portal-stepper">
+                  <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{actor.id}}" data-stat="endurance" data-delta="-1" title="{{localize 'SWIA.Attributes.EnduranceMinus'}}" {{#unless actor.canManage}}disabled{{/unless}}>&minus;</button>
+                  <strong>{{actor.endurance.value}}</strong>
+                  <span class="stat-max">/{{actor.endurance.max}}</span>
+                  <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{actor.id}}" data-stat="endurance" data-delta="1" title="{{localize 'SWIA.Attributes.EndurancePlus'}}" {{#unless actor.canManage}}disabled{{/unless}}>+</button>
+                </div>
               </div>
             {{/if}}
 
@@ -78,6 +128,8 @@
                 <span class="dice-blocks rollable" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="defense" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
                   {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
                   {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
+                  {{#each actor.armorBlackDice}}<span class="dice-block black from-item" title="{{localize 'SWIA.Portal.FromArmor'}}"></span>{{/each}}
+                  {{#each actor.armorWhiteDice}}<span class="dice-block white from-item" title="{{localize 'SWIA.Portal.FromArmor'}}"></span>{{/each}}
                 </span>
               </div>
               <div class="dice-line hero-dice-line">
@@ -113,12 +165,30 @@
                   {{#each actor.techYellowDice}}<span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
                 </span>
               </div>
-              <div class="dice-line hero-dice-line">
-                <label>{{localize "SWIA.Roll.WeaponAttack"}}</label>
-                <span class="dice-blocks rollable hero-attack-roll" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="attack" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
-                  <i class="fas fa-dice"></i>
-                </span>
-              </div>
+            </div>
+            <div class="portal-action-row">
+              <button
+                type="button"
+                class="portal-attack-btn"
+                data-action="rollDice"
+                data-actor-id="{{actor.id}}"
+                data-roll-type="attack"
+                title="{{localize 'SWIA.Roll.ClickToRoll'}}"
+              >
+                <i class="fas fa-dice"></i> {{localize "SWIA.Roll.WeaponAttack"}}
+              </button>
+              {{#if actor.canManage}}
+              <button
+                type="button"
+                class="portal-ready-all"
+                data-action="readyAllItems"
+                data-actor-id="{{actor.id}}"
+                title="{{localize 'SWIA.Inventory.ReadyAllHint'}}"
+                {{#unless actor.hasReadyableCards}}disabled{{/unless}}
+              >
+                <i class="fas fa-rotate-left"></i> {{localize "SWIA.Inventory.ReadyAll"}}
+              </button>
+              {{/if}}
             </div>
           {{else}}
             <div class="dice-list">
@@ -127,6 +197,8 @@
                 <span class="dice-blocks rollable" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="defense" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
                   {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
                   {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
+                  {{#each actor.armorBlackDice}}<span class="dice-block black from-item" title="{{localize 'SWIA.Portal.FromArmor'}}"></span>{{/each}}
+                  {{#each actor.armorWhiteDice}}<span class="dice-block white from-item" title="{{localize 'SWIA.Portal.FromArmor'}}"></span>{{/each}}
                 </span>
               </div>
               <div class="dice-line">
@@ -139,8 +211,49 @@
                 </span>
               </div>
             </div>
+            {{#if actor.canManage}}
+            <div class="portal-action-row">
+              <button type="button" class="portal-ready-all" data-action="readyAllItems" data-actor-id="{{actor.id}}" title="{{localize 'SWIA.Inventory.ReadyAllHint'}}" {{#unless actor.hasReadyableCards}}disabled{{/unless}}>
+                <i class="fas fa-rotate-left"></i> {{localize "SWIA.Inventory.ReadyAll"}}
+              </button>
+            </div>
+            {{/if}}
           {{/if}}
         </article>
+        {{#if actor.companions.length}}
+        <div class="portal-companions">
+          {{#each actor.companions as |companion|}}
+          <article class="portal-companion-card {{#if companion.isWounded}}is-wounded{{/if}}" data-actor-id="{{companion.id}}">
+            <img class="companion-portrait" src="{{companion.tokenImage}}" alt="{{companion.name}}" loading="lazy">
+            <div class="companion-id">
+              <button type="button" class="actor-name-link companion-name" data-action="openActor" data-actor-id="{{companion.id}}" title="{{localize 'SWIA.Portal.OpenSheet'}}">
+                {{companion.name}}
+              </button>
+              <span class="companion-tag">{{localize "SWIA.Portal.CompanionTag"}}</span>
+            </div>
+            <div class="companion-stats">
+              <span class="companion-stat">
+                <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{companion.id}}" data-stat="health" data-delta="-1" {{#unless companion.canManage}}disabled{{/unless}}>&minus;</button>
+                <strong>{{companion.health.value}}</strong><span class="stat-max">/{{companion.health.max}}</span>
+                <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{companion.id}}" data-stat="health" data-delta="1" {{#unless companion.canManage}}disabled{{/unless}}>+</button>
+              </span>
+              <span class="companion-stat companion-speed">{{localize "SWIA.Attributes.Speed"}} <strong>{{companion.speed}}</strong></span>
+              {{#if companion.canManage}}
+              <button type="button" class="portal-ready-all companion-ready-all" data-action="readyAllItems" data-actor-id="{{companion.id}}" title="{{localize 'SWIA.Inventory.ReadyAllHint'}}" {{#unless companion.hasReadyableCards}}disabled{{/unless}}>
+                <i class="fas fa-rotate-left"></i>
+              </button>
+              {{/if}}
+              <span class="companion-dice" title="{{localize 'SWIA.Attributes.Defense'}}">
+                {{#each companion.defenseBlackDice}}<span class="dice-block black"></span>{{/each}}
+                {{#each companion.defenseWhiteDice}}<span class="dice-block white"></span>{{/each}}
+                {{#each companion.armorBlackDice}}<span class="dice-block black from-item"></span>{{/each}}
+                {{#each companion.armorWhiteDice}}<span class="dice-block white from-item"></span>{{/each}}
+              </span>
+            </div>
+          </article>
+          {{/each}}
+        </div>
+        {{/if}}
         <section class="portal-inventory" aria-label="Inventory">
           <div class="portal-inventory-grid">
               <div class="portal-item-column">
@@ -164,6 +277,70 @@
                             <img src="{{item.img}}" alt="{{item.name}}" loading="lazy">
                           </button>
                           <div class="portal-item-footer">
+                            <button
+                              type="button"
+                              class="portal-item-state state-{{item.state}}"
+                              data-action="cycleItemState"
+                              data-actor-id="{{actor.id}}"
+                              data-item-id="{{item.id}}"
+                              title="{{item.stateLabel}}"
+                              {{#unless actor.canManage}}disabled{{/unless}}
+                            >
+                              {{item.stateLabel}}
+                            </button>
+                          </div>
+                          {{#if item.mods.length}}
+                          <div class="portal-mod-chips">
+                            {{#each item.mods as |mod|}}
+                            <span class="portal-mod-chip" title="{{mod.name}}">
+                              <span class="mod-chip-name">{{mod.name}}</span>
+                              {{#each mod.redDice}}<span class="dice-block red"></span>{{/each}}
+                              {{#each mod.blueDice}}<span class="dice-block blue"></span>{{/each}}
+                              {{#each mod.greenDice}}<span class="dice-block green"></span>{{/each}}
+                              {{#each mod.yellowDice}}<span class="dice-block yellow"></span>{{/each}}
+                            </span>
+                            {{/each}}
+                          </div>
+                          {{/if}}
+                        </article>
+                      {{/each}}
+                    </div>
+                  {{/if}}
+                </div>
+              </div>
+
+              <div class="portal-item-column">
+                <header>
+                  <h3>{{localize "SWIA.Inventory.Armor"}}</h3>
+                  <span>{{actor.armorCount}}</span>
+                </header>
+                <div class="portal-drop-zone {{#if actor.canManage}}can-drop{{/if}}" data-actor-id="{{actor.id}}" data-item-type="armor">
+                  {{#if actor.armor.length}}
+                    <div class="portal-card-stack">
+                      {{#each actor.armor as |item|}}
+                        <article class="portal-item-card state-{{item.state}} {{#unless item.equipped}}is-unequipped{{/unless}}" data-item-id="{{item.id}}">
+                          <button
+                            type="button"
+                            class="portal-item-open"
+                            data-action="openItem"
+                            data-actor-id="{{actor.id}}"
+                            data-item-id="{{item.id}}"
+                            title="{{item.name}}"
+                          >
+                            <img src="{{item.img}}" alt="{{item.name}}" loading="lazy">
+                          </button>
+                          <div class="portal-item-footer">
+                            <button
+                              type="button"
+                              class="portal-armor-equip {{#unless item.equipped}}off{{/unless}}"
+                              data-action="toggleEquipArmor"
+                              data-actor-id="{{actor.id}}"
+                              data-item-id="{{item.id}}"
+                              title="{{#if item.equipped}}{{localize 'SWIA.Inventory.UnequipHint'}}{{else}}{{localize 'SWIA.Inventory.EquipHint'}}{{/if}}"
+                              {{#unless actor.canManage}}disabled{{/unless}}
+                            >
+                              <i class="fas fa-shield-halved"></i>
+                            </button>
                             <button
                               type="button"
                               class="portal-item-state state-{{item.state}}"

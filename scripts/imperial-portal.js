@@ -73,6 +73,15 @@ export class SWIAImperialPortal extends BaseApplication {
     this._assertGmAccess();
     const orderedActors = this._getOrderedImperialActors();
     const actors = await Promise.all(orderedActors.map(actor => this._toPortalActor(actor)));
+
+    // Companions pinned to a villain nest inside its card, mirroring how hero
+    // companions nest in the Player Area.
+    const byId = new Map(actors.map((a) => [a.id, a]));
+    for (const ally of (game.actors?.contents ?? []).filter((a) => a.type === "ally")) {
+      const owner = byId.get(ally.system?.companionOf);
+      if (!owner) continue;
+      owner.companions.push(this._toCompanion(ally));
+    }
     const worldItems = game.items?.contents ?? [];
     const agendaCards = worldItems
       .filter(item => item.type === "agendacard")
@@ -161,7 +170,9 @@ export class SWIAImperialPortal extends BaseApplication {
   }
 
   _isPortalActor(actor) {
-    return actor?.type === "villain";
+    // Allies count too: a companion's stats (or its companionOf link) changing
+    // must re-render the villain card it nests inside.
+    return ["villain", "ally"].includes(actor?.type);
   }
 
   _isPortalItem(item) {
@@ -201,6 +212,28 @@ export class SWIAImperialPortal extends BaseApplication {
       this._refreshHandle = null;
       this.render(false);
     }, 75);
+  }
+
+  /** Slim card context for a companion nested under its villain. */
+  _toCompanion(actor) {
+    const system = actor.system ?? {};
+    const attributes = system.attributes ?? {};
+    const health = attributes.health ?? { value: 0, max: 0 };
+    const defense = attributes.defense ?? { black: 0, white: 0 };
+    return {
+      id: actor.id,
+      name: actor.name,
+      tokenImage: actor.prototypeToken?.texture?.src || actor.img,
+      health,
+      speed: attributes.speed ?? 0,
+      canManage: Boolean(game.user?.isGM || actor.isOwner),
+      hasReadyableCards: (actor.items?.contents ?? []).some(
+        (item) => item.system?.cardState === "exhausted"
+          && ["weapon", "weaponmod", "armor", "classcard", "gear"].includes(item.type)
+      ),
+      defenseBlackDice: Array.from({ length: defense.black || 0 }, (_, i) => i),
+      defenseWhiteDice: Array.from({ length: defense.white || 0 }, (_, i) => i)
+    };
   }
 
   _getOrderedImperialActors() {
@@ -246,6 +279,7 @@ export class SWIAImperialPortal extends BaseApplication {
       id: actor.id,
       name: actor.name,
       img: actor.img,
+      companions: [],
       type: actor.type,
       typeLabel: game.i18n.localize(`SWIA.Actor.${actor.type.charAt(0).toUpperCase()}${actor.type.slice(1)}`),
       isHero,

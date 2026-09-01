@@ -191,8 +191,13 @@ export class SWIACompanionPortal extends BaseApplication {
       return (ownership[currentUser.id] ?? ownership.default ?? 0) >= observerLevel;
     };
 
+    // Assigned companions live in their owner's column (Player Area for hero
+    // companions, Imperial Portal for villain ones). This is the staging area
+    // for allies that have not been pinned to anyone yet.
+    const ownerExists = (id) => Boolean(id && game.actors?.get(id));
     return (game.actors?.contents ?? [])
       .filter(actor => actor.type === "ally")
+      .filter(actor => !ownerExists(actor.system?.companionOf))
       .filter(canObserve)
       .sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang, { sensitivity: "base" }));
   }

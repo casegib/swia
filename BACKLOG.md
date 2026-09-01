@@ -9,12 +9,6 @@ Working list of planned improvements. Items graduate from here into implementati
 
 ## Planned
 
-**Player Area upgrade: party overview ("Rebel Heroes Area")** — decisions settled, delta mockup approved-pending
-- Upgrade the existing Player Portal (which already has per-hero cards, card-art item stacks, drop zones, state cycling); GM Portal stays as-is for round tracking + villains
-- Add per hero: unspent-XP headline (Campaign Tracker heroXp is the source of truth, editable both places), clickable state pill, health/endurance steppers, per-hero Ready All — all reusing the sheet's handlers
-- Armor column in the item area with mini equip toggles; attached mods as chips on their weapon's card; armor dice gold-ringed in the DEFENSE row
-- Companions nest under their owner's hero card (matched by player ownership) as a slim card; standalone Companion Area kept for now
-
 **Card-art borrows (from Vassal comparison)**
 - Send-to-chat posts the item's uploaded card image when one exists (text card as fallback)
 - Hover preview on inventory rows showing the card art (compact rows stay the structure; art is garnish)
@@ -27,12 +21,18 @@ Working list of planned improvements. Items graduate from here into implementati
 - Optional: collapse-per-weapon ability lists if surge-heavy loadouts make the sheet too tall
 - Optional: one-mod-per-subtype validation (no double barrels) — table-rules toggle
 
+**Known issues**
+- Wound/heal destroys custom token art: `getHealthyTokenSrc` falls back to `actor.img` because wounding overwrites `prototypeToken.texture.src`. A GM who set token art distinct from the portrait loses it after the first wound/heal cycle. Proper fix: capture `system.healthyTokenImage` before the first wound and restore from it. (Do NOT just read prototypeToken first — healing would then restore the wounded art.)
+- Portal defense dice over-draw if a GM sets a raw defense attribute above 9 (`buildDefensePool` clamps at 9, the raw render does not).
+
 **Earlier follow-ups (from combat window work)**
 - Mirror unlimited rerolls + surge undo into the solo roll dialog and chat cards
-- Confirm dialog on Healthy → Wounded pill click (health pool reset is destructive)
 - Undo for spent power tokens in the combat window (recreate the consumed status effect)
 
 ## Done (this cycle)
+- Player Area party overview: unspent-XP headline (GM-editable, shares `system.xp` with the Campaign Tracker), clickable state pills, health/endurance steppers, per-figure Ready All, Armor column with equip toggles, mod chips on weapon cards, armor dice gold-ringed in DEFENSE, companions nested under their owner
+- New `scripts/actor-actions.js`: shared mutations (wound/defeat, stat + XP steppers, armor equip, Ready All, token sync) used by both the actor sheet and the portal so the two surfaces cannot drift
+- Confirm dialog on the Healthy → Wounded transition (both surfaces)
 - Weapon pool substitution: `poolAttribute` on weapons draws the attack pool from Strength/Insight/Tech (wounded-aware); hero sheet shows the live substituted dice with a note, item sheet shows ? pips
 - Pass 2: `exhaustToUse` surge flag, auto-exhaust with undo, depleted gating, Ready All
 - Pass 1: armor section, nested mods with attach/detach + slot limits, effective dice, surge lines on weapon rows

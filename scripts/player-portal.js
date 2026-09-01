@@ -1,5 +1,9 @@
 import { CAMPAIGN_RESOURCES_KEY } from "./campaign-tracker.js";
-import { SWIARollDialog } from "./dice/roll-dialog.js";
+import { SWIARollDialog, buildDefensePool, weaponModsFor } from "./dice/roll-dialog.js";
+import {
+  canManageActor, requestWoundedState, setDefeatedState, adjustActorStat,
+  adjustActorXp, toggleArmorEquipped, readyAllItemsWithNotice, READY_ALL_TYPES
+} from "./actor-actions.js";
 
 // Foundry v13+ ApplicationV2 base
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -23,7 +27,13 @@ export class SWIAPlayerPortal extends BaseApplication {
       toggleActivated: SWIAPlayerPortal.prototype._onToggleActivated,
       openItem: SWIAPlayerPortal.prototype._onOpenItem,
       cycleItemState: SWIAPlayerPortal.prototype._onCycleItemState,
-      rollDice: SWIAPlayerPortal.prototype._onRollDice
+      rollDice: SWIAPlayerPortal.prototype._onRollDice,
+      adjustStat: SWIAPlayerPortal.prototype._onAdjustStat,
+      adjustXp: SWIAPlayerPortal.prototype._onAdjustXp,
+      toggleWounded: SWIAPlayerPortal.prototype._onToggleWounded,
+      toggleDefeated: SWIAPlayerPortal.prototype._onToggleDefeated,
+      toggleEquipArmor: SWIAPlayerPortal.prototype._onToggleEquipArmor,
+      readyAllItems: SWIAPlayerPortal.prototype._onReadyAllItems
     }
   };
 
@@ -70,12 +80,47 @@ export class SWIAPlayerPortal extends BaseApplication {
 
   async _buildContext() {
     const orderedActors = this._getOrderedPlayerActors();
-    const actors = await Promise.all(orderedActors.map(actor => this._toPortalActor(actor)));
+    const built = await Promise.all(orderedActors.map(actor => this._toPortalActor(actor)));
+    const byId = new Map(built.map((a) => [a.id, a]));
 
+    // Companions (allies) sit inside their owner's hero column rather than
+    // floating on their own — a companion out of context is meaningless.
+    const nestedIds = new Set();
+    for (const candidate of built) {
+      if (candidate.type !== "ally") continue;
+      // Explicit link only: no ownership guessing, and it behaves the same for
+      // player and NPC companions. An ally pinned to a figure this user cannot
+      // see simply stays a top-level card.
+      const ownerId = game.actors?.get(candidate.id)?.system?.companionOf;
+      const owner = ownerId ? byId.get(ownerId) : null;
+      if (!owner || !owner.isHero) continue;
+      owner.companions.push(candidate);
+      nestedIds.add(candidate.id);
+    }
+
+    const actors = built.filter((a) => !nestedIds.has(a.id));
     return {
       actors,
       hasActors: actors.length > 0
     };
+  }
+
+  /** Non-GM user ids that own this actor. */
+  _playerOwnerIds(actor) {
+    if (!actor) return [];
+    const ownerLevel = CONST.DOCUMENT_OWNERSHIP_LEVELS?.OWNER ?? 3;
+    const ownership = actor.ownership ?? {};
+    // testUserPermission handles INHERIT (-1), which ?? treats as present and
+    // would misclassify an inheriting owner as a non-owner.
+    const isOwner = (user) => {
+      if (typeof actor.testUserPermission === "function") return actor.testUserPermission(user, "OWNER");
+      const raw = ownership[user.id];
+      const level = (raw === undefined || raw === -1) ? (ownership.default ?? 0) : raw;
+      return level >= ownerLevel;
+    };
+    return (game.users?.contents ?? [])
+      .filter((user) => !user.isGM && isOwner(user))
+      .map((user) => user.id);
   }
 
   _registerSyncHooks() {
@@ -144,7 +189,7 @@ export class SWIAPlayerPortal extends BaseApplication {
   _isPortalItem(item) {
     if (!item?.parent) return false;
     if (item.parent.documentName !== "Actor") return false;
-    if (!["weapon", "classcard", "gear"].includes(item.type)) return false;
+    if (!["weapon", "classcard", "gear", "armor", "weaponmod"].includes(item.type)) return false;
     return this._isPortalActor(item.parent);
   }
 
@@ -183,6 +228,19 @@ export class SWIAPlayerPortal extends BaseApplication {
     // Any actor some player can observe — the GM's view of the player roster.
     const hasPlayerAccess = (actor) => nonGmUsers.some((user) => canObserve(actor, user));
 
+    // Allies are companions: they earn a spot in the Player Area only by being
+    // a player's own figure (owned, not merely observable) or by being pinned
+    // to a hero via companionOf. Everything else stays in the Companion Area,
+    // so an NPC ally the players can see doesn't clutter their roster.
+    const heroIds = new Set(
+      (game.actors?.contents ?? []).filter((a) => a.type === "hero").map((a) => a.id)
+    );
+    const belongsInPlayerArea = (actor) => {
+      if (actor.type !== "ally") return true;
+      if (heroIds.has(actor.system?.companionOf)) return true;
+      return this._playerOwnerIds(actor).length > 0;
+    };
+
     // A player only sees actors they themselves can observe; the GM keeps the
     // full player-facing roster. Without this, every client renders every
     // player's hero because Foundry ships all world actors to all clients.
@@ -200,6 +258,7 @@ export class SWIAPlayerPortal extends BaseApplication {
     return (game.actors?.contents ?? [])
       .filter(actor => ["hero", "villain", "ally"].includes(actor.type))
       .filter(actor => isPlayerActor(actor))
+      .filter(actor => belongsInPlayerArea(actor))
       .sort((a, b) => {
         const mineDelta = Number(isMine(b)) - Number(isMine(a));
         if (mineDelta !== 0) return mineDelta;
@@ -236,6 +295,20 @@ export class SWIAPlayerPortal extends BaseApplication {
     const weaponItems = ownedItems.filter(item => item.type === "weapon");
     const classcardItems = ownedItems.filter(item => item.type === "classcard");
     const gearItems = ownedItems.filter(item => item.type === "gear");
+    const armorItems = ownedItems.filter(item => item.type === "armor");
+
+    // Defense shown on the card is the pool that will actually be rolled:
+    // the actor's own dice plus every equipped armor's dice. The armor share
+    // renders gold-ringed, matching the "gold = from an item" rule on sheets.
+    const totalDefense = buildDefensePool(actor);
+    const armorDefense = {
+      black: Math.max(0, (totalDefense.black ?? 0) - (defense.black ?? 0)),
+      white: Math.max(0, (totalDefense.white ?? 0) - (defense.white ?? 0))
+    };
+
+    const hasReadyableCards = ownedItems.some(
+      (item) => item.system?.cardState === "exhausted" && READY_ALL_TYPES.includes(item.type)
+    );
 
     const toPortalItem = (item) => {
       const state = item.system?.cardState || "ready";
@@ -270,11 +343,25 @@ export class SWIAPlayerPortal extends BaseApplication {
       );
     }
 
+    // Attached mods ride along on their weapon's card as small chips.
+    const modChipsFor = (weapon) => weaponModsFor(actor, weapon).map((mod) => ({
+      id: mod.id,
+      name: mod.name,
+      redDice: Array.from({ length: mod.system?.bonusDice?.red || 0 }, (_, i) => i),
+      blueDice: Array.from({ length: mod.system?.bonusDice?.blue || 0 }, (_, i) => i),
+      greenDice: Array.from({ length: mod.system?.bonusDice?.green || 0 }, (_, i) => i),
+      yellowDice: Array.from({ length: mod.system?.bonusDice?.yellow || 0 }, (_, i) => i)
+    }));
+
     return {
       id: actor.id,
       name: actor.name,
       img: actor.img,
       tokenImage,
+      companions: [],
+      xp: Number(system.xp) || 0,
+      canEditXp: Boolean(game.user?.isGM),
+      hasReadyableCards,
       type: actor.type,
       typeLabel: game.i18n.localize(`SWIA.Actor.${actor.type.charAt(0).toUpperCase()}${actor.type.slice(1)}`),
       isHero,
@@ -296,6 +383,8 @@ export class SWIAPlayerPortal extends BaseApplication {
       enrichedHeroAbilities,
       defenseBlackDice: Array.from({ length: defense.black || 0 }, (_, i) => i),
       defenseWhiteDice: Array.from({ length: defense.white || 0 }, (_, i) => i),
+      armorBlackDice: Array.from({ length: armorDefense.black }, (_, i) => i),
+      armorWhiteDice: Array.from({ length: armorDefense.white }, (_, i) => i),
       attackRedDice: Array.from({ length: attack.red || 0 }, (_, i) => i),
       attackBlueDice: Array.from({ length: attack.blue || 0 }, (_, i) => i),
       attackGreenDice: Array.from({ length: attack.green || 0 }, (_, i) => i),
@@ -313,12 +402,17 @@ export class SWIAPlayerPortal extends BaseApplication {
       techGreenDice: Array.from({ length: tech.green || 0 }, (_, i) => i),
       techYellowDice: Array.from({ length: tech.yellow || 0 }, (_, i) => i),
       hasAttack: actor.type !== "hero",
-      weapons: weaponItems.map(toPortalItem),
+      weapons: weaponItems.map((item) => ({ ...toPortalItem(item), mods: modChipsFor(item) })),
       abilities: classcardItems.map(toPortalItem),
       gear: gearItems.map(toPortalItem),
+      armor: armorItems.map((item) => ({
+        ...toPortalItem(item),
+        equipped: item.system?.equipped ?? true
+      })),
       weaponCount: weaponItems.length,
       abilityCount: classcardItems.length,
       gearCount: gearItems.length,
+      armorCount: armorItems.length,
       hasInventory: ownedItems.length > 0
     };
   }
@@ -540,6 +634,67 @@ export class SWIAPlayerPortal extends BaseApplication {
     const current = item.system?.cardState || "ready";
     const cycle = { ready: "exhausted", exhausted: "depleted", depleted: "ready" };
     await item.update({ "system.cardState": cycle[current] || "ready" });
+  }
+
+  /** Resolve the actor a control belongs to, enforcing GM-or-owner. */
+  _manageableActor(target) {
+    const actorId = target?.dataset?.actorId ?? target?.closest?.("[data-actor-id]")?.dataset?.actorId;
+    const actor = actorId ? game.actors?.get(actorId) : null;
+    if (!actor || !canManageActor(actor)) return null;
+    return actor;
+  }
+
+  async _onAdjustStat(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+    const actor = this._manageableActor(target ?? event.currentTarget);
+    if (!actor) return;
+    await adjustActorStat(actor, target?.dataset?.stat, target?.dataset?.delta);
+  }
+
+  async _onAdjustXp(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+    // XP is spent between missions under GM supervision; players see it but
+    // do not edit it here. The Campaign Tracker writes the same field.
+    if (!game.user?.isGM) return;
+    const actorId = target?.dataset?.actorId ?? target?.closest?.("[data-actor-id]")?.dataset?.actorId;
+    const actor = actorId ? game.actors?.get(actorId) : null;
+    if (!actor) return;
+    await adjustActorXp(actor, target?.dataset?.delta);
+  }
+
+  async _onToggleWounded(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+    const actor = this._manageableActor(target ?? event.currentTarget);
+    if (!actor) return;
+    await requestWoundedState(actor, !actor.system.state?.wounded);
+  }
+
+  async _onToggleDefeated(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+    const actor = this._manageableActor(target ?? event.currentTarget);
+    if (!actor) return;
+    await setDefeatedState(actor, !actor.system.state?.defeated);
+  }
+
+  async _onToggleEquipArmor(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+    const actor = this._manageableActor(target ?? event.currentTarget);
+    if (!actor) return;
+    const itemId = target?.dataset?.itemId ?? target?.closest?.("[data-item-id]")?.dataset?.itemId;
+    await toggleArmorEquipped(itemId ? actor.items?.get(itemId) : null);
+  }
+
+  async _onReadyAllItems(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+    const actor = this._manageableActor(target ?? event.currentTarget);
+    if (!actor) return;
+    await readyAllItemsWithNotice(actor);
   }
 
   _onPortalDragOver(event) {

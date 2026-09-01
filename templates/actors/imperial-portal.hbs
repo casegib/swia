@@ -146,6 +146,29 @@
             </div>
           {{/if}}
         </article>
+        {{#if actor.companions.length}}
+        <div class="portal-companions">
+          {{#each actor.companions as |companion|}}
+          <article class="portal-companion-card" data-actor-id="{{companion.id}}">
+            <img class="companion-portrait" src="{{companion.tokenImage}}" alt="{{companion.name}}" loading="lazy">
+            <div class="companion-id">
+              <button type="button" class="actor-name-link companion-name" data-action="openActor" data-actor-id="{{companion.id}}" title="{{localize 'SWIA.Portal.OpenSheet'}}">
+                {{companion.name}}
+              </button>
+              <span class="companion-tag">{{localize "SWIA.Portal.CompanionTag"}}</span>
+            </div>
+            <div class="companion-stats">
+              <span class="companion-stat">&#9829; <strong>{{companion.health.value}}</strong><span class="stat-max">/{{companion.health.max}}</span></span>
+              <span class="companion-stat companion-speed">{{localize "SWIA.Attributes.Speed"}} <strong>{{companion.speed}}</strong></span>
+              <span class="companion-dice" title="{{localize 'SWIA.Attributes.Defense'}}">
+                {{#each companion.defenseBlackDice}}<span class="dice-block black"></span>{{/each}}
+                {{#each companion.defenseWhiteDice}}<span class="dice-block white"></span>{{/each}}
+              </span>
+            </div>
+          </article>
+          {{/each}}
+        </div>
+        {{/if}}
         </div>
       {{/each}}
     </div>

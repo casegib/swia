@@ -1,6 +1,11 @@
 // Foundry v13+ ApplicationV2 actor sheet
 import { SWIARollDialog } from "../dice/roll-dialog.js";
 import { escapeHTML, sanitizeLabelHTML } from "../data/common.js";
+import {
+  getHealthyTokenSrc, getWoundedTokenSrc, syncActiveTokenTextures,
+  requestWoundedState, setDefeatedState, adjustActorStat,
+  toggleArmorEquipped, readyAllItemsWithNotice
+} from "../actor-actions.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseActorSheet = HandlebarsApplicationMixin(foundry.applications.sheets.ActorSheetV2);
@@ -210,18 +215,7 @@ export class SWIAActorSheet extends BaseActorSheet {
   async _onAdjustStat(event, target) {
     event.preventDefault();
     const actor = this.document ?? this.actor;
-    if (!actor) return;
-    const stat = target?.dataset?.stat === "endurance" ? "endurance" : "health";
-    const delta = Number(target?.dataset?.delta) || 0;
-    const wounded = actor.type === "hero" && actor.system?.state?.wounded;
-    const path = wounded ? `system.woundedAttributes.${stat}` : `system.attributes.${stat}`;
-    const current = Number(foundry.utils.getProperty(actor, `${path}.value`)) || 0;
-    const max = Number(foundry.utils.getProperty(actor, `${path}.max`));
-    let next = current + delta;
-    if (Number.isFinite(max) && max > 0) next = Math.min(max, next);
-    next = Math.max(0, next);
-    if (next === current) return;
-    await actor.update({ [`${path}.value`]: next });
+    await adjustActorStat(actor, target?.dataset?.stat, target?.dataset?.delta);
   }
 
   // Edit mode: pick which attribute set (healthy/wounded) the stat editors
@@ -257,11 +251,11 @@ export class SWIAActorSheet extends BaseActorSheet {
   }
 
   _getHealthyTokenSrc(actor) {
-    return actor?.img || actor?.prototypeToken?.texture?.src || "";
+    return getHealthyTokenSrc(actor);
   }
 
   _getWoundedTokenSrc(actor) {
-    return actor?.system?.woundedTokenImage || this._getHealthyTokenSrc(actor);
+    return getWoundedTokenSrc(actor);
   }
 
   _getTokenPreviewSrc(actor, isWounded) {
@@ -286,37 +280,7 @@ export class SWIAActorSheet extends BaseActorSheet {
   }
 
   async _syncActiveTokenTextures(actor, src) {
-    if (!actor || !src) return;
-
-    const tokenDocs = [];
-
-    // Pull from canvas first when available, including both linked and unlinked tokens.
-    if (typeof actor.getActiveTokens === "function") {
-      const activeTokens = actor.getActiveTokens(false, true) || [];
-      for (const token of activeTokens) {
-        const tokenDoc = token?.document ?? token;
-        if (tokenDoc?.id) tokenDocs.push(tokenDoc);
-      }
-    }
-
-    // Fallback/coverage: scan scene token documents by actorId.
-    for (const scene of game.scenes?.contents ?? []) {
-      for (const tokenDoc of scene.tokens?.contents ?? []) {
-        if (tokenDoc?.actorId !== actor.id) continue;
-        if (tokenDocs.some(existing => existing.id === tokenDoc.id && existing.parent?.id === tokenDoc.parent?.id)) continue;
-        tokenDocs.push(tokenDoc);
-      }
-    }
-
-    if (!tokenDocs.length) return;
-
-    const updates = [];
-    for (const tokenDoc of tokenDocs) {
-      if ((tokenDoc.texture?.src || "") === src) continue;
-      updates.push(tokenDoc.update({ "texture.src": src }));
-    }
-
-    if (updates.length) await Promise.allSettled(updates);
+    return syncActiveTokenTextures(actor, src);
   }
 
   async _syncActiveTokenFootprint(actor, footprint, linkedOnly = true) {
@@ -696,6 +660,16 @@ export class SWIAActorSheet extends BaseActorSheet {
       isGM: game.user?.isGM ?? false,
       editMode: this._editMode ?? false,
       isEditable: actor.isOwner ?? true,
+      companionOwnerChoices: actor.type === "ally"
+        ? (game.actors?.contents ?? [])
+            .filter((a) => ["hero", "villain"].includes(a.type))
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((a) => ({
+              id: a.id,
+              label: `${a.name} (${game.i18n.localize(`SWIA.Actor.${a.type.charAt(0).toUpperCase()}${a.type.slice(1)}`)})`,
+              selected: a.id === system.companionOf
+            }))
+        : [],
       currentAttrPath: currentAttrPath,
       currentAttributes: system[currentAttrPath] ?? system.attributes,
       editStatTab,
@@ -787,50 +761,20 @@ export class SWIAActorSheet extends BaseActorSheet {
   async _onToggleWounded(event, target) {
     const actor = this.document ?? this.actor;
     if (!actor || actor.type !== "hero") return;
-
     // Works from either a checkbox (reads .checked) or the state pill button
     // (flips the current state).
     const el = target ?? event?.currentTarget;
-    const isChecked = el?.type === "checkbox" ? Boolean(el.checked) : !actor.system.state?.wounded;
-    const nextTokenSrc = isChecked ? this._getWoundedTokenSrc(actor) : this._getHealthyTokenSrc(actor);
-    const update = { "system.state.wounded": isChecked };
-    if (!isChecked) update["system.state.defeated"] = false;
-
-    // Reset the active health pool to its maximum when toggling between states
-    if (isChecked) {
-      const wMax = actor.system.woundedAttributes?.health?.max ?? actor.system.woundedAttributes?.health?.value ?? 0;
-      update["system.woundedAttributes.health.value"] = wMax;
-    } else {
-      const hMax = actor.system.attributes?.health?.max ?? actor.system.attributes?.health?.value ?? 0;
-      update["system.attributes.health.value"] = hMax;
-    }
-
-    if (nextTokenSrc) {
-      update["prototypeToken.texture.src"] = nextTokenSrc;
-    }
-
-    try {
-      await actor.update(update);
-    } catch (error) {
-      console.error("SWIA: Failed to toggle wounded state", error);
-      ui.notifications?.error("Failed to toggle wounded state. Check console for validation errors.");
-      return;
-    }
-
-    if (nextTokenSrc) {
-      await this._syncActiveTokenTextures(actor, nextTokenSrc);
-    }
+    const next = el?.type === "checkbox" ? Boolean(el.checked) : !actor.system.state?.wounded;
+    await requestWoundedState(actor, next);
   }
 
   // Toggle defeated state (heroes only, only valid when wounded)
   async _onToggleDefeated(event, target) {
     const actor = this.document ?? this.actor;
     if (!actor || actor.type !== "hero") return;
-    if (!actor.system.state?.wounded) return;
-
     const el = target ?? event?.currentTarget;
-    const isChecked = el?.type === "checkbox" ? Boolean(el.checked) : !actor.system.state?.defeated;
-    await actor.update({ "system.state.defeated": isChecked });
+    const next = el?.type === "checkbox" ? Boolean(el.checked) : !actor.system.state?.defeated;
+    await setDefeatedState(actor, next);
   }
 
   // Toggle activation state (all actor types)
@@ -1160,27 +1104,14 @@ export class SWIAActorSheet extends BaseActorSheet {
     event.preventDefault();
     const actor = this.document ?? this.actor;
     const itemId = target?.closest?.("[data-item-id]")?.dataset?.itemId;
-    const item = itemId ? actor?.items?.get(itemId) : null;
-    if (!item || item.type !== "armor") return;
-    await item.update({ "system.equipped": !(item.system?.equipped ?? true) });
+    await toggleArmorEquipped(itemId ? actor?.items?.get(itemId) : null);
   }
 
   // Status phase helper: ready every exhausted card on this actor in one
   // click (weapons, mods, armor, class cards, gear). Depleted cards stay.
   async _onReadyAllItems(event) {
     event.preventDefault();
-    const actor = this.document ?? this.actor;
-    if (!actor) return;
-    const types = ["weapon", "weaponmod", "armor", "classcard", "gear"];
-    const updates = (actor.items?.contents ?? [])
-      .filter((i) => types.includes(i.type) && i.system?.cardState === "exhausted")
-      .map((i) => ({ _id: i.id, "system.cardState": "ready" }));
-    if (!updates.length) {
-      ui.notifications?.info(game.i18n.localize("SWIA.Inventory.ReadyAllNone"));
-      return;
-    }
-    await actor.updateEmbeddedDocuments("Item", updates);
-    ui.notifications?.info(game.i18n.format("SWIA.Inventory.ReadyAllDone", { count: updates.length }));
+    await readyAllItemsWithNotice(this.document ?? this.actor);
   }
 
   // Detach a mod from its weapon (clears attachedWeaponId; mod moves to the

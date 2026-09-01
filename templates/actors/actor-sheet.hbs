@@ -189,6 +189,18 @@
             <option value="civilian" {{#if (eq systemData.affiliation "civilian")}}selected{{/if}}>{{localize "SWIA.Villain.Affiliation.Civilian"}}</option>
           </select>
         </div>
+        {{#if (eq actor.type "ally")}}
+        <div class="companion-of-edit">
+          <label>{{localize "SWIA.Companion.CompanionOf"}}</label>
+          <select name="system.companionOf">
+            <option value="" {{#unless systemData.companionOf}}selected{{/unless}}>{{localize "SWIA.Companion.Unassigned"}}</option>
+            {{#each companionOwnerChoices}}
+            <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+          <span class="editor-hint">{{localize "SWIA.Companion.CompanionOfHint"}}</span>
+        </div>
+        {{/if}}
         <div class="villain-traits-edit">
           <input name="system.traits" type="text" value="{{systemData.traits}}" placeholder="{{localize 'SWIA.Villain.TraitsPlaceholder'}}" />
         </div>

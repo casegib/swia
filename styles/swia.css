@@ -3114,7 +3114,7 @@
 
 .swia-player-portal .identity {
   display: grid;
-  grid-template-columns: 68px 1fr;
+  grid-template-columns: 68px 1fr auto;
   gap: 10px;
   align-items: center;
 }
@@ -3487,8 +3487,11 @@ nav.tabs [data-tab="cards"]::before {
 }
 
 .swia-player-portal .portal-inventory-grid {
+  /* auto-fit against the CARD's width, not the viewport: the portal window is
+     a fixed 1500px, so viewport breakpoints never fire and a hard 4-column
+     rule crushes the item art. Columns drop to 2 rows when space is tight. */
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
   gap: 8px;
   align-items: stretch;
 }
@@ -5929,3 +5932,362 @@ input:checked + .defeated-label { color: #8b0000; }
   text-align: center;
   line-height: 12px;
 }
+
+
+/* ============================================================
+   Player Area upgrade — party overview
+   XP headline, state pills, steppers, Ready All, armor column,
+   mod chips, nested companions
+   ============================================================ */
+
+/* Unspent XP headline */
+.swia-player-portal .portal-xp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2b6cb0, #1d4d80);
+  border: 1px solid #163a61;
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  align-self: start;
+}
+.swia-player-portal .portal-xp .xp-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.swia-player-portal .portal-xp .xp-value {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+.swia-player-portal .portal-xp .xp-label {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.swia-player-portal .portal-xp .xp-step {
+  width: 16px;
+  height: 15px;
+  padding: 0;
+  line-height: 1;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  cursor: pointer;
+}
+.swia-player-portal .portal-xp .xp-step:hover { background: rgba(255, 255, 255, 0.32); }
+
+/* State pills — same vocabulary as the actor sheet */
+.swia-player-portal .portal-state-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: filter 0.12s ease;
+}
+.swia-player-portal .portal-state-pill:hover:not(:disabled) { filter: brightness(1.1); }
+.swia-player-portal .portal-state-pill:disabled { cursor: default; opacity: 0.85; }
+.swia-player-portal .portal-state-pill i { font-size: 9px; }
+.swia-player-portal .portal-state-pill.pill-healthy {
+  background: linear-gradient(135deg, #3f9e58, #27722c);
+  border-color: #1e5a23;
+}
+.swia-player-portal .portal-state-pill.pill-wounded {
+  background: linear-gradient(135deg, #c0392b, #8f1f14);
+  border-color: #6e150c;
+}
+.swia-player-portal .portal-state-pill.pill-active {
+  background: linear-gradient(135deg, #7a7a7a, #555);
+  border-color: #3d3d3d;
+}
+.swia-player-portal .portal-state-pill.pill-defeated {
+  background: linear-gradient(135deg, #2b2b2b, #0d0d0d);
+  border-color: #000;
+  color: #d9d9d9;
+}
+
+/* Health / endurance steppers on stat boxes */
+.swia-player-portal .portal-stepper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.swia-player-portal .portal-stepper .stat-max {
+  font-size: 11px;
+  opacity: 0.6;
+  color: #5a4429;
+}
+.swia-player-portal .portal-step {
+  width: 17px;
+  height: 17px;
+  padding: 0;
+  line-height: 1;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 3px;
+  border: 1px solid rgba(111, 87, 56, 0.5);
+  background: rgba(255, 255, 255, 0.6);
+  color: #5a4429;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.swia-player-portal .portal-step:hover:not(:disabled) {
+  background: #fff;
+  border-color: #8b6f47;
+}
+.swia-player-portal .portal-step:disabled { opacity: 0.4; cursor: default; }
+
+/* Per-hero Ready All */
+.swia-player-portal .portal-ready-all {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #3f9e58, #27722c);
+  color: #fff;
+  border: 1px solid #1e5a23;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.swia-player-portal .portal-ready-all:hover:not(:disabled) { filter: brightness(1.1); }
+.swia-player-portal .portal-ready-all:disabled { opacity: 0.4; cursor: default; }
+
+/* Armor: equip toggle + unequipped dimming */
+.swia-player-portal .portal-item-card.is-unequipped { opacity: 0.55; }
+.swia-player-portal .portal-item-footer { gap: 4px; }
+.swia-player-portal .portal-armor-equip {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #b8860b;
+  background: linear-gradient(135deg, #e0b23e, #b8860b);
+  color: #1a1200;
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.swia-player-portal .portal-armor-equip.off {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(111, 87, 56, 0.5);
+  color: rgba(90, 68, 41, 0.7);
+}
+.swia-player-portal .portal-armor-equip:disabled { cursor: default; opacity: 0.5; }
+
+/* Dice contributed by equipped armor (matches the sheet's gold rule) */
+.swia-player-portal .dice-block.from-item {
+  outline: 2px solid #e0b23e;
+  outline-offset: 1px;
+}
+
+/* Attached mods riding on a weapon card */
+.swia-player-portal .portal-mod-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 4px 4px;
+}
+.swia-player-portal .portal-mod-chip {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px dashed rgba(184, 150, 63, 0.7);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 8.5px;
+  color: #6b5522;
+  min-width: 0;
+}
+.swia-player-portal .portal-mod-chip .mod-chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+.swia-player-portal .portal-mod-chip .dice-block {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+}
+
+/* Companions nested under their owner */
+.swia-player-portal .portal-companions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 4px 0 0 20px;
+}
+.swia-player-portal .portal-companion-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border: 2px solid #3f9e58;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+.swia-player-portal .portal-companion-card.is-wounded { border-color: #a82323; }
+.swia-player-portal .portal-companion-card::before {
+  content: "\21B3";
+  position: absolute;
+  left: -16px;
+  top: 6px;
+  color: #3f9e58;
+  font-weight: 800;
+  font-size: 14px;
+}
+.swia-player-portal .companion-portrait {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #8b6f47;
+  object-fit: cover;
+  background: #1b1b1b;
+  flex-shrink: 0;
+}
+.swia-player-portal .companion-id {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.swia-player-portal .companion-name {
+  font-weight: 700;
+  font-size: 12px;
+  text-align: left;
+  padding: 0;
+}
+.swia-player-portal .companion-tag {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #27722c;
+}
+.swia-player-portal .companion-stats {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: #5a4429;
+  flex-wrap: wrap;
+}
+.swia-player-portal .companion-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.swia-player-portal .companion-dice {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.swia-player-portal .portal-ready-all.companion-ready-all {
+  margin-left: 0;
+  padding: 2px 7px;
+}
+
+
+/* Action row: Weapon Attack + Ready All get their own full-width strip under
+   the dice grid. Previously the attack line was a 5th child of a 4-column
+   grid, so it wrapped into a 1fr cell too narrow for its label. */
+.swia-player-portal .portal-action-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  margin-top: 6px;
+}
+.swia-player-portal .portal-attack-btn {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid #8a6508;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #e0b23e, #b8860b);
+  color: #1a1200;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: filter 0.12s ease, transform 0.08s ease;
+}
+.swia-player-portal .portal-attack-btn i { color: #1a1200; }
+.swia-player-portal .portal-attack-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.swia-player-portal .portal-attack-btn:active { transform: translateY(0); filter: brightness(0.96); }
+
+/* In the action row Ready All is a sibling, not a right-floated extra */
+.swia-player-portal .portal-action-row .portal-ready-all {
+  margin-left: 0;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+
+/* "Companion Of" picker on the ally sheet */
+.swia-sheet .companion-of-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+}
+.swia-sheet .companion-of-edit > label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+.swia-sheet .companion-of-edit select {
+  width: 100%;
+  font-size: 0.85em;
+  padding: 2px 4px;
+  border-radius: 3px;
+  border: 1px solid var(--accent);
+  color: var(--label);
+}
+
+/* Companion cards inherit the player-portal styling; the imperial portal
+   carries both classes on its root, so only the accent needs re-pointing. */
+.swia-imperial-portal .portal-companion-card {
+  border-color: #7a5c8a;
+}
+.swia-imperial-portal .portal-companion-card::before { color: #7a5c8a; }
+.swia-imperial-portal .portal-companion-card .companion-tag { color: #7a5c8a; }
