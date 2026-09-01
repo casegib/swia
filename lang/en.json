@@ -465,5 +465,9 @@
   "SWIA.Inventory.ReadyAll": "Ready All",
   "SWIA.Inventory.ReadyAllHint": "Status phase: ready every exhausted card on this hero",
   "SWIA.Inventory.ReadyAllDone": "{count} card(s) readied.",
-  "SWIA.Inventory.ReadyAllNone": "Nothing to ready."
+  "SWIA.Inventory.ReadyAllNone": "Nothing to ready.",
+  "SWIA.Item.Weapon.PoolAttribute": "Attack Pool Source",
+  "SWIA.Item.Weapon.PoolAttributeNone": "Weapon dice (printed)",
+  "SWIA.Item.Weapon.PoolAttributeVariable": "Variable — uses the wielder's attribute pool",
+  "SWIA.Inventory.PoolNote": "Uses your {attr} pool"
 }

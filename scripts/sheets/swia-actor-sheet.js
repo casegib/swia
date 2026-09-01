@@ -569,16 +569,27 @@ export class SWIAActorSheet extends BaseActorSheet {
           attachedMods.flatMap((m) => m.surgeLines.map((s) => ({ ...s, source: m.name })))
         );
         const slotsTotal = Math.max(0, Number(w.system?.attachmentSlots) || 0);
+        // Pool substitution: show the wielder's current attribute pool
+        // (wounded-aware) as this weapon's base dice, with a note.
+        const poolAttr = ["strength", "insight", "tech"].includes(w.system?.poolAttribute)
+          ? w.system.poolAttribute : null;
+        const baseDice = poolAttr ? (attrSet?.[poolAttr] ?? {}) : dice;
+        const poolNote = poolAttr
+          ? game.i18n.format("SWIA.Inventory.PoolNote", {
+              attr: game.i18n.localize(`SWIA.Attributes.${poolAttr.charAt(0).toUpperCase()}${poolAttr.slice(1)}`)
+            })
+          : "";
         return {
           id: w.id,
           name: w.name,
           img: w.img,
           system: w.system,
           enrichedAbilities,
-          attackRedDice: SWIAActorSheet._diceArray(dice.red),
-          attackBlueDice: SWIAActorSheet._diceArray(dice.blue),
-          attackGreenDice: SWIAActorSheet._diceArray(dice.green),
-          attackYellowDice: SWIAActorSheet._diceArray(dice.yellow),
+          poolNote,
+          attackRedDice: SWIAActorSheet._diceArray(baseDice.red),
+          attackBlueDice: SWIAActorSheet._diceArray(baseDice.blue),
+          attackGreenDice: SWIAActorSheet._diceArray(baseDice.green),
+          attackYellowDice: SWIAActorSheet._diceArray(baseDice.yellow),
           modRedDice: SWIAActorSheet._diceArray(modDice.red),
           modBlueDice: SWIAActorSheet._diceArray(modDice.blue),
           modGreenDice: SWIAActorSheet._diceArray(modDice.green),

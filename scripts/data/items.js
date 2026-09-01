@@ -23,6 +23,9 @@ export class WeaponData extends SWIAItemBase {
       weaponClass: str(),
       weaponSubtype: str(),
       attackDice: attackDice(),
+      // "" = use printed attackDice; strength|insight|tech = the wielder's
+      // attribute pool substitutes for the printed dice (Ancient Lightsaber)
+      poolAttribute: str(),
       damage: int(),
       accuracy: int(),
       range: str("melee"),

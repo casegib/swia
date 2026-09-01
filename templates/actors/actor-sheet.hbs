@@ -900,6 +900,7 @@
                 {{#each this.modYellowDice}}<span class="dice-block yellow from-mod" title="{{localize 'SWIA.Inventory.FromMod'}}"></span>{{/each}}
                 {{#each this.modBonusTags}}<span class="mod-bonus-tag">{{this}}</span>{{/each}}
                 {{#if this.showSlots}}<span class="mod-slots {{#if this.slotsFull}}full{{/if}}">{{localize "SWIA.Inventory.ModSlots" used=this.slotsUsed total=this.slotsTotal}}</span>{{/if}}
+                {{#if this.poolNote}}<span class="weapon-pool-note">{{this.poolNote}}</span>{{/if}}
               </div>
               <div class="weapon-abilities-inline">
                 {{#each this.enrichedAbilities}}

@@ -42,10 +42,16 @@
           {{/if}}
         </div>
         <div class="attack-badge-dice">
+          {{#if systemData.poolAttribute}}
+          <span class="attack-pip variable" title="{{localize 'SWIA.Item.Weapon.PoolAttributeVariable'}}">?</span>
+          <span class="attack-pip variable" title="{{localize 'SWIA.Item.Weapon.PoolAttributeVariable'}}">?</span>
+          <span class="attack-pip variable" title="{{localize 'SWIA.Item.Weapon.PoolAttributeVariable'}}">?</span>
+          {{else}}
           {{#each (range systemData.attackDice.red)}}<span class="attack-pip red" title="{{localize 'SWIA.Attack.Red'}}"></span>{{/each}}
           {{#each (range systemData.attackDice.blue)}}<span class="attack-pip blue" title="{{localize 'SWIA.Attack.Blue'}}"></span>{{/each}}
           {{#each (range systemData.attackDice.green)}}<span class="attack-pip green" title="{{localize 'SWIA.Attack.Green'}}"></span>{{/each}}
           {{#each (range systemData.attackDice.yellow)}}<span class="attack-pip yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span>{{/each}}
+          {{/if}}
         </div>
         {{#if systemData.accuracy}}
         <div class="attack-badge-accuracy" title="{{localize 'SWIA.Item.Weapon.Accuracy'}}">
@@ -129,6 +135,15 @@
             <label>{{localize "SWIA.Attack.Green"}} <input name="system.attackDice.green" type="number" value="{{systemData.attackDice.green}}" data-dtype="Number" min="0" /></label>
             <label>{{localize "SWIA.Attack.Yellow"}} <input name="system.attackDice.yellow" type="number" value="{{systemData.attackDice.yellow}}" data-dtype="Number" min="0" /></label>
           </div>
+        </div>
+        <div class="edit-field">
+          <label>{{localize "SWIA.Item.Weapon.PoolAttribute"}}</label>
+          <select name="system.poolAttribute" data-dtype="String">
+            <option value="" {{#unless systemData.poolAttribute}}selected{{/unless}}>{{localize "SWIA.Item.Weapon.PoolAttributeNone"}}</option>
+            <option value="strength" {{#if (eq systemData.poolAttribute "strength")}}selected{{/if}}>{{localize "SWIA.Attributes.Strength"}}</option>
+            <option value="insight" {{#if (eq systemData.poolAttribute "insight")}}selected{{/if}}>{{localize "SWIA.Attributes.Insight"}}</option>
+            <option value="tech" {{#if (eq systemData.poolAttribute "tech")}}selected{{/if}}>{{localize "SWIA.Attributes.Tech"}}</option>
+          </select>
         </div>
         <div class="edit-field">
           <label>{{localize "SWIA.Item.Weapon.AttachmentSlots"}}</label>

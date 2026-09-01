@@ -5906,3 +5906,26 @@ input:checked + .defeated-label { color: #8b0000; }
   background: linear-gradient(135deg, #e0b23e, #b8860b);
   border-radius: 3px; padding: 0 5px; margin-left: 6px;
 }
+
+
+/* poolAttribute: substituted-pool weapons */
+.swia-sheet .weapon-pool-note {
+  font-size: 10px;
+  font-style: italic;
+  color: #5b4a8a;
+  background: rgba(142, 124, 195, 0.15);
+  border: 1px solid rgba(142, 124, 195, 0.5);
+  border-radius: 8px;
+  padding: 0 6px;
+  white-space: nowrap;
+}
+.swia-item-sheet .attack-pip.variable,
+.attack-pip.variable {
+  background: linear-gradient(135deg, #8e7cc3, #5b4a8a);
+  border-color: #453768;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  text-align: center;
+  line-height: 12px;
+}

@@ -153,7 +153,18 @@ export function buildAttackPool(actor, weaponId = null) {
   if (actor.type === "hero") {
     const weapon = weaponId ? actor.items.get(weaponId) : null;
     if (!weapon) return pool;
-    const wd = weapon.system?.attackDice ?? {};
+    // Pool substitution ("your attack pool with this weapon is your X pool"):
+    // a weapon with poolAttribute set draws its base dice from that hero
+    // attribute (wounded-aware) instead of its printed dice. Mods still add.
+    const poolAttr = weapon.system?.poolAttribute;
+    let wd;
+    if (["strength", "insight", "tech"].includes(poolAttr)) {
+      const sys = actor.system ?? {};
+      const attrs = sys.state?.wounded ? (sys.woundedAttributes ?? sys.attributes) : sys.attributes;
+      wd = attrs?.[poolAttr] ?? {};
+    } else {
+      wd = weapon.system?.attackDice ?? {};
+    }
     for (const c of ATTACK_POOL_COLORS) pool[c] += clampCount(wd[c]);
     for (const mod of weaponModsFor(actor, weapon)) {
       const bd = mod.system?.bonusDice ?? {};

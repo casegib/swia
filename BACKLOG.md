@@ -2,41 +2,25 @@
 
 Working list of planned improvements. Items graduate from here into implementation passes.
 
-## DONE
-
-**Pass 1 — Inventory & attachments (hero sheet)** *(DONE)*
-- Armor section with equip toggle (wired to `system.equipped`, feeds `buildDefensePool`)
-- Weapon mods nested under their weapon; unattached-mod pool with "Attach to…" picker writing `attachedWeaponId`
-- Attachment slot display ("Mods 1/2") and enforcement against `attachmentSlots`; compat filtering via `modCompatType`
-- Effective dice on weapon rows (mod dice gold-outlined, flat bonuses as tags)
-- Surge/exhaust/action ability lines on weapon rows with cost badges (display only in this pass)
-- Color-coded card-state pills (green ready / amber exhausted / red depleted)
-
-**Pass 2 — Exhaust & surge mechanics** *(DONE)*
-- `exhaustToUse` flag on the shared weapon/mod surge-entry schema (one checkbox, works for both editors)
-- Combat window: surge buttons tagged with source item id; spending a flagged surge exhausts the source item; surge-undo readies it back
-- Exhausted item semantics (locked in): printed dice/damage/accuracy/keywords always apply; only flagged surge + exhaust abilities are gated; depleted = item fully off (weapon leaves attack dropdowns, mod contributes nothing)
-- Exhausted weapons remain usable (e.g. abilities that reference carried weapons)
-- "Ready All" button (status phase): readies all exhausted weapons, mods, class cards, gear on a hero
-- Weapon `exhaustAbilities` clickable on sheet: posts chat card + exhausts the item
-
-**Weapon pool substitution**
-- Optional `poolAttribute` field on weapons ("", strength, insight, tech). When set, `buildAttackPool` substitutes that attribute pool (Ancient Lightsaber: "your attack pool is your Insight pool"). Sheet shows ? dice chips + italic rule text.
-
 ## Next up
+
+- Commit everything to git with a `system.json` version bump (two feature passes + fixes currently uncommitted)
+- Table-test the exhaust/surge mechanics and inventory management in a real session
 
 ## Planned
 
-**GM portal: party overview ("Rebel Heroes Area")** — inspired by the Vassal module layout
-- One column per hero: portrait, name, health/endurance steppers, state pill, **unspent XP promoted to a headline**, compact equipment list, companions in their owner's column
-- Click-through to full actor sheets; visible to GM (and optionally players) as the at-a-glance table state
-- This is the layer where Vassal's all-players-at-once layout belongs; the actor sheet stays the deep per-hero view
+**Player Area upgrade: party overview ("Rebel Heroes Area")** — decisions settled, delta mockup approved-pending
+- Upgrade the existing Player Portal (which already has per-hero cards, card-art item stacks, drop zones, state cycling); GM Portal stays as-is for round tracking + villains
+- Add per hero: unspent-XP headline (Campaign Tracker heroXp is the source of truth, editable both places), clickable state pill, health/endurance steppers, per-hero Ready All — all reusing the sheet's handlers
+- Armor column in the item area with mini equip toggles; attached mods as chips on their weapon's card; armor dice gold-ringed in the DEFENSE row
+- Companions nest under their owner's hero card (matched by player ownership) as a slim card; standalone Companion Area kept for now
 
 **Card-art borrows (from Vassal comparison)**
 - Send-to-chat posts the item's uploaded card image when one exists (text card as fallback)
 - Hover preview on inventory rows showing the card art (compact rows stay the structure; art is garnish)
 
 **Item QoL**
+- Weapon `exhaustAbilities` clickable on sheet: posts chat card + exhausts the item (schema field exists, currently unrendered)
 - Send-to-chat button on every item row (💬)
 - "Give to…" item trading between heroes (between-mission phase)
 - Class card XP badges; optional XP deduction on purchase with GM override
@@ -49,6 +33,9 @@ Working list of planned improvements. Items graduate from here into implementati
 - Undo for spent power tokens in the combat window (recreate the consumed status effect)
 
 ## Done (this cycle)
+- Weapon pool substitution: `poolAttribute` on weapons draws the attack pool from Strength/Insight/Tech (wounded-aware); hero sheet shows the live substituted dice with a note, item sheet shows ? pips
+- Pass 2: `exhaustToUse` surge flag, auto-exhaust with undo, depleted gating, Ready All
+- Pass 1: armor section, nested mods with attach/detach + slot limits, effective dice, surge lines on weapon rows
 - Combat window: reopen on attack when combat already active (no more stranded state)
 - Combat window: auto-opens for all connected users (spectators view-only)
 - Unlimited dice rerolls until a spend locks them; surge spend undo
