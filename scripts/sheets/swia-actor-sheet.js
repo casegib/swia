@@ -1,10 +1,12 @@
 // Foundry v13+ ApplicationV2 actor sheet
 import { SWIARollDialog } from "../dice/roll-dialog.js";
-import { escapeHTML, sanitizeLabelHTML } from "../data/common.js";
+import { escapeHTML, sanitizeLabelHTML, armorEffectsFor } from "../data/common.js";
+import { bindCardPreviews, hideCardPreview, postItemCardFromElement } from "../item-cards.js";
 import {
   getHealthyTokenSrc, getWoundedTokenSrc, syncActiveTokenTextures,
   requestWoundedState, setDefeatedState, adjustActorStat,
-  toggleArmorEquipped, readyAllItemsWithNotice
+  toggleArmorEquipped, readyAllItemsWithNotice,
+  powerTokenRows, grantPowerToken, removePowerToken
 } from "../actor-actions.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -177,7 +179,9 @@ export class SWIAActorSheet extends BaseActorSheet {
       deleteItem: SWIAActorSheet.prototype._onDeleteItem,
       cycleItemState: SWIAActorSheet.prototype._onCycleItemState,
       toggleEquipArmor: SWIAActorSheet.prototype._onToggleEquipArmor,
+      adjustPowerToken: SWIAActorSheet.prototype._onAdjustPowerToken,
       readyAllItems: SWIAActorSheet.prototype._onReadyAllItems,
+      postItemCard: SWIAActorSheet.prototype._onPostItemCard,
       detachMod: SWIAActorSheet.prototype._onDetachMod,
       setAttackType: SWIAActorSheet.prototype._onSetAttackType,
       // Imperial/ally list management
@@ -343,6 +347,12 @@ export class SWIAActorSheet extends BaseActorSheet {
     const editStatTab = actor.type === "hero" ? (this._editStatTab ?? "healthy") : "healthy";
     const editAttrPath = editStatTab === "wounded" ? "woundedAttributes" : "attributes";
     const editAttributes = system[editAttrPath] ?? system.attributes;
+    // health.max is DERIVED (stored base + equipped armor, see actors.js).
+    // The edit input must show and write the stored base, or every save
+    // would bake the armor bonus into the base and double-count it.
+    const editSourceAttrs = actor._source?.system?.[editAttrPath] ?? actor._source?.system?.attributes ?? {};
+    const editHealthBaseMax = Number(editSourceAttrs.health?.max ?? editAttributes.health?.baseMax ?? editAttributes.health?.max) || 0;
+    const editHealthArmorBonus = Number(editAttributes.health?.armorBonus) || 0;
     const tokenSrc = actor?.prototypeToken?.texture?.src ?? "";
     const profileSrc = actor?.img || tokenSrc || "";
     const tokenPreviewSrc = this._getTokenPreviewSrc(actor, isWounded) || profileSrc;
@@ -588,16 +598,19 @@ export class SWIAActorSheet extends BaseActorSheet {
         return ctx;
       });
 
-    // Armor: previously invisible on the sheet despite feeding buildDefensePool
+    // Armor: printed Health/Block/Evade shown as chips; equipped pieces feed
+    // the derived max health and the defender's Block/Evade seed.
     const armorItems = ownedItems.filter(i => i.type === "armor").map((a) => ({
       id: a.id,
       name: a.name,
       img: a.img,
       cardState: a.system?.cardState ?? "ready",
       equipped: a.system?.equipped ?? true,
-      defenseBlackDice: SWIAActorSheet._diceArray(a.system?.defenseDice?.black),
-      defenseWhiteDice: SWIAActorSheet._diceArray(a.system?.defenseDice?.white)
+      bonusHealth: Number(a.system?.bonusHealth) || 0,
+      bonusBlock: Number(a.system?.bonusBlock) || 0,
+      bonusEvade: Number(a.system?.bonusEvade) || 0
     }));
+    const armorFx = armorEffectsFor(actor);
 
     // Form card (Shift) context — villain only
     let formCards = [];
@@ -675,6 +688,8 @@ export class SWIAActorSheet extends BaseActorSheet {
       editStatTab,
       editAttrPath,
       editAttributes,
+      editHealthBaseMax,
+      editHealthArmorBonus,
       hasFreeCustomSlot: customSlots.some((s) => !s.enabled),
       config: CONFIG.SWIA ?? {},
       profileSrc,
@@ -704,6 +719,10 @@ export class SWIAActorSheet extends BaseActorSheet {
       // This allows displaying individual dice blocks in the template
       defenseBlackDice: SWIAActorSheet._diceArray(defense.black),
       defenseWhiteDice: SWIAActorSheet._diceArray(defense.white),
+      armorBlock: armorFx.block,
+      armorEvade: armorFx.evade,
+      powerTokens: powerTokenRows(actor, { editable: Boolean(game.user?.isGM) }),
+      canEditTokens: Boolean(game.user?.isGM),
       attackRedDice: SWIAActorSheet._diceArray(attack.red),
       attackBlueDice: SWIAActorSheet._diceArray(attack.blue),
       attackGreenDice: SWIAActorSheet._diceArray(attack.green),
@@ -970,6 +989,9 @@ export class SWIAActorSheet extends BaseActorSheet {
   }
 
   async close(options) {
+    this._cardPreviewAbort?.abort();
+    this._cardPreviewAbort = null;
+    hideCardPreview();
     this._enrichCache?.clear?.();
     return super.close(options);
   }
@@ -1099,12 +1121,31 @@ export class SWIAActorSheet extends BaseActorSheet {
   }
 
   // Attach a native drop listener after each render
-  // Armor equip toggle: flips system.equipped, which buildDefensePool reads.
+  // Grant / remove one power token (GM only; shared with the portal).
+  async _onAdjustPowerToken(event, target) {
+    event.preventDefault();
+    if (!game.user?.isGM) return;
+    const actor = this.document ?? this.actor;
+    const type = target?.dataset?.token;
+    const delta = Number(target?.dataset?.delta) || 0;
+    if (delta > 0) await grantPowerToken(actor, type);
+    else if (delta < 0) await removePowerToken(actor, type);
+  }
+
+  // Armor equip toggle: flips system.equipped.
   async _onToggleEquipArmor(event, target) {
     event.preventDefault();
     const actor = this.document ?? this.actor;
     const itemId = target?.closest?.("[data-item-id]")?.dataset?.itemId;
     await toggleArmorEquipped(itemId ? actor?.items?.get(itemId) : null);
+  }
+
+  // Post an item's card to chat: the scan when the item has one, a generated
+  // card otherwise.
+  async _onPostItemCard(event, target) {
+    event.preventDefault();
+    hideCardPreview();
+    await postItemCardFromElement(this.document ?? this.actor, target);
   }
 
   // Status phase helper: ready every exhausted card on this actor in one
@@ -1152,6 +1193,11 @@ export class SWIAActorSheet extends BaseActorSheet {
   _onRender(context, options) {
     if (typeof super._onRender === "function") super._onRender(context, options);
     const el = this.element;
+    // Hover previews rebind every render; the old listeners die with the
+    // replaced DOM, and aborting drops any stale scroll handlers.
+    this._cardPreviewAbort?.abort();
+    this._cardPreviewAbort = new AbortController();
+    bindCardPreviews(el, { signal: this._cardPreviewAbort.signal });
     // Attach-mod selects re-render each pass; bind fresh every time.
     for (const select of el?.querySelectorAll?.(".mod-attach-select") ?? []) {
       select.addEventListener("change", (event) => {

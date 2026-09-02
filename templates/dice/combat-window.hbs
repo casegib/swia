@@ -43,13 +43,33 @@
         {{/each}}
       </div>
       <div class="combat-pre-bonus">
-        <span class="combat-pre-bonus-label">{{localize "SWIA.Combat.ManualBonus"}}</span>
+        <span class="combat-pre-bonus-label">{{localize "SWIA.Combat.PreRollBonus"}}</span>
         {{#each attacker.preBonusRows}}
-        <div class="roll-pool-row">
-          <span class="pool-label">{{label}}</span>
+        <div class="roll-pool-row bonus-row {{#if takesTokens}}has-token-slot{{/if}}">
+          <span class="pool-label" title="{{breakdown}}">{{label}}{{#if armor}} <span class="pool-armor-hint" title="{{localize 'SWIA.Roll.FromArmor' count=armor}}">&#9632;{{armor}}</span>{{/if}}</span>
           <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="attacker" data-stat="{{stat}}" data-delta="-1" {{#unless ../canAttacker}}disabled{{/unless}}>&minus;</button>
-          <span class="pool-count {{#if count}}has-bonus{{/if}}">{{count}}</span>
+          <span class="pool-count {{#if count}}has-bonus{{/if}}" title="{{breakdown}}">{{count}}</span>
           <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="attacker" data-stat="{{stat}}" data-delta="1" {{#unless ../canAttacker}}disabled{{/unless}}>+</button>
+          {{#if takesTokens}}
+          <span class="pool-token-controls">
+            <button type="button" class="pool-token-btn" data-action="combatSpendToken" data-side="attacker" data-stat="{{stat}}" data-kind="typed"
+              title="{{localize 'SWIA.Combat.SpendTokenHint' label=label}}" {{#unless canSpend}}disabled{{/unless}} {{#unless typedTokens}}disabled{{/unless}}>
+              <img src="{{tokenIcon}}" alt="" /><span class="pool-token-count">&times;{{typedTokens}}</span>
+            </button>
+            {{#if anyTokens}}
+            <button type="button" class="pool-token-btn any" data-action="combatSpendToken" data-side="attacker" data-stat="{{stat}}" data-kind="any"
+              title="{{localize 'SWIA.Combat.SpendAnyTokenHint' label=label}}" {{#unless canSpend}}disabled{{/unless}}>
+              <img src="{{anyIcon}}" alt="" /><span class="pool-token-count">&times;{{anyTokens}}</span>
+            </button>
+            {{/if}}
+            {{#if spent}}
+            <button type="button" class="pool-token-btn undo" data-action="combatUnspendToken" data-side="attacker" data-stat="{{stat}}"
+              title="{{localize 'SWIA.Combat.UnspendTokenHint'}}" {{#unless canSpend}}disabled{{/unless}}>
+              <i class="fas fa-undo"></i><span class="pool-token-count">{{spent}}</span>
+            </button>
+            {{/if}}
+          </span>
+          {{/if}}
         </div>
         {{/each}}
       </div>
@@ -58,10 +78,11 @@
 
     <section class="combat-panel defender-panel">
       <h3>{{localize "SWIA.Combat.Defender"}}</h3>
-      <p class="combat-meta">
+      <p class="combat-meta combat-tokens-held">
         {{localize "SWIA.Combat.PowerTokens"}}:
-        {{localize "SWIA.Dice.Block"}} {{defender.tokens.block}} &middot;
-        {{localize "SWIA.Dice.Evade"}} {{defender.tokens.evade}}
+        {{localize "SWIA.Dice.Block"}} {{defender.tokensHeld.block}} &middot;
+        {{localize "SWIA.Dice.Evade"}} {{defender.tokensHeld.evade}}
+        {{#if defender.tokensHeld.any}}&middot; {{localize "SWIA.PowerTokens.AnyToken"}} {{defender.tokensHeld.any}}{{/if}}
       </p>
       {{#if isSetup}}
       <div class="combat-pool-grid">
@@ -77,13 +98,33 @@
       {{/if}}
       {{#if showDefenderBonus}}
       <div class="combat-pre-bonus">
-        <span class="combat-pre-bonus-label">{{localize "SWIA.Combat.ManualBonus"}}</span>
+        <span class="combat-pre-bonus-label">{{localize "SWIA.Combat.PreRollBonus"}}</span>
         {{#each defender.preBonusRows}}
-        <div class="roll-pool-row">
-          <span class="pool-label">{{label}}</span>
+        <div class="roll-pool-row bonus-row {{#if takesTokens}}has-token-slot{{/if}}">
+          <span class="pool-label" title="{{breakdown}}">{{label}}{{#if armor}} <span class="pool-armor-hint" title="{{localize 'SWIA.Roll.FromArmor' count=armor}}">&#9632;{{armor}}</span>{{/if}}</span>
           <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="defender" data-stat="{{stat}}" data-delta="-1" {{#unless ../canDefender}}disabled{{/unless}}>&minus;</button>
-          <span class="pool-count {{#if count}}has-bonus{{/if}}">{{count}}</span>
+          <span class="pool-count {{#if count}}has-bonus{{/if}}" title="{{breakdown}}">{{count}}</span>
           <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="defender" data-stat="{{stat}}" data-delta="1" {{#unless ../canDefender}}disabled{{/unless}}>+</button>
+          {{#if takesTokens}}
+          <span class="pool-token-controls">
+            <button type="button" class="pool-token-btn" data-action="combatSpendToken" data-side="defender" data-stat="{{stat}}" data-kind="typed"
+              title="{{localize 'SWIA.Combat.SpendTokenHint' label=label}}" {{#unless canSpend}}disabled{{/unless}} {{#unless typedTokens}}disabled{{/unless}}>
+              <img src="{{tokenIcon}}" alt="" /><span class="pool-token-count">&times;{{typedTokens}}</span>
+            </button>
+            {{#if anyTokens}}
+            <button type="button" class="pool-token-btn any" data-action="combatSpendToken" data-side="defender" data-stat="{{stat}}" data-kind="any"
+              title="{{localize 'SWIA.Combat.SpendAnyTokenHint' label=label}}" {{#unless canSpend}}disabled{{/unless}}>
+              <img src="{{anyIcon}}" alt="" /><span class="pool-token-count">&times;{{anyTokens}}</span>
+            </button>
+            {{/if}}
+            {{#if spent}}
+            <button type="button" class="pool-token-btn undo" data-action="combatUnspendToken" data-side="defender" data-stat="{{stat}}"
+              title="{{localize 'SWIA.Combat.UnspendTokenHint'}}" {{#unless canSpend}}disabled{{/unless}}>
+              <i class="fas fa-undo"></i><span class="pool-token-count">{{spent}}</span>
+            </button>
+            {{/if}}
+          </span>
+          {{/if}}
         </div>
         {{/each}}
       </div>
@@ -163,11 +204,20 @@
       <span class="total damage">{{localize "SWIA.Dice.Damage"}} {{result.totalDamage}}</span>
       <span class="total surge">{{localize "SWIA.Dice.Surge"}} {{result.usableSurge}}</span>
       <span class="total accuracy">{{localize "SWIA.Dice.Accuracy"}} {{result.totalAccuracy}}</span>
-      <span class="total block">{{localize "SWIA.Dice.Block"}} {{#if result.pierceTotal}}{{result.effectiveBlock}} ({{result.block}}+{{result.bonusBlock}}&minus;{{result.pierceTotal}}){{else}}{{result.effectiveBlock}}{{/if}}</span>
-      {{#if result.evade}}<span class="total evade">{{localize "SWIA.Dice.Evade"}} {{result.evade}}</span>{{/if}}
+      <span class="total block">{{localize "SWIA.Dice.Block"}} {{#if result.pierceTotal}}{{result.effectiveBlock}} ({{result.block}}+{{result.bonusBlock}}&minus;{{result.pierceTotal}}){{else}}{{result.effectiveBlock}}{{#if result.bonusBlock}} ({{result.block}}+{{result.bonusBlock}}){{/if}}{{/if}}</span>
+      {{#if result.totalEvade}}<span class="total evade">{{localize "SWIA.Dice.Evade"}} {{result.totalEvade}}{{#if result.bonusEvade}} ({{result.evade}}+{{result.bonusEvade}}){{/if}}</span>{{/if}}
       {{#if result.dodged}}<span class="total dodge">{{localize "SWIA.Dice.Dodge"}}!</span>{{/if}}
     </div>
 
+    {{#if result.hasDeclaredTokens}}
+    <p class="combat-meta combat-declared-tokens">
+      {{localize "SWIA.Combat.DeclaredTokens"}}:
+      {{#if result.tokenDamage}}<span>+{{result.tokenDamage}} {{localize "SWIA.Dice.Damage"}}</span>{{/if}}
+      {{#if result.tokenSurge}}<span>+{{result.tokenSurge}} {{localize "SWIA.Dice.Surge"}}</span>{{/if}}
+      {{#if result.tokenBlock}}<span>+{{result.tokenBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
+      {{#if result.tokenEvade}}<span>+{{result.tokenEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
+    </p>
+    {{/if}}
     <div class="roll-card-result {{#if result.dodged}}dodged{{/if}}">
       {{#if result.dodged}}
       <span class="roll-card-net">{{localize "SWIA.Roll.Dodged"}}</span>
@@ -209,19 +259,6 @@
         {{/each}}
       </div>
       {{/if}}
-      <div class="combat-reaction-column">
-        <span class="roll-card-surges-title">{{localize "SWIA.Combat.PowerTokens"}}</span>
-        <button type="button" class="combat-token-btn" data-action="combatSpendToken" data-token="block"
-          {{#unless canDefender}}disabled{{/unless}} {{#unless defender.tokens.block}}disabled{{/unless}}>
-          {{localize "SWIA.Combat.SpendBlock"}} ({{defender.tokens.block}})
-        </button>
-        <button type="button" class="combat-token-btn" data-action="combatSpendToken" data-token="evade"
-          {{#unless canDefender}}disabled{{/unless}} {{#unless defender.tokens.evade}}disabled{{/unless}}>
-          {{localize "SWIA.Combat.SpendEvade"}} ({{defender.tokens.evade}})
-        </button>
-        {{#if result.spentTokens.block}}<p class="combat-meta">+{{result.spentTokens.block}} {{localize "SWIA.Dice.Block"}}</p>{{/if}}
-        {{#if result.spentTokens.evade}}<p class="combat-meta">+{{result.spentTokens.evade}} {{localize "SWIA.Dice.Evade"}}</p>{{/if}}
-      </div>
     </div>
 
     <footer class="combat-actions">

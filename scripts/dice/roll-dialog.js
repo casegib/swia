@@ -3,11 +3,12 @@
 //   hero attack      -> equipped weapon attackDice + attached mod bonusDice
 //   villain/ally     -> attributes.attack (form-card surge abilities when Shift active)
 //   hero attribute   -> attributes.{strength|insight|tech} (wounded variants when wounded)
-//   defense          -> actor's own attributes.defense
+//   defense          -> actor's own attributes.defense (armor never adds dice;
+//                       equipped armor seeds flat Block/Evade bonuses instead)
 //   attack target    -> first targeted token's attributes.defense (manual fallback)
 
 import { COLOR_TO_DENOM, totalSymbols, rollFaces } from "./dice-terms.js";
-import { escapeHTML, sanitizeLabelHTML } from "../data/common.js";
+import { escapeHTML, sanitizeLabelHTML, equippedArmorFor, armorEffectsFor } from "../data/common.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseApplication = HandlebarsApplicationMixin(ApplicationV2);
@@ -89,7 +90,14 @@ export function recomputeCard(state) {
   // Power-token bonuses (combat window); absent on solo-roll cards
   state.bonusBlock ??= 0;
   state.bonusEvade ??= 0;
-  state.usableSurge = Math.max(0, state.surge - (state.evade + state.bonusEvade) - state.spentSurge);
+  state.totalEvade = state.evade + state.bonusEvade;
+  // Defense totals are worth showing when dice were rolled OR armor added
+  // flat results to a diceless defender.
+  state.showDefenseTotals = (state.defenseFaces?.length ?? 0) > 0
+    || state.bonusBlock > 0 || state.bonusEvade > 0;
+  state.hasDeclaredTokens = (state.tokenDamage ?? 0) + (state.tokenSurge ?? 0)
+    + (state.tokenBlock ?? 0) + (state.tokenEvade ?? 0) > 0;
+  state.usableSurge = Math.max(0, state.surge - state.totalEvade - state.spentSurge);
   state.pierceTotal = state.basePierce + state.bonusPierce;
   state.effectiveBlock = Math.max(0, state.block + state.bonusBlock - state.pierceTotal);
   state.dodged = state.dodge > 0;
@@ -177,28 +185,30 @@ export function buildAttackPool(actor, weaponId = null) {
   return pool;
 }
 
-/** Owned armor items currently equipped. */
-export function equippedArmorFor(actor) {
-  return (actor?.items ?? []).filter(
-    (i) => i.type === "armor" && (i.system?.equipped ?? true)
-  );
-}
+// Re-exported for callers that historically imported these from here.
+export { equippedArmorFor, armorEffectsFor };
 
 /**
- * Defense pool {black, white} for an actor: the actor's own defense attribute
- * plus the dice from every equipped armor item, added on top.
+ * Defense pool {black, white} for an actor: the actor's own defense attribute.
+ * Armor contributes no dice in Imperial Assault; its printed Block/Evade are
+ * flat results, seeded via armorDefenseBonusFor().
  *
  * Single chokepoint — the combat window's defender panel, the solo defense
  * roll and the targeted-defense path all resolve their pool through here.
  */
 export function buildDefensePool(actor) {
   const d = actor?.system?.attributes?.defense ?? {};
-  const pool = { black: clampCount(d.black), white: clampCount(d.white) };
-  for (const armor of equippedArmorFor(actor)) {
-    const ad = armor.system?.defenseDice ?? {};
-    for (const c of DEFENSE_POOL_COLORS) pool[c] = clampCount(pool[c] + clampCount(ad[c]));
-  }
-  return pool;
+  return { black: clampCount(d.black), white: clampCount(d.white) };
+}
+
+/**
+ * Flat {block, evade} a defender starts with from equipped armor. Seeds the
+ * combat window's defender bonus row (still adjustable for conditional card
+ * text) and the solo defense card.
+ */
+export function armorDefenseBonusFor(actor) {
+  const fx = armorEffectsFor(actor);
+  return { block: fx.block, evade: fx.evade };
 }
 
 /** Accumulated keyword block: weapon + attached mods (heroes only). */
@@ -600,6 +610,12 @@ export class SWIARollDialog extends BaseApplication {
       ? this._attackKeywords()
       : { pierce: 0, blast: 0, cleave: false, reach: false };
 
+    // Armor Block/Evade apply even when the defender rolls no dice at all.
+    const defendingActor = this.rollType === "defense"
+      ? this.actor
+      : (this.rollType === "attack" ? this.targetActor : null);
+    const armorBonus = defendingActor ? armorDefenseBonusFor(defendingActor) : { block: 0, evade: 0 };
+
     const state = recomputeCard({
       actorName: this.actor?.name ?? "",
       actorId: this.actor?.id ?? "",
@@ -620,6 +636,12 @@ export class SWIARollDialog extends BaseApplication {
       block: defenseTotals.block,
       evade: defenseTotals.evade,
       dodge: defenseTotals.dodge,
+      // Equipped armor's printed Block/Evade apply on top of whatever the
+      // defender rolled (own defense roll, or the targeted actor on an attack).
+      bonusBlock: armorBonus.block,
+      bonusEvade: armorBonus.evade,
+      armorBlock: armorBonus.block,
+      armorEvade: armorBonus.evade,
       weaponAccuracy: this.rollType === "attack" ? this._weaponAccuracy() : 0,
       basePierce: keywords.pierce,
       blast: keywords.blast,

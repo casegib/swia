@@ -3,7 +3,7 @@
 // stepper, a state pill or a Ready All button behaves identically wherever it
 // is clicked.
 
-import { escapeHTML } from "./data/common.js";
+import { escapeHTML, armorEffectsFor } from "./data/common.js";
 
 /** Card types that participate in the ready/exhausted/depleted cycle. */
 export const READY_ALL_TYPES = ["weapon", "weaponmod", "armor", "classcard", "gear"];
@@ -178,10 +178,94 @@ export async function adjustActorXp(actor, delta) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Power tokens                                                        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Power tokens are status effects (see the status list in swia.js), one
+ * effect per token so they stack. These helpers are the shared read/write
+ * path for the combat window, the portal/sheet chips and the map badge.
+ */
+export const POWER_TOKEN_TYPES = ["damage", "surge", "block", "evade", "any"];
+export const POWER_TOKEN_STATUS = Object.fromEntries(
+  POWER_TOKEN_TYPES.map((type) => [type, `power-${type}`])
+);
+
+/** Count each power-token type held by an actor: {damage, surge, block, evade, any}. */
+export function countPowerTokens(actor) {
+  const counts = Object.fromEntries(POWER_TOKEN_TYPES.map((t) => [t, 0]));
+  for (const effect of actor?.effects ?? []) {
+    for (const type of POWER_TOKEN_TYPES) {
+      if (effect.statuses?.has?.(POWER_TOKEN_STATUS[type])) counts[type] += 1;
+    }
+  }
+  return counts;
+}
+
+/** True when the actor holds at least one power token of any type. */
+export function hasPowerTokens(actor) {
+  return Object.values(countPowerTokens(actor)).some((n) => n > 0);
+}
+
+/**
+ * Display rows for a token tray: every type for editors (so a GM can grant
+ * from an empty slot), only held types for everyone else.
+ */
+export function powerTokenRows(actor, { editable = false } = {}) {
+  const counts = countPowerTokens(actor);
+  const labels = {
+    damage: "SWIA.PowerTokens.DamageToken",
+    surge: "SWIA.PowerTokens.SurgeToken",
+    block: "SWIA.PowerTokens.BlockToken",
+    evade: "SWIA.PowerTokens.EvadeToken",
+    any: "SWIA.PowerTokens.AnyToken"
+  };
+  return POWER_TOKEN_TYPES
+    .filter((type) => editable || counts[type] > 0)
+    .map((type) => ({
+      type,
+      count: counts[type],
+      label: game.i18n.localize(labels[type]),
+      icon: `systems/swia/icons/Power ${type.charAt(0).toUpperCase()}${type.slice(1)} Token.png`
+    }));
+}
+
+/**
+ * Give an actor one more token of `type`. Goes through the status-effect
+ * registry so the icon/name match what the token HUD would create, but
+ * creates a fresh effect each time (toggleStatusEffect would refuse to
+ * stack a second one).
+ */
+export async function grantPowerToken(actor, type) {
+  if (!actor || !POWER_TOKEN_TYPES.includes(type)) return null;
+  const EffectClass = CONFIG.ActiveEffect?.documentClass ?? ActiveEffect;
+  const effect = await EffectClass.fromStatusEffect(POWER_TOKEN_STATUS[type]);
+  const data = effect?.toObject?.() ?? effect;
+  if (!data) return null;
+  delete data._id;
+  return EffectClass.create(data, { parent: actor });
+}
+
+/** Take one token of `type` away (the most recently added). */
+export async function removePowerToken(actor, type) {
+  if (!actor || !POWER_TOKEN_TYPES.includes(type)) return false;
+  const status = POWER_TOKEN_STATUS[type];
+  const held = (actor.effects ?? []).filter((e) => e.statuses?.has?.(status));
+  const effect = held[held.length - 1];
+  if (!effect) return false;
+  await effect.delete();
+  return true;
+}
+
+/* ------------------------------------------------------------------ */
 /* Items                                                               */
 /* ------------------------------------------------------------------ */
 
-/** Flip an armor item's equipped flag (feeds buildDefensePool). */
+/**
+ * Flip an armor item's equipped flag. Health/Block/Evade follow automatically:
+ * max health is derived (actors.js) and the item hooks below keep the current
+ * value in step with it.
+ */
 export async function toggleArmorEquipped(item) {
   if (!item || item.type !== "armor") return false;
   await item.update({ "system.equipped": !(item.system?.equipped ?? true) });
@@ -212,3 +296,96 @@ export async function readyAllItemsWithNotice(actor) {
   ui.notifications?.info(game.i18n.format("SWIA.Inventory.ReadyAllDone", { count }));
   return count;
 }
+
+/* ------------------------------------------------------------------ */
+/* Armor health: keep damage-taken constant when the max moves         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The system stores REMAINING health, but Imperial Assault tracks DAMAGE.
+ * When equipped armor changes the max (equip/unequip, edit, add, remove), the
+ * remaining value shifts by the same amount so the damage on the figure stays
+ * put: 10/12 wearing +2 armor is 12/14, not 10/14. Runs once, on the client
+ * that made the item change (it necessarily owns the actor).
+ */
+function armorHealthContribution(itemLike) {
+  const sys = itemLike?.system ?? {};
+  if (!(sys.equipped ?? true)) return 0;
+  return Math.max(0, Number(sys.bonusHealth) || 0);
+}
+
+function activeHealthPath(actor) {
+  const wounded = actor?.type === "hero" && actor.system?.state?.wounded;
+  return wounded ? "system.woundedAttributes.health" : "system.attributes.health";
+}
+
+// One in-flight shift per actor: two rapid changes (equip toggle + a
+// bonusHealth edit, say) must read the value the previous shift wrote.
+const pendingShifts = new Map();
+
+function shiftHealthForArmorChange(actor, delta) {
+  if (!actor || !delta) return Promise.resolve();
+  const key = actor.uuid ?? actor.id;
+  const run = async () => {
+    const path = activeHealthPath(actor);
+    // Recompute the effective max from source + current items rather than
+    // trusting derived data, which may not have been re-prepared yet when an
+    // embedded-document hook fires.
+    const sourceMax = Number(foundry.utils.getProperty(actor._source, `${path}.max`)) || 0;
+    const max = sourceMax + (armorEffectsFor(actor).health || 0);
+    const current = Number(foundry.utils.getProperty(actor, `${path}.value`)) || 0;
+    const next = Math.max(0, Math.min(max, current + delta));
+    if (next === current) return;
+    try {
+      await actor.update({ [`${path}.value`]: next });
+    } catch (error) {
+      console.warn("SWIA | Could not shift health for armor change", error);
+    }
+  };
+  const chained = (pendingShifts.get(key) ?? Promise.resolve()).then(run, run);
+  pendingShifts.set(key, chained);
+  chained.finally(() => {
+    if (pendingShifts.get(key) === chained) pendingShifts.delete(key);
+  });
+  return chained;
+}
+
+function isOwnArmorChange(item, userId) {
+  return item?.type === "armor"
+    && item.parent?.documentName === "Actor"
+    && userId === game.user?.id;
+}
+
+Hooks.on("preUpdateItem", (item, changes, options) => {
+  if (item?.type !== "armor" || item.parent?.documentName !== "Actor") return;
+  const touchesHealth = foundry.utils.hasProperty(changes, "system.equipped")
+    || foundry.utils.hasProperty(changes, "system.bonusHealth");
+  if (!touchesHealth) return;
+  // Stash the pre-change contribution; updateItem only sees the new state.
+  // `options` is shared by every item in a batched updateEmbeddedDocuments,
+  // so key it by item id or a batch would read one item's value for all.
+  options.swiaArmorHealthBefore = {
+    ...(options.swiaArmorHealthBefore ?? {}),
+    [item.id]: armorHealthContribution(item)
+  };
+});
+
+Hooks.on("updateItem", (item, changes, options, userId) => {
+  if (!isOwnArmorChange(item, userId)) return;
+  const before = options?.swiaArmorHealthBefore?.[item.id];
+  if (before === undefined) return;
+  const delta = armorHealthContribution(item) - before;
+  if (delta) shiftHealthForArmorChange(item.parent, delta);
+});
+
+Hooks.on("createItem", (item, options, userId) => {
+  if (!isOwnArmorChange(item, userId)) return;
+  const delta = armorHealthContribution(item);
+  if (delta) shiftHealthForArmorChange(item.parent, delta);
+});
+
+Hooks.on("deleteItem", (item, options, userId) => {
+  if (!isOwnArmorChange(item, userId)) return;
+  const delta = -armorHealthContribution(item);
+  if (delta) shiftHealthForArmorChange(item.parent, delta);
+});

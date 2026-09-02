@@ -1,4 +1,4 @@
-<form class="swia-sheet item-sheet card-sheet gear-sheet armor-sheet {{#if editMode}}editing{{/if}}" autocomplete="off">
+<form class="swia-sheet item-sheet card-sheet weapon-sheet armor-sheet {{#if editMode}}editing{{/if}}" autocomplete="off">
   <div class="item-sheet-toolbar">
     {{#if isGM}}
     <button type="button" class="item-edit-toggle {{#if editMode}}active{{/if}}" data-action="toggleEdit">
@@ -12,109 +12,148 @@
     {{/if}}
   </div>
 
-  <div class="card-image-container">
-    <img class="card-image {{systemData.cardState}}" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" alt="{{item.name}}" />
-    {{#unless hasCardImage}}
-    <div class="card-placeholder">
-      <i class="fas fa-image"></i>
-      <p>{{localize "SWIA.Item.ClickToUploadCard"}}</p>
-    </div>
-    {{/unless}}
-    <button type="button" class="card-state-btn {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
-      {{cardStateLabel}}
-    </button>
-  </div>
-
-  <div class="item-sheet-body">
-    <div class="item-name-row">
-      <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'SWIA.Item.Name'}}" {{#unless editMode}}disabled{{/unless}} />
-    </div>
-
-    <section class="item-description-section">
-      <h3>{{localize "SWIA.Item.Armor.ArmorClassLabel"}}</h3>
+  <div class="weapon-card-frame">
+    <header class="weapon-title-strip">
       {{#if editMode}}
-      <select name="system.armorClass" data-dtype="String">
-        <option value="" {{#if (eq systemData.armorClass "")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.None"}}</option>
-        <option value="light" {{#if (eq systemData.armorClass "light")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.Light"}}</option>
-        <option value="medium" {{#if (eq systemData.armorClass "medium")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.Medium"}}</option>
-        <option value="heavy" {{#if (eq systemData.armorClass "heavy")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.Heavy"}}</option>
-      </select>
+      <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'SWIA.Item.Name'}}" />
       {{else}}
-      <div class="weapon-view-badges">
-        <span class="weapon-range-pill">
-          {{#if (eq systemData.armorClass "light")}}{{localize "SWIA.Item.Armor.ArmorClass.Light"}}{{/if}}
-          {{#if (eq systemData.armorClass "medium")}}{{localize "SWIA.Item.Armor.ArmorClass.Medium"}}{{/if}}
-          {{#if (eq systemData.armorClass "heavy")}}{{localize "SWIA.Item.Armor.ArmorClass.Heavy"}}{{/if}}
-          {{#if (eq systemData.armorClass "")}}{{localize "SWIA.Item.Armor.ArmorClass.None"}}{{/if}}
-        </span>
-      </div>
+      <h1>{{item.name}}</h1>
       {{/if}}
-    </section>
+      <button type="button" class="card-state-pill {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
+        {{cardStateLabel}}
+      </button>
+      {{#if systemData.cost}}
+      <span class="cost-chip" title="{{localize 'SWIA.Item.Weapon.Cost'}}">{{systemData.cost}} {{localize "SWIA.Item.Weapon.Credits"}}</span>
+      {{/if}}
+    </header>
 
-    <section class="item-description-section">
-      <h3>{{localize "SWIA.Item.Armor.Equipped"}}</h3>
+    <div class="weapon-art-area">
+      <div class="weapon-art-panel">
+        {{#if hasCardImage}}
+        <img class="card-image {{systemData.cardState}}" src="{{item.img}}" {{#if editMode}}data-edit="img" data-action="editImage"{{/if}} title="{{item.name}}" alt="{{item.name}}" style="object-position: {{systemData.imageOffsetX}}% {{systemData.imageOffsetY}}%; transform: scale({{systemData.imageZoom}}); transform-origin: {{systemData.imageOffsetX}}% {{systemData.imageOffsetY}}%" />
+        {{/if}}
+        {{#unless hasCardImage}}
+        <div class="card-placeholder" {{#if editMode}}data-edit="img" data-action="editImage"{{/if}}>
+          <i class="fas fa-image"></i>
+          <p>{{localize "SWIA.Item.ClickToUploadCard"}}</p>
+        </div>
+        {{/unless}}
+      </div>
+
+      <aside class="attack-badge armor-effects-badge" aria-label="{{localize 'SWIA.Item.Armor.Effects'}}">
+        <div class="attack-badge-title">{{localize "SWIA.Item.Armor.Effects"}}</div>
+        <div class="attack-badge-dice armor-effects-row">
+          {{#if systemData.bonusHealth}}<span class="armor-fx-chip health" title="{{localize 'SWIA.Item.Armor.BonusHealthHint'}}">+{{systemData.bonusHealth}} <img src="systems/swia/icons/Damage.png" alt="{{localize 'SWIA.Attributes.Health'}}" /></span>{{/if}}
+          {{#if systemData.bonusBlock}}<span class="armor-fx-chip block" title="{{localize 'SWIA.Item.Armor.BonusBlockHint'}}">+{{systemData.bonusBlock}} <img src="systems/swia/icons/Block.png" alt="{{localize 'SWIA.Dice.Block'}}" /></span>{{/if}}
+          {{#if systemData.bonusEvade}}<span class="armor-fx-chip evade" title="{{localize 'SWIA.Item.Armor.BonusEvadeHint'}}">+{{systemData.bonusEvade}} <img src="systems/swia/icons/Evade.png" alt="{{localize 'SWIA.Dice.Evade'}}" /></span>{{/if}}
+          {{#unless hasArmorEffects}}<span class="armor-fx-chip none">{{localize "SWIA.Item.Armor.NoEffects"}}</span>{{/unless}}
+        </div>
+      </aside>
+    </div>
+
+    <div class="weapon-subtitle-row">
       {{#if editMode}}
-      <label class="keyword-checkbox">
+      <input class="weapon-traits-input" name="system.traits" type="text" value="{{systemData.traits}}" placeholder="{{localize 'SWIA.Item.Armor.TraitsPlaceholder'}}" />
+      <label class="keyword-toggle equipped-toggle {{#if systemData.equipped}}is-on{{/if}}" title="{{localize 'SWIA.Item.Armor.EquippedHint'}}">
         <input name="system.equipped" type="checkbox" {{#if systemData.equipped}}checked{{/if}} />
-        {{localize "SWIA.Item.Armor.EquippedHint"}}
+        <span>{{localize "SWIA.Item.Armor.Equipped"}}</span>
       </label>
       {{else}}
-      <div class="weapon-view-badges">
-        <span class="weapon-range-pill">
-          {{#if systemData.equipped}}{{localize "SWIA.Item.Armor.Equipped"}}{{else}}{{localize "SWIA.Item.Armor.NotEquipped"}}{{/if}}
-        </span>
-      </div>
+      {{#if systemData.traits}}<p class="weapon-traits-text">{{systemData.traits}}</p>{{/if}}
+      {{#if armorClassLabel}}<p class="weapon-type-line">{{armorClassLabel}}</p>{{/if}}
+      <span class="equipped-pill {{#if systemData.equipped}}is-on{{/if}}" title="{{localize 'SWIA.Item.Armor.EquippedHint'}}">
+        {{#if systemData.equipped}}{{localize "SWIA.Item.Armor.Equipped"}}{{else}}{{localize "SWIA.Item.Armor.NotEquipped"}}{{/if}}
+      </span>
       {{/if}}
-    </section>
+    </div>
 
-    <section class="item-description-section">
-      <h3>{{localize "SWIA.Item.Armor.DefenseDice"}}</h3>
-      {{#if editMode}}
-      <div class="defense">
-        <label>{{localize "SWIA.Defense.Black"}}</label>
-        <input name="system.defenseDice.black" type="number" value="{{systemData.defenseDice.black}}" data-dtype="Number" min="0" />
-        <label>{{localize "SWIA.Defense.White"}}</label>
-        <input name="system.defenseDice.white" type="number" value="{{systemData.defenseDice.white}}" data-dtype="Number" min="0" />
-      </div>
-      {{else}}
-      <div class="attribute-row">
-        <div class="dice-display">
-          <div class="dice-blocks">
-            {{#each (range systemData.defenseDice.black)}}
-            <span class="dice-block black"></span>
-            {{/each}}
-            {{#each (range systemData.defenseDice.white)}}
-            <span class="dice-block white"></span>
-            {{/each}}
+    {{#if editMode}}
+    <div class="weapon-meta-edit">
+      <div class="meta-edit-row">
+        <div class="edit-field numeric-trio armor-effects-edit">
+          <div class="numeric-field">
+            <label title="{{localize 'SWIA.Item.Armor.BonusHealthHint'}}">{{localize "SWIA.Item.Armor.BonusHealth"}}</label>
+            <input name="system.bonusHealth" type="number" value="{{systemData.bonusHealth}}" data-dtype="Number" min="0" />
+          </div>
+          <div class="numeric-field">
+            <label title="{{localize 'SWIA.Item.Armor.BonusBlockHint'}}">{{localize "SWIA.Item.Armor.BonusBlock"}}</label>
+            <input name="system.bonusBlock" type="number" value="{{systemData.bonusBlock}}" data-dtype="Number" min="0" />
+          </div>
+          <div class="numeric-field">
+            <label title="{{localize 'SWIA.Item.Armor.BonusEvadeHint'}}">{{localize "SWIA.Item.Armor.BonusEvade"}}</label>
+            <input name="system.bonusEvade" type="number" value="{{systemData.bonusEvade}}" data-dtype="Number" min="0" />
+          </div>
+          <div class="numeric-field">
+            <label>{{localize "SWIA.Item.Weapon.Cost"}}</label>
+            <input name="system.cost" type="number" value="{{systemData.cost}}" data-dtype="Number" min="0" />
           </div>
         </div>
+        <div class="edit-field">
+          <label>{{localize "SWIA.Item.Armor.ArmorClassLabel"}}</label>
+          <select name="system.armorClass" data-dtype="String">
+            <option value="" {{#unless systemData.armorClass}}selected{{/unless}}>{{localize "SWIA.Item.Armor.ArmorClass.None"}}</option>
+            <option value="light" {{#if (eq systemData.armorClass "light")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.Light"}}</option>
+            <option value="medium" {{#if (eq systemData.armorClass "medium")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.Medium"}}</option>
+            <option value="heavy" {{#if (eq systemData.armorClass "heavy")}}selected{{/if}}>{{localize "SWIA.Item.Armor.ArmorClass.Heavy"}}</option>
+          </select>
+        </div>
+      </div>
+      {{#if hasCardImage}}
+      <details class="image-framing">
+        <summary>{{localize "SWIA.Item.Weapon.ImageFraming"}}</summary>
+        <div class="meta-edit-row image-position-row">
+          <div class="edit-field image-position-field">
+            <label>{{localize "SWIA.Item.Weapon.ImagePositionX"}}</label>
+            <input name="system.imageOffsetX" type="range" value="{{systemData.imageOffsetX}}" data-dtype="Number" min="0" max="100" step="1" />
+          </div>
+          <div class="edit-field image-position-field">
+            <label>{{localize "SWIA.Item.Weapon.ImagePositionY"}}</label>
+            <input name="system.imageOffsetY" type="range" value="{{systemData.imageOffsetY}}" data-dtype="Number" min="0" max="100" step="1" />
+          </div>
+          <div class="edit-field image-position-field">
+            <label>{{localize "SWIA.Item.Weapon.ImageZoom"}}</label>
+            <input name="system.imageZoom" type="range" value="{{systemData.imageZoom}}" data-dtype="Number" min="0.25" max="3" step="0.05" />
+          </div>
+        </div>
+      </details>
+      {{/if}}
+    </div>
+    {{/if}}
+
+    <section class="weapon-abilities-section">
+      {{#if editMode}}
+      <div class="section-header">
+        <h3>{{localize "SWIA.Item.Weapon.Abilities"}}</h3>
+        <button type="button" data-action="addAbility">{{localize "SWIA.Item.Weapon.AddAbility"}}</button>
       </div>
       {{/if}}
-    </section>
 
-    <section class="item-description-section">
-      <h3>{{localize "SWIA.Item.Description"}}</h3>
-      <div class="editor-container">
-        {{#if editMode}}
-        <div class="html-editor">
-          <label class="editor-label">{{localize "SWIA.Item.Description"}} (HTML)</label>
-          <textarea name="system.description" data-dtype="String" rows="8">{{systemData.description}}</textarea>
-          <div class="editor-hint">{{localize "SWIA.BiographyHint"}}</div>
-        </div>
+      <ol class="weapon-abilities-list">
+        {{#each enrichedAbilities as |ability index|}}
+        <li class="weapon-ability-row">
+          {{#if ../editMode}}
+          <input class="ability-desc-input" type="text" value="{{ability.description}}" placeholder="{{localize 'SWIA.Item.Armor.AbilityPlaceholder'}}" />
+          <button type="button" class="ability-delete" data-action="removeAbility" data-index="{{index}}" title="{{localize 'SWIA.Item.Weapon.RemoveAbility'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+          {{else}}
+          <span class="weapon-ability-view">
+            <span class="ability-rich-text">{{{ability.enrichedDescription}}}</span>
+          </span>
+          {{/if}}
+        </li>
         {{else}}
-        <div class="editor">
-          <div class="editor-content">{{{ enrichedDescription }}}</div>
-        </div>
-        {{/if}}
-      </div>
+        <li class="empty-message">{{localize "SWIA.Item.Weapon.NoAbilities"}}</li>
+        {{/each}}
+      </ol>
     </section>
 
-    <section class="item-description-section">
-      <h3>{{localize "SWIA.Item.Weapon.Cost"}}</h3>
+    <section class="weapon-flavor-section">
       {{#if editMode}}
-      <input name="system.cost" type="number" value="{{systemData.cost}}" data-dtype="Number" min="0" />
+      <h3>{{localize "SWIA.Item.Weapon.FlavorText"}}</h3>
+      <textarea name="system.description" data-dtype="String" rows="4" placeholder="{{localize 'SWIA.Item.Weapon.FlavorPlaceholder'}}">{{systemData.description}}</textarea>
       {{else}}
-      <div>{{systemData.cost}}</div>
+      <div class="flavor-display">{{{enrichedDescription}}}</div>
       {{/if}}
     </section>
   </div>

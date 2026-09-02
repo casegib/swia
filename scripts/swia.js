@@ -20,6 +20,7 @@ import {
 } from "./dice/dice-terms.js";
 import { registerRollCardHooks } from "./dice/roll-dialog.js";
 import { registerCombatHooks, SWIACombatWindow } from "./dice/combat-window.js";
+import { definePowerTokenActorClass, registerPowerTokenBadgeHooks } from "./token-badge.js";
 
 // Foundry v13+ namespaced APIs (system.json minimum is v13)
 // The appv1 sheet classes are referenced only to unregister the core-registered defaults.
@@ -118,6 +119,11 @@ Hooks.once("init", async function initSWIA() {
   registerRollCardHooks();
   checkLegacyDiceModule();
   registerCombatHooks();
+
+  // Power tokens: hidden from the stock status strip, drawn as a count badge
+  // on the map token instead (scripts/token-badge.js)
+  definePowerTokenActorClass();
+  registerPowerTokenBadgeHooks();
 
   // Register system data models (schemas live here; document types are declared in system.json)
   Object.assign(CONFIG.Actor.dataModels, {

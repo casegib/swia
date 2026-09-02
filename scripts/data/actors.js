@@ -1,6 +1,6 @@
 // SWIA actor data models (Foundry v13+ TypeDataModel).
 // Schemas mirror the legacy template.json structure so existing world data loads unchanged.
-import { int, str, html, bool, resource, attackDice, defenseDice, customAttr, abilityList, surgeList, toArray } from "./common.js";
+import { int, str, html, bool, resource, attackDice, defenseDice, customAttr, abilityList, surgeList, toArray, armorEffectsFor } from "./common.js";
 
 const fields = foundry.data.fields;
 const { TypeDataModel } = foundry.abstract;
@@ -21,6 +21,34 @@ class SWIAActorBase extends TypeDataModel {
       speed: int(4),
       defense: defenseDice()
     };
+  }
+
+  /**
+   * Derived data: equipped armor's printed "+N Health" is added on top of
+   * the STORED max. `health.max` is therefore the effective max everywhere
+   * it is read (sheet, portals, steppers, wound/heal reset, Foundry token
+   * bars); the printed base survives as `health.baseMax` and the armor share
+   * as `health.armorBonus` for display. Anything that WRITES max must write
+   * the base — the hero sheet's edit inputs read from `_source` for exactly
+   * that reason. Subclasses with a second attribute set (hero wounded side)
+   * call applyArmorHealth on it too.
+   */
+  prepareDerivedData() {
+    super.prepareDerivedData?.();
+    this.armorEffects = armorEffectsFor(this.parent);
+    this.applyArmorHealth(this.attributes?.health);
+  }
+
+  applyArmorHealth(health) {
+    if (!health) return;
+    const bonus = Math.max(0, Number(this.armorEffects?.health) || 0);
+    // baseMax is only ever set by this method, so on a fresh prepare it is
+    // undefined and max IS the stored base. Reading it back makes a repeated
+    // prepare on the same instance a no-op instead of stacking the bonus.
+    const base = Math.max(0, Number(health.baseMax ?? health.max) || 0);
+    health.baseMax = base;
+    health.armorBonus = bonus;
+    health.max = base + bonus;
   }
 }
 
@@ -74,6 +102,12 @@ export class HeroData extends SWIAActorBase {
     if (source.heroAbilities !== undefined) source.heroAbilities = toArray(source.heroAbilities);
     if (source.woundedHeroAbilities !== undefined) source.woundedHeroAbilities = toArray(source.woundedHeroAbilities);
     return super.migrateData(source);
+  }
+
+  /** Wounded doesn't change printed Health, so armor applies to both sides. */
+  prepareDerivedData() {
+    super.prepareDerivedData();
+    this.applyArmorHealth(this.woundedAttributes?.health);
   }
 }
 

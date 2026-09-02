@@ -58,6 +58,17 @@
                 {{/if}}
                 {{/if}}
               </div>
+              {{#if actor.powerTokens.length}}
+              <div class="power-token-tray" title="{{localize 'SWIA.PowerTokensTitle'}}">
+                {{#each actor.powerTokens as |tok|}}
+                <span class="power-token-chip {{#unless tok.count}}empty{{/unless}}" title="{{tok.label}}">
+                  {{#if actor.canEditTokens}}<button type="button" class="power-token-step" data-action="adjustPowerToken" data-actor-id="{{actor.id}}" data-token="{{tok.type}}" data-delta="-1" {{#unless tok.count}}disabled{{/unless}}>&minus;</button>{{/if}}
+                  <img src="{{tok.icon}}" alt="{{tok.label}}" /><span class="power-token-count">{{tok.count}}</span>
+                  {{#if actor.canEditTokens}}<button type="button" class="power-token-step" data-action="adjustPowerToken" data-actor-id="{{actor.id}}" data-token="{{tok.type}}" data-delta="1">+</button>{{/if}}
+                </span>
+                {{/each}}
+              </div>
+              {{/if}}
             </div>
             {{#if actor.isHero}}
             <div class="portal-xp" title="{{localize 'SWIA.Portal.UnspentXpHint'}}">
@@ -81,7 +92,7 @@
               <div class="portal-stepper">
                 <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{actor.id}}" data-stat="health" data-delta="-1" title="{{localize 'SWIA.Attributes.HealthMinus'}}" {{#unless actor.canManage}}disabled{{/unless}}>&minus;</button>
                 <strong>{{actor.health.value}}</strong>
-                <span class="stat-max">/{{actor.health.max}}</span>
+                <span class="stat-max" {{#if actor.health.armorBonus}}title="{{localize 'SWIA.Attributes.HealthFromArmor' base=actor.health.baseMax bonus=actor.health.armorBonus}}"{{/if}}>/{{actor.health.max}}{{#if actor.health.armorBonus}}<span class="armor-health-note">+{{actor.health.armorBonus}}</span>{{/if}}</span>
                 <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{actor.id}}" data-stat="health" data-delta="1" title="{{localize 'SWIA.Attributes.HealthPlus'}}" {{#unless actor.canManage}}disabled{{/unless}}>+</button>
               </div>
             </div>
@@ -128,9 +139,9 @@
                 <span class="dice-blocks rollable" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="defense" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
                   {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
                   {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
-                  {{#each actor.armorBlackDice}}<span class="dice-block black from-item" title="{{localize 'SWIA.Portal.FromArmor'}}"></span>{{/each}}
-                  {{#each actor.armorWhiteDice}}<span class="dice-block white from-item" title="{{localize 'SWIA.Portal.FromArmor'}}"></span>{{/each}}
                 </span>
+                {{#if actor.armorBlock}}<span class="armor-fx-chip block" title="{{localize 'SWIA.Portal.FromArmor'}}">+{{actor.armorBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
+                {{#if actor.armorEvade}}<span class="armor-fx-chip evade" title="{{localize 'SWIA.Portal.FromArmor'}}">+{{actor.armorEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
               </div>
               <div class="dice-line hero-dice-line">
                 <label class="dice-attr-icon" title="{{localize 'SWIA.Attributes.Strength'}}">
@@ -197,9 +208,9 @@
                 <span class="dice-blocks rollable" data-action="rollDice" data-actor-id="{{actor.id}}" data-roll-type="defense" title="{{localize 'SWIA.Roll.ClickToRoll'}}">
                   {{#each actor.defenseBlackDice}}<span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span>{{/each}}
                   {{#each actor.defenseWhiteDice}}<span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span>{{/each}}
-                  {{#each actor.armorBlackDice}}<span class="dice-block black from-item" title="{{localize 'SWIA.Portal.FromArmor'}}"></span>{{/each}}
-                  {{#each actor.armorWhiteDice}}<span class="dice-block white from-item" title="{{localize 'SWIA.Portal.FromArmor'}}"></span>{{/each}}
                 </span>
+                {{#if actor.armorBlock}}<span class="armor-fx-chip block" title="{{localize 'SWIA.Portal.FromArmor'}}">+{{actor.armorBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
+                {{#if actor.armorEvade}}<span class="armor-fx-chip evade" title="{{localize 'SWIA.Portal.FromArmor'}}">+{{actor.armorEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
               </div>
               <div class="dice-line">
                 <label>{{localize "SWIA.Attributes.Attack"}}</label>
@@ -234,7 +245,7 @@
             <div class="companion-stats">
               <span class="companion-stat">
                 <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{companion.id}}" data-stat="health" data-delta="-1" {{#unless companion.canManage}}disabled{{/unless}}>&minus;</button>
-                <strong>{{companion.health.value}}</strong><span class="stat-max">/{{companion.health.max}}</span>
+                <strong>{{companion.health.value}}</strong><span class="stat-max" {{#if companion.health.armorBonus}}title="{{localize 'SWIA.Attributes.HealthFromArmor' base=companion.health.baseMax bonus=companion.health.armorBonus}}"{{/if}}>/{{companion.health.max}}{{#if companion.health.armorBonus}}<span class="armor-health-note">+{{companion.health.armorBonus}}</span>{{/if}}</span>
                 <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{companion.id}}" data-stat="health" data-delta="1" {{#unless companion.canManage}}disabled{{/unless}}>+</button>
               </span>
               <span class="companion-stat companion-speed">{{localize "SWIA.Attributes.Speed"}} <strong>{{companion.speed}}</strong></span>
@@ -246,9 +257,9 @@
               <span class="companion-dice" title="{{localize 'SWIA.Attributes.Defense'}}">
                 {{#each companion.defenseBlackDice}}<span class="dice-block black"></span>{{/each}}
                 {{#each companion.defenseWhiteDice}}<span class="dice-block white"></span>{{/each}}
-                {{#each companion.armorBlackDice}}<span class="dice-block black from-item"></span>{{/each}}
-                {{#each companion.armorWhiteDice}}<span class="dice-block white from-item"></span>{{/each}}
               </span>
+              {{#if companion.armorBlock}}<span class="armor-fx-chip block" title="{{localize 'SWIA.Portal.FromArmor'}}">+{{companion.armorBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
+              {{#if companion.armorEvade}}<span class="armor-fx-chip evade" title="{{localize 'SWIA.Portal.FromArmor'}}">+{{companion.armorEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
             </div>
           </article>
           {{/each}}
@@ -268,7 +279,7 @@
                         <article class="portal-item-card state-{{item.state}}" data-item-id="{{item.id}}">
                           <button
                             type="button"
-                            class="portal-item-open"
+                            class="portal-item-open swia-card-preview-trigger"
                             data-action="openItem"
                             data-actor-id="{{actor.id}}"
                             data-item-id="{{item.id}}"
@@ -287,6 +298,16 @@
                               {{#unless actor.canManage}}disabled{{/unless}}
                             >
                               {{item.stateLabel}}
+                            </button>
+                            <button
+                              type="button"
+                              class="portal-item-chat"
+                              data-action="postItemCard"
+                              data-actor-id="{{actor.id}}"
+                              data-item-id="{{item.id}}"
+                              title="{{localize 'SWIA.Inventory.SendToChat'}}"
+                            >
+                              <i class="fas fa-comment"></i>
                             </button>
                           </div>
                           {{#if item.mods.length}}
@@ -321,7 +342,7 @@
                         <article class="portal-item-card state-{{item.state}} {{#unless item.equipped}}is-unequipped{{/unless}}" data-item-id="{{item.id}}">
                           <button
                             type="button"
-                            class="portal-item-open"
+                            class="portal-item-open swia-card-preview-trigger"
                             data-action="openItem"
                             data-actor-id="{{actor.id}}"
                             data-item-id="{{item.id}}"
@@ -352,7 +373,24 @@
                             >
                               {{item.stateLabel}}
                             </button>
+                            <button
+                              type="button"
+                              class="portal-item-chat"
+                              data-action="postItemCard"
+                              data-actor-id="{{actor.id}}"
+                              data-item-id="{{item.id}}"
+                              title="{{localize 'SWIA.Inventory.SendToChat'}}"
+                            >
+                              <i class="fas fa-comment"></i>
+                            </button>
                           </div>
+                          {{#if item.hasEffects}}
+                          <div class="portal-mod-chips armor-fx-chips">
+                            {{#if item.bonusHealth}}<span class="armor-fx-chip health">+{{item.bonusHealth}} {{localize "SWIA.Attributes.Health"}}</span>{{/if}}
+                            {{#if item.bonusBlock}}<span class="armor-fx-chip block">+{{item.bonusBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
+                            {{#if item.bonusEvade}}<span class="armor-fx-chip evade">+{{item.bonusEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
+                          </div>
+                          {{/if}}
                         </article>
                       {{/each}}
                     </div>
@@ -372,7 +410,7 @@
                         <article class="portal-item-card state-{{item.state}}" data-item-id="{{item.id}}">
                           <button
                             type="button"
-                            class="portal-item-open"
+                            class="portal-item-open swia-card-preview-trigger"
                             data-action="openItem"
                             data-actor-id="{{actor.id}}"
                             data-item-id="{{item.id}}"
@@ -391,6 +429,16 @@
                               {{#unless actor.canManage}}disabled{{/unless}}
                             >
                               {{item.stateLabel}}
+                            </button>
+                            <button
+                              type="button"
+                              class="portal-item-chat"
+                              data-action="postItemCard"
+                              data-actor-id="{{actor.id}}"
+                              data-item-id="{{item.id}}"
+                              title="{{localize 'SWIA.Inventory.SendToChat'}}"
+                            >
+                              <i class="fas fa-comment"></i>
                             </button>
                           </div>
                         </article>
@@ -412,7 +460,7 @@
                         <article class="portal-item-card state-{{item.state}}" data-item-id="{{item.id}}">
                           <button
                             type="button"
-                            class="portal-item-open"
+                            class="portal-item-open swia-card-preview-trigger"
                             data-action="openItem"
                             data-actor-id="{{actor.id}}"
                             data-item-id="{{item.id}}"
@@ -431,6 +479,16 @@
                               {{#unless actor.canManage}}disabled{{/unless}}
                             >
                               {{item.stateLabel}}
+                            </button>
+                            <button
+                              type="button"
+                              class="portal-item-chat"
+                              data-action="postItemCard"
+                              data-actor-id="{{actor.id}}"
+                              data-item-id="{{item.id}}"
+                              title="{{localize 'SWIA.Inventory.SendToChat'}}"
+                            >
+                              <i class="fas fa-comment"></i>
                             </button>
                           </div>
                         </article>

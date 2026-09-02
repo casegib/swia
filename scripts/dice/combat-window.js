@@ -8,17 +8,56 @@ import {
   SOCKET_NAME, CARD_TEMPLATE, renderTemplateFn, clampCount, recomputeCard,
   ATTACK_POOL_COLORS, DEFENSE_POOL_COLORS, heroWeapons, defaultWeaponId,
   buildAttackPool, buildDefensePool, attackKeywordsFor, weaponAccuracyFor,
-  gatherSurgeAbilities, setCombatStarter
+  armorDefenseBonusFor, gatherSurgeAbilities, setCombatStarter
 } from "./roll-dialog.js";
 import { COLOR_TO_DENOM, totalSymbols, rollFaces, faceData, SWIA_DICE, symbolsLabel, dieImgPath } from "./dice-terms.js";
 import { escapeHTML } from "../data/common.js";
+import { countPowerTokens, POWER_TOKEN_STATUS } from "../actor-actions.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseApplication = HandlebarsApplicationMixin(ApplicationV2);
 
 export const ACTIVE_COMBAT_KEY = "activeCombat";
 const WINDOW_TEMPLATE = "systems/swia/templates/dice/combat-window.hbs";
-const POWER_TOKEN_TYPES = ["block", "evade"];
+
+/**
+ * Which power tokens each side can declare, and the bonus stat each feeds.
+ * Tokens are spent BEFORE that side rolls (attacker: during setup; defender:
+ * until its defense roll), matching the table rule that they are declared
+ * when attacking/defending. An "any" token converts to one of the side's
+ * stats at spend time.
+ */
+const SIDE_TOKEN_STATS = {
+  attacker: ["damage", "surge"],
+  defender: ["block", "evade"]
+};
+const SIDE_BONUS_STATS = {
+  attacker: ["damage", "surge", "accuracy"],
+  defender: ["block", "evade"]
+};
+
+/** Is `side` still inside its declaration window? */
+function inDeclareWindow(combat, side) {
+  if (!combat) return false;
+  if (side === "attacker") return combat.phase === "setup";
+  return combat.phase === "setup" || combat.phase === "attackRolled";
+}
+
+/** Total pre-roll bonus per stat: manual steppers + armor seed + spent tokens. */
+function totalBonus(sideData, side) {
+  const out = {};
+  for (const stat of SIDE_BONUS_STATS[side]) {
+    out[stat] = Math.max(0,
+      (sideData.manualBonus?.[stat] ?? 0)
+      + (sideData.armorBonus?.[stat] ?? 0)
+      + (sideData.tokenBonus?.[stat] ?? 0));
+  }
+  return out;
+}
+
+function emptyBonus(side) {
+  return Object.fromEntries(SIDE_BONUS_STATS[side].map((stat) => [stat, 0]));
+}
 
 /* ------------------------------------------------------------------ */
 /* State access + permissions                                          */
@@ -26,7 +65,31 @@ const POWER_TOKEN_TYPES = ["block", "evade"];
 
 export function getCombat() {
   const data = game.settings.get("swia", ACTIVE_COMBAT_KEY);
-  return data && typeof data === "object" && data.attacker ? data : null;
+  if (!data || typeof data !== "object" || !data.attacker) return null;
+  // A combat saved by an older build (pre-declared-token state shape) has no
+  // per-source bonus layers. Rather than silently mis-scoring it (its armor
+  // seed and manual bonuses would all read as 0), treat it as finished.
+  if (!data.attacker.manualBonus || !data.defender?.manualBonus) return null;
+  return data;
+}
+
+/**
+ * The actor behind a combat side. Unlinked tokens carry a synthetic actor
+ * whose id is the BASE actor's id, so `game.actors.get` would silently hit
+ * the wrong document; prefer the token uuid recorded at start.
+ */
+function resolveActor(actorId, tokenUuid) {
+  if (tokenUuid) {
+    const doc = fromUuidSync(tokenUuid);
+    if (doc?.actor) return doc.actor;
+  }
+  return game.actors?.get(actorId) ?? null;
+}
+
+function sideActor(combat, side) {
+  const data = combat?.[side];
+  if (!data) return null;
+  return resolveActor(data.actorId, data.tokenUuid);
 }
 
 async function setCombat(data) {
@@ -41,16 +104,6 @@ function userOwnsActor(user, actorId) {
 function canControl(user, combat, side) {
   if (!user || !combat) return false;
   return user.isGM || userOwnsActor(user, combat[side]?.actorId);
-}
-
-function countPowerTokens(actor) {
-  const counts = { block: 0, evade: 0 };
-  for (const effect of actor?.effects ?? []) {
-    for (const type of POWER_TOKEN_TYPES) {
-      if (effect.statuses?.has?.(`power-${type}`)) counts[type] += 1;
-    }
-  }
-  return counts;
 }
 
 function healthPath(actor) {
@@ -108,6 +161,7 @@ async function execIntent(intent, payload, userId) {
       case "spendSurge": return await execSpendSurge(payload, user);
       case "unspendSurge": return await execUnspendSurge(payload, user);
       case "spendToken": return await execSpendToken(payload, user);
+      case "unspendToken": return await execUnspendToken(payload, user);
       case "applyDamage": return await execApplyDamage(payload, user);
       case "cancel": return await execCancel(payload, user);
     }
@@ -116,10 +170,10 @@ async function execIntent(intent, payload, userId) {
   }
 }
 
-async function execStart({ attackerActorId, defenderActorId, defenderTokenId }, user) {
+async function execStart({ attackerActorId, attackerTokenUuid, defenderActorId, defenderTokenUuid }, user) {
   if (getCombat() && !user.isGM) return;
-  const attacker = game.actors?.get(attackerActorId);
-  const defender = game.actors?.get(defenderActorId);
+  const attacker = resolveActor(attackerActorId, attackerTokenUuid);
+  const defender = resolveActor(defenderActorId, defenderTokenUuid);
   if (!attacker || !defender) return;
   if (!user.isGM && !userOwnsActor(user, attacker.id)) return;
 
@@ -130,22 +184,35 @@ async function execStart({ attackerActorId, defenderActorId, defenderTokenId }, 
     applied: false,
     attacker: {
       actorId: attacker.id,
+      tokenUuid: attackerTokenUuid ?? null,
       name: attacker.name,
       img: attacker.img,
       weaponId,
       pool: buildAttackPool(attacker, weaponId),
       keywords: attackKeywordsFor(attacker, weaponId),
       accuracy: weaponAccuracyFor(attacker, weaponId),
-      preBonus: { damage: 0, surge: 0, accuracy: 0 }
+      // Pre-roll bonuses are kept by source so each can be undone on its
+      // own: manual steppers, the armor seed, and declared power tokens.
+      manualBonus: emptyBonus("attacker"),
+      armorBonus: emptyBonus("attacker"),
+      tokenBonus: emptyBonus("attacker"),
+      // Per stat, the tokens declared so far (most recent last); each entry
+      // carries the deleted effect so Undo can restore it exactly.
+      spentTokens: { damage: [], surge: [] }
     },
     defender: {
       actorId: defender.id,
-      tokenId: defenderTokenId ?? null,
+      tokenUuid: defenderTokenUuid ?? null,
       name: defender.name,
       img: defender.img,
       pool: buildDefensePool(defender),
-      tokens: countPowerTokens(defender),
-      preBonus: { block: 0, evade: 0 }
+      manualBonus: emptyBonus("defender"),
+      // Equipped armor's printed Block/Evade pre-seed the bonus row. The
+      // manual stepper can pull the total back down when the printed text
+      // doesn't apply ("+1 Block against Ranged").
+      armorBonus: armorDefenseBonusFor(defender),
+      tokenBonus: emptyBonus("defender"),
+      spentTokens: { block: [], evade: [] }
     },
     result: null
   });
@@ -154,7 +221,7 @@ async function execStart({ attackerActorId, defenderActorId, defenderTokenId }, 
 async function execSetWeapon({ weaponId }, user) {
   const combat = getCombat();
   if (!combat || combat.phase !== "setup" || !canControl(user, combat, "attacker")) return;
-  const attacker = game.actors?.get(combat.attacker.actorId);
+  const attacker = sideActor(combat, "attacker");
   if (!attacker || (weaponId && !attacker.items.get(weaponId))) return;
   combat.attacker.weaponId = weaponId || null;
   combat.attacker.pool = buildAttackPool(attacker, combat.attacker.weaponId);
@@ -182,19 +249,19 @@ async function execAdjustBonus({ side, stat, delta }, user) {
   if (side === "attacker" && combat.phase !== "setup") return;
   if (side === "defender" && !["setup", "attackRolled"].includes(combat.phase)) return;
   if (!canControl(user, combat, side)) return;
-  const validStats = side === "attacker" ? ["damage", "surge", "accuracy"] : ["block", "evade"];
-  if (!validStats.includes(stat)) return;
-  const preBonus = combat[side].preBonus ?? {};
-  preBonus[stat] = Math.max(0, (preBonus[stat] ?? 0) + (Number(delta) || 0));
-  combat[side].preBonus = preBonus;
+  if (!SIDE_BONUS_STATS[side].includes(stat)) return;
+  const sideData = combat[side];
+  sideData.manualBonus ??= emptyBonus(side);
+  const floor = -((sideData.armorBonus?.[stat] ?? 0) + (sideData.tokenBonus?.[stat] ?? 0));
+  sideData.manualBonus[stat] = Math.max(floor, (sideData.manualBonus[stat] ?? 0) + (Number(delta) || 0));
   await setCombat(combat);
 }
 
 async function execRollAttack(_payload, user) {
   const combat = getCombat();
   if (!combat || combat.phase !== "setup" || !canControl(user, combat, "attacker")) return;
-  const attacker = game.actors?.get(combat.attacker.actorId);
-  const defender = game.actors?.get(combat.defender.actorId);
+  const attacker = sideActor(combat, "attacker");
+  const defender = sideActor(combat, "defender");
   if (!attacker || !defender) return;
 
   const formula = (pool, colors) => colors
@@ -219,7 +286,7 @@ async function execRollAttack(_payload, user) {
   const attackTotals = totalSymbols(attackRoll);
   const kw = combat.attacker.keywords ?? { pierce: 0, blast: 0, cleave: false };
   const weapon = combat.attacker.weaponId ? attacker.items.get(combat.attacker.weaponId) : null;
-  const pre = combat.attacker.preBonus ?? {};
+  const pre = totalBonus(combat.attacker, "attacker");
 
   combat.result = recomputeCard({
     isAttack: true,
@@ -244,8 +311,10 @@ async function execRollAttack(_payload, user) {
     bonusBlock: 0,
     bonusEvade: 0,
     spentSurge: 0,
-    spentTokens: { block: 0, evade: 0 },
     preBonusSurge: pre.surge ?? 0,
+    // Declared-token shares, for the results breakdown
+    tokenDamage: combat.attacker.tokenBonus?.damage ?? 0,
+    tokenSurge: combat.attacker.tokenBonus?.surge ?? 0,
     rerollLocked: false,
     surgeAbilities: gatherSurgeAbilities(attacker, combat.attacker.weaponId)
   });
@@ -256,8 +325,8 @@ async function execRollAttack(_payload, user) {
 async function execRollDefense(_payload, user) {
   const combat = getCombat();
   if (!combat || combat.phase !== "attackRolled" || !canControl(user, combat, "defender")) return;
-  const attacker = game.actors?.get(combat.attacker.actorId);
-  const defender = game.actors?.get(combat.defender.actorId);
+  const attacker = sideActor(combat, "attacker");
+  const defender = sideActor(combat, "defender");
   if (!attacker || !defender) return;
 
   const formula = (pool, colors) => colors
@@ -278,7 +347,7 @@ async function execRollDefense(_payload, user) {
   });
 
   const defenseTotals = totalSymbols(defenseRoll);
-  const defPre = combat.defender.preBonus ?? {};
+  const defPre = totalBonus(combat.defender, "defender");
   const state = combat.result;
   state.defenseFaces = rollFaces(defenseRoll);
   state.block = defenseTotals.block;
@@ -286,6 +355,10 @@ async function execRollDefense(_payload, user) {
   state.dodge = defenseTotals.dodge;
   state.bonusBlock = (state.bonusBlock ?? 0) + (defPre.block ?? 0);
   state.bonusEvade = (state.bonusEvade ?? 0) + (defPre.evade ?? 0);
+  state.armorBlock = combat.defender.armorBonus?.block ?? 0;
+  state.armorEvade = combat.defender.armorBonus?.evade ?? 0;
+  state.tokenBlock = combat.defender.tokenBonus?.block ?? 0;
+  state.tokenEvade = combat.defender.tokenBonus?.evade ?? 0;
   state.rerollLocked = false;
 
   recomputeCard(state);
@@ -309,7 +382,7 @@ async function execRerollDie({ side, index }, user) {
 
     const face = faces[idx];
     const roll = await new Roll(`1d${face.denom}`).evaluate();
-    const attacker = game.actors?.get(combat.attacker.actorId);
+    const attacker = sideActor(combat, "attacker");
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: attacker }),
       rolls: [roll],
@@ -353,7 +426,7 @@ async function execRerollDie({ side, index }, user) {
 
     const face = faces[idx];
     const roll = await new Roll(`1d${face.denom}`).evaluate();
-    const defender = game.actors?.get(combat.defender.actorId);
+    const defender = sideActor(combat, "defender");
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: defender }),
       rolls: [roll],
@@ -412,7 +485,7 @@ async function execSpendSurge({ index }, user) {
   // Exhaust-to-use: spending consumes the source card; undo readies it back.
   if (ability.exhaustToUse && ability.sourceItemId) {
     try {
-      const attackerActor = game.actors?.get(combat.attacker.actorId);
+      const attackerActor = sideActor(combat, "attacker");
       const sourceItem = attackerActor?.items?.get(ability.sourceItemId);
       if (sourceItem && (sourceItem.system?.cardState ?? "ready") === "ready") {
         await sourceItem.update({ "system.cardState": "exhausted" });
@@ -427,12 +500,10 @@ async function execSpendSurge({ index }, user) {
 }
 
 // Rerolls stay available until something irreversible-by-reroll is committed:
-// a spent surge ability or a consumed power token. Unspending a surge rechecks
-// this so rerolls come back when nothing else is still locked in.
+// a spent surge ability. (Power tokens are declared before the roll, so they
+// never lock rerolls.) Unspending a surge rechecks this so rerolls come back.
 function hasCommittedSpends(state) {
-  return (state.surgeAbilities ?? []).some((a) => a.spent)
-    || (state.spentTokens?.block ?? 0) > 0
-    || (state.spentTokens?.evade ?? 0) > 0;
+  return (state.surgeAbilities ?? []).some((a) => a.spent);
 }
 
 async function execUnspendSurge({ index }, user) {
@@ -452,7 +523,7 @@ async function execUnspendSurge({ index }, user) {
   }
   // Undo the auto-exhaust that this spend caused (if any)
   if (ability.exhaustedItemId) {
-    const attackerActor = game.actors?.get(combat.attacker.actorId);
+    const attackerActor = sideActor(combat, "attacker");
     const sourceItem = attackerActor?.items?.get(ability.exhaustedItemId);
     if (sourceItem && sourceItem.system?.cardState === "exhausted") {
       await sourceItem.update({ "system.cardState": "ready" });
@@ -464,25 +535,89 @@ async function execUnspendSurge({ index }, user) {
   await setCombat(combat);
 }
 
-async function execSpendToken({ token }, user) {
+/**
+ * Declare a power token for `side` on `stat`. `kind` is "typed" (a Block
+ * token for Block) or "any" (a wildcard converted to `stat`). The status
+ * effect is removed from the actor and its data kept on the combat so Undo
+ * can put it back. Only inside the side's declaration window.
+ */
+async function execSpendToken({ side, stat, kind = "typed" }, user) {
   const combat = getCombat();
-  if (!combat || combat.phase !== "rolled" || !canControl(user, combat, "defender")) return;
-  if (!POWER_TOKEN_TYPES.includes(token)) return;
-  const defender = game.actors?.get(combat.defender.actorId);
-  if (!defender) return;
+  if (!combat || !["attacker", "defender"].includes(side)) return;
+  if (!inDeclareWindow(combat, side) || !canControl(user, combat, side)) return;
+  if (!SIDE_TOKEN_STATS[side].includes(stat)) return;
+  const actor = sideActor(combat, side);
+  if (!actor) return;
 
-  // Consume one matching power-token status effect from the defender
-  const effect = (defender.effects ?? []).find((e) => e.statuses?.has?.(`power-${token}`));
+  const status = kind === "any" ? POWER_TOKEN_STATUS.any : POWER_TOKEN_STATUS[stat];
+  if (!status) return;
+  const effect = (actor.effects ?? []).find((e) => e.statuses?.has?.(status));
   if (!effect) return;
+  const effectData = effect.toObject();
   await effect.delete();
 
-  const state = combat.result;
-  if (token === "block") state.bonusBlock += 1;
-  else state.bonusEvade += 1;
-  state.spentTokens[token] = (state.spentTokens[token] ?? 0) + 1;
-  state.rerollLocked = true;
-  combat.defender.tokens = countPowerTokens(defender);
-  recomputeCard(state);
+  const sideData = combat[side];
+  sideData.tokenBonus ??= emptyBonus(side);
+  sideData.spentTokens ??= {};
+  sideData.spentTokens[stat] ??= [];
+  sideData.spentTokens[stat].push({ kind: kind === "any" ? "any" : "typed", effect: effectData });
+  sideData.tokenBonus[stat] = (sideData.tokenBonus[stat] ?? 0) + 1;
+  await setCombat(combat);
+}
+
+/** Put a declared token back on its figure from the stashed effect data. */
+async function restoreTokenEffect(actor, entry) {
+  if (!actor || !entry?.effect) return;
+  const EffectClass = CONFIG.ActiveEffect?.documentClass ?? ActiveEffect;
+  try {
+    await EffectClass.create(entry.effect, { parent: actor, keepId: true });
+  } catch (err) {
+    // Same-id restore can collide if the token was re-granted meanwhile;
+    // fall back to a fresh id rather than losing the token.
+    const copy = { ...entry.effect };
+    delete copy._id;
+    await EffectClass.create(copy, { parent: actor });
+  }
+}
+
+/** Every token declared on either side goes back to its figure (cancel path). */
+async function refundDeclaredTokens(combat) {
+  for (const side of ["attacker", "defender"]) {
+    const sideData = combat?.[side];
+    const actor = sideActor(combat, side);
+    if (!sideData?.spentTokens || !actor) continue;
+    for (const log of Object.values(sideData.spentTokens)) {
+      for (const entry of log ?? []) {
+        try {
+          await restoreTokenEffect(actor, entry);
+        } catch (err) {
+          console.warn("SWIA | could not refund a declared power token", err);
+        }
+      }
+    }
+  }
+}
+
+/** Undo the most recent token declared on `stat`: restore the effect exactly. */
+async function execUnspendToken({ side, stat }, user) {
+  const combat = getCombat();
+  if (!combat || !["attacker", "defender"].includes(side)) return;
+  if (!inDeclareWindow(combat, side) || !canControl(user, combat, side)) return;
+  const sideData = combat[side];
+  const log = sideData.spentTokens?.[stat];
+  if (!Array.isArray(log) || !log.length) return;
+  const actor = resolveActor(sideData.actorId, sideData.tokenUuid);
+  if (!actor) return;
+
+  // Restore first, pop only once the token is back on the figure: a failed
+  // create must not leave the entry gone from the log AND from the actor.
+  const entry = log[log.length - 1];
+  await restoreTokenEffect(actor, entry);
+  log.pop();
+  sideData.tokenBonus[stat] = Math.max(0, (sideData.tokenBonus[stat] ?? 0) - 1);
+  // Manual may have been pulled negative against this token; keep total >= 0.
+  const floor = -((sideData.armorBonus?.[stat] ?? 0) + (sideData.tokenBonus?.[stat] ?? 0));
+  if ((sideData.manualBonus?.[stat] ?? 0) < floor) sideData.manualBonus[stat] = floor;
   await setCombat(combat);
 }
 
@@ -490,7 +625,7 @@ async function execApplyDamage(_payload, user) {
   const combat = getCombat();
   if (!combat || combat.phase !== "rolled" || combat.applied) return;
   if (!canControl(user, combat, "attacker")) return;
-  const defender = game.actors?.get(combat.defender.actorId);
+  const defender = sideActor(combat, "defender");
   if (!defender) return;
 
   const state = combat.result;
@@ -506,7 +641,7 @@ async function execApplyDamage(_payload, user) {
   });
   for (const ability of summary.surgeAbilities ?? []) ability.affordable = false;
   const content = await renderTemplateFn(CARD_TEMPLATE, summary);
-  const attacker = game.actors?.get(combat.attacker.actorId);
+  const attacker = sideActor(combat, "attacker");
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: attacker ?? undefined }),
     content
@@ -523,6 +658,9 @@ async function execCancel(_payload, user) {
   const combat = getCombat();
   if (!combat) return;
   if (!user.isGM && !canControl(user, combat, "attacker")) return;
+  // Declared tokens were removed from the figures; a cancelled attack never
+  // happened, so they go back.
+  await refundDeclaredTokens(combat);
   await setCombat(null);
 }
 
@@ -540,8 +678,10 @@ export function startCombat(attacker, targetToken) {
   }
   dispatchIntent("start", {
     attackerActorId: attacker.id,
+    // Synthetic (unlinked-token) actors expose their TokenDocument as .token
+    attackerTokenUuid: attacker.token?.uuid ?? null,
     defenderActorId: targetToken.actor.id,
-    defenderTokenId: targetToken.id ?? null
+    defenderTokenUuid: targetToken.document?.uuid ?? targetToken.uuid ?? null
   });
 }
 
@@ -565,6 +705,7 @@ export class SWIACombatWindow extends BaseApplication {
       combatSpendSurge: SWIACombatWindow.prototype._onSpendSurge,
       combatUnspendSurge: SWIACombatWindow.prototype._onUnspendSurge,
       combatSpendToken: SWIACombatWindow.prototype._onSpendToken,
+      combatUnspendToken: SWIACombatWindow.prototype._onUnspendToken,
       combatApplyDamage: SWIACombatWindow.prototype._onApplyDamage,
       combatCancel: SWIACombatWindow.prototype._onCancel
     }
@@ -595,7 +736,7 @@ export class SWIACombatWindow extends BaseApplication {
 
     const canAttacker = canControl(game.user, combat, "attacker");
     const canDefender = canControl(game.user, combat, "defender");
-    const attackerActor = game.actors?.get(combat.attacker.actorId);
+    const attackerActor = sideActor(combat, "attacker");
     const weapons = attackerActor?.type === "hero"
       ? heroWeapons(attackerActor).filter((w) => (w.system?.cardState ?? "ready") !== "depleted")
       : [];
@@ -607,8 +748,37 @@ export class SWIACombatWindow extends BaseApplication {
     if (kw.reach) keywordParts.push(game.i18n.localize("SWIA.Keywords.Reach"));
 
     const diceRow = (side, pool) => (color) => ({ side, color, count: pool[color] ?? 0 });
-    const attackPre = combat.attacker.preBonus ?? { damage: 0, surge: 0, accuracy: 0 };
-    const defensePre = combat.defender.preBonus ?? { block: 0, evade: 0 };
+    const defenderActor = sideActor(combat, "defender");
+
+    // One row per bonus stat: the manual stepper on the total, plus token
+    // controls for stats a token can feed. Token counts are read live from
+    // the actor so a GM granting one mid-setup shows up without a restart.
+    const bonusRows = (side, sideData, actor, canAct) => {
+      const totals = totalBonus(sideData, side);
+      const held = countPowerTokens(actor);
+      const open = inDeclareWindow(combat, side) && canAct;
+      return SIDE_BONUS_STATS[side].map((stat) => {
+        const manual = sideData.manualBonus?.[stat] ?? 0;
+        const armor = sideData.armorBonus?.[stat] ?? 0;
+        const token = sideData.tokenBonus?.[stat] ?? 0;
+        const spent = sideData.spentTokens?.[stat]?.length ?? 0;
+        const takesTokens = SIDE_TOKEN_STATS[side].includes(stat);
+        const label = game.i18n.localize(`SWIA.Dice.${stat.charAt(0).toUpperCase()}${stat.slice(1)}`);
+        return {
+          side, stat, label,
+          count: totals[stat],
+          manual, armor, token,
+          breakdown: game.i18n.format("SWIA.Combat.BonusBreakdown", { manual, armor, token }),
+          takesTokens,
+          typedTokens: takesTokens ? (held[stat] ?? 0) : 0,
+          anyTokens: takesTokens ? (held.any ?? 0) : 0,
+          spent,
+          canSpend: open,
+          tokenIcon: `systems/swia/icons/Power ${stat.charAt(0).toUpperCase()}${stat.slice(1)} Token.png`,
+          anyIcon: "systems/swia/icons/Power Any Token.png"
+        };
+      });
+    };
     const isSetup = combat.phase === "setup";
     const isAttackRolled = combat.phase === "attackRolled";
     const isRolled = combat.phase === "rolled";
@@ -634,18 +804,13 @@ export class SWIACombatWindow extends BaseApplication {
           selected: w.id === combat.attacker.weaponId,
           cardState: w.system?.cardState ?? "ready"
         })),
-        preBonusRows: [
-          { stat: "damage", label: game.i18n.localize("SWIA.Dice.Damage"), count: attackPre.damage },
-          { stat: "surge", label: game.i18n.localize("SWIA.Dice.Surge"), count: attackPre.surge },
-          { stat: "accuracy", label: game.i18n.localize("SWIA.Dice.Accuracy"), count: attackPre.accuracy }
-        ]
+        preBonusRows: bonusRows("attacker", combat.attacker, attackerActor, canAttacker),
+        tokensHeld: countPowerTokens(attackerActor)
       },
       defender: {
         ...combat.defender,
-        preBonusRows: [
-          { stat: "block", label: game.i18n.localize("SWIA.Dice.Block"), count: defensePre.block },
-          { stat: "evade", label: game.i18n.localize("SWIA.Dice.Evade"), count: defensePre.evade }
-        ]
+        preBonusRows: bonusRows("defender", combat.defender, defenderActor, canDefender),
+        tokensHeld: countPowerTokens(defenderActor)
       },
       attackRows: ATTACK_POOL_COLORS.map(diceRow("attacker", combat.attacker.pool)),
       defenseRows: DEFENSE_POOL_COLORS.map(diceRow("defender", combat.defender.pool)),
@@ -711,7 +876,19 @@ export class SWIACombatWindow extends BaseApplication {
 
   async _onSpendToken(event, target) {
     event.preventDefault();
-    dispatchIntent("spendToken", { token: target?.dataset?.token });
+    dispatchIntent("spendToken", {
+      side: target?.dataset?.side,
+      stat: target?.dataset?.stat,
+      kind: target?.dataset?.kind || "typed"
+    });
+  }
+
+  async _onUnspendToken(event, target) {
+    event.preventDefault();
+    dispatchIntent("unspendToken", {
+      side: target?.dataset?.side,
+      stat: target?.dataset?.stat
+    });
   }
 
   async _onApplyDamage(event) {
@@ -755,6 +932,19 @@ export function registerCombatHooks() {
 
   // Targeted attacks start a shared combat instead of the solo dialog
   setCombatStarter(startCombat);
+
+  // Token trays in the window read the actors live; repaint when a power
+  // token is granted or removed on either combatant (e.g. from the portal).
+  for (const hook of ["createActiveEffect", "updateActiveEffect", "deleteActiveEffect"]) {
+    Hooks.on(hook, (effect) => {
+      const combat = getCombat();
+      const parent = effect?.parent;
+      if (!combat || parent?.documentName !== "Actor") return;
+      const ids = [combat.attacker?.actorId, combat.defender?.actorId];
+      if (!ids.includes(parent.id)) return;
+      SWIACombatWindow.instance?.render(false);
+    });
+  }
 
   Hooks.once("ready", () => {
     game.socket?.on?.(SOCKET_NAME, onSocketMessage);

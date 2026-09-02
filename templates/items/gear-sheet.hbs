@@ -13,9 +13,11 @@
   </div>
 
   <div class="card-image-container">
+    {{#if hasCardImage}}
     <img class="card-image {{systemData.cardState}}" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" alt="{{item.name}}" />
+    {{/if}}
     {{#unless hasCardImage}}
-    <div class="card-placeholder">
+    <div class="card-placeholder" data-edit="img" data-action="editImage">
       <i class="fas fa-image"></i>
       <p>{{localize "SWIA.Item.ClickToUploadCard"}}</p>
     </div>

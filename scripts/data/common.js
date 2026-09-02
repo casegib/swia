@@ -106,6 +106,36 @@ export function toArray(value) {
   return [];
 }
 
+/* ------------------------------------------------------------------ */
+/* Equipped armor                                                      */
+/* ------------------------------------------------------------------ */
+
+/** Owned armor items currently equipped. `equipped` defaults true (see ArmorData). */
+export function equippedArmorFor(actor) {
+  const items = actor?.items;
+  if (!items) return [];
+  const list = typeof items.filter === "function" ? items : Array.from(items);
+  return list.filter((i) => i?.type === "armor" && (i.system?.equipped ?? true));
+}
+
+/**
+ * Summed printed effects of every equipped armor item: {health, block, evade}.
+ * The single chokepoint for "what does this figure's armor do" — the actor
+ * models derive max health from it, the combat window and solo defense card
+ * seed their Block/Evade bonus from it, and the portal/sheet armor chips
+ * display it. Stacks across pieces, matching how the table plays it.
+ */
+export function armorEffectsFor(actor) {
+  const total = { health: 0, block: 0, evade: 0 };
+  for (const armor of equippedArmorFor(actor)) {
+    const sys = armor.system ?? {};
+    total.health += Math.max(0, Number(sys.bonusHealth) || 0);
+    total.block += Math.max(0, Number(sys.bonusBlock) || 0);
+    total.evade += Math.max(0, Number(sys.bonusEvade) || 0);
+  }
+  return total;
+}
+
 /** Escape raw text for safe HTML interpolation. */
 export function escapeHTML(value) {
   return String(value ?? "")
@@ -114,6 +144,45 @@ export function escapeHTML(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+/**
+ * Scrub enriched HTML that is about to be broadcast (chat cards). Unlike
+ * sanitizeLabelHTML this keeps ordinary rich text — paragraphs, lists, links,
+ * Foundry's own content links — and only removes what can execute: script-ish
+ * elements, every on* handler, and javascript: URLs.
+ */
+const RICH_FORBIDDEN_TAGS = new Set(["script", "style", "iframe", "object", "embed", "link", "meta", "base", "form"]);
+
+export function sanitizeRichHTML(value) {
+  const html = String(value ?? "");
+  if (!html) return "";
+  let doc;
+  try {
+    doc = new DOMParser().parseFromString(`<body>${html}</body>`, "text/html");
+  } catch {
+    return escapeHTML(html);
+  }
+  for (const el of [...doc.body.querySelectorAll("*")]) {
+    if (RICH_FORBIDDEN_TAGS.has(el.tagName.toLowerCase())) {
+      el.remove();
+      continue;
+    }
+    for (const attr of [...el.attributes]) {
+      const name = attr.name.toLowerCase();
+      if (name.startsWith("on")) {
+        el.removeAttribute(attr.name);
+        continue;
+      }
+      if (["href", "src", "xlink:href", "action", "formaction"].includes(name)) {
+        const url = attr.value.replace(/[\u0000-\u0020]/g, "").toLowerCase();
+        const bad = url.startsWith("javascript:") || url.startsWith("vbscript:")
+          || (url.startsWith("data:") && !url.startsWith("data:image/"));
+        if (bad) el.removeAttribute(attr.name);
+      }
+    }
+  }
+  return doc.body.innerHTML;
 }
 
 const LABEL_ALLOWED_TAGS = new Set(["img", "strong", "em", "br", "span"]);

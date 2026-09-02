@@ -321,8 +321,13 @@
   align-items: center;
   justify-content: center;
   color: rgba(255, 255, 255, 0.5);
-  pointer-events: none;
+  /* The placeholder IS the upload target now that the default-art <img> is no
+     longer rendered — it must accept clicks. It only exists when there is no
+     card image, so it never blocks the real art. */
+  pointer-events: auto;
+  cursor: pointer;
 }
+.swia-sheet.card-sheet .card-placeholder:hover { color: rgba(255, 255, 255, 0.78); }
 
 .swia-sheet.card-sheet .card-placeholder i {
   font-size: 48px;
@@ -1783,17 +1788,6 @@
 .swia-sheet.weapon-sheet .attack-pip.blue { background: linear-gradient(180deg, #74c2ff 0%, #2b7ab3 100%); }
 .swia-sheet.weapon-sheet .attack-pip.green { background: linear-gradient(180deg, #90e57f 0%, #3f9b37 100%); }
 .swia-sheet.weapon-sheet .attack-pip.yellow { background: linear-gradient(180deg, #ffe375 0%, #cf9722 100%); }
-
-.swia-sheet.weapon-sheet .weapon-art-area .card-state-btn {
-  top: 6px;
-  left: 6px;
-  bottom: auto;
-  padding: 2px 6px;
-  font-size: 9px;
-  letter-spacing: 0.3px;
-  opacity: 0.9;
-  border-radius: 3px;
-}
 
 .swia-sheet.weapon-sheet .weapon-subtitle-row {
   display: flex;
@@ -5510,10 +5504,6 @@ input:checked + .defeated-label { color: #8b0000; }
   opacity: 0.6;
   text-decoration: line-through;
 }
-.swia-combat-window .combat-token-btn {
-  font-size: 12px;
-  padding: 3px 6px;
-}
 .swia-combat-window .combat-actions {
   display: flex;
   gap: 8px;
@@ -6291,3 +6281,663 @@ input:checked + .defeated-label { color: #8b0000; }
 }
 .swia-imperial-portal .portal-companion-card::before { color: #7a5c8a; }
 .swia-imperial-portal .portal-companion-card .companion-tag { color: #7a5c8a; }
+
+
+/* ============================================================
+   Card art: chat cards, send-to-chat buttons, thumbnail cropping
+   ============================================================ */
+
+/* Inventory thumbnails hold portrait card scans; bias the crop toward the
+   top so the card's artwork shows instead of its rules text. */
+.swia-sheet .item-image img,
+.swia-sheet .item-entry .item-image img {
+  object-fit: cover;
+  object-position: center 18%;
+}
+.swia-sheet .swia-card-preview-trigger { cursor: zoom-in; }
+
+/* Send-to-chat buttons */
+.swia-sheet .item-chat-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid rgba(95, 67, 35, 0.35);
+  background: rgba(255, 255, 255, 0.5);
+  color: #5f4323;
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.swia-sheet .item-chat-btn:hover {
+  border-color: #b8860b;
+  background: linear-gradient(135deg, #e0b23e, #b8860b);
+  color: #1a1200;
+}
+.swia-player-portal .portal-item-chat {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.55);
+  color: #5a4429;
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.swia-player-portal .portal-item-chat:hover {
+  border-color: #b8860b;
+  background: linear-gradient(135deg, #e0b23e, #b8860b);
+  color: #1a1200;
+}
+
+/* Chat card */
+.swia-item-chat-card {
+  border: 1px solid #b8963f;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #efe9d8;
+}
+.swia-item-chat-card .item-chat-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #c0392b, #a82323);
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.swia-item-chat-card .item-chat-owner {
+  margin-left: auto;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 9.5px;
+  opacity: 0.85;
+}
+.swia-item-chat-card .item-chat-art {
+  padding: 5px;
+  background: #1b1b1b;
+}
+.swia-item-chat-card .item-chat-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+  border-radius: 3px;
+}
+.swia-item-chat-card .item-chat-body { padding: 7px 9px; }
+.swia-item-chat-card .item-chat-subtitle {
+  font-size: 10px;
+  font-style: italic;
+  color: #5f4323;
+  margin-bottom: 5px;
+}
+.swia-item-chat-card .item-chat-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin: 3px 0;
+  font-size: 10.5px;
+  color: #3c3016;
+}
+.swia-item-chat-card .item-chat-stat { font-weight: 700; }
+.swia-item-chat-card .item-chat-kw {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #4c3d20;
+  border: 1px solid rgba(95, 67, 35, 0.35);
+  border-radius: 8px;
+  padding: 0 6px;
+  background: rgba(255, 255, 255, 0.5);
+}
+.swia-item-chat-card .item-chat-surge {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 10.5px;
+  color: #3c3016;
+  margin: 2px 0;
+}
+.swia-item-chat-card .item-chat-surge-cost {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  justify-content: center;
+  min-width: 24px;
+  font-weight: 800;
+  font-size: 9px;
+  color: #fff;
+  background: linear-gradient(135deg, #7a6a3a, #4c3d20);
+  border-radius: 8px;
+  padding: 0 5px;
+}
+.swia-item-chat-card .surge-cost-icon {
+  height: 10px;
+  width: auto;
+  border: 0;
+  filter: brightness(0) invert(1);
+}
+/* Printed ability lines on a generated text card (weapons, armor). */
+.swia-item-chat-card .item-chat-ability {
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: #3c3016;
+  margin: 2px 0;
+  padding-left: 8px;
+  border-left: 2px solid rgba(95, 67, 35, 0.3);
+}
+.swia-item-chat-card .item-chat-desc {
+  font-size: 10.5px;
+  color: #3c3016;
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(95, 67, 35, 0.25);
+}
+.swia-item-chat-card .item-chat-desc img { max-width: 100%; }
+.swia-item-chat-card .item-chat-footer { margin-top: 6px; }
+.swia-item-chat-card .item-chat-state {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 9px;
+  padding: 2px 8px;
+  color: #fff;
+}
+.swia-item-chat-card .item-chat-state.state-ready { background: linear-gradient(135deg, #3f9e58, #27722c); }
+.swia-item-chat-card .item-chat-state.state-exhausted { background: linear-gradient(135deg, #e0a52e, #b07708); }
+.swia-item-chat-card .item-chat-state.state-depleted { background: linear-gradient(135deg, #c0392b, #8f1f14); }
+.swia-item-chat-card .dice-block {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+.swia-item-chat-card .dice-block.red { background: linear-gradient(135deg, #e74c3c, #c0392b); border-color: #a12a1f; }
+.swia-item-chat-card .dice-block.blue { background: linear-gradient(135deg, #3498db, #2980b9); border-color: #1c5d8f; }
+.swia-item-chat-card .dice-block.green { background: linear-gradient(135deg, #2ecc71, #27ae60); border-color: #1e8449; }
+.swia-item-chat-card .dice-block.yellow { background: linear-gradient(135deg, #f1c40f, #f39c12); border-color: #c87f0a; }
+.swia-item-chat-card .dice-block.black { background: linear-gradient(135deg, #4d4d4d, #1f1f1f); border-color: #9a9a9a; }
+.swia-item-chat-card .dice-block.white { background: linear-gradient(135deg, #fff, #e0e0e0); border-color: #b0b0b0; }
+
+
+/* ============================================================
+   Item sheet polish: chip dice editors, compact numerics,
+   keyword toggles, state pill, image-framing disclosure
+   ============================================================ */
+
+/* Dice editors: colored chip + small input pairs, matching the actor sheet.
+   Two pairs per line so a chip is never separated from its number. */
+.swia-sheet.item-sheet .dice-edit-row {
+  display: grid;
+  grid-template-columns: repeat(2, min-content minmax(40px, 56px));
+  justify-content: start;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.swia-sheet.item-sheet .dice-edit-row .dice-block {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+.swia-sheet.item-sheet .dice-edit-row .dice-block.red { background: linear-gradient(135deg, #e74c3c, #c0392b); border-color: #a12a1f; }
+.swia-sheet.item-sheet .dice-edit-row .dice-block.blue { background: linear-gradient(135deg, #3498db, #2980b9); border-color: #1c5d8f; }
+.swia-sheet.item-sheet .dice-edit-row .dice-block.green { background: linear-gradient(135deg, #2ecc71, #27ae60); border-color: #1e8449; }
+.swia-sheet.item-sheet .dice-edit-row .dice-block.yellow { background: linear-gradient(135deg, #f1c40f, #f39c12); border-color: #c87f0a; }
+.swia-sheet.item-sheet .dice-edit-row .dice-block.black {
+  background: linear-gradient(135deg, #4d4d4d, #1f1f1f);
+  border-color: #9a9a9a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+.swia-sheet.item-sheet .dice-edit-row .dice-block.white { background: linear-gradient(135deg, #fff, #e0e0e0); border-color: #b0b0b0; }
+.swia-sheet.item-sheet .dice-edit-row input[type="number"] {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+}
+
+/* Small numbers get small boxes, not full-width ones */
+.swia-sheet.item-sheet .numeric-trio {
+  display: flex;
+  /* .weapon-sheet .edit-field sets column; this must win it back */
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-start;
+}
+.swia-sheet.item-sheet .numeric-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.swia-sheet.item-sheet .numeric-field input[type="number"] {
+  width: 68px;
+  text-align: center;
+}
+.swia-sheet.item-sheet .keywords-edit-grid input[type="number"] {
+  width: 56px;
+  text-align: center;
+}
+
+/* Keyword booleans as on/off pills instead of bare checkboxes */
+.swia-sheet.item-sheet .keyword-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(95, 67, 35, 0.45);
+  background: rgba(0, 0, 0, 0.06);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--label);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+.swia-sheet.item-sheet .keyword-toggle input[type="checkbox"] {
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  cursor: pointer;
+}
+/* The is-on class is render-time only, and this sheet does not submit on
+   change — so drive the lit state from the checkbox itself as well, or the
+   pill stays grey until Save. */
+.swia-sheet.item-sheet .keyword-toggle:has(input[type="checkbox"]:checked),
+.swia-sheet.item-sheet .keyword-toggle.is-on {
+  background: linear-gradient(135deg, #e0b23e, #b8860b);
+  border-color: #8a6508;
+  color: #1a1200;
+}
+
+/* Card state as a pill in the title strip (replaces the full-width banner) */
+.swia-sheet.item-sheet .card-state-pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+.swia-sheet.item-sheet .card-state-pill.ready { background: linear-gradient(135deg, #3f9e58, #27722c); border-color: #1e5a23; }
+.swia-sheet.item-sheet .card-state-pill.exhausted { background: linear-gradient(135deg, #e0a52e, #b07708); border-color: #8a6508; }
+.swia-sheet.item-sheet .card-state-pill.depleted { background: linear-gradient(135deg, #c0392b, #8f1f14); border-color: #6e150c; }
+
+/* Cost sits with the other header numbers rather than alone at the bottom */
+.swia-sheet.item-sheet .cost-chip {
+  flex-shrink: 0;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--label);
+  border: 1px solid rgba(95, 67, 35, 0.4);
+  border-radius: 999px;
+  padding: 2px 10px;
+  background: rgba(255, 255, 255, 0.35);
+}
+.swia-sheet.weapon-sheet .weapon-title-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.swia-sheet.weapon-sheet .weapon-title-strip h1,
+.swia-sheet.weapon-sheet .weapon-title-strip input[name="name"] {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Image framing: collapsed by default, only rendered when art exists */
+.swia-sheet.item-sheet details.image-framing { margin-top: 6px; }
+.swia-sheet.item-sheet details.image-framing > summary {
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--label);
+  opacity: 0.75;
+  padding: 3px 6px;
+  border: 1px solid rgba(95, 67, 35, 0.3);
+  border-radius: 4px;
+  user-select: none;
+  display: inline-block;
+}
+.swia-sheet.item-sheet details.image-framing > summary:hover {
+  opacity: 1;
+  border-color: var(--accent);
+}
+.swia-sheet.item-sheet details.image-framing[open] > summary { margin-bottom: 6px; }
+
+/* The placeholder now owns the panel outright (no scaled default icon behind it) */
+.swia-sheet.card-sheet .card-placeholder i { font-size: 30px; margin-bottom: 6px; opacity: 0.7; }
+.swia-sheet.card-sheet .card-placeholder p { font-size: 11px; letter-spacing: 0.06em; }
+
+
+/* Weapon-mod sheets still use the in-art state button. Pin it top-left and
+   clear the base rule's `right`, otherwise left+right stretch it into a
+   full-width banner (the original bug on the weapon sheet). */
+.swia-sheet.weaponmod-sheet .weapon-art-area .card-state-btn,
+.swia-sheet.weapon-sheet .weapon-art-area .card-state-btn {
+  top: 6px;
+  left: 6px;
+  right: auto;
+  bottom: auto;
+  padding: 2px 8px;
+  font-size: 9px;
+  letter-spacing: 0.3px;
+  opacity: 0.9;
+  border-radius: 999px;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Armor                                                               */
+/* The armor form carries `weapon-sheet` as well, so it inherits the    */
+/* card frame, title strip, art panel, meta rows, ability list and      */
+/* flavor block. Only the armor-specific pieces live here.              */
+/* ------------------------------------------------------------------ */
+
+/* Effect chips: "+2 Health · +1 Block · +1 Evade". Shared by the armor
+   sheet badge, the hero sheet armor rows + DEFENSE line, and the portal. */
+.armor-fx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1.5;
+  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+.armor-fx-chip img {
+  width: 11px;
+  height: 11px;
+  object-fit: contain;
+  border: 0;
+  filter: brightness(0) invert(1);
+}
+.armor-fx-chip.health { background: linear-gradient(180deg, #d9584a 0%, #a32a1d 100%); border-color: rgba(110, 21, 12, 0.6); }
+.armor-fx-chip.block  { background: linear-gradient(180deg, #5c5c5c 0%, #202020 100%); border-color: rgba(0, 0, 0, 0.75); }
+.armor-fx-chip.evade  { background: linear-gradient(180deg, #f4f1ea 0%, #cfc8b8 100%); border-color: rgba(60, 52, 40, 0.55); color: #2a2318; }
+.armor-fx-chip.evade img { filter: none; }
+.armor-fx-chip.none   { background: transparent; border: 1px dashed rgba(60, 52, 40, 0.45); color: rgba(60, 52, 40, 0.7); box-shadow: none; }
+
+.armor-fx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+/* Armor sheet: EFFECTS lozenge in the weapon ATTACK badge's slot, without
+   the melee/ranged icon column. Wider so three chips fit. */
+.swia-sheet.armor-sheet .armor-effects-badge {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  width: auto;
+  min-width: 80px;
+  max-width: 220px;
+  height: auto;
+  min-height: 48px;
+  padding: 5px 12px;
+  border-radius: 18px;
+  white-space: normal;
+  top: auto;
+  bottom: -24px;
+  transform: translateY(0);
+}
+/* Two-line badge (three chips) hangs further down into the subtitle padding
+   rather than climbing over the art. */
+.swia-sheet.armor-sheet .armor-effects-badge:has(.armor-fx-chip:nth-child(3)) {
+  bottom: -34px;
+}
+.swia-sheet.armor-sheet .weapon-art-area:has(.armor-fx-chip:nth-child(3)) + .weapon-subtitle-row {
+  padding-top: 36px;
+}
+
+.swia-sheet.armor-sheet .armor-effects-row {
+  grid-column: 1;
+  grid-row: 2;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* Room under the badge — it can now be wider than the weapon's 80px. */
+.swia-sheet.armor-sheet .weapon-subtitle-row {
+  min-height: 38px;
+  padding-right: 8px;
+  padding-top: 26px;
+}
+
+/* Equipped state: an editable gold pill in edit mode (the shared
+   .keyword-toggle), a read-only twin in view mode. */
+.swia-sheet.armor-sheet .equipped-toggle {
+  flex: 0 0 auto;
+}
+
+.swia-sheet.armor-sheet .equipped-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  border: 1px solid rgba(95, 67, 35, 0.4);
+  background: rgba(255, 251, 239, 0.75);
+  color: rgba(66, 46, 22, 0.7);
+}
+
+.swia-sheet.armor-sheet .equipped-pill.is-on {
+  border-color: rgba(64, 43, 21, 0.55);
+  background: linear-gradient(180deg, #d8a35c 0%, #a16f2d 100%);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Four small numbers on one row: Health / Block / Evade / Cost. */
+.swia-sheet.armor-sheet .armor-effects-edit {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.swia-sheet.armor-sheet .armor-effects-edit .numeric-field input[type="number"] {
+  width: 56px;
+}
+
+/* Hero sheet armor rows */
+.swia-sheet .armor-entry .armor-dice-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+/* "+2" beside a derived max health, on the sheet and the portal. */
+.armor-health-note {
+  display: inline-block;
+  margin-left: 3px;
+  padding: 0 4px;
+  border-radius: 6px;
+  font-size: 0.7em;
+  font-weight: 700;
+  line-height: 1.5;
+  vertical-align: 0.15em;
+  color: #fff;
+  background: linear-gradient(180deg, #d9584a 0%, #a32a1d 100%);
+  border: 1px solid rgba(110, 21, 12, 0.6);
+}
+
+/* Combat window: armor share of the defender's pre-bonus, beside the label. */
+.swia-combat-window .pool-armor-hint {
+  margin-left: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #a32a1d;
+  letter-spacing: 0.3px;
+}
+
+/* Portal: armor chips on the DEFENSE line and on armor cards */
+.swia-player-portal .armor-fx-chip { font-size: 9px; padding: 0 6px; }
+.swia-player-portal .dice-line .armor-fx-chip { margin-left: 4px; }
+.swia-player-portal .armor-fx-chips { padding: 4px 6px 6px; }
+
+/* ------------------------------------------------------------------ */
+/* Power tokens                                                        */
+/* ------------------------------------------------------------------ */
+
+/* Combat window: token controls sit to the right of each bonus stepper. */
+.swia-combat-window .bonus-row {
+  flex-wrap: wrap;
+}
+.swia-combat-window .pool-token-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+.swia-combat-window .pool-token-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 22px;
+  padding: 0 6px 0 3px;
+  border-radius: 11px;
+  border: 1px solid rgba(64, 43, 21, 0.5);
+  background: linear-gradient(180deg, #f3ead8 0%, #d9c8a6 100%);
+  color: #2a1f10;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+.swia-combat-window .pool-token-btn img {
+  width: 16px;
+  height: 16px;
+  border: 0;
+}
+.swia-combat-window .pool-token-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #d8a35c 0%, #a16f2d 100%);
+  color: #fff;
+}
+.swia-combat-window .pool-token-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.swia-combat-window .pool-token-btn.any {
+  border-style: dashed;
+}
+.swia-combat-window .pool-token-btn.undo {
+  background: rgba(255, 251, 239, 0.7);
+  padding: 0 6px;
+}
+.swia-combat-window .pool-token-btn.undo i {
+  font-size: 10px;
+}
+.swia-combat-window .combat-declared-tokens span {
+  display: inline-block;
+  margin-right: 8px;
+  font-weight: 700;
+}
+
+/* Tray of held tokens on the hero sheet header and portal cards. */
+.power-token-tray {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+.power-token-tray > label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  margin-right: 2px;
+}
+.power-token-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 22px;
+  padding: 0 4px;
+  border-radius: 11px;
+  border: 1px solid rgba(64, 43, 21, 0.45);
+  background: rgba(255, 251, 239, 0.8);
+  font-size: 11px;
+  font-weight: 700;
+  color: #2a1f10;
+}
+.power-token-chip img {
+  width: 18px;
+  height: 18px;
+  border: 0;
+}
+.power-token-chip.empty {
+  opacity: 0.45;
+}
+.power-token-chip.empty:hover {
+  opacity: 0.9;
+}
+.power-token-count {
+  min-width: 10px;
+  text-align: center;
+}
+.power-token-step {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(64, 43, 21, 0.4);
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+}
+.power-token-step:hover:not(:disabled) {
+  background: #d8a35c;
+  color: #fff;
+}
+.power-token-step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.swia-player-portal .power-token-tray {
+  margin: 2px 0 0;
+}

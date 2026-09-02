@@ -228,6 +228,18 @@
         {{/if}}
       </div>
       {{/if}}
+      {{#if powerTokens.length}}
+      <div class="power-token-tray" title="{{localize 'SWIA.PowerTokensTitle'}}">
+        <label>{{localize "SWIA.PowerTokensTitle"}}</label>
+        {{#each powerTokens as |tok|}}
+        <span class="power-token-chip {{#unless tok.count}}empty{{/unless}}" title="{{tok.label}}">
+          {{#if ../canEditTokens}}<button type="button" class="power-token-step" data-action="adjustPowerToken" data-token="{{tok.type}}" data-delta="-1" {{#unless tok.count}}disabled{{/unless}}>&minus;</button>{{/if}}
+          <img src="{{tok.icon}}" alt="{{tok.label}}" /><span class="power-token-count">{{tok.count}}</span>
+          {{#if ../canEditTokens}}<button type="button" class="power-token-step" data-action="adjustPowerToken" data-token="{{tok.type}}" data-delta="1">+</button>{{/if}}
+        </span>
+        {{/each}}
+      </div>
+      {{/if}}
     </div>
   </header>
 
@@ -511,14 +523,15 @@
         <div class="pair">
           <input name="system.{{editAttrPath}}.health.value" type="number" value="{{editAttributes.health.value}}" />
           <span>/</span>
-          <input name="system.{{editAttrPath}}.health.max" type="number" value="{{editAttributes.health.max}}" />
+          <input name="system.{{editAttrPath}}.health.max" type="number" value="{{editHealthBaseMax}}" title="{{localize 'SWIA.Attributes.HealthBaseMaxHint'}}" />
+          {{#if editHealthArmorBonus}}<span class="armor-health-note" title="{{localize 'SWIA.Attributes.HealthFromArmorHint'}}">+{{editHealthArmorBonus}}</span>{{/if}}
         </div>
         {{else}}
         <div class="stat-stepper">
           <button type="button" class="stat-step" data-action="adjustStat" data-stat="health" data-delta="-1" title="{{localize 'SWIA.Attributes.HealthMinus'}}">&minus;</button>
           <span class="stat-current">{{currentAttributes.health.value}}</span>
           <span class="stat-sep">/</span>
-          <span class="stat-max">{{currentAttributes.health.max}}</span>
+          <span class="stat-max" {{#if currentAttributes.health.armorBonus}}title="{{localize 'SWIA.Attributes.HealthFromArmor' base=currentAttributes.health.baseMax bonus=currentAttributes.health.armorBonus}}"{{/if}}>{{currentAttributes.health.max}}{{#if currentAttributes.health.armorBonus}}<span class="armor-health-note">+{{currentAttributes.health.armorBonus}}</span>{{/if}}</span>
           <button type="button" class="stat-step" data-action="adjustStat" data-stat="health" data-delta="1" title="{{localize 'SWIA.Attributes.HealthPlus'}}">+</button>
         </div>
         {{/if}}
@@ -580,6 +593,8 @@
               {{/each}}
             </div>
           </div>
+          {{#if armorBlock}}<span class="armor-fx-chip block" title="{{localize 'SWIA.Portal.FromArmor'}}">+{{armorBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
+          {{#if armorEvade}}<span class="armor-fx-chip evade" title="{{localize 'SWIA.Portal.FromArmor'}}">+{{armorEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
         </div>
         {{/if}}
       </div>
@@ -658,6 +673,8 @@
               {{/each}}
             </div>
           </div>
+          {{#if armorBlock}}<span class="armor-fx-chip block" title="{{localize 'SWIA.Portal.FromArmor'}}">+{{armorBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
+          {{#if armorEvade}}<span class="armor-fx-chip evade" title="{{localize 'SWIA.Portal.FromArmor'}}">+{{armorEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
         </div>
         {{/if}}
       </div>
@@ -892,7 +909,7 @@
       <ol class="item-list weapon-list">
         {{#each weapons}}
         <li class="item-entry weapon-entry" data-item-id="{{this.id}}">
-          <div class="item-image" data-action="openItem">
+          <div class="item-image swia-card-preview-trigger" data-action="openItem" tabindex="0">
             <img src="{{this.img}}" alt="{{this.name}}" title="{{localize 'SWIA.Inventory.ClickToOpen'}}" />
           </div>
           <div class="item-info weapon-info" data-action="openItem">
@@ -937,6 +954,9 @@
             <button type="button" class="item-state-btn {{this.system.cardState}}" data-action="cycleItemState" title="{{this.system.cardState}}">
               {{this.system.cardState}}
             </button>
+            <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}">
+              <i class="fas fa-comment"></i>
+            </button>
             {{#if ../editMode}}
             <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
               <i class="fas fa-trash"></i>
@@ -957,6 +977,7 @@
               </span>
               <span class="mod-spacer"></span>
               <button type="button" class="item-state-btn {{this.cardState}}" data-action="cycleItemState" title="{{this.cardState}}">{{this.cardState}}</button>
+              <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}"><i class="fas fa-comment"></i></button>
               <button type="button" class="mod-detach-btn" data-action="detachMod" title="{{localize 'SWIA.Inventory.Detach'}}">&times;</button>
             </div>
             {{/each}}
@@ -984,6 +1005,7 @@
             {{#each this.bonusYellowDice}}<span class="dice-block yellow"></span>{{/each}}
           </span>
           <span class="mod-spacer"></span>
+          <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}"><i class="fas fa-comment"></i></button>
           <select class="mod-attach-select">
             <option value="">{{localize "SWIA.Inventory.AttachTo"}}</option>
             {{#each this.attachTargets}}
@@ -1020,21 +1042,25 @@
       <ol class="item-list">
         {{#each armorItems}}
         <li class="item-entry armor-entry {{#unless this.equipped}}unequipped{{/unless}}" data-item-id="{{this.id}}">
-          <div class="item-image" data-action="openItem">
+          <div class="item-image swia-card-preview-trigger" data-action="openItem" tabindex="0">
             <img src="{{this.img}}" alt="{{this.name}}" title="{{localize 'SWIA.Inventory.ClickToOpen'}}" />
           </div>
           <div class="item-info" data-action="openItem">
             <span class="item-name">{{this.name}}</span>
-            <div class="armor-dice-inline">
-              {{#each this.defenseBlackDice}}<span class="dice-block black"></span>{{/each}}
-              {{#each this.defenseWhiteDice}}<span class="dice-block white"></span>{{/each}}
-              {{#if this.equipped}}<span class="armor-feeds-tag">{{localize "SWIA.Inventory.FeedsDefense"}}</span>{{/if}}
+            <div class="armor-dice-inline armor-fx-chips">
+              {{#if this.bonusHealth}}<span class="armor-fx-chip health">+{{this.bonusHealth}} {{localize "SWIA.Attributes.Health"}}</span>{{/if}}
+              {{#if this.bonusBlock}}<span class="armor-fx-chip block">+{{this.bonusBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
+              {{#if this.bonusEvade}}<span class="armor-fx-chip evade">+{{this.bonusEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
+              {{#if this.equipped}}<span class="armor-feeds-tag">{{localize "SWIA.Inventory.Equipped"}}</span>{{/if}}
             </div>
           </div>
           <div class="item-controls">
             <button type="button" class="armor-equip-btn {{#unless this.equipped}}off{{/unless}}" data-action="toggleEquipArmor"
               title="{{#if this.equipped}}{{localize 'SWIA.Inventory.UnequipHint'}}{{else}}{{localize 'SWIA.Inventory.EquipHint'}}{{/if}}">
               <i class="fas fa-shield-halved"></i>
+            </button>
+            <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}">
+              <i class="fas fa-comment"></i>
             </button>
             {{#if ../editMode}}
             <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
@@ -1073,7 +1099,7 @@
       <ol class="item-list">
         {{#each abilities}}
         <li class="item-entry" data-item-id="{{this.id}}">
-          <div class="item-image" data-action="openItem">
+          <div class="item-image swia-card-preview-trigger" data-action="openItem" tabindex="0">
             <img src="{{this.img}}" alt="{{this.name}}" title="{{localize 'SWIA.Inventory.ClickToOpen'}}" />
           </div>
           <div class="item-info" data-action="openItem">
@@ -1082,6 +1108,9 @@
           <div class="item-controls">
             <button type="button" class="item-state-btn {{this.system.cardState}}" data-action="cycleItemState" title="{{this.system.cardState}}">
               {{this.system.cardState}}
+            </button>
+            <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}">
+              <i class="fas fa-comment"></i>
             </button>
             {{#if ../editMode}}
             <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
@@ -1120,7 +1149,7 @@
       <ol class="item-list">
         {{#each gear}}
         <li class="item-entry" data-item-id="{{this.id}}">
-          <div class="item-image" data-action="openItem">
+          <div class="item-image swia-card-preview-trigger" data-action="openItem" tabindex="0">
             <img src="{{this.img}}" alt="{{this.name}}" title="{{localize 'SWIA.Inventory.ClickToOpen'}}" />
           </div>
           <div class="item-info" data-action="openItem">
@@ -1129,6 +1158,9 @@
           <div class="item-controls">
             <button type="button" class="item-state-btn {{this.system.cardState}}" data-action="cycleItemState" title="{{this.system.cardState}}">
               {{this.system.cardState}}
+            </button>
+            <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}">
+              <i class="fas fa-comment"></i>
             </button>
             {{#if ../editMode}}
             <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">

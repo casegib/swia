@@ -6,6 +6,13 @@ function resolveItemDocument(ctx) {
   return ctx?.document ?? ctx?.item ?? ctx?.object ?? ctx?.options?.document ?? null;
 }
 
+// Item types whose surge abilities use the structured weapon surge editor
+// (cost / effect type / value / text / exhaust) and the DOM-scrape save path.
+// Armor is deliberately absent: defenders never spend surges.
+const STRUCTURED_SURGE_TYPES = ["weapon", "weaponmod"];
+// Item types carrying the free-form printed ability rows.
+const ABILITY_ROW_TYPES = ["weapon", "armor"];
+
 function mapItemSheetType(sourceType) {
   if (sourceType === "agendacard" || sourceType === "imperialclasscard") return "classcard";
   return sourceType;
@@ -168,9 +175,12 @@ export class SWIAItemSheet extends BaseItemSheet {
     const item = resolveItemDocument(this);
     if (!item) return;
 
-    // Structured weapon/weaponmod surge rows are unnamed inputs; scrape them.
-    if (["weapon", "weaponmod"].includes(item.type)) {
+    // Structured surge rows and printed ability rows are unnamed inputs; scrape them.
+    if (STRUCTURED_SURGE_TYPES.includes(item.type)) {
       Object.assign(update, this._collectWeaponSurgeUpdate(form));
+    }
+    if (ABILITY_ROW_TYPES.includes(item.type)) {
+      Object.assign(update, this._collectAbilityRowsUpdate(form));
     }
 
     if (!Object.keys(update).length) return;
@@ -200,7 +210,7 @@ export class SWIAItemSheet extends BaseItemSheet {
   static async #onAddSurgeAbility(event, target) {
     const item = resolveItemDocument(this);
     if (!item) return;
-    if (!["weapon", "weaponmod"].includes(item.type)) return;
+    if (!STRUCTURED_SURGE_TYPES.includes(item.type)) return;
     
     const surgeAbilities = item.system.surgeAbilities || [];
     const newSurgeAbilities = [...surgeAbilities, { cost: 1, effectType: "damage", effectValue: 0, effectText: "", exhaustToUse: false }];
@@ -212,7 +222,7 @@ export class SWIAItemSheet extends BaseItemSheet {
   static async #onRemoveSurgeAbility(event, target) {
     const item = resolveItemDocument(this);
     if (!item) return;
-    if (!["weapon", "weaponmod"].includes(item.type)) return;
+    if (!STRUCTURED_SURGE_TYPES.includes(item.type)) return;
     
     const index = parseInt(target.dataset.index);
     if (isNaN(index)) return;
@@ -254,7 +264,7 @@ export class SWIAItemSheet extends BaseItemSheet {
   static async #onAddAbility(event, target) {
     const item = resolveItemDocument(this);
     if (!item) return;
-    if (item.type !== "weapon") return;
+    if (!ABILITY_ROW_TYPES.includes(item.type)) return;
     const abilities = Array.isArray(item.system.abilities) ? item.system.abilities : Object.values(item.system.abilities || {});
     await item.update({ "system.abilities": [...abilities, { prefix: "none", description: "" }] });
   }
@@ -263,7 +273,7 @@ export class SWIAItemSheet extends BaseItemSheet {
   static async #onRemoveAbility(event, target) {
     const item = resolveItemDocument(this);
     if (!item) return;
-    if (item.type !== "weapon") return;
+    if (!ABILITY_ROW_TYPES.includes(item.type)) return;
     const index = parseInt(target.dataset.index);
     if (isNaN(index)) return;
     const abilities = Array.isArray(item.system.abilities) ? item.system.abilities : Object.values(item.system.abilities || {});
@@ -294,9 +304,12 @@ export class SWIAItemSheet extends BaseItemSheet {
       Object.assign(update, this._collectFormcardArrayUpdate(formEl));
     }
 
-    // Same for structured weapon/weaponmod surge abilities
-    if (["weapon", "weaponmod"].includes(item.type)) {
+    // Same for structured surge abilities and printed ability rows
+    if (STRUCTURED_SURGE_TYPES.includes(item.type)) {
       Object.assign(update, this._collectWeaponSurgeUpdate(formEl));
+    }
+    if (ABILITY_ROW_TYPES.includes(item.type)) {
+      Object.assign(update, this._collectAbilityRowsUpdate(formEl));
     }
 
     if (!Object.keys(update).length) {
@@ -390,10 +403,19 @@ export class SWIAItemSheet extends BaseItemSheet {
     const surgeRaw = Array.isArray(system.surgeAbilities)
       ? system.surgeAbilities
       : Object.values(system.surgeAbilities || {});
-    const weaponSurgeRows = isWeaponLike
+    const weaponSurgeRows = STRUCTURED_SURGE_TYPES.includes(item.type)
       ? surgeRaw.map((surge) => ({ ...surge, displayEffect: weaponSurgeDisplayEffect(surge) }))
       : [];
     const keywordsLine = isWeaponLike ? buildKeywordsLine(system.keywords) : "";
+
+    // Armor view-mode helpers: the weight-class line and whether the effects
+    // badge has anything to show (an empty badge gets a "no effects" label).
+    const armorClassLabel = item.type === "armor" && system.armorClass
+      ? game.i18n.localize(`SWIA.Item.Armor.ArmorClass.${system.armorClass.charAt(0).toUpperCase()}${system.armorClass.slice(1)}`)
+      : "";
+    const hasArmorEffects = item.type === "armor"
+      && ((Number(system.bonusHealth) || 0) + (Number(system.bonusBlock) || 0) + (Number(system.bonusEvade) || 0)) > 0;
+
     const hasClasscardDetails = item.type === "classcard"
       && Boolean(system.heroClass || system.xpCost > 0 || system.abilityText);
 
@@ -436,6 +458,8 @@ export class SWIAItemSheet extends BaseItemSheet {
       cardStateLabel: cardStateLabel,
       weaponSurgeRows: weaponSurgeRows,
       keywordsLine: keywordsLine,
+      armorClassLabel: armorClassLabel,
+      hasArmorEffects: hasArmorEffects,
       hasClasscardDetails: hasClasscardDetails,
       weaponmodAttachedWeaponName: weaponmodAttachedWeaponName,
       config: CONFIG.SWIA ?? {}
@@ -492,6 +516,42 @@ export class SWIAItemSheet extends BaseItemSheet {
     });
 
     return { "system.surgeAbilities": surgeAbilities };
+  }
+
+  // Scrape the printed ability rows (weapon/armor) directly from the DOM.
+  // Same rationale as _collectWeaponSurgeUpdate: indexed named paths like
+  // "system.abilities.0.description" expand into a plain {"0": {…}} object
+  // rather than an array, and they carry only the edited key, so `prefix`
+  // would be re-defaulted on every save. Inputs are therefore unnamed.
+  _collectAbilityRowsUpdate(formEl) {
+    const root = formEl
+      ?? this.element?.querySelector?.('[data-application-part="form"]')
+      ?? this.element
+      ?? null;
+
+    if (!(root instanceof HTMLElement)) return {};
+
+    // Only scrape when the edit inputs are actually rendered; the view-mode
+    // list has none, and an empty query would wipe the stored array.
+    if (!root.querySelector(".weapon-abilities-list .ability-desc-input")) return {};
+
+    const item = resolveItemDocument(this);
+    const stored = Array.isArray(item?.system?.abilities)
+      ? item.system.abilities
+      : Object.values(item?.system?.abilities ?? {});
+
+    const abilities = [];
+    root.querySelectorAll(".weapon-abilities-list .weapon-ability-row").forEach((li, index) => {
+      const input = li.querySelector(".ability-desc-input");
+      if (!input) return;
+      abilities.push({
+        // Carry the stored prefix through — nothing edits it yet.
+        prefix: stored[index]?.prefix ?? "none",
+        description: input.value ?? ""
+      });
+    });
+
+    return { "system.abilities": abilities };
   }
 
   // Scrape formcard surge/special ability rows directly from the DOM.

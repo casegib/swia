@@ -23,9 +23,11 @@
 
     <div class="weapon-art-area">
       <div class="weapon-art-panel">
+        {{#if hasCardImage}}
         <img class="card-image {{systemData.cardState}}" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" alt="{{item.name}}" />
+        {{/if}}
         {{#unless hasCardImage}}
-        <div class="card-placeholder">
+        <div class="card-placeholder" data-edit="img" data-action="editImage">
           <i class="fas fa-image"></i>
           <p>{{localize "SWIA.Item.ClickToUploadCard"}}</p>
         </div>
@@ -101,11 +103,11 @@
 
       <div class="edit-field dice-edit-field">
         <label>{{localize "SWIA.Item.Weaponmod.BonusDice"}}</label>
-        <div class="dice-edit-grid">
-          <label>{{localize "SWIA.Attack.Red"}} <input name="system.bonusDice.red" type="number" value="{{systemData.bonusDice.red}}" data-dtype="Number" min="0" /></label>
-          <label>{{localize "SWIA.Attack.Blue"}} <input name="system.bonusDice.blue" type="number" value="{{systemData.bonusDice.blue}}" data-dtype="Number" min="0" /></label>
-          <label>{{localize "SWIA.Attack.Green"}} <input name="system.bonusDice.green" type="number" value="{{systemData.bonusDice.green}}" data-dtype="Number" min="0" /></label>
-          <label>{{localize "SWIA.Attack.Yellow"}} <input name="system.bonusDice.yellow" type="number" value="{{systemData.bonusDice.yellow}}" data-dtype="Number" min="0" /></label>
+        <div class="dice-edit-grid dice-edit-row">
+          <span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span><input name="system.bonusDice.red" type="number" value="{{systemData.bonusDice.red}}" data-dtype="Number" min="0" />
+          <span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span><input name="system.bonusDice.blue" type="number" value="{{systemData.bonusDice.blue}}" data-dtype="Number" min="0" />
+          <span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span><input name="system.bonusDice.green" type="number" value="{{systemData.bonusDice.green}}" data-dtype="Number" min="0" />
+          <span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span><input name="system.bonusDice.yellow" type="number" value="{{systemData.bonusDice.yellow}}" data-dtype="Number" min="0" />
         </div>
       </div>
 

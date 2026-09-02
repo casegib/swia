@@ -25,17 +25,20 @@ Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor shee
 - Roll chat cards with spendable surge abilities gathered from weapons, weapon mods, form cards, and special abilities.
 - Shared `SWIACombatWindow` attacker-vs-defender flow synced to all clients via the `swia.activeCombat` world setting and the `updateSetting` hook. Opens for every connected user (view-only for spectators); starting an attack while a combat is active reopens the in-progress window.
 - Unlimited per-die rerolls until a surge or power token is spent; surge spends can be undone (refunding cost, reversing effects, and re-readying any card the spend exhausted).
-- Hero inventory management on the actor sheet: armor section with an equip toggle feeding the defense pool; weapon mods nested under their weapon with attach/detach, attachment-slot limits, and melee/ranged compatibility checks; weapon rows show the effective dice pool (mod dice highlighted) and each item's surge abilities.
+- Armor modeled the way the cards print it: equipped armor adds its Health to the wearer's max (derived data, shown as `12 +2`), and its Block/Evade pre-seed the defender's bonus row in the combat window and the solo defense card. Armor never adds defense dice. Equip/unequip shifts current health by the same amount so damage taken stays constant.
+- Hero inventory management on the actor sheet: armor section with an equip toggle and Health/Block/Evade chips; weapon mods nested under their weapon with attach/detach, attachment-slot limits, and melee/ranged compatibility checks; weapon rows show the effective dice pool (mod dice highlighted) and each item's surge abilities.
 - Card-state automation: an `exhaustToUse` flag on weapon/mod surge abilities auto-exhausts the source card when spent (in the combat window and on chat cards); exhausted cards keep passive stats but withhold flagged abilities; depleted weapons leave the attack dropdowns and depleted mods contribute nothing; a per-hero **Ready All** button readies every exhausted card for the status phase.
 - Hero sheet quality of life: health/endurance current-max steppers, clickable Healthy/Wounded/Defeated state pills, and edit-mode Healthy|Wounded tabs for configuring both attribute sets without toggling actor state.
 - GM socket relay (`system.swia`) for permission-checked surge and power token spends, per-die rerolls, and damage application.
-- Power token (block/evade) consumption and wounded-aware damage application to actor health.
+- Power tokens (Damage/Surge/Block/Evade/Any) as stackable status effects: declared before the roll in the combat window (attacker during setup, defender until its defense roll) with exact undo and refund-on-cancel; GM grant/remove trays on the hero sheet and portal; a count badge drawn on the map token in place of stacked status icons (`scripts/token-badge.js`).
+- Wounded-aware damage application to actor health.
 - Dice So Nice! integration for 3D dice, plus a startup warning if the legacy external `swia-dice` module is still active.
 - Foundry v13+ ApplicationV2 sheets with TypeDataModel schemas.
 
 ## File Map
 - `system.json` – system manifest; update `manifest`, `download`, `url` when publishing. Document types declared under `documentTypes`.
 - `scripts/data/actors.js` – TypeDataModel schemas for actor types: `hero`, `villain`, `ally`, `character`.
+- `scripts/token-badge.js` – Power-token map badge and the Actor subclass that hides those effects from the stock status strip.
 - `scripts/data/items.js` – TypeDataModel schemas for item types: `weapon`, `weaponmod`, `armor`, `gear`, `classcard`, `agendacard`, `imperialclasscard`, `heroability`, `formcard`.
 - `scripts/data/common.js` – Shared field builders and helpers for data model definitions.
 - `scripts/dice/dice-terms.js` – Custom Imperial Assault dice term definitions, symbol tables, face icons, Dice So Nice presets, chat rendering hooks, and legacy module detection.

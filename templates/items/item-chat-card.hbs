@@ -1,0 +1,55 @@
+<div class="swia-item-chat-card {{#if withArt}}has-art{{/if}}">
+  <header class="item-chat-head">
+    <span class="item-chat-name">{{name}}</span>
+    {{#if ownerName}}<span class="item-chat-owner">{{ownerName}}</span>{{/if}}
+  </header>
+
+  {{#if withArt}}
+  <div class="item-chat-art">
+    <img src="{{img}}" alt="{{name}}" />
+  </div>
+  {{else}}
+  <div class="item-chat-body">
+    {{#if subtitle}}<div class="item-chat-subtitle">{{subtitle}}</div>{{/if}}
+
+    {{#if hasDice}}
+    <div class="item-chat-row item-chat-dice">
+      {{#each attackDice}}<span class="dice-block {{this}}"></span>{{/each}}
+      {{#if damage}}<span class="item-chat-stat">+{{damage}} {{localize "SWIA.Dice.Damage"}}</span>{{/if}}
+      {{#if accuracy}}<span class="item-chat-stat">+{{accuracy}} {{localize "SWIA.Dice.Accuracy"}}</span>{{/if}}
+    </div>
+    {{/if}}
+
+    {{#if keywords.length}}
+    <div class="item-chat-row">
+      {{#each keywords}}<span class="item-chat-kw">{{this}}</span>{{/each}}
+    </div>
+    {{/if}}
+
+    {{#if bonusHealth}}<div class="item-chat-row"><span class="item-chat-stat">+{{bonusHealth}} {{localize "SWIA.Attributes.Health"}}</span></div>{{/if}}
+    {{#if bonusBlock}}<div class="item-chat-row"><span class="item-chat-stat">+{{bonusBlock}} {{localize "SWIA.Dice.Block"}}</span></div>{{/if}}
+    {{#if bonusEvade}}<div class="item-chat-row"><span class="item-chat-stat">+{{bonusEvade}} {{localize "SWIA.Dice.Evade"}}</span></div>{{/if}}
+
+    {{#each abilities}}
+    <div class="item-chat-ability">{{{this}}}</div>
+    {{/each}}
+
+    {{#each surges}}
+    <div class="item-chat-surge">
+      <span class="item-chat-surge-cost">{{this.cost}}<img class="surge-cost-icon" src="systems/swia/icons/Surge.png" alt="{{localize 'SWIA.Surge'}}" /></span>
+      <span class="item-chat-surge-label">{{{this.label}}}</span>
+      {{#if this.exhausts}}<span class="surge-exhaust-flag" title="{{localize 'SWIA.Combat.ExhaustsSource'}}">&#9889;</span>{{/if}}
+    </div>
+    {{/each}}
+
+    {{#if description}}
+    <div class="item-chat-desc">{{{description}}}</div>
+    {{/if}}
+
+    <div class="item-chat-row item-chat-footer">
+      <span class="item-chat-state state-{{state}}">{{stateLabel}}</span>
+      {{#if equipped}}<span class="item-chat-kw">{{localize "SWIA.Inventory.Equipped"}}</span>{{/if}}
+    </div>
+  </div>
+  {{/if}}
+</div>

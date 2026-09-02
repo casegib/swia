@@ -1,8 +1,11 @@
 import { CAMPAIGN_RESOURCES_KEY } from "./campaign-tracker.js";
-import { SWIARollDialog, buildDefensePool, weaponModsFor } from "./dice/roll-dialog.js";
+import { SWIARollDialog, weaponModsFor } from "./dice/roll-dialog.js";
+import { armorEffectsFor } from "./data/common.js";
+import { bindCardPreviews, hideCardPreview, destroyCardPreview, postItemCardFromElement } from "./item-cards.js";
 import {
   canManageActor, requestWoundedState, setDefeatedState, adjustActorStat,
-  adjustActorXp, toggleArmorEquipped, readyAllItemsWithNotice, READY_ALL_TYPES
+  adjustActorXp, toggleArmorEquipped, readyAllItemsWithNotice, READY_ALL_TYPES,
+  powerTokenRows, grantPowerToken, removePowerToken
 } from "./actor-actions.js";
 
 // Foundry v13+ ApplicationV2 base
@@ -33,7 +36,9 @@ export class SWIAPlayerPortal extends BaseApplication {
       toggleWounded: SWIAPlayerPortal.prototype._onToggleWounded,
       toggleDefeated: SWIAPlayerPortal.prototype._onToggleDefeated,
       toggleEquipArmor: SWIAPlayerPortal.prototype._onToggleEquipArmor,
-      readyAllItems: SWIAPlayerPortal.prototype._onReadyAllItems
+      adjustPowerToken: SWIAPlayerPortal.prototype._onAdjustPowerToken,
+      readyAllItems: SWIAPlayerPortal.prototype._onReadyAllItems,
+      postItemCard: SWIAPlayerPortal.prototype._onPostItemCard
     }
   };
 
@@ -61,9 +66,6 @@ export class SWIAPlayerPortal extends BaseApplication {
     super(...args);
     this._syncHooks = [];
     this._refreshHandle = null;
-    this._cardPreviewElement = null;
-    this._cardPreviewDelayHandle = null;
-    this._pendingCardPreview = null;
     this._cardPreviewEventsController = null;
     this._registerSyncHooks();
   }
@@ -158,6 +160,15 @@ export class SWIAPlayerPortal extends BaseApplication {
       if (!this._isPortalItem(item)) return;
       this._queueRefresh();
     });
+
+    // Power tokens are active effects; the tray on each card reads them live.
+    for (const hook of ["createActiveEffect", "updateActiveEffect", "deleteActiveEffect"]) {
+      watch(hook, (effect) => {
+        const parent = effect?.parent;
+        if (parent?.documentName !== "Actor" || !this._isPortalActor(parent)) return;
+        this._queueRefresh();
+      });
+    }
 
     watch("updateUser", () => {
       // Ownership or GM/player toggles can change portal visibility/order.
@@ -297,14 +308,9 @@ export class SWIAPlayerPortal extends BaseApplication {
     const gearItems = ownedItems.filter(item => item.type === "gear");
     const armorItems = ownedItems.filter(item => item.type === "armor");
 
-    // Defense shown on the card is the pool that will actually be rolled:
-    // the actor's own dice plus every equipped armor's dice. The armor share
-    // renders gold-ringed, matching the "gold = from an item" rule on sheets.
-    const totalDefense = buildDefensePool(actor);
-    const armorDefense = {
-      black: Math.max(0, (totalDefense.black ?? 0) - (defense.black ?? 0)),
-      white: Math.max(0, (totalDefense.white ?? 0) - (defense.white ?? 0))
-    };
+    // Armor adds no dice; its printed Block/Evade ride beside the defense
+    // dice as chips, and its Health is already folded into health.max.
+    const armorFx = armorEffectsFor(actor);
 
     const hasReadyableCards = ownedItems.some(
       (item) => item.system?.cardState === "exhausted" && READY_ALL_TYPES.includes(item.type)
@@ -383,8 +389,10 @@ export class SWIAPlayerPortal extends BaseApplication {
       enrichedHeroAbilities,
       defenseBlackDice: Array.from({ length: defense.black || 0 }, (_, i) => i),
       defenseWhiteDice: Array.from({ length: defense.white || 0 }, (_, i) => i),
-      armorBlackDice: Array.from({ length: armorDefense.black }, (_, i) => i),
-      armorWhiteDice: Array.from({ length: armorDefense.white }, (_, i) => i),
+      armorBlock: armorFx.block,
+      armorEvade: armorFx.evade,
+      powerTokens: powerTokenRows(actor, { editable: Boolean(game.user?.isGM) }),
+      canEditTokens: Boolean(game.user?.isGM),
       attackRedDice: Array.from({ length: attack.red || 0 }, (_, i) => i),
       attackBlueDice: Array.from({ length: attack.blue || 0 }, (_, i) => i),
       attackGreenDice: Array.from({ length: attack.green || 0 }, (_, i) => i),
@@ -407,7 +415,11 @@ export class SWIAPlayerPortal extends BaseApplication {
       gear: gearItems.map(toPortalItem),
       armor: armorItems.map((item) => ({
         ...toPortalItem(item),
-        equipped: item.system?.equipped ?? true
+        equipped: item.system?.equipped ?? true,
+        bonusHealth: Number(item.system?.bonusHealth) || 0,
+        bonusBlock: Number(item.system?.bonusBlock) || 0,
+        bonusEvade: Number(item.system?.bonusEvade) || 0,
+        hasEffects: Boolean(Number(item.system?.bonusHealth) || Number(item.system?.bonusBlock) || Number(item.system?.bonusEvade))
       })),
       weaponCount: weaponItems.length,
       abilityCount: classcardItems.length,
@@ -424,150 +436,28 @@ export class SWIAPlayerPortal extends BaseApplication {
   }
 
   _unbindCardPreviewListeners() {
-    if (!this._cardPreviewEventsController) return;
-    this._cardPreviewEventsController.abort();
+    this._cardPreviewEventsController?.abort();
     this._cardPreviewEventsController = null;
   }
 
+  /**
+   * Hover previews come from the shared item-cards helper (identical to the
+   * actor sheet); the portal layers its drag-and-drop wiring on top.
+   */
   _bindCardPreviewListeners(root) {
     if (!root?.querySelectorAll) return;
-
     this._unbindCardPreviewListeners();
 
     const controller = new AbortController();
     const signal = controller.signal;
     this._cardPreviewEventsController = controller;
 
-    const itemButtons = root.querySelectorAll(".portal-item-open");
-    for (const button of itemButtons) {
-      button.addEventListener("mouseenter", this._onShowCardPreview.bind(this), { signal });
-      button.addEventListener("focusin", this._onShowCardPreview.bind(this), { signal });
-      button.addEventListener("mousemove", this._onMoveCardPreview.bind(this), { signal });
-      button.addEventListener("mouseleave", this._onHideCardPreview.bind(this), { signal });
-      button.addEventListener("focusout", this._onHideCardPreview.bind(this), { signal });
-    }
+    bindCardPreviews(root, { signal });
 
-    const dropZones = root.querySelectorAll(".portal-drop-zone");
-    for (const dropZone of dropZones) {
-      dropZone.addEventListener("scroll", this._onHideCardPreview.bind(this), { signal });
-      // Item drag-and-drop onto portal panels (rebound on each render).
+    for (const dropZone of root.querySelectorAll(".portal-drop-zone")) {
       dropZone.addEventListener("dragover", this._onPortalDragOver.bind(this), { signal });
       dropZone.addEventListener("drop", this._onPortalDrop.bind(this), { signal });
     }
-  }
-
-  _ensureCardPreviewElement() {
-    if (this._cardPreviewElement) return this._cardPreviewElement;
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "swia-portal-card-preview";
-
-    const image = document.createElement("img");
-    image.alt = "";
-    image.loading = "eager";
-    wrapper.appendChild(image);
-
-    document.body.appendChild(wrapper);
-    this._cardPreviewElement = wrapper;
-    return wrapper;
-  }
-
-  _destroyCardPreviewElement() {
-    if (!this._cardPreviewElement) return;
-    this._cardPreviewElement.remove();
-    this._cardPreviewElement = null;
-  }
-
-  _extractPointer(event) {
-    const baseEvent = event?.originalEvent ?? event;
-    const touch = baseEvent?.touches?.[0] ?? baseEvent?.changedTouches?.[0] ?? null;
-    const clientX = touch?.clientX ?? baseEvent?.clientX;
-    const clientY = touch?.clientY ?? baseEvent?.clientY;
-    return { clientX, clientY };
-  }
-
-  _positionCardPreview(clientX, clientY) {
-    const preview = this._cardPreviewElement;
-    if (!preview) return;
-    if (!Number.isFinite(clientX) || !Number.isFinite(clientY)) return;
-
-    const offset = 18;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const rect = preview.getBoundingClientRect();
-    const width = rect.width || 280;
-    const height = rect.height || 410;
-
-    let left = clientX + offset;
-    let top = clientY + offset;
-
-    if (left + width > vw - 8) left = clientX - width - offset;
-    if (top + height > vh - 8) top = vh - height - 8;
-    if (left < 8) left = 8;
-    if (top < 8) top = 8;
-
-    preview.style.left = `${Math.round(left)}px`;
-    preview.style.top = `${Math.round(top)}px`;
-  }
-
-  _onShowCardPreview(event) {
-    const target = event.currentTarget;
-    const image = target?.querySelector("img");
-    const src = image?.getAttribute("src");
-    if (!src) return;
-    const { clientX, clientY } = this._extractPointer(event);
-    const rect = target?.getBoundingClientRect?.();
-    const fallbackX = rect ? rect.left + (rect.width / 2) : undefined;
-    const fallbackY = rect ? rect.top + (rect.height / 2) : undefined;
-    this._pendingCardPreview = {
-      src,
-      alt: image?.getAttribute("alt") || target?.getAttribute("title") || "",
-      clientX: Number.isFinite(clientX) ? clientX : fallbackX,
-      clientY: Number.isFinite(clientY) ? clientY : fallbackY
-    };
-
-    if (this._cardPreviewDelayHandle) {
-      clearTimeout(this._cardPreviewDelayHandle);
-    }
-
-    this._cardPreviewDelayHandle = setTimeout(() => {
-      this._cardPreviewDelayHandle = null;
-      const pending = this._pendingCardPreview;
-      if (!pending?.src) return;
-
-      const preview = this._ensureCardPreviewElement();
-      const previewImage = preview.querySelector("img");
-      if (!previewImage) return;
-
-      previewImage.src = pending.src;
-      previewImage.alt = pending.alt;
-      preview.classList.add("is-visible");
-
-      if (Number.isFinite(pending.clientX) && Number.isFinite(pending.clientY)) {
-        this._positionCardPreview(pending.clientX, pending.clientY);
-      }
-    }, 120);
-  }
-
-  _onMoveCardPreview(event) {
-    if (this._pendingCardPreview) {
-      const { clientX, clientY } = this._extractPointer(event);
-      this._pendingCardPreview.clientX = clientX;
-      this._pendingCardPreview.clientY = clientY;
-    }
-
-    if (!this._cardPreviewElement?.classList.contains("is-visible")) return;
-    const { clientX, clientY } = this._extractPointer(event);
-    this._positionCardPreview(clientX, clientY);
-  }
-
-  _onHideCardPreview() {
-    if (this._cardPreviewDelayHandle) {
-      clearTimeout(this._cardPreviewDelayHandle);
-      this._cardPreviewDelayHandle = null;
-    }
-    this._pendingCardPreview = null;
-    this._cardPreviewElement?.classList.remove("is-visible");
   }
 
   async _onOpenActor(event, target) {
@@ -652,6 +542,20 @@ export class SWIAPlayerPortal extends BaseApplication {
     await adjustActorStat(actor, target?.dataset?.stat, target?.dataset?.delta);
   }
 
+  // Grant or remove one power token. GM-only: tokens come from card text
+  // the GM adjudicates, and this replaces hunting through the token HUD.
+  async _onAdjustPowerToken(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!game.user?.isGM) return;
+    const actor = this._manageableActor(target ?? event.currentTarget);
+    if (!actor) return;
+    const type = target?.dataset?.token;
+    const delta = Number(target?.dataset?.delta) || 0;
+    if (delta > 0) await grantPowerToken(actor, type);
+    else if (delta < 0) await removePowerToken(actor, type);
+  }
+
   async _onAdjustXp(event, target) {
     event.preventDefault();
     event.stopPropagation();
@@ -687,6 +591,17 @@ export class SWIAPlayerPortal extends BaseApplication {
     if (!actor) return;
     const itemId = target?.dataset?.itemId ?? target?.closest?.("[data-item-id]")?.dataset?.itemId;
     await toggleArmorEquipped(itemId ? actor.items?.get(itemId) : null);
+  }
+
+  async _onPostItemCard(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+    hideCardPreview();
+    const el = target ?? event.currentTarget;
+    const actorId = el?.dataset?.actorId ?? el?.closest?.("[data-actor-id]")?.dataset?.actorId;
+    const actor = actorId ? game.actors?.get(actorId) : null;
+    if (!actor) return;
+    await postItemCardFromElement(actor, el);
   }
 
   async _onReadyAllItems(event, target) {
@@ -747,9 +662,9 @@ export class SWIAPlayerPortal extends BaseApplication {
   }
 
   async close(options) {
-    this._onHideCardPreview();
+    hideCardPreview();
     this._unbindCardPreviewListeners();
-    this._destroyCardPreviewElement();
+    destroyCardPreview();
     this._unregisterSyncHooks();
     return super.close?.(options);
   }

@@ -19,13 +19,21 @@
       {{else}}
       <h1>{{item.name}}</h1>
       {{/if}}
+      <button type="button" class="card-state-pill {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
+        {{cardStateLabel}}
+      </button>
+      {{#if systemData.cost}}
+      <span class="cost-chip" title="{{localize 'SWIA.Item.Weapon.Cost'}}">{{systemData.cost}} {{localize "SWIA.Item.Weapon.Credits"}}</span>
+      {{/if}}
     </header>
 
     <div class="weapon-art-area">
       <div class="weapon-art-panel">
+        {{#if hasCardImage}}
         <img class="card-image {{systemData.cardState}}" src="{{item.img}}" {{#if editMode}}data-edit="img" data-action="editImage"{{/if}} title="{{item.name}}" alt="{{item.name}}" style="object-position: {{systemData.imageOffsetX}}% {{systemData.imageOffsetY}}%; transform: scale({{systemData.imageZoom}}); transform-origin: {{systemData.imageOffsetX}}% {{systemData.imageOffsetY}}%" />
+        {{/if}}
         {{#unless hasCardImage}}
-        <div class="card-placeholder">
+        <div class="card-placeholder" {{#if editMode}}data-edit="img" data-action="editImage"{{/if}}>
           <i class="fas fa-image"></i>
           <p>{{localize "SWIA.Item.ClickToUploadCard"}}</p>
         </div>
@@ -61,9 +69,6 @@
         {{/if}}
       </aside>
 
-      <button type="button" class="card-state-btn {{systemData.cardState}}" data-action="cycleCardState" title="{{cardStateLabel}}">
-        {{cardStateLabel}}
-      </button>
     </div>
 
     <div class="weapon-subtitle-row">
@@ -129,11 +134,11 @@
       <div class="meta-edit-row">
         <div class="edit-field dice-edit-field">
           <label>{{localize "SWIA.Item.Weapon.AttackDice"}}</label>
-          <div class="dice-edit-grid">
-            <label>{{localize "SWIA.Attack.Red"}} <input name="system.attackDice.red" type="number" value="{{systemData.attackDice.red}}" data-dtype="Number" min="0" /></label>
-            <label>{{localize "SWIA.Attack.Blue"}} <input name="system.attackDice.blue" type="number" value="{{systemData.attackDice.blue}}" data-dtype="Number" min="0" /></label>
-            <label>{{localize "SWIA.Attack.Green"}} <input name="system.attackDice.green" type="number" value="{{systemData.attackDice.green}}" data-dtype="Number" min="0" /></label>
-            <label>{{localize "SWIA.Attack.Yellow"}} <input name="system.attackDice.yellow" type="number" value="{{systemData.attackDice.yellow}}" data-dtype="Number" min="0" /></label>
+          <div class="dice-edit-grid dice-edit-row">
+            <span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span><input name="system.attackDice.red" type="number" value="{{systemData.attackDice.red}}" data-dtype="Number" min="0" />
+            <span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span><input name="system.attackDice.blue" type="number" value="{{systemData.attackDice.blue}}" data-dtype="Number" min="0" />
+            <span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span><input name="system.attackDice.green" type="number" value="{{systemData.attackDice.green}}" data-dtype="Number" min="0" />
+            <span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span><input name="system.attackDice.yellow" type="number" value="{{systemData.attackDice.yellow}}" data-dtype="Number" min="0" />
           </div>
         </div>
         <div class="edit-field">
@@ -145,40 +150,57 @@
             <option value="tech" {{#if (eq systemData.poolAttribute "tech")}}selected{{/if}}>{{localize "SWIA.Attributes.Tech"}}</option>
           </select>
         </div>
-        <div class="edit-field">
-          <label>{{localize "SWIA.Item.Weapon.AttachmentSlots"}}</label>
-          <input name="system.attachmentSlots" type="number" value="{{systemData.attachmentSlots}}" data-dtype="Number" min="0" max="5" />
-        </div>
       </div>
       <div class="meta-edit-row">
-        <div class="edit-field">
-          <label>{{localize "SWIA.Item.Weapon.Accuracy"}}</label>
-          <input name="system.accuracy" type="number" value="{{systemData.accuracy}}" data-dtype="Number" min="0" />
+        <div class="edit-field numeric-trio">
+          <div class="numeric-field">
+            <label>{{localize "SWIA.Item.Weapon.AttachmentSlots"}}</label>
+            <input name="system.attachmentSlots" type="number" value="{{systemData.attachmentSlots}}" data-dtype="Number" min="0" max="5" />
+          </div>
+          <div class="numeric-field">
+            <label>{{localize "SWIA.Item.Weapon.Accuracy"}}</label>
+            <input name="system.accuracy" type="number" value="{{systemData.accuracy}}" data-dtype="Number" min="0" />
+          </div>
+          <div class="numeric-field">
+            <label>{{localize "SWIA.Item.Weapon.Cost"}}</label>
+            <input name="system.cost" type="number" value="{{systemData.cost}}" data-dtype="Number" min="0" />
+          </div>
         </div>
         <div class="edit-field keywords-edit-field">
           <label>{{localize "SWIA.Item.Weapon.Keywords"}}</label>
           <div class="keywords-edit-grid">
             <label>{{localize "SWIA.Keywords.Pierce"}} <input name="system.keywords.pierce" type="number" value="{{systemData.keywords.pierce}}" data-dtype="Number" min="0" /></label>
             <label>{{localize "SWIA.Keywords.Blast"}} <input name="system.keywords.blast" type="number" value="{{systemData.keywords.blast}}" data-dtype="Number" min="0" /></label>
-            <label class="keyword-checkbox">{{localize "SWIA.Keywords.Cleave"}} <input name="system.keywords.cleave" type="checkbox" {{#if systemData.keywords.cleave}}checked{{/if}} /></label>
-            <label class="keyword-checkbox">{{localize "SWIA.Keywords.Reach"}} <input name="system.keywords.reach" type="checkbox" {{#if systemData.keywords.reach}}checked{{/if}} /></label>
+            <label class="keyword-toggle {{#if systemData.keywords.cleave}}is-on{{/if}}">
+              <input name="system.keywords.cleave" type="checkbox" {{#if systemData.keywords.cleave}}checked{{/if}} />
+              <span>{{localize "SWIA.Keywords.Cleave"}}</span>
+            </label>
+            <label class="keyword-toggle {{#if systemData.keywords.reach}}is-on{{/if}}">
+              <input name="system.keywords.reach" type="checkbox" {{#if systemData.keywords.reach}}checked{{/if}} />
+              <span>{{localize "SWIA.Keywords.Reach"}}</span>
+            </label>
           </div>
         </div>
       </div>
-      <div class="meta-edit-row image-position-row">
-        <div class="edit-field image-position-field">
-          <label>{{localize "SWIA.Item.Weapon.ImagePositionX"}}</label>
-          <input name="system.imageOffsetX" type="range" value="{{systemData.imageOffsetX}}" data-dtype="Number" min="0" max="100" step="1" />
+      {{#if hasCardImage}}
+      <details class="image-framing">
+        <summary>{{localize "SWIA.Item.Weapon.ImageFraming"}}</summary>
+        <div class="meta-edit-row image-position-row">
+          <div class="edit-field image-position-field">
+            <label>{{localize "SWIA.Item.Weapon.ImagePositionX"}}</label>
+            <input name="system.imageOffsetX" type="range" value="{{systemData.imageOffsetX}}" data-dtype="Number" min="0" max="100" step="1" />
+          </div>
+          <div class="edit-field image-position-field">
+            <label>{{localize "SWIA.Item.Weapon.ImagePositionY"}}</label>
+            <input name="system.imageOffsetY" type="range" value="{{systemData.imageOffsetY}}" data-dtype="Number" min="0" max="100" step="1" />
+          </div>
+          <div class="edit-field image-position-field">
+            <label>{{localize "SWIA.Item.Weapon.ImageZoom"}}</label>
+            <input name="system.imageZoom" type="range" value="{{systemData.imageZoom}}" data-dtype="Number" min="0.25" max="3" step="0.05" />
+          </div>
         </div>
-        <div class="edit-field image-position-field">
-          <label>{{localize "SWIA.Item.Weapon.ImagePositionY"}}</label>
-          <input name="system.imageOffsetY" type="range" value="{{systemData.imageOffsetY}}" data-dtype="Number" min="0" max="100" step="1" />
-        </div>
-        <div class="edit-field image-position-field">
-          <label>{{localize "SWIA.Item.Weapon.ImageZoom"}}</label>
-          <input name="system.imageZoom" type="range" value="{{systemData.imageZoom}}" data-dtype="Number" min="0.25" max="3" step="0.05" />
-        </div>
-      </div>
+      </details>
+      {{/if}}
     </div>
     {{/if}}
 
@@ -194,7 +216,7 @@
         {{#each enrichedAbilities as |ability index|}}
         <li class="weapon-ability-row">
           {{#if ../editMode}}
-          <input class="ability-desc-input" name="system.abilities.{{index}}.description" type="text" value="{{ability.description}}" placeholder="{{localize 'SWIA.Item.Weapon.AbilityPlaceholder'}}" />
+          <input class="ability-desc-input" type="text" value="{{ability.description}}" placeholder="{{localize 'SWIA.Item.Weapon.AbilityPlaceholder'}}" />
           <button type="button" class="ability-delete" data-action="removeAbility" data-index="{{index}}" title="{{localize 'SWIA.Item.Weapon.RemoveAbility'}}">
             <i class="fas fa-trash"></i>
           </button>
@@ -270,22 +292,13 @@
       <h3>{{localize "SWIA.Item.Weapon.FlavorText"}}</h3>
       {{/if}}
       {{#if editMode}}
-      <textarea name="system.description" data-dtype="String" rows="5" placeholder="{{localize 'SWIA.Item.Description'}}">{{systemData.description}}</textarea>
+      <textarea name="system.description" data-dtype="String" rows="4" placeholder="{{localize 'SWIA.Item.Weapon.FlavorPlaceholder'}}">{{systemData.description}}</textarea>
       {{else}}
       <div class="flavor-display">{{{enrichedDescription}}}</div>
       {{/if}}
     </section>
 
     <footer class="weapon-bottom-row">
-      <div class="cost-badge">
-        {{#if editMode}}
-        <label for="weapon-cost-input">{{localize "SWIA.Item.Weapon.Cost"}}</label>
-        <input id="weapon-cost-input" name="system.cost" type="number" value="{{systemData.cost}}" data-dtype="Number" min="0" />
-        {{else}}
-        <span class="cost-value">{{systemData.cost}}</span>
-        <span class="cost-label">{{localize "SWIA.Item.Weapon.Credits"}}</span>
-        {{/if}}
-      </div>
       {{#unless editMode}}
       {{#if systemData.attachmentSlots}}
       <div class="attachment-pips" title="{{localize 'SWIA.Item.Weapon.AttachmentSlots'}}: {{systemData.attachmentSlots}}">
