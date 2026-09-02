@@ -1,0 +1,36 @@
+{{!-- Condition chips. Context: conditions[], conditionChoices[], hasActionStrain,
+     hasEndOfActivation, canManage, and (portal) id — the tray carries data-actor-id
+     so the portal's click handler can resolve the actor. Buttons dispatch data-action="conditionAction"
+     with data-op; the portal resolves the actor from the enclosing [data-actor-id]. --}}
+{{#if (or conditions.length canManage)}}
+<div class="condition-tray" title="{{localize 'SWIA.Conditions.Title'}}" {{#if id}}data-actor-id="{{id}}"{{/if}}>
+  <label>{{localize "SWIA.Conditions.Title"}}</label>
+  {{#each conditions as |cond|}}
+  <span class="condition-chip {{cond.kind}}" title="{{cond.label}}{{#if cond.description}} &mdash; {{cond.description}}{{/if}}">
+    <img src="{{cond.icon}}" alt="" /><span class="condition-name">{{cond.label}}</span>
+    {{#if ../canManage}}
+    {{#if cond.spendAction}}
+    <button type="button" class="condition-btn" data-action="conditionAction" data-op="spendAction" data-condition="{{cond.id}}" title="{{localize 'SWIA.Conditions.SpendActionHint'}}"><i class="fas fa-hourglass-half"></i></button>
+    {{/if}}
+    <button type="button" class="condition-btn discard" data-action="conditionAction" data-op="discard" data-condition="{{cond.id}}" title="{{localize 'SWIA.Conditions.DiscardHint'}}">&times;</button>
+    {{/if}}
+  </span>
+  {{/each}}
+  {{#if canManage}}
+  {{#if hasActionStrain}}
+  <button type="button" class="condition-tray-btn" data-action="conditionAction" data-op="suffer" title="{{localize 'SWIA.Conditions.SufferHint'}}"><i class="fas fa-tint"></i> {{localize "SWIA.Conditions.Suffer"}}</button>
+  {{/if}}
+  {{#if hasEndOfActivation}}
+  <button type="button" class="condition-tray-btn" data-action="conditionAction" data-op="endActivation" title="{{localize 'SWIA.Conditions.EndActivationHint'}}"><i class="fas fa-flag-checkered"></i> {{localize "SWIA.Conditions.EndActivation"}}</button>
+  {{/if}}
+  {{#if conditionChoices.length}}
+  <span class="condition-add">
+    <select class="condition-add-select">
+      {{#each conditionChoices}}<option value="{{id}}">{{label}}</option>{{/each}}
+    </select>
+    <button type="button" class="condition-btn add" data-action="conditionAction" data-op="add" title="{{localize 'SWIA.Conditions.AddHint'}}">+</button>
+  </span>
+  {{/if}}
+  {{/if}}
+</div>
+{{/if}}

@@ -69,6 +69,7 @@
                 {{/each}}
               </div>
               {{/if}}
+              {{> "systems/swia/templates/actors/parts/condition-tray.hbs" actor}}
             </div>
             {{#if actor.isHero}}
             <div class="portal-xp" title="{{localize 'SWIA.Portal.UnspentXpHint'}}">

@@ -61,6 +61,9 @@ export class HeroData extends SWIAActorBase {
       affiliation: str(),
       xp: int(),
       woundedTokenImage: str(),
+      // Healthy token art, captured the moment a hero is wounded (wounding
+      // overwrites prototypeToken.texture.src) so healing can restore it.
+      healthyTokenImage: str(),
       woundedBiography: html(),
       heroAbilities: abilityList({ sourceUuid: str() }),
       woundedHeroAbilities: abilityList({ sourceUuid: str() }),

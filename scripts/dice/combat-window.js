@@ -8,11 +8,14 @@ import {
   SOCKET_NAME, CARD_TEMPLATE, renderTemplateFn, clampCount, recomputeCard,
   ATTACK_POOL_COLORS, DEFENSE_POOL_COLORS, heroWeapons, defaultWeaponId,
   buildAttackPool, buildDefensePool, attackKeywordsFor, weaponAccuracyFor,
-  armorDefenseBonusFor, gatherSurgeAbilities, setCombatStarter
+  armorDefenseBonusFor, gatherSurgeAbilities, setCombatStarter,
+  replaceFace, recomputeFaceTotals, rollReplacementDie,
+  applySurgeToState, revertSurgeOnState, exhaustSurgeSource, readySurgeSource
 } from "./roll-dialog.js";
-import { COLOR_TO_DENOM, totalSymbols, rollFaces, faceData, SWIA_DICE, symbolsLabel, dieImgPath } from "./dice-terms.js";
+import { COLOR_TO_DENOM, totalSymbols, rollFaces } from "./dice-terms.js";
 import { escapeHTML } from "../data/common.js";
 import { countPowerTokens, POWER_TOKEN_STATUS } from "../actor-actions.js";
+import { conditionEffectsFor, discardConditions, conditionLabel, getCondition } from "../conditions.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseApplication = HandlebarsApplicationMixin(ApplicationV2);
@@ -43,16 +46,28 @@ function inDeclareWindow(combat, side) {
   return combat.phase === "setup" || combat.phase === "attackRolled";
 }
 
-/** Total pre-roll bonus per stat: manual steppers + armor seed + spent tokens. */
+/**
+ * Total pre-roll bonus per stat: manual steppers + armor seed + spent tokens
+ * (that trio never drops below 0), plus the signed condition layer (Hidden
+ * +1 Surge, Weakened -1 Evade) which may pull the total negative — the
+ * result totals floor at 0 in recomputeCard.
+ */
 function totalBonus(sideData, side) {
   const out = {};
   for (const stat of SIDE_BONUS_STATS[side]) {
     out[stat] = Math.max(0,
       (sideData.manualBonus?.[stat] ?? 0)
       + (sideData.armorBonus?.[stat] ?? 0)
-      + (sideData.tokenBonus?.[stat] ?? 0));
+      + (sideData.tokenBonus?.[stat] ?? 0))
+      + (sideData.conditionBonus?.[stat] ?? 0);
   }
   return out;
+}
+
+/** Add condition dice (Focused) onto a built attack pool. */
+function withConditionDice(pool, dice) {
+  for (const c of ATTACK_POOL_COLORS) pool[c] = clampCount((pool[c] ?? 0) + (dice?.[c] ?? 0));
+  return pool;
 }
 
 function emptyBonus(side) {
@@ -178,6 +193,10 @@ async function execStart({ attackerActorId, attackerTokenUuid, defenderActorId, 
   if (!user.isGM && !userOwnsActor(user, attacker.id)) return;
 
   const weaponId = attacker.type === "hero" ? defaultWeaponId(attacker) : null;
+  // Condition rules for each side, read once at start. The defender's
+  // "attacker accuracy" shift (Hidden -2) lands on the attacker's layer.
+  const atkFx = conditionEffectsFor(attacker, "attack");
+  const defFx = conditionEffectsFor(defender, "defense");
   await setCombat({
     id: foundry.utils.randomID(),
     phase: "setup",
@@ -188,7 +207,11 @@ async function execStart({ attackerActorId, attackerTokenUuid, defenderActorId, 
       name: attacker.name,
       img: attacker.img,
       weaponId,
-      pool: buildAttackPool(attacker, weaponId),
+      pool: withConditionDice(buildAttackPool(attacker, weaponId), atkFx.dice),
+      conditionDice: atkFx.dice,
+      conditionBonus: { damage: atkFx.damage, surge: atkFx.surge, accuracy: atkFx.accuracy + defFx.attackerAccuracy },
+      conditionNotes: [...atkFx.notes, ...defFx.notes],
+      conditionDiscard: atkFx.discardIds,
       keywords: attackKeywordsFor(attacker, weaponId),
       accuracy: weaponAccuracyFor(attacker, weaponId),
       // Pre-roll bonuses are kept by source so each can be undone on its
@@ -206,6 +229,8 @@ async function execStart({ attackerActorId, attackerTokenUuid, defenderActorId, 
       name: defender.name,
       img: defender.img,
       pool: buildDefensePool(defender),
+      conditionBonus: { block: defFx.block, evade: defFx.evade },
+      conditionNotes: defFx.notes,
       manualBonus: emptyBonus("defender"),
       // Equipped armor's printed Block/Evade pre-seed the bonus row. The
       // manual stepper can pull the total back down when the printed text
@@ -224,7 +249,7 @@ async function execSetWeapon({ weaponId }, user) {
   const attacker = sideActor(combat, "attacker");
   if (!attacker || (weaponId && !attacker.items.get(weaponId))) return;
   combat.attacker.weaponId = weaponId || null;
-  combat.attacker.pool = buildAttackPool(attacker, combat.attacker.weaponId);
+  combat.attacker.pool = withConditionDice(buildAttackPool(attacker, combat.attacker.weaponId), combat.attacker.conditionDice);
   combat.attacker.keywords = attackKeywordsFor(attacker, combat.attacker.weaponId);
   combat.attacker.accuracy = weaponAccuracyFor(attacker, combat.attacker.weaponId);
   await setCombat(combat);
@@ -296,7 +321,7 @@ async function execRollAttack(_payload, user) {
     attackFaces: rollFaces(attackRoll),
     defenseFaces: [],
     damage: attackTotals.damage,
-    surge: attackTotals.surge + (pre.surge ?? 0),
+    surge: Math.max(0, attackTotals.surge + (pre.surge ?? 0)),
     accuracy: attackTotals.accuracy,
     block: 0,
     evade: 0,
@@ -315,6 +340,7 @@ async function execRollAttack(_payload, user) {
     // Declared-token shares, for the results breakdown
     tokenDamage: combat.attacker.tokenBonus?.damage ?? 0,
     tokenSurge: combat.attacker.tokenBonus?.surge ?? 0,
+    conditionNotes: [...(combat.attacker.conditionNotes ?? []), ...(combat.defender.conditionNotes ?? [])],
     rerollLocked: false,
     surgeAbilities: gatherSurgeAbilities(attacker, combat.attacker.weaponId)
   });
@@ -373,96 +399,22 @@ async function execRerollDie({ side, index }, user) {
   if (state.rerollLocked) return;
 
   const idx = Number(index);
+  if (!["attack", "defense"].includes(side)) return;
 
-  if (side === "attack") {
-    if (!["attackRolled", "rolled"].includes(combat.phase)) return;
-    if (!canControl(user, combat, "attacker")) return;
-    const faces = state.attackFaces;
-    if (!faces?.[idx] || !faces[idx].denom) return;
+  // Attack dice reroll from the attack roll onward; defense dice only once rolled.
+  const combatSide = side === "attack" ? "attacker" : "defender";
+  const phases = side === "attack" ? ["attackRolled", "rolled"] : ["rolled"];
+  if (!phases.includes(combat.phase) || !canControl(user, combat, combatSide)) return;
 
-    const face = faces[idx];
-    const roll = await new Roll(`1d${face.denom}`).evaluate();
-    const attacker = sideActor(combat, "attacker");
-    await ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor: attacker }),
-      rolls: [roll],
-      flavor: game.i18n.format("SWIA.Combat.RerollFlavor", { name: escapeHTML(combat.attacker.name) }),
-      sound: CONFIG.sounds.dice
-    });
+  const faces = side === "attack" ? state.attackFaces : state.defenseFaces;
+  const face = faces?.[idx];
+  if (!face?.denom) return;
 
-    const newResult = roll.dice[0].results[0].result;
-    const newFace = faceData(face.denom, newResult);
-    if (!newFace) return;
-    faces[idx] = {
-      img: dieImgPath(newFace.img),
-      label: symbolsLabel(newFace.symbols),
-      color: SWIA_DICE[face.denom].color,
-      denom: face.denom,
-      resultNum: newResult,
-      rerolled: true
-    };
-
-    // Recompute attack totals from all current faces
-    let totalDmg = 0, totalSrg = 0, totalAcc = 0;
-    for (const f of faces) {
-      if (!f.denom || f.resultNum == null) continue;
-      const fd = faceData(f.denom, f.resultNum);
-      if (fd) {
-        totalDmg += fd.symbols.damage ?? 0;
-        totalSrg += fd.symbols.surge ?? 0;
-        totalAcc += fd.symbols.accuracy ?? 0;
-      }
-    }
-    state.damage = totalDmg;
-    state.surge = totalSrg + (state.preBonusSurge ?? 0);
-    state.accuracy = totalAcc;
-    recomputeCard(state);
-
-  } else if (side === "defense") {
-    if (combat.phase !== "rolled") return;
-    if (!canControl(user, combat, "defender")) return;
-    const faces = state.defenseFaces;
-    if (!faces?.[idx] || !faces[idx].denom) return;
-
-    const face = faces[idx];
-    const roll = await new Roll(`1d${face.denom}`).evaluate();
-    const defender = sideActor(combat, "defender");
-    await ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor: defender }),
-      rolls: [roll],
-      flavor: game.i18n.format("SWIA.Combat.RerollFlavor", { name: escapeHTML(combat.defender.name) }),
-      sound: CONFIG.sounds.dice
-    });
-
-    const newResult = roll.dice[0].results[0].result;
-    const newFace = faceData(face.denom, newResult);
-    if (!newFace) return;
-    faces[idx] = {
-      img: dieImgPath(newFace.img),
-      label: symbolsLabel(newFace.symbols),
-      color: SWIA_DICE[face.denom].color,
-      denom: face.denom,
-      resultNum: newResult,
-      rerolled: true
-    };
-
-    // Recompute defense totals from all current faces
-    // bonusBlock/bonusEvade already include preBonus + any token spends; just update raw dice values
-    let totalBlk = 0, totalEvd = 0, totalDdg = 0;
-    for (const f of faces) {
-      if (!f.denom || f.resultNum == null) continue;
-      const fd = faceData(f.denom, f.resultNum);
-      if (fd) {
-        totalBlk += fd.symbols.block ?? 0;
-        totalEvd += fd.symbols.evade ?? 0;
-        totalDdg += fd.symbols.dodge ?? 0;
-      }
-    }
-    state.block = totalBlk;
-    state.evade = totalEvd;
-    state.dodge = totalDdg;
-    recomputeCard(state);
-  }
+  // Shared with the solo chat card: roll the replacement, swap the face,
+  // recompute raw dice totals (pre-roll bonuses are preserved).
+  const newResult = await rollReplacementDie(face, sideActor(combat, combatSide), combat[combatSide].name);
+  if (!replaceFace(faces, idx, newResult)) return;
+  recomputeFaceTotals(state, side);
 
   await setCombat(combat);
 }
@@ -471,39 +423,12 @@ async function execSpendSurge({ index }, user) {
   const combat = getCombat();
   if (!combat || combat.phase !== "rolled" || !canControl(user, combat, "attacker")) return;
   const state = combat.result;
-  const ability = state?.surgeAbilities?.[Number(index)];
-  if (!ability || ability.spent || ability.cost > state.usableSurge) return;
-
-  ability.spent = true;
-  state.spentSurge += ability.cost;
-  state.rerollLocked = true;
-  for (const fx of ability.effects ?? []) {
-    if (fx.type === "damage") state.bonusDamage += fx.value;
-    else if (fx.type === "accuracy") state.bonusAccuracy += fx.value;
-    else if (fx.type === "pierce") state.bonusPierce += fx.value;
-  }
-  // Exhaust-to-use: spending consumes the source card; undo readies it back.
-  if (ability.exhaustToUse && ability.sourceItemId) {
-    try {
-      const attackerActor = sideActor(combat, "attacker");
-      const sourceItem = attackerActor?.items?.get(ability.sourceItemId);
-      if (sourceItem && (sourceItem.system?.cardState ?? "ready") === "ready") {
-        await sourceItem.update({ "system.cardState": "exhausted" });
-        ability.exhaustedItemId = sourceItem.id;
-      }
-    } catch (err) {
-      console.warn("SWIA | could not exhaust surge source", err);
-    }
-  }
-  recomputeCard(state);
+  // Shared with the solo chat card: mark spent, apply effects, lock rerolls
+  // (a spend is the one thing a reroll can't undo; declared power tokens
+  // never lock them). Exhaust-to-use flips the source card; undo readies it.
+  if (!applySurgeToState(state, index)) return;
+  await exhaustSurgeSource(sideActor(combat, "attacker"), state.surgeAbilities[Number(index)]);
   await setCombat(combat);
-}
-
-// Rerolls stay available until something irreversible-by-reroll is committed:
-// a spent surge ability. (Power tokens are declared before the roll, so they
-// never lock rerolls.) Unspending a surge rechecks this so rerolls come back.
-function hasCommittedSpends(state) {
-  return (state.surgeAbilities ?? []).some((a) => a.spent);
 }
 
 async function execUnspendSurge({ index }, user) {
@@ -512,26 +437,8 @@ async function execUnspendSurge({ index }, user) {
   if (!canControl(user, combat, "attacker")) return;
   const state = combat.result;
   const ability = state?.surgeAbilities?.[Number(index)];
-  if (!ability?.spent) return;
-
-  ability.spent = false;
-  state.spentSurge = Math.max(0, state.spentSurge - ability.cost);
-  for (const fx of ability.effects ?? []) {
-    if (fx.type === "damage") state.bonusDamage = Math.max(0, state.bonusDamage - fx.value);
-    else if (fx.type === "accuracy") state.bonusAccuracy = Math.max(0, state.bonusAccuracy - fx.value);
-    else if (fx.type === "pierce") state.bonusPierce = Math.max(0, state.bonusPierce - fx.value);
-  }
-  // Undo the auto-exhaust that this spend caused (if any)
-  if (ability.exhaustedItemId) {
-    const attackerActor = sideActor(combat, "attacker");
-    const sourceItem = attackerActor?.items?.get(ability.exhaustedItemId);
-    if (sourceItem && sourceItem.system?.cardState === "exhausted") {
-      await sourceItem.update({ "system.cardState": "ready" });
-    }
-    ability.exhaustedItemId = null;
-  }
-  state.rerollLocked = hasCommittedSpends(state);
-  recomputeCard(state);
+  if (!revertSurgeOnState(state, index)) return;
+  await readySurgeSource(sideActor(combat, "attacker"), ability);
   await setCombat(combat);
 }
 
@@ -633,12 +540,15 @@ async function execApplyDamage(_payload, user) {
   const current = Number(foundry.utils.getProperty(defender, `${path}.value`)) || 0;
   await defender.update({ [`${path}.value`]: Math.max(0, current - state.netDamage) });
 
-  // Summary chat card (read-only: no flags, all surge buttons disabled)
+  // Summary chat card (read-only: no flags, no reroll/undo buttons, all
+  // surge buttons disabled)
   const summary = foundry.utils.deepClone(state);
   summary.title = game.i18n.format("SWIA.Combat.SummaryTitle", {
     attacker: combat.attacker.name,
     defender: combat.defender.name
   });
+  summary.readOnly = true;
+  recomputeCard(summary); // derives canReroll=false from readOnly
   for (const ability of summary.surgeAbilities ?? []) ability.affordable = false;
   const content = await renderTemplateFn(CARD_TEMPLATE, summary);
   const attacker = sideActor(combat, "attacker");
@@ -651,6 +561,18 @@ async function execApplyDamage(_payload, user) {
     damage: state.netDamage,
     name: combat.defender.name
   }));
+
+  // The attack has resolved: the attacker's Focused/Hidden-style conditions
+  // come off. (Cancel never reaches here, so a cancelled attack keeps them.)
+  if (combat.attacker.conditionDiscard?.length) {
+    const removed = await discardConditions(attacker, combat.attacker.conditionDiscard);
+    if (removed.length) {
+      ui.notifications?.info(game.i18n.format("SWIA.Conditions.Discarded", {
+        name: combat.attacker.name,
+        list: removed.map((id) => conditionLabel(getCondition(id))).join(", ")
+      }));
+    }
+  }
   await setCombat(null);
 }
 
@@ -761,14 +683,15 @@ export class SWIACombatWindow extends BaseApplication {
         const manual = sideData.manualBonus?.[stat] ?? 0;
         const armor = sideData.armorBonus?.[stat] ?? 0;
         const token = sideData.tokenBonus?.[stat] ?? 0;
+        const condition = sideData.conditionBonus?.[stat] ?? 0;
         const spent = sideData.spentTokens?.[stat]?.length ?? 0;
         const takesTokens = SIDE_TOKEN_STATS[side].includes(stat);
         const label = game.i18n.localize(`SWIA.Dice.${stat.charAt(0).toUpperCase()}${stat.slice(1)}`);
         return {
           side, stat, label,
           count: totals[stat],
-          manual, armor, token,
-          breakdown: game.i18n.format("SWIA.Combat.BonusBreakdown", { manual, armor, token }),
+          manual, armor, token, condition,
+          breakdown: game.i18n.format("SWIA.Combat.BonusBreakdown", { manual, armor, token, condition }),
           takesTokens,
           typedTokens: takesTokens ? (held[stat] ?? 0) : 0,
           anyTokens: takesTokens ? (held.any ?? 0) : 0,

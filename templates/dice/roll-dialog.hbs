@@ -7,6 +7,13 @@
     {{/if}}
   </header>
 
+  {{#if showConditions}}
+  <p class="roll-conditions" title="{{localize 'SWIA.Conditions.RollHint'}}">
+    <i class="fas fa-notes-medical"></i> {{localize "SWIA.Conditions.Title"}}:
+    {{#each conditionNotes}}<span class="roll-condition-note">{{{this}}}</span>{{/each}}
+  </p>
+  {{/if}}
+
   {{#if showWeaponSelect}}
   <div class="roll-weapon-row">
     <label>{{localize "SWIA.Roll.Weapon"}}</label>
@@ -50,6 +57,36 @@
       </div>
       {{/each}}
     </div>
+  </fieldset>
+  {{/if}}
+
+  {{#if showTokens}}
+  <fieldset class="roll-pool roll-tokens">
+    <legend>{{localize "SWIA.Roll.DeclareTokens"}}</legend>
+    <p class="roll-tokens-hint">{{localize "SWIA.Roll.DeclareTokensHint"}}</p>
+    <div class="roll-pool-grid">
+      {{#each tokenRows}}
+      <div class="roll-pool-row roll-token-row {{#if declared}}has-declared{{/if}}">
+        <span class="pool-label"><img class="roll-token-icon" src="{{icon}}" alt="" />{{label}}</span>
+        {{#if typedHeld}}
+        <span class="roll-token-stepper" title="{{localize 'SWIA.Roll.TypedTokensHeld' label=label count=typedHeld}}">
+          <button type="button" class="pool-adjust" data-action="adjustToken" data-stat="{{stat}}" data-kind="typed" data-delta="-1" {{#unless typed}}disabled{{/unless}}>&minus;</button>
+          <span class="pool-count {{#if typed}}has-bonus{{/if}}">{{typed}}<small>/{{typedHeld}}</small></span>
+          <button type="button" class="pool-adjust" data-action="adjustToken" data-stat="{{stat}}" data-kind="typed" data-delta="1" {{#unless canAddTyped}}disabled{{/unless}}>+</button>
+        </span>
+        {{/if}}
+        {{#if anyHeld}}
+        <span class="roll-token-stepper any" title="{{localize 'SWIA.Roll.AnyTokensAs' label=label}}">
+          <img class="roll-token-icon" src="{{anyIcon}}" alt="" />
+          <button type="button" class="pool-adjust" data-action="adjustToken" data-stat="{{stat}}" data-kind="any" data-delta="-1" {{#unless any}}disabled{{/unless}}>&minus;</button>
+          <span class="pool-count {{#if any}}has-bonus{{/if}}">{{any}}</span>
+          <button type="button" class="pool-adjust" data-action="adjustToken" data-stat="{{stat}}" data-kind="any" data-delta="1" {{#unless canAddAny}}disabled{{/unless}}>+</button>
+        </span>
+        {{/if}}
+      </div>
+      {{/each}}
+    </div>
+    {{#if anyHeld}}<p class="roll-tokens-hint">{{localize "SWIA.Roll.AnyTokensHeld" count=anyHeld}}</p>{{/if}}
   </fieldset>
   {{/if}}
 

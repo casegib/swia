@@ -5,7 +5,8 @@ import { bindCardPreviews, hideCardPreview, destroyCardPreview, postItemCardFrom
 import {
   canManageActor, requestWoundedState, setDefeatedState, adjustActorStat,
   adjustActorXp, toggleArmorEquipped, readyAllItemsWithNotice, READY_ALL_TYPES,
-  powerTokenRows, grantPowerToken, removePowerToken
+  powerTokenRows, grantPowerToken, removePowerToken,
+  conditionRows, conditionChoices, hasEndOfActivationConditions, runConditionAction
 } from "./actor-actions.js";
 
 // Foundry v13+ ApplicationV2 base
@@ -37,6 +38,7 @@ export class SWIAPlayerPortal extends BaseApplication {
       toggleDefeated: SWIAPlayerPortal.prototype._onToggleDefeated,
       toggleEquipArmor: SWIAPlayerPortal.prototype._onToggleEquipArmor,
       adjustPowerToken: SWIAPlayerPortal.prototype._onAdjustPowerToken,
+      conditionAction: SWIAPlayerPortal.prototype._onConditionAction,
       readyAllItems: SWIAPlayerPortal.prototype._onReadyAllItems,
       postItemCard: SWIAPlayerPortal.prototype._onPostItemCard
     }
@@ -393,6 +395,10 @@ export class SWIAPlayerPortal extends BaseApplication {
       armorEvade: armorFx.evade,
       powerTokens: powerTokenRows(actor, { editable: Boolean(game.user?.isGM) }),
       canEditTokens: Boolean(game.user?.isGM),
+      conditions: conditionRows(actor),
+      conditionChoices: conditionChoices(actor),
+      hasActionStrain: conditionRows(actor).some((c) => c.actionStrain > 0),
+      hasEndOfActivation: hasEndOfActivationConditions(actor),
       attackRedDice: Array.from({ length: attack.red || 0 }, (_, i) => i),
       attackBlueDice: Array.from({ length: attack.blue || 0 }, (_, i) => i),
       attackGreenDice: Array.from({ length: attack.green || 0 }, (_, i) => i),
@@ -554,6 +560,15 @@ export class SWIAPlayerPortal extends BaseApplication {
     const delta = Number(target?.dataset?.delta) || 0;
     if (delta > 0) await grantPowerToken(actor, type);
     else if (delta < 0) await removePowerToken(actor, type);
+  }
+
+  // Condition chips (shared helpers with the actor sheet).
+  async _onConditionAction(event, target) {
+    event.preventDefault();
+    event.stopPropagation();
+    const actor = this._manageableActor(target ?? event.currentTarget);
+    if (!actor) return;
+    await runConditionAction(actor, target, target?.closest?.(".condition-tray") ?? this.element);
   }
 
   async _onAdjustXp(event, target) {

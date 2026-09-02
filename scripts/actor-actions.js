@@ -4,6 +4,10 @@
 // is clicked.
 
 import { escapeHTML, armorEffectsFor } from "./data/common.js";
+import {
+  allConditions, actorConditions, conditionLabel, conditionDescription,
+  addCondition, discardCondition, endActivationConditions, actionStrainFor
+} from "./conditions.js";
 
 /** Card types that participate in the ready/exhausted/depleted cycle. */
 export const READY_ALL_TYPES = ["weapon", "weaponmod", "armor", "classcard", "gear"];
@@ -18,19 +22,22 @@ export function canManageActor(actor) {
 /* ------------------------------------------------------------------ */
 
 /**
- * Healthy token art. Deliberately prefers actor.img over the prototype token:
- * wounding OVERWRITES prototypeToken.texture.src with the wounded art, so by
- * the time we heal, the prototype no longer remembers the healthy image.
- * actor.img is the one field the wound cycle never touches.
+ * Healthy token art.
  *
- * Known limitation: a GM who set distinct token art (different from the
- * portrait) loses it on the first wound/heal cycle. The real fix is a stored
- * system.healthyTokenImage captured before the first wound — see BACKLOG.md.
- * Do NOT "fix" this by reading prototypeToken first; that makes healing
- * restore the wounded art.
+ * While a hero is healthy the prototype token IS the healthy art (a GM may
+ * have set it distinct from the portrait through Foundry's token config).
+ * Wounding overwrites prototypeToken.texture.src with the wounded art, so
+ * while wounded we read the copy setWoundedState stashed in
+ * system.healthyTokenImage — never the prototype, which would make healing
+ * restore the wounded art. Heroes wounded before that field existed fall
+ * back to the portrait, as before.
  */
 export function getHealthyTokenSrc(actor) {
-  return actor?.img || actor?.prototypeToken?.texture?.src || "";
+  if (!actor) return "";
+  const proto = actor.prototypeToken?.texture?.src || "";
+  const wounded = actor.type === "hero" && actor.system?.state?.wounded;
+  if (wounded) return actor.system?.healthyTokenImage || actor.img || proto || "";
+  return proto || actor.img || "";
 }
 
 export function getWoundedTokenSrc(actor) {
@@ -87,6 +94,14 @@ export async function setWoundedState(actor, wounded) {
   const nextTokenSrc = wounded ? getWoundedTokenSrc(actor) : getHealthyTokenSrc(actor);
   const update = { "system.state.wounded": wounded };
   if (!wounded) update["system.state.defeated"] = false;
+
+  // Going healthy -> wounded overwrites the prototype token art below, so
+  // stash the current healthy art first (refreshed on every wound, so token
+  // art changed while healthy is what comes back on heal).
+  if (wounded && !actor.system?.state?.wounded) {
+    const healthy = actor.prototypeToken?.texture?.src || actor.img || "";
+    if (healthy) update["system.healthyTokenImage"] = healthy;
+  }
 
   if (wounded) {
     const wMax = actor.system.woundedAttributes?.health?.max ?? actor.system.woundedAttributes?.health?.value ?? 0;
@@ -163,6 +178,148 @@ export async function adjustActorStat(actor, stat, delta) {
 
   await actor.update({ [`${path}.value`]: next });
   return true;
+}
+
+/* ------------------------------------------------------------------ */
+/* Conditions (chips on the sheet header and the portal card)          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Display rows for an actor's condition chips. Each carries the manual
+ * controls the sheet/portal offer for it: Discard (always), Spend Action
+ * (Bleeding/Stunned), Suffer strain (Bleeding), plus flags for the
+ * end-of-activation button on the tray.
+ */
+export function conditionRows(actor) {
+  return actorConditions(actor).map((c) => ({
+    id: c.id,
+    label: conditionLabel(c),
+    description: conditionDescription(c),
+    icon: c.img,
+    kind: c.kind,
+    spendAction: c.discard.spendAction,
+    actionStrain: c.actionStrain,
+    endOfActivation: c.discard.endOfActivation
+  }));
+}
+
+/** Choices for the "add condition" picker: everything not already on the actor. */
+export function conditionChoices(actor) {
+  const held = new Set(actorConditions(actor).map((c) => c.id));
+  return allConditions()
+    .filter((c) => !held.has(c.id))
+    .map((c) => ({ id: c.id, label: conditionLabel(c), kind: c.kind }));
+}
+
+/** True when any held condition discards at end of activation. */
+export function hasEndOfActivationConditions(actor) {
+  return actorConditions(actor).some((c) => c.discard.endOfActivation);
+}
+
+export async function applyCondition(actor, id) {
+  return addCondition(actor, id);
+}
+
+export async function removeCondition(actor, id) {
+  return discardCondition(actor, id);
+}
+
+/**
+ * "A figure can spend 1 action to discard this condition." The action
+ * itself isn't tracked; this just records the choice and clears the card.
+ */
+export async function spendActionToDiscard(actor, id) {
+  if (!actor) return false;
+  const removed = await discardCondition(actor, id);
+  if (removed) {
+    ui.notifications?.info(game.i18n.format("SWIA.Conditions.SpentAction", {
+      name: actor.name, label: conditionLabel(actorConditionById(id))
+    }));
+  }
+  return removed;
+}
+
+function actorConditionById(id) {
+  return allConditions().find((c) => c.id === id) ?? null;
+}
+
+/**
+ * Bleeding: "Whenever you perform an action, you must suffer 1 strain (or
+ * 1 damage if you are at maximum strain)." Endurance counts down in this
+ * system, so max strain == endurance.value 0. Applies every held
+ * condition's actionStrain in one go and reports what happened.
+ */
+export async function sufferActionStrain(actor) {
+  if (!actor) return null;
+  const total = actionStrainFor(actor);
+  if (!total) return null;
+  const wounded = actor.type === "hero" && actor.system?.state?.wounded;
+  const base = wounded ? "system.woundedAttributes" : "system.attributes";
+  const endurance = Number(foundry.utils.getProperty(actor, `${base}.endurance.value`)) || 0;
+  const health = Number(foundry.utils.getProperty(actor, `${base}.health.value`)) || 0;
+  const strain = Math.min(total, endurance);
+  const damage = total - strain;
+  const update = {};
+  if (strain) update[`${base}.endurance.value`] = endurance - strain;
+  if (damage) update[`${base}.health.value`] = Math.max(0, health - damage);
+  if (Object.keys(update).length) await actor.update(update);
+  const parts = [];
+  if (strain) parts.push(game.i18n.format("SWIA.Conditions.StrainSuffered", { count: strain }));
+  if (damage) parts.push(game.i18n.format("SWIA.Conditions.DamageSuffered", { count: damage }));
+  ui.notifications?.info(`${actor.name}: ${parts.join(", ")}`);
+  return { strain, damage };
+}
+
+/** End of activation: discard Weakened-style conditions. */
+export async function endActivation(actor) {
+  if (!actor) return [];
+  const removed = await endActivationConditions(actor);
+  if (removed.length) {
+    ui.notifications?.info(game.i18n.format("SWIA.Conditions.Discarded", {
+      name: actor.name,
+      list: removed.map((id) => conditionLabel(actorConditionById(id))).join(", ")
+    }));
+  }
+  return removed;
+}
+
+/**
+ * One dispatcher for every condition button on the sheet and the portal.
+ * `target` carries data-op (discard | spendAction | suffer | endActivation |
+ * add) and, for per-condition ops, data-condition. "add" reads the picker
+ * <select class="condition-add-select"> inside `scope`.
+ */
+export async function runConditionAction(actor, target, scope = null) {
+  if (!actor || !canManageActor(actor)) return false;
+  const op = target?.dataset?.op;
+  const id = target?.dataset?.condition;
+  switch (op) {
+    case "discard":
+      return removeCondition(actor, id);
+    case "spendAction": {
+      const confirmed = await foundry.applications.api.DialogV2.confirm({
+        window: { title: game.i18n.localize("SWIA.Conditions.SpendActionTitle") },
+        content: `<p>${game.i18n.format("SWIA.Conditions.SpendActionConfirm", {
+          name: escapeHTML(actor.name), label: escapeHTML(conditionLabel(actorConditionById(id)))
+        })}</p>`,
+        rejectClose: false
+      });
+      if (!confirmed) return false;
+      return spendActionToDiscard(actor, id);
+    }
+    case "suffer":
+      return sufferActionStrain(actor);
+    case "endActivation":
+      return endActivation(actor);
+    case "add": {
+      const select = scope?.querySelector?.(".condition-add-select")
+        ?? target?.closest?.(".condition-tray")?.querySelector?.(".condition-add-select");
+      const pick = select?.value;
+      if (!pick) return false;
+      return applyCondition(actor, pick);
+    }
+  }
+  return false;
 }
 
 /** Nudge a hero's XP. Campaign Tracker reads/writes this same field. */
@@ -355,6 +512,16 @@ function isOwnArmorChange(item, userId) {
     && item.parent?.documentName === "Actor"
     && userId === game.user?.id;
 }
+
+// Flipping the activation token to "activated" IS the end of that figure's
+// activation, so Weakened-style conditions come off then. Runs only on the
+// client that made the change, so it fires once.
+Hooks.on("updateActor", (actor, changes, options, userId) => {
+  if (userId !== game.user?.id) return;
+  if (foundry.utils.getProperty(changes, "system.state.activated") !== true) return;
+  if (!hasEndOfActivationConditions(actor)) return;
+  endActivation(actor).catch((err) => console.warn("SWIA | end-of-activation discard failed", err));
+});
 
 Hooks.on("preUpdateItem", (item, changes, options) => {
   if (item?.type !== "armor" || item.parent?.documentName !== "Actor") return;

@@ -1,0 +1,87 @@
+<div class="swia-conditions-body">
+  <p class="conditions-hint">{{localize "SWIA.Conditions.ConfigHint"}}</p>
+
+  <div class="conditions-builtins">
+    <span class="conditions-builtins-label">{{localize "SWIA.Conditions.BuiltIn"}}</span>
+    {{#each builtins}}
+    <span class="condition-chip builtin" title="{{id}}"><img src="{{img}}" alt="" />{{name}}</span>
+    {{/each}}
+  </div>
+
+  {{#if rows.length}}
+  <div class="conditions-rows">
+    {{#each rows}}
+    <fieldset class="condition-row" data-row-index="{{index}}">
+      <legend>
+        <img class="condition-icon-preview" src="{{img}}" alt="" />
+        <span>{{#if name}}{{name}}{{else}}{{localize "SWIA.Conditions.Unnamed"}}{{/if}}</span>
+        <button type="button" class="condition-remove" data-action="removeCondition" data-index="{{index}}" title="{{localize 'SWIA.Conditions.Remove'}}"><i class="fas fa-trash"></i></button>
+      </legend>
+
+      <div class="condition-grid identity">
+        <label>{{localize "SWIA.Conditions.Field.Name"}}<input type="text" name="name" value="{{name}}" /></label>
+        <label>{{localize "SWIA.Conditions.Field.Id"}}<input type="text" name="id" value="{{id}}" placeholder="marked" /></label>
+        <label>{{localize "SWIA.Conditions.Field.Kind"}}
+          <select name="kind">
+            {{#each ../kinds}}<option value="{{value}}" {{#if (eq value ../kind)}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </label>
+        <label class="icon-field">{{localize "SWIA.Conditions.Field.Icon"}}
+          <span class="icon-input">
+            <input type="text" name="img" value="{{img}}" />
+            <button type="button" data-action="pickIcon" data-index="{{index}}" title="{{localize 'SWIA.Conditions.PickIcon'}}"><i class="fas fa-file-image"></i></button>
+          </span>
+        </label>
+        <label class="wide">{{localize "SWIA.Conditions.Field.Description"}}<input type="text" name="description" value="{{description}}" /></label>
+      </div>
+
+      <div class="condition-grid rules">
+        <div class="rule-group">
+          <span class="rule-title">{{localize "SWIA.Conditions.Group.AttackDice"}}</span>
+          {{#each ../diceColors as |color|}}
+          <label class="die-field"><span class="dice-block {{color}}"></span><input type="number" min="0" max="9" name="attackDice.{{color}}" value="{{lookup ../attackDice color}}" /></label>
+          {{/each}}
+        </div>
+        <div class="rule-group">
+          <span class="rule-title">{{localize "SWIA.Conditions.Group.TestDice"}}</span>
+          {{#each ../diceColors as |color|}}
+          <label class="die-field"><span class="dice-block {{color}}"></span><input type="number" min="0" max="9" name="testDice.{{color}}" value="{{lookup ../testDice color}}" /></label>
+          {{/each}}
+        </div>
+        <div class="rule-group">
+          <span class="rule-title">{{localize "SWIA.Conditions.Group.Attacking"}}</span>
+          <label>{{localize "SWIA.Dice.Damage"}}<input type="number" name="attack.damage" value="{{attack.damage}}" /></label>
+          <label>{{localize "SWIA.Dice.Surge"}}<input type="number" name="attack.surge" value="{{attack.surge}}" /></label>
+          <label>{{localize "SWIA.Dice.Accuracy"}}<input type="number" name="attack.accuracy" value="{{attack.accuracy}}" /></label>
+        </div>
+        <div class="rule-group">
+          <span class="rule-title">{{localize "SWIA.Conditions.Group.Defending"}}</span>
+          <label>{{localize "SWIA.Dice.Block"}}<input type="number" name="defense.block" value="{{defense.block}}" /></label>
+          <label>{{localize "SWIA.Dice.Evade"}}<input type="number" name="defense.evade" value="{{defense.evade}}" /></label>
+          <label title="{{localize 'SWIA.Conditions.AttackerAccuracyHint'}}">{{localize "SWIA.Conditions.AttackerAccuracy"}}<input type="number" name="defense.accuracy" value="{{defense.accuracy}}" /></label>
+        </div>
+        <div class="rule-group">
+          <span class="rule-title">{{localize "SWIA.Conditions.Group.Discard"}}</span>
+          <label class="check"><input type="checkbox" name="discard.afterAttack" {{#if discard.afterAttack}}checked{{/if}} />{{localize "SWIA.Conditions.Discard.AfterAttack"}}</label>
+          <label class="check"><input type="checkbox" name="discard.afterTest" {{#if discard.afterTest}}checked{{/if}} />{{localize "SWIA.Conditions.Discard.AfterTest"}}</label>
+          <label class="check"><input type="checkbox" name="discard.endOfActivation" {{#if discard.endOfActivation}}checked{{/if}} />{{localize "SWIA.Conditions.Discard.EndOfActivation"}}</label>
+          <label class="check"><input type="checkbox" name="discard.spendAction" {{#if discard.spendAction}}checked{{/if}} />{{localize "SWIA.Conditions.Discard.SpendAction"}}</label>
+        </div>
+        <div class="rule-group">
+          <span class="rule-title">{{localize "SWIA.Conditions.Group.Other"}}</span>
+          <label class="check"><input type="checkbox" name="cannotAttack" {{#if cannotAttack}}checked{{/if}} />{{localize "SWIA.Conditions.CannotAttack"}}</label>
+          <label title="{{localize 'SWIA.Conditions.ActionStrainHint'}}">{{localize "SWIA.Conditions.ActionStrain"}}<input type="number" min="0" name="actionStrain" value="{{actionStrain}}" /></label>
+        </div>
+      </div>
+    </fieldset>
+    {{/each}}
+  </div>
+  {{else}}
+  <p class="conditions-empty">{{localize "SWIA.Conditions.NoCustom"}}</p>
+  {{/if}}
+
+  <footer class="conditions-actions">
+    <button type="button" data-action="addCondition"><i class="fas fa-plus"></i> {{localize "SWIA.Conditions.Add"}}</button>
+    <button type="submit"><i class="fas fa-save"></i> {{localize "SWIA.Conditions.Save"}}</button>
+  </footer>
+</div>

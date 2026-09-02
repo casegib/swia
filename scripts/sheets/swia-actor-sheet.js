@@ -6,7 +6,9 @@ import {
   getHealthyTokenSrc, getWoundedTokenSrc, syncActiveTokenTextures,
   requestWoundedState, setDefeatedState, adjustActorStat,
   toggleArmorEquipped, readyAllItemsWithNotice,
-  powerTokenRows, grantPowerToken, removePowerToken
+  powerTokenRows, grantPowerToken, removePowerToken,
+  conditionRows, conditionChoices, hasEndOfActivationConditions,
+  runConditionAction
 } from "../actor-actions.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -180,6 +182,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       cycleItemState: SWIAActorSheet.prototype._onCycleItemState,
       toggleEquipArmor: SWIAActorSheet.prototype._onToggleEquipArmor,
       adjustPowerToken: SWIAActorSheet.prototype._onAdjustPowerToken,
+      conditionAction: SWIAActorSheet.prototype._onConditionAction,
       readyAllItems: SWIAActorSheet.prototype._onReadyAllItems,
       postItemCard: SWIAActorSheet.prototype._onPostItemCard,
       detachMod: SWIAActorSheet.prototype._onDetachMod,
@@ -723,6 +726,11 @@ export class SWIAActorSheet extends BaseActorSheet {
       armorEvade: armorFx.evade,
       powerTokens: powerTokenRows(actor, { editable: Boolean(game.user?.isGM) }),
       canEditTokens: Boolean(game.user?.isGM),
+      conditions: conditionRows(actor),
+      conditionChoices: conditionChoices(actor),
+      hasActionStrain: conditionRows(actor).some((c) => c.actionStrain > 0),
+      hasEndOfActivation: hasEndOfActivationConditions(actor),
+      canManage: Boolean(game.user?.isGM || actor.isOwner),
       attackRedDice: SWIAActorSheet._diceArray(attack.red),
       attackBlueDice: SWIAActorSheet._diceArray(attack.blue),
       attackGreenDice: SWIAActorSheet._diceArray(attack.green),
@@ -1130,6 +1138,15 @@ export class SWIAActorSheet extends BaseActorSheet {
     const delta = Number(target?.dataset?.delta) || 0;
     if (delta > 0) await grantPowerToken(actor, type);
     else if (delta < 0) await removePowerToken(actor, type);
+  }
+
+  // Condition chips: discard / spend action / suffer strain / end activation /
+  // add (GM or owner; shared helpers with the portal).
+  async _onConditionAction(event, target) {
+    event.preventDefault();
+    const actor = this.document ?? this.actor;
+    if (!(game.user?.isGM || actor?.isOwner)) return;
+    await runConditionAction(actor, target, this.element);
   }
 
   // Armor equip toggle: flips system.equipped.

@@ -21,6 +21,7 @@ import {
 import { registerRollCardHooks } from "./dice/roll-dialog.js";
 import { registerCombatHooks, SWIACombatWindow } from "./dice/combat-window.js";
 import { definePowerTokenActorClass, registerPowerTokenBadgeHooks } from "./token-badge.js";
+import { registerConditionSettings, rebuildConditionRegistry, applyStatusEffects } from "./conditions.js";
 
 // Foundry v13+ namespaced APIs (system.json minimum is v13)
 // The appv1 sheet classes are referenced only to unregister the core-registered defaults.
@@ -50,26 +51,9 @@ const DEFAULT_CAMPAIGN_RESOURCES = {
   missions: []
 };
 
-// Defined at module scope so both init and setup hooks can apply it,
-// ensuring it survives any module init hooks that overwrite CONFIG.statusEffects.
-const SWIA_STATUS_EFFECTS = [
-  // Combat Conditions
-  { id: "weakened", name: "SWIA.Conditions.Weakened", img: "systems/swia/icons/Weaken.png" },
-  { id: "stunned",  name: "SWIA.Conditions.Stunned",  img: "systems/swia/icons/Stunned.png" },
-  { id: "bleeding", name: "SWIA.Conditions.Bleeding", img: "systems/swia/icons/Bleeding.png" },
-  { id: "focused",  name: "SWIA.Conditions.Focused",  img: "systems/swia/icons/Focused.png" },
-  { id: "hidden",   name: "SWIA.Conditions.Hidden",   img: "systems/swia/icons/Hidden.png" },
-  { id: "blind",    name: "SWIA.Conditions.Blind",    img: "systems/swia/icons/Blind.png" },
-  { id: "scanned",  name: "SWIA.Conditions.Scanned",  img: "systems/swia/icons/Scanned.png" },
-  { id: "recon",    name: "SWIA.Conditions.Recon",    img: "systems/swia/icons/Recon.png" },
-  { id: "wanted",   name: "SWIA.Conditions.Wanted",   img: "systems/swia/icons/Wanted.png" },
-  // Power Tokens
-  { id: "power-block",  name: "SWIA.PowerTokens.BlockToken",  img: "systems/swia/icons/Power Block Token.png" },
-  { id: "power-damage", name: "SWIA.PowerTokens.DamageToken", img: "systems/swia/icons/Power Damage Token.png" },
-  { id: "power-evade",  name: "SWIA.PowerTokens.EvadeToken",  img: "systems/swia/icons/Power Evade Token.png" },
-  { id: "power-surge",  name: "SWIA.PowerTokens.SurgeToken",  img: "systems/swia/icons/Power Surge Token.png" },
-  { id: "power-any",    name: "SWIA.PowerTokens.AnyToken",    img: "systems/swia/icons/Power Any Token.png" }
-];
+// Status effects (conditions + power tokens) are owned by scripts/conditions.js;
+// applyStatusEffects() runs at init and again at setup so no module init hook
+// can overwrite the list.
 
 async function migrateLegacyAbilityItems() {
   if (!game.user?.isGM) return;
@@ -197,8 +181,11 @@ Hooks.once("init", async function initSWIA() {
     default: DEFAULT_CAMPAIGN_RESOURCES
   });
 
-  // Configure SWIA-specific status effects (conditions and power tokens)
-  CONFIG.statusEffects = SWIA_STATUS_EFFECTS;
+  // Conditions: registry (built-ins + the custom world setting) and the
+  // GM settings menu; then the status-effect list they feed.
+  registerConditionSettings();
+  rebuildConditionRegistry();
+  applyStatusEffects();
 
   // Preload Handlebars templates for actor and item sheets
   await loadTemplatesFn([
@@ -219,7 +206,9 @@ Hooks.once("init", async function initSWIA() {
     "systems/swia/templates/items/formcard-sheet.hbs",
     "systems/swia/templates/dice/roll-dialog.hbs",
     "systems/swia/templates/dice/roll-card.hbs",
-    "systems/swia/templates/dice/combat-window.hbs"
+    "systems/swia/templates/dice/combat-window.hbs",
+    "systems/swia/templates/settings/conditions-config.hbs",
+    "systems/swia/templates/actors/parts/condition-tray.hbs"
   ]);
 
   // Register actor sheets for hero, villain, and ally types
@@ -252,7 +241,7 @@ Hooks.once("init", async function initSWIA() {
 // Re-apply status effects in the setup hook, which fires after all module init hooks.
 // This ensures no module can overwrite CONFIG.statusEffects after us.
 Hooks.once("setup", () => {
-  CONFIG.statusEffects = SWIA_STATUS_EFFECTS;
+  applyStatusEffects();
 });
 
 Hooks.once("ready", async () => {

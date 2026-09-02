@@ -6941,3 +6941,324 @@ input:checked + .defeated-label { color: #8b0000; }
 .swia-player-portal .power-token-tray {
   margin: 2px 0 0;
 }
+
+/* ------------------------------------------------------------------ */
+/* Solo-roll parity: token declaration in the roll dialog, reroll +   */
+/* surge undo on chat cards                                            */
+/* ------------------------------------------------------------------ */
+
+.swia-roll-dialog .roll-tokens .roll-pool-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+}
+.swia-roll-dialog .roll-tokens-hint {
+  margin: 0 0 4px;
+  font-size: 11px;
+  opacity: 0.75;
+}
+.swia-roll-dialog .roll-token-row {
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+.swia-roll-dialog .roll-token-row .pool-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 78px;
+  font-weight: 700;
+  font-size: 12px;
+}
+.swia-roll-dialog .roll-token-row.has-declared .pool-label {
+  color: #7a4b0a;
+}
+.swia-roll-dialog .roll-token-icon {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  vertical-align: middle;
+}
+.swia-roll-dialog .roll-token-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.swia-roll-dialog .roll-token-stepper.any {
+  padding-left: 8px;
+  border-left: 1px dashed rgba(95, 67, 35, 0.4);
+}
+.swia-roll-dialog .roll-token-stepper .pool-count {
+  font-size: 14px;
+}
+.swia-roll-dialog .roll-token-stepper .pool-count small {
+  font-size: 10px;
+  font-weight: 400;
+  opacity: 0.7;
+}
+.swia-roll-dialog .roll-token-stepper .pool-count.has-bonus {
+  color: #7a4b0a;
+}
+.swia-roll-dialog .roll-token-stepper .pool-adjust {
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+}
+
+/* Chat card: reroll wrapper/button and the undo state, mirroring the combat window */
+.swia-roll-card .swia-die-reroll-wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.swia-roll-card .die-reroll-btn {
+  width: auto;
+  font-size: 11px;
+  line-height: 1;
+  padding: 1px 4px;
+  cursor: pointer;
+  opacity: 0.75;
+}
+.swia-roll-card .die-reroll-btn:hover {
+  opacity: 1;
+}
+.swia-roll-card .swia-card-die.rerolled {
+  outline: 2px solid rgba(212, 175, 55, 0.7);
+  border-radius: 3px;
+}
+.swia-roll-card .roll-card-surge-btn.spent:not(:disabled) {
+  cursor: pointer;
+  text-decoration: none;
+}
+.swia-roll-card .roll-card-surge-btn.spent:not(:disabled) .surge-label {
+  text-decoration: line-through;
+}
+.swia-roll-card .roll-card-surge-btn.spent:not(:disabled):hover {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* Conditions: chips (sheet + portal), roll notes, GM config form     */
+/* ------------------------------------------------------------------ */
+
+.condition-tray {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+.condition-tray > label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  margin-right: 2px;
+}
+.condition-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 22px;
+  padding: 0 4px 0 3px;
+  border-radius: 11px;
+  border: 1px solid rgba(64, 43, 21, 0.45);
+  background: rgba(255, 251, 239, 0.85);
+  font-size: 11px;
+  font-weight: 700;
+  color: #2a1f10;
+}
+.condition-chip.beneficial {
+  border-color: rgba(46, 125, 50, 0.6);
+  background: rgba(232, 245, 233, 0.9);
+}
+.condition-chip.harmful {
+  border-color: rgba(160, 40, 30, 0.6);
+  background: rgba(252, 232, 228, 0.9);
+}
+.condition-chip img {
+  width: 18px;
+  height: 18px;
+  border: 0;
+}
+.condition-btn {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(64, 43, 21, 0.4);
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+}
+.condition-btn:hover:not(:disabled) {
+  background: #d8a35c;
+  color: #fff;
+}
+.condition-btn.discard {
+  font-size: 12px;
+}
+.condition-tray-btn {
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 11px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  width: auto;
+}
+.condition-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.condition-add-select {
+  height: 22px;
+  font-size: 11px;
+  max-width: 130px;
+}
+.swia-player-portal .condition-tray {
+  margin: 2px 0 0;
+}
+
+/* Roll dialog / cards / combat window: condition notes */
+.swia-roll-dialog .roll-conditions,
+.swia-combat-window .combat-conditions,
+.swia-roll-card .roll-card-conditions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0;
+  font-size: 11px;
+}
+.roll-condition-note {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 9px;
+  border: 1px solid rgba(64, 43, 21, 0.35);
+  background: rgba(255, 251, 239, 0.7);
+  font-weight: 600;
+}
+
+/* GM config form */
+.swia-conditions-config .swia-conditions-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.swia-conditions-config .conditions-hint,
+.swia-conditions-config .conditions-empty {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+.swia-conditions-config .conditions-builtins {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.swia-conditions-config .conditions-builtins-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  margin-right: 4px;
+}
+.swia-conditions-config .condition-chip.builtin {
+  opacity: 0.8;
+}
+.swia-conditions-config .condition-row {
+  border: 1px solid rgba(95, 67, 35, 0.35);
+  border-radius: 6px;
+  padding: 6px 10px 10px;
+}
+.swia-conditions-config .condition-row legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  padding: 0 4px;
+}
+.swia-conditions-config .condition-icon-preview {
+  width: 20px;
+  height: 20px;
+  border: 0;
+}
+.swia-conditions-config .condition-remove {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  font-size: 11px;
+  line-height: 1;
+}
+.swia-conditions-config .condition-grid.identity {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 2fr;
+  gap: 6px 10px;
+  margin-bottom: 8px;
+}
+.swia-conditions-config .condition-grid.identity label.wide {
+  grid-column: 1 / -1;
+}
+.swia-conditions-config .condition-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.swia-conditions-config .condition-grid label.check {
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+.swia-conditions-config .icon-input {
+  display: flex;
+  gap: 4px;
+}
+.swia-conditions-config .icon-input button {
+  width: 28px;
+  padding: 0;
+}
+.swia-conditions-config .condition-grid.rules {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 14px;
+}
+.swia-conditions-config .rule-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 4px 8px;
+}
+.swia-conditions-config .rule-title {
+  flex: 1 0 100%;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+.swia-conditions-config .rule-group input[type="number"] {
+  width: 48px;
+}
+.swia-conditions-config .die-field {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 3px !important;
+}
+.swia-conditions-config .conditions-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}

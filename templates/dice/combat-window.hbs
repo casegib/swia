@@ -31,6 +31,9 @@
       {{#if attacker.keywordsLine}}
       <p class="combat-meta combat-keywords">{{attacker.keywordsLine}}</p>
       {{/if}}
+      {{#if attacker.conditionNotes.length}}
+      <p class="combat-meta combat-conditions"><i class="fas fa-notes-medical"></i> {{#each attacker.conditionNotes}}<span class="roll-condition-note">{{{this}}}</span>{{/each}}</p>
+      {{/if}}
       {{#if isSetup}}
       <div class="combat-pool-grid">
         {{#each attackRows}}
@@ -84,6 +87,9 @@
         {{localize "SWIA.Dice.Evade"}} {{defender.tokensHeld.evade}}
         {{#if defender.tokensHeld.any}}&middot; {{localize "SWIA.PowerTokens.AnyToken"}} {{defender.tokensHeld.any}}{{/if}}
       </p>
+      {{#if defender.conditionNotes.length}}
+      <p class="combat-meta combat-conditions"><i class="fas fa-notes-medical"></i> {{#each defender.conditionNotes}}<span class="roll-condition-note">{{{this}}}</span>{{/each}}</p>
+      {{/if}}
       {{#if isSetup}}
       <div class="combat-pool-grid">
         {{#each defenseRows}}
@@ -209,6 +215,11 @@
       {{#if result.dodged}}<span class="total dodge">{{localize "SWIA.Dice.Dodge"}}!</span>{{/if}}
     </div>
 
+    {{#if result.hasConditionNotes}}
+    <p class="combat-meta combat-conditions">
+      {{localize "SWIA.Conditions.Title"}}: {{#each result.conditionNotes}}<span class="roll-condition-note">{{{this}}}</span>{{/each}}
+    </p>
+    {{/if}}
     {{#if result.hasDeclaredTokens}}
     <p class="combat-meta combat-declared-tokens">
       {{localize "SWIA.Combat.DeclaredTokens"}}:

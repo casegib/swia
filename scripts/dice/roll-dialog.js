@@ -7,8 +7,12 @@
 //                       equipped armor seeds flat Block/Evade bonuses instead)
 //   attack target    -> first targeted token's attributes.defense (manual fallback)
 
-import { COLOR_TO_DENOM, totalSymbols, rollFaces } from "./dice-terms.js";
+import {
+  COLOR_TO_DENOM, totalSymbols, rollFaces, faceData, SWIA_DICE, symbolsLabel, dieImgPath
+} from "./dice-terms.js";
 import { escapeHTML, sanitizeLabelHTML, equippedArmorFor, armorEffectsFor } from "../data/common.js";
+import { countPowerTokens, POWER_TOKEN_STATUS } from "../actor-actions.js";
+import { conditionEffectsFor, discardConditions, conditionLabel, getCondition } from "../conditions.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseApplication = HandlebarsApplicationMixin(ApplicationV2);
@@ -90,24 +94,228 @@ export function recomputeCard(state) {
   // Power-token bonuses (combat window); absent on solo-roll cards
   state.bonusBlock ??= 0;
   state.bonusEvade ??= 0;
-  state.totalEvade = state.evade + state.bonusEvade;
+  // Bonuses may be negative (Weakened: -1 Evade); totals never are.
+  state.totalEvade = Math.max(0, state.evade + state.bonusEvade);
   // Defense totals are worth showing when dice were rolled OR armor added
   // flat results to a diceless defender.
   state.showDefenseTotals = (state.defenseFaces?.length ?? 0) > 0
     || state.bonusBlock > 0 || state.bonusEvade > 0;
   state.hasDeclaredTokens = (state.tokenDamage ?? 0) + (state.tokenSurge ?? 0)
     + (state.tokenBlock ?? 0) + (state.tokenEvade ?? 0) > 0;
+  // Solo chat cards: per-die reroll buttons show until a surge spend locks
+  // them; a read-only summary (combat window's apply) never offers them.
+  state.canReroll = !state.rerollLocked && !state.readOnly;
   state.usableSurge = Math.max(0, state.surge - state.totalEvade - state.spentSurge);
   state.pierceTotal = state.basePierce + state.bonusPierce;
   state.effectiveBlock = Math.max(0, state.block + state.bonusBlock - state.pierceTotal);
   state.dodged = state.dodge > 0;
-  state.totalDamage = state.damage + state.bonusDamage;
+  state.totalDamage = Math.max(0, state.damage + state.bonusDamage);
   state.netDamage = state.dodged ? 0 : Math.max(0, state.totalDamage - state.effectiveBlock);
-  state.totalAccuracy = state.accuracy + state.weaponAccuracy + state.bonusAccuracy;
+  state.totalAccuracy = Math.max(0, state.accuracy + state.weaponAccuracy + state.bonusAccuracy);
+  state.hasConditionNotes = (state.conditionNotes?.length ?? 0) > 0;
   for (const ability of state.surgeAbilities ?? []) {
     ability.affordable = !ability.spent && ability.cost <= state.usableSurge;
   }
   return state;
+}
+
+/* ------------------------------------------------------------------ */
+/* Shared result-state mutations (solo chat cards AND combat window)   */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Replace one rolled face in a face list with a fresh result of the same die.
+ * Returns the new face entry, or null when the index/denomination is invalid.
+ */
+export function replaceFace(faces, index, newResult) {
+  const face = faces?.[index];
+  if (!face?.denom) return null;
+  const newFace = faceData(face.denom, newResult);
+  if (!newFace) return null;
+  faces[index] = {
+    img: dieImgPath(newFace.img),
+    label: symbolsLabel(newFace.symbols),
+    color: SWIA_DICE[face.denom].color,
+    denom: face.denom,
+    resultNum: newResult,
+    rerolled: true
+  };
+  return faces[index];
+}
+
+/** Sum the symbols currently showing on a face list. */
+function sumFaces(faces) {
+  const totals = { damage: 0, surge: 0, accuracy: 0, block: 0, evade: 0, dodge: 0 };
+  for (const f of faces ?? []) {
+    if (!f.denom || f.resultNum == null) continue;
+    const fd = faceData(f.denom, f.resultNum);
+    if (!fd) continue;
+    for (const key of Object.keys(totals)) totals[key] += fd.symbols[key] ?? 0;
+  }
+  return totals;
+}
+
+/**
+ * Recompute the raw dice totals of a result state from its current faces
+ * (after a reroll). Pre-roll bonuses (declared tokens, manual, armor) are
+ * kept: attack surge re-adds `preBonusSurge`; Block/Evade bonuses live in
+ * `bonusBlock`/`bonusEvade` and are untouched. `side` limits the recompute
+ * to "attack" or "defense"; omit for both.
+ */
+export function recomputeFaceTotals(state, side = null) {
+  if (side !== "defense") {
+    const a = sumFaces(state.attackFaces);
+    state.damage = a.damage;
+    // preBonusSurge may be negative (Weakened); raw surge never is.
+    state.surge = Math.max(0, a.surge + (state.preBonusSurge ?? 0));
+    state.accuracy = a.accuracy;
+  }
+  if (side !== "attack") {
+    const d = sumFaces(state.defenseFaces);
+    state.block = d.block;
+    state.evade = d.evade;
+    state.dodge = d.dodge;
+  }
+  return recomputeCard(state);
+}
+
+/** Numeric effects of a surge ability (structured or parsed). */
+function abilityEffects(ability) {
+  return ability.effects
+    ?? (["damage", "accuracy", "pierce"].includes(ability.effectType)
+      ? [{ type: ability.effectType, value: Number(ability.effectValue) || 0 }]
+      : []);
+}
+
+/**
+ * Mark a surge ability spent on a result state and apply its numeric
+ * effects. Locks rerolls (a spend is the one thing a reroll can't undo).
+ * Returns false when the spend is invalid. Does NOT touch items.
+ */
+export function applySurgeToState(state, index) {
+  const ability = state?.surgeAbilities?.[Number(index)];
+  if (!ability || ability.spent || ability.cost > state.usableSurge) return false;
+  ability.spent = true;
+  state.spentSurge += ability.cost;
+  state.rerollLocked = true;
+  for (const fx of abilityEffects(ability)) {
+    if (fx.type === "damage") state.bonusDamage += fx.value;
+    else if (fx.type === "accuracy") state.bonusAccuracy += fx.value;
+    else if (fx.type === "pierce") state.bonusPierce += fx.value;
+  }
+  recomputeCard(state);
+  return true;
+}
+
+/** True while any surge ability on the state is spent. */
+export function hasCommittedSpends(state) {
+  return (state?.surgeAbilities ?? []).some((a) => a.spent);
+}
+
+/**
+ * Reverse a surge spend on a result state. Rerolls unlock again once no
+ * spend remains. Returns false when the ability wasn't spent.
+ */
+export function revertSurgeOnState(state, index) {
+  const ability = state?.surgeAbilities?.[Number(index)];
+  if (!ability?.spent) return false;
+  ability.spent = false;
+  state.spentSurge = Math.max(0, state.spentSurge - ability.cost);
+  for (const fx of abilityEffects(ability)) {
+    if (fx.type === "damage") state.bonusDamage = Math.max(0, state.bonusDamage - fx.value);
+    else if (fx.type === "accuracy") state.bonusAccuracy = Math.max(0, state.bonusAccuracy - fx.value);
+    else if (fx.type === "pierce") state.bonusPierce = Math.max(0, state.bonusPierce - fx.value);
+  }
+  state.rerollLocked = hasCommittedSpends(state);
+  recomputeCard(state);
+  return true;
+}
+
+/**
+ * Exhaust-to-use: flip the ability's source card once its spend has landed.
+ * Records the exhausted item id on the ability so the undo can ready it
+ * back. Idempotent via the "ready" guard.
+ */
+export async function exhaustSurgeSource(actor, ability) {
+  if (!ability?.exhaustToUse || !ability.sourceItemId) return;
+  const sourceItem = actor?.items?.get(ability.sourceItemId);
+  if (!sourceItem || (sourceItem.system?.cardState ?? "ready") !== "ready") return;
+  try {
+    await sourceItem.update({ "system.cardState": "exhausted" });
+    ability.exhaustedItemId = sourceItem.id;
+  } catch (err) {
+    console.warn("SWIA | could not exhaust surge source", err);
+  }
+}
+
+/** Undo the auto-exhaust a surge spend caused (if any). */
+export async function readySurgeSource(actor, ability) {
+  if (!ability?.exhaustedItemId) return;
+  const sourceItem = actor?.items?.get(ability.exhaustedItemId);
+  if (sourceItem && sourceItem.system?.cardState === "exhausted") {
+    try { await sourceItem.update({ "system.cardState": "ready" }); }
+    catch (err) { console.warn("SWIA | could not ready surge source", err); }
+  }
+  ability.exhaustedItemId = null;
+}
+
+/**
+ * Roll one replacement die for a face and post it to chat (so Dice So Nice
+ * and the log both see it). Returns the new face result number.
+ */
+export async function rollReplacementDie(face, actor, name) {
+  const roll = await new Roll(`1d${face.denom}`).evaluate();
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    rolls: [roll],
+    flavor: game.i18n.format("SWIA.Combat.RerollFlavor", { name: escapeHTML(name) }),
+    sound: CONFIG.sounds.dice
+  });
+  return roll.dice[0].results[0].result;
+}
+
+/* ------------------------------------------------------------------ */
+/* Power-token declaration (solo dialog; the combat window keeps its   */
+/* own per-source layers but consumes tokens the same way)             */
+/* ------------------------------------------------------------------ */
+
+/** Token types each roll type may declare, and the stat each feeds. */
+export const ROLL_TOKEN_STATS = {
+  attack: ["damage", "surge"],
+  defense: ["block", "evade"],
+  test: []
+};
+
+/**
+ * Consume declared power tokens from an actor. `declared` is
+ * { [stat]: { typed, any } }. Typed tokens of `stat` go first, then Any
+ * tokens converted to `stat`. Returns the count actually consumed per stat
+ * (never more than the figure holds — the tray may have changed since the
+ * dialog rendered).
+ */
+export async function consumeDeclaredTokens(actor, declared) {
+  const consumed = {};
+  if (!actor) return consumed;
+  const take = async (status, n) => {
+    let taken = 0;
+    for (let i = 0; i < n; i++) {
+      const held = (actor.effects ?? []).filter((e) => e.statuses?.has?.(status));
+      const effect = held[held.length - 1];
+      if (!effect) break;
+      await effect.delete();
+      taken += 1;
+    }
+    return taken;
+  };
+  for (const [stat, counts] of Object.entries(declared ?? {})) {
+    const status = POWER_TOKEN_STATUS[stat];
+    if (!status) continue;
+    let n = 0;
+    n += await take(status, Math.max(0, Number(counts?.typed) || 0));
+    n += await take(POWER_TOKEN_STATUS.any, Math.max(0, Number(counts?.any) || 0));
+    consumed[stat] = n;
+  }
+  return consumed;
 }
 
 /* ------------------------------------------------------------------ */
@@ -335,6 +543,7 @@ export class SWIARollDialog extends BaseApplication {
     window: { title: "SWIA.Roll.Title", icon: "fas fa-dice" },
     actions: {
       adjustDie: SWIARollDialog.prototype._onAdjustDie,
+      adjustToken: SWIARollDialog.prototype._onAdjustToken,
       executeRoll: SWIARollDialog.prototype._onExecuteRoll
     }
   };
@@ -358,12 +567,50 @@ export class SWIARollDialog extends BaseApplication {
     this.attribute = attribute;
     this.selectedWeaponId = null;
     this.targetActor = null;
+    // Condition rules for this roll's role (Focused dice, Hidden/Weakened
+    // shifts, what to discard afterwards). Read once at open.
+    this.conditionFx = conditionEffectsFor(actor, rollType === "defense" ? "defense" : rollType === "test" ? "test" : "attack");
     this.pool = this._buildInitialPool();
+    // Power tokens declared for this roll: { [stat]: { typed, any } }.
+    // Nothing is consumed until Roll is clicked; closing spends nothing.
+    this.declared = Object.fromEntries(
+      (ROLL_TOKEN_STATS[this.rollType] ?? []).map((stat) => [stat, { typed: 0, any: 0 }])
+    );
+  }
+
+  /**
+   * A condition that forbids attacking (Stunned) stops the attack here, at
+   * the single entry point for both the solo dialog and the combat window.
+   * The GM may override (card text sometimes says otherwise); players can't.
+   * Returns true when the attack may proceed.
+   */
+  static async _checkCanAttack(actor) {
+    const fx = conditionEffectsFor(actor, "attack");
+    if (!fx.cannotAttack) return true;
+    if (!game.user?.isGM) {
+      ui.notifications?.warn(game.i18n.format("SWIA.Conditions.CannotAttackWarn", { name: actor.name }));
+      return false;
+    }
+    return foundry.applications.api.DialogV2.confirm({
+      window: { title: game.i18n.localize("SWIA.Conditions.CannotAttackTitle") },
+      content: `<p>${game.i18n.format("SWIA.Conditions.CannotAttackOverride", { name: escapeHTML(actor.name) })}</p>`,
+      rejectClose: false
+    });
   }
 
   /** Convenience opener used by sheets and portals. */
   static open(config) {
     if (!config?.actor) return null;
+    if (config.rollType === "attack") {
+      SWIARollDialog._checkCanAttack(config.actor).then((ok) => {
+        if (ok) SWIARollDialog._openChecked(config);
+      });
+      return null;
+    }
+    return SWIARollDialog._openChecked(config);
+  }
+
+  static _openChecked(config) {
     // Phase 6: a targeted attack starts a shared combat instead of the solo
     // dialog (combat-window.js registers the starter at init).
     if (config.rollType === "attack" && combatStarter) {
@@ -493,12 +740,14 @@ export class SWIARollDialog extends BaseApplication {
       const attrs = wounded ? (sys.woundedAttributes ?? sys.attributes) : sys.attributes;
       const dice = attrs?.[this.attribute] ?? {};
       for (const c of ATTACK_COLORS) pool[c] = clampCount(dice[c]);
+      this._addConditionDice(pool);
       return pool;
     }
 
     // Attack
     if (this.actor?.type === "hero") this.selectedWeaponId = defaultWeaponId(this.actor);
     Object.assign(pool, buildAttackPool(this.actor, this.selectedWeaponId));
+    this._addConditionDice(pool);
 
     // Defense from the first targeted token
     const target = [...(game.user?.targets ?? [])][0] ?? null;
@@ -509,9 +758,16 @@ export class SWIARollDialog extends BaseApplication {
     return pool;
   }
 
+  /** Focused and friends: condition dice ride on top of the printed pool. */
+  _addConditionDice(pool) {
+    for (const c of ATTACK_COLORS) pool[c] = clampCount(pool[c] + (this.conditionFx?.dice?.[c] ?? 0));
+    return pool;
+  }
+
   _applyWeaponPool(pool) {
     for (const c of ATTACK_COLORS) pool[c] = 0;
     Object.assign(pool, buildAttackPool(this.actor, this.selectedWeaponId));
+    this._addConditionDice(pool);
   }
 
   _attackKeywords() {
@@ -530,6 +786,42 @@ export class SWIARollDialog extends BaseApplication {
     return gatherSurgeAbilities(this.actor, weaponId);
   }
 
+  /** Any tokens declared across every stat (they share one pool). */
+  _anyDeclared() {
+    return Object.values(this.declared).reduce((n, d) => n + (d.any ?? 0), 0);
+  }
+
+  /**
+   * Token rows for the dialog: one per stat this roll type can feed, with
+   * the figure's live counts. Empty when the figure holds nothing usable,
+   * so the section stays hidden for the common case.
+   */
+  _tokenRows() {
+    const stats = ROLL_TOKEN_STATS[this.rollType] ?? [];
+    if (!stats.length) return [];
+    const held = countPowerTokens(this.actor);
+    const anyLeft = (held.any ?? 0) - this._anyDeclared();
+    const rows = stats.map((stat) => {
+      const d = this.declared[stat] ?? { typed: 0, any: 0 };
+      const cap = stat.charAt(0).toUpperCase() + stat.slice(1);
+      return {
+        stat,
+        label: game.i18n.localize(`SWIA.Dice.${cap}`),
+        icon: `systems/swia/icons/Power ${cap} Token.png`,
+        anyIcon: "systems/swia/icons/Power Any Token.png",
+        typedHeld: held[stat] ?? 0,
+        anyHeld: held.any ?? 0,
+        typed: d.typed,
+        any: d.any,
+        canAddTyped: d.typed < (held[stat] ?? 0),
+        canAddAny: anyLeft > 0,
+        declared: d.typed + d.any
+      };
+    });
+    const usable = rows.some((r) => r.typedHeld > 0) || (held.any ?? 0) > 0;
+    return usable ? rows : [];
+  }
+
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     const weapons = this.rollType === "attack" && this.actor?.type === "hero" ? this._heroWeapons() : [];
@@ -540,7 +832,23 @@ export class SWIARollDialog extends BaseApplication {
       count: this.pool[color]
     });
 
+    const tokenRows = this._tokenRows();
+
+    // Defender-side conditions on a targeted solo attack (rare — targeted
+    // attacks normally go to the combat window) shift the attacker's accuracy.
+    const targetFx = this.rollType === "attack" && this.targetActor
+      ? conditionEffectsFor(this.targetActor, "defense") : null;
+    const conditionNotes = [
+      ...(this.conditionFx?.notes ?? []),
+      ...(targetFx?.notes ?? [])
+    ];
+
     return foundry.utils.mergeObject(context, {
+      conditionNotes,
+      showConditions: conditionNotes.length > 0,
+      tokenRows,
+      showTokens: tokenRows.length > 0,
+      anyHeld: countPowerTokens(this.actor).any ?? 0,
       actorName: this.actor?.name ?? "",
       rollType: this.rollType,
       attributeLabel: this.attributeLabel,
@@ -582,6 +890,22 @@ export class SWIARollDialog extends BaseApplication {
     this.render();
   }
 
+  /** Step a declared token count (typed or Any) for a stat, bounded by what the figure holds. */
+  async _onAdjustToken(event, target) {
+    event.preventDefault();
+    const stat = target?.dataset?.stat;
+    const kind = target?.dataset?.kind === "any" ? "any" : "typed";
+    const delta = Number(target?.dataset?.delta) || 0;
+    const d = this.declared[stat];
+    if (!d) return;
+    const held = countPowerTokens(this.actor);
+    const max = kind === "any"
+      ? (held.any ?? 0) - (this._anyDeclared() - d.any)
+      : (held[stat] ?? 0);
+    d[kind] = Math.min(Math.max(d[kind] + delta, 0), Math.max(max, 0));
+    this.render();
+  }
+
   _poolFormula(colors) {
     const parts = [];
     for (const color of colors) {
@@ -600,6 +924,22 @@ export class SWIARollDialog extends BaseApplication {
       ui.notifications?.warn(game.i18n.localize("SWIA.Roll.EmptyPool"));
       return;
     }
+
+    // Declared power tokens are spent now — before the dice — matching the
+    // table rule and the combat window's declaration window. Counts come
+    // back from what was actually removed from the figure.
+    const consumed = await consumeDeclaredTokens(this.actor, this.declared);
+    const tok = (stat) => consumed[stat] ?? 0;
+
+    // Condition shifts: the roller's own (attack or defense role) plus, on a
+    // targeted solo attack, the defender's shift on the attacker's accuracy.
+    const fx = this.conditionFx ?? conditionEffectsFor(this.actor, "attack");
+    const targetFx = this.rollType === "attack" && this.targetActor
+      ? conditionEffectsFor(this.targetActor, "defense")
+      : { block: 0, evade: 0, attackerAccuracy: 0, notes: [] };
+    const condAttack = this.rollType === "attack" ? fx : { damage: 0, surge: 0, accuracy: 0 };
+    const condDefense = this.rollType === "defense" ? fx : targetFx;
+    const conditionNotes = [...(fx.notes ?? []), ...(targetFx.notes ?? [])];
 
     const attackRoll = attackFormula ? await new Roll(attackFormula).evaluate() : null;
     const defenseRoll = defenseFormula ? await new Roll(defenseFormula).evaluate() : null;
@@ -631,25 +971,37 @@ export class SWIARollDialog extends BaseApplication {
       attackFaces: rollFaces(attackRoll),
       defenseFaces: rollFaces(defenseRoll),
       damage: attackTotals.damage,
-      surge: attackTotals.surge,
+      // Declared Surge tokens ride on the raw surge count (as in the combat
+      // window); preBonusSurge keeps them through rerolls.
+      surge: Math.max(0, attackTotals.surge + tok("surge") + condAttack.surge),
+      preBonusSurge: tok("surge") + condAttack.surge,
       accuracy: attackTotals.accuracy,
       block: defenseTotals.block,
       evade: defenseTotals.evade,
       dodge: defenseTotals.dodge,
       // Equipped armor's printed Block/Evade apply on top of whatever the
-      // defender rolled (own defense roll, or the targeted actor on an attack).
-      bonusBlock: armorBonus.block,
-      bonusEvade: armorBonus.evade,
+      // defender rolled (own defense roll, or the targeted actor on an attack),
+      // plus any Block/Evade tokens the defender declared, plus condition
+      // shifts (Weakened -1 Evade).
+      bonusBlock: armorBonus.block + tok("block") + (condDefense.block ?? 0),
+      bonusEvade: armorBonus.evade + tok("evade") + (condDefense.evade ?? 0),
       armorBlock: armorBonus.block,
       armorEvade: armorBonus.evade,
+      tokenDamage: tok("damage"),
+      tokenSurge: tok("surge"),
+      tokenBlock: tok("block"),
+      tokenEvade: tok("evade"),
+      conditionNotes,
       weaponAccuracy: this.rollType === "attack" ? this._weaponAccuracy() : 0,
       basePierce: keywords.pierce,
       blast: keywords.blast,
       cleave: keywords.cleave,
-      bonusDamage: 0,
-      bonusAccuracy: 0,
+      bonusDamage: tok("damage") + condAttack.damage,
+      bonusAccuracy: this.rollType === "attack" ? condAttack.accuracy + (targetFx.attackerAccuracy ?? 0) : 0,
       bonusPierce: 0,
       spentSurge: 0,
+      // Rerolls stay open until a surge is spent (parity with the combat window).
+      rerollLocked: false,
       surgeAbilities: this.rollType === "defense" ? [] : this._surgeAbilities()
     });
 
@@ -662,127 +1014,185 @@ export class SWIARollDialog extends BaseApplication {
       flags: { [CARD_FLAG_SCOPE]: { [CARD_FLAG_KEY]: state } }
     });
 
+    // The roll has resolved: Focused/Hidden-style conditions come off now.
+    if (fx.discardIds?.length) {
+      const removed = await discardConditions(this.actor, fx.discardIds);
+      if (removed.length) {
+        ui.notifications?.info(game.i18n.format("SWIA.Conditions.Discarded", {
+          name: this.actor.name,
+          list: removed.map((id) => conditionLabel(getCondition(id))).join(", ")
+        }));
+      }
+    }
+
     this.close();
   }
 }
 
 export const SOCKET_NAME = "system.swia";
 
-/**
- * Apply a surge spend to a roll-card message. Must run on a client with
- * permission to update the message (the GM, or the author when core allows).
- * Returns false when the spend is invalid (already spent / can't afford).
- */
-async function applySurgeSpend(message, index) {
-  const stored = message.getFlag(CARD_FLAG_SCOPE, CARD_FLAG_KEY);
-  if (!stored || Number.isNaN(index)) return false;
+/* ------------------------------------------------------------------ */
+/* Solo roll-card actions: spend / unspend surge, reroll a die          */
+/* ------------------------------------------------------------------ */
 
-  const state = foundry.utils.deepClone(stored);
-  const ability = state.surgeAbilities?.[index];
-  if (!ability || ability.spent) return false;
-  if (ability.cost > state.usableSurge) return false;
+const CARD_ACTIONS = new Set(["spendSurge", "unspendSurge", "rerollDie"]);
 
-  ability.spent = true;
-  state.spentSurge += ability.cost;
-  // Apply all parsed/structured numeric effects; anything else (conditions,
-  // freeform special text) is shown as applied on the card.
-  const effects = ability.effects
-    ?? (["damage", "accuracy", "pierce"].includes(ability.effectType)
-      ? [{ type: ability.effectType, value: Number(ability.effectValue) || 0 }]
-      : []);
-  for (const fx of effects) {
-    if (fx.type === "damage") state.bonusDamage += fx.value;
-    else if (fx.type === "accuracy") state.bonusAccuracy += fx.value;
-    else if (fx.type === "pierce") state.bonusPierce += fx.value;
-  }
-  recomputeCard(state);
+/** The actor a roll card speaks for (token-aware, so unlinked figures resolve). */
+function cardActor(message) {
+  return ChatMessage.getSpeakerActor?.(message.speaker) ?? game.actors?.get(message.speaker?.actor) ?? null;
+}
 
+/** Persist a mutated state back onto its card. */
+async function saveCardState(message, state) {
   const content = await renderTemplateFn(CARD_TEMPLATE, state);
   await message.update({
     content,
     [`flags.${CARD_FLAG_SCOPE}.${CARD_FLAG_KEY}`]: state
   });
-
-  // Exhaust-to-use: flip the source card once the spend has actually landed
-  // (never before — a failed/relayed message update must not strand an
-  // exhausted item). Idempotent via the "ready" guard when the GM re-runs
-  // a relayed spend.
-  if (ability.exhaustToUse && ability.sourceItemId) {
-    const speakerActor = game.actors?.get(message.speaker?.actor);
-    const sourceItem = speakerActor?.items?.get(ability.sourceItemId);
-    if (sourceItem && (sourceItem.system?.cardState ?? "ready") === "ready") {
-      try { await sourceItem.update({ "system.cardState": "exhausted" }); }
-      catch (err) { console.warn("SWIA | could not exhaust surge source", err); }
-    }
-  }
-  return true;
 }
 
 /**
- * Handle surge-spend clicks. Core Foundry restricts which message fields a
- * non-GM author may update, so player spends are relayed to the active GM's
+ * Apply one card action to a roll-card message. Must run on a client with
+ * permission to update the message (the GM, or the author when core allows).
+ * Returns false when the action is invalid for the card's current state.
+ *
+ * Item side effects (exhaust / ready) run only after the message update has
+ * landed, so a failed or relayed update never strands an exhausted item.
+ */
+async function applyCardAction(message, action, payload = {}) {
+  const stored = message.getFlag(CARD_FLAG_SCOPE, CARD_FLAG_KEY);
+  if (!stored || stored.readOnly) return false;
+  const state = foundry.utils.deepClone(stored);
+  const index = Number(payload.index);
+  if (Number.isNaN(index)) return false;
+  const actor = cardActor(message);
+
+  switch (action) {
+    case "spendSurge": {
+      if (!applySurgeToState(state, index)) return false;
+      await saveCardState(message, state);
+      const ability = state.surgeAbilities[index];
+      await exhaustSurgeSource(actor, ability);
+      // exhaustedItemId is set by the exhaust; store it so Undo can ready the card.
+      if (ability.exhaustedItemId) await saveCardState(message, state);
+      return true;
+    }
+    case "unspendSurge": {
+      const ability = state.surgeAbilities?.[index];
+      if (!revertSurgeOnState(state, index)) return false;
+      await saveCardState(message, state);
+      await readySurgeSource(actor, ability);
+      return true;
+    }
+    case "rerollDie": {
+      if (state.rerollLocked) return false;
+      const side = payload.side === "defense" ? "defense" : "attack";
+      const faces = side === "defense" ? state.defenseFaces : state.attackFaces;
+      const face = faces?.[index];
+      if (!face?.denom) return false;
+      const newResult = await rollReplacementDie(face, actor, state.actorName || actor?.name || "");
+      if (!replaceFace(faces, index, newResult)) return false;
+      recomputeFaceTotals(state, side);
+      await saveCardState(message, state);
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Handle a card-action click. Core Foundry restricts which message fields a
+ * non-GM author may update, so player actions are relayed to the active GM's
  * client over the system socket when a direct update isn't permitted.
  */
-async function onSpendSurge(message, event) {
+async function onCardAction(message, action, payload, event) {
   event.preventDefault();
   if (!(game.user?.isGM || message.isAuthor)) {
     ui.notifications?.warn(game.i18n.localize("SWIA.Roll.NoPermission"));
     return;
   }
-
-  const index = Number(event.currentTarget.dataset.swiaSurgeIndex);
   const stored = message.getFlag(CARD_FLAG_SCOPE, CARD_FLAG_KEY);
-  if (!stored || Number.isNaN(index)) return;
+  if (!stored || stored.readOnly) return;
 
   // Validate locally so the clicking user gets feedback either way.
-  const ability = stored.surgeAbilities?.[index];
-  if (!ability || ability.spent) return;
-  if (ability.cost > stored.usableSurge) {
-    ui.notifications?.warn(game.i18n.localize("SWIA.Roll.NotEnoughSurge"));
-    return;
+  const index = Number(payload.index);
+  if (action === "spendSurge") {
+    const ability = stored.surgeAbilities?.[index];
+    if (!ability || ability.spent) return;
+    if (ability.cost > stored.usableSurge) {
+      ui.notifications?.warn(game.i18n.localize("SWIA.Roll.NotEnoughSurge"));
+      return;
+    }
+  } else if (action === "unspendSurge") {
+    if (!stored.surgeAbilities?.[index]?.spent) return;
+  } else if (action === "rerollDie") {
+    if (stored.rerollLocked) {
+      ui.notifications?.warn(game.i18n.localize("SWIA.Roll.RerollLocked"));
+      return;
+    }
   }
 
-  // GM (or an author core permits) updates directly; otherwise relay to the GM.
+  // The GM applies directly. A player relays to the active GM whenever one is
+  // connected: a reroll posts a die before the message update, so "try locally,
+  // relay on failure" would roll twice. With no GM online, try locally anyway
+  // (core may permit the author's update) and say so if it doesn't.
   if (game.user.isGM) {
-    await applySurgeSpend(message, index);
+    await applyCardAction(message, action, payload);
+    return;
+  }
+  if (game.users?.activeGM) {
+    game.socket?.emit(SOCKET_NAME, {
+      type: "cardAction", action, messageId: message.id, payload, userId: game.user.id
+    });
     return;
   }
   try {
-    await applySurgeSpend(message, index);
+    await applyCardAction(message, action, payload);
   } catch (err) {
-    const gm = game.users?.activeGM;
-    if (!gm) {
-      ui.notifications?.warn(game.i18n.localize("SWIA.Roll.NoGMForSurge"));
-      return;
-    }
-    game.socket?.emit(SOCKET_NAME, { type: "spendSurge", messageId: message.id, index, userId: game.user.id });
+    console.warn("SWIA | roll-card action failed without a GM", err);
+    ui.notifications?.warn(game.i18n.localize("SWIA.Roll.NoGMForSurge"));
   }
 }
 
-/** GM-side socket handler: execute relayed surge spends. */
-function onSocketMessage(payload) {
-  if (payload?.type !== "spendSurge") return;
+/** GM-side socket handler: execute relayed card actions. */
+function onSocketMessage(data) {
+  // "spendSurge" is the pre-parity wire shape; keep accepting it.
+  const isLegacy = data?.type === "spendSurge";
+  if (!isLegacy && data?.type !== "cardAction") return;
   if (game.user !== game.users?.activeGM) return;
-  const message = game.messages?.get(payload.messageId);
+  const action = isLegacy ? "spendSurge" : data.action;
+  if (!CARD_ACTIONS.has(action)) return;
+  const message = game.messages?.get(data.messageId);
   if (!message) return;
-  // The spender id is self-asserted — Foundry exposes no verified socket sender on
-  // the client. The local GM applies spends directly and never relays, and the
-  // click handler only relays for a card's own author, so a legitimate relayed
-  // spend always comes from the message author. Require exactly that: reject any
-  // spend whose claimed user is missing, a GM, or not this card's author, so a
-  // client can't drive surge spends on cards it doesn't own.
-  const user = game.users?.get(payload.userId);
+  // The acting id is self-asserted — Foundry exposes no verified socket sender
+  // on the client. The local GM applies actions directly and never relays, and
+  // the click handler only relays for a card's own author, so a legitimate
+  // relayed action always comes from the message author. Require exactly that:
+  // reject any action whose claimed user is missing, a GM, or not this card's
+  // author, so a client can't drive actions on cards it doesn't own.
+  const user = game.users?.get(data.userId);
   if (!user || user.isGM || message.author?.id !== user.id) return;
-  applySurgeSpend(message, Number(payload.index));
+  const payload = isLegacy ? { index: data.index } : (data.payload ?? {});
+  applyCardAction(message, action, payload);
 }
 
-/** Wire surge-spend buttons whenever a roll card renders. Call once at init. */
+/** Wire roll-card buttons whenever a card renders. Call once at init. */
 export function registerRollCardHooks() {
   Hooks.on("renderChatMessageHTML", (message, html) => {
-    const buttons = html.querySelectorAll("[data-swia-surge-index]");
-    if (!buttons.length) return;
-    buttons.forEach((btn) => {
-      btn.addEventListener("click", (event) => onSpendSurge(message, event));
+    html.querySelectorAll("[data-swia-surge-index]").forEach((btn) => {
+      btn.addEventListener("click", (event) =>
+        onCardAction(message, "spendSurge", { index: Number(btn.dataset.swiaSurgeIndex) }, event));
+    });
+    html.querySelectorAll("[data-swia-unspend-index]").forEach((btn) => {
+      btn.addEventListener("click", (event) =>
+        onCardAction(message, "unspendSurge", { index: Number(btn.dataset.swiaUnspendIndex) }, event));
+    });
+    html.querySelectorAll("[data-swia-reroll-index]").forEach((btn) => {
+      btn.addEventListener("click", (event) =>
+        onCardAction(message, "rerollDie", {
+          index: Number(btn.dataset.swiaRerollIndex),
+          side: btn.dataset.swiaRerollSide
+        }, event));
     });
   });
 
