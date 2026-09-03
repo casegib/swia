@@ -1,0 +1,4219 @@
+{
+ "heroes": [
+  {
+   "name": "Biv Bodhrik",
+   "healthy": "heroes/biv-bodhrik-healthy.png",
+   "wounded": "heroes/biv-bodhrik-wounded.png"
+  },
+  {
+   "name": "Davith Elso",
+   "healthy": "heroes/davith-elso-healthy.png",
+   "wounded": "heroes/davith-elso-wounded.png"
+  },
+  {
+   "name": "Diala Passil",
+   "healthy": "heroes/diala-passil-healthy.png",
+   "wounded": "heroes/diala-passil-wounded.png"
+  },
+  {
+   "name": "Fenn Signis",
+   "healthy": "heroes/fenn-signis-healthy.png",
+   "wounded": "heroes/fenn-signis-wounded.png"
+  },
+  {
+   "name": "Gaarkhan",
+   "healthy": "heroes/gaarkhan-healthy.png",
+   "wounded": "heroes/gaarkhan-wounded.png"
+  },
+  {
+   "name": "Gideon Argus",
+   "healthy": "heroes/gideon-argus-healthy.png",
+   "wounded": "heroes/gideon-argus-wounded.png"
+  },
+  {
+   "name": "Jyn Odan",
+   "healthy": "heroes/jyn-odan-healthy.png",
+   "wounded": "heroes/jyn-odan-wounded.png"
+  },
+  {
+   "name": "Loku Kanoloa",
+   "healthy": "heroes/loku-kanoloa-healthy.png",
+   "wounded": "heroes/loku-kanoloa-wounded.png"
+  },
+  {
+   "name": "MHD-19",
+   "healthy": "heroes/mhd-19-healthy.png",
+   "wounded": "heroes/mhd-19-wounded.png"
+  },
+  {
+   "name": "Mak Eshka'rey",
+   "healthy": "heroes/mak-eshkarey-healthy.png",
+   "wounded": "heroes/mak-eshkarey-wounded.png"
+  },
+  {
+   "name": "Murne Rin",
+   "healthy": "heroes/murne-rin-healthy.png",
+   "wounded": "heroes/murne-rin-wounded.png"
+  },
+  {
+   "name": "Onar Koma",
+   "healthy": "heroes/onar-koma-healthy.png",
+   "wounded": "heroes/onar-koma-wounded.png"
+  },
+  {
+   "name": "Saska Teft",
+   "healthy": "heroes/saska-teft-healthy.png",
+   "wounded": "heroes/saska-teft-wounded.png"
+  },
+  {
+   "name": "Shyla Varad",
+   "healthy": "heroes/shyla-varad-healthy.png",
+   "wounded": "heroes/shyla-varad-wounded.png"
+  },
+  {
+   "name": "Verena Talos",
+   "healthy": "heroes/verena-talos-healthy.png",
+   "wounded": "heroes/verena-talos-wounded.png"
+  },
+  {
+   "name": "Vinto Hreeda",
+   "healthy": "heroes/vinto-hreeda-healthy.png",
+   "wounded": "heroes/vinto-hreeda-wounded.png"
+  },
+  {
+   "name": "Drokkatta",
+   "healthy": "heroes/drokkatta-healthy.png",
+   "wounded": "heroes/drokkatta-wounded.png"
+  },
+  {
+   "name": "Jarrod Kelvin",
+   "healthy": "heroes/jarrod-kelvin-healthy.png",
+   "wounded": "heroes/jarrod-kelvin-wounded.png"
+  },
+  {
+   "name": "Ko-Tun Feralo",
+   "healthy": "heroes/ko-tun-feralo-healthy.png",
+   "wounded": "heroes/ko-tun-feralo-wounded.png"
+  }
+ ],
+ "hero-class-cards": [
+  {
+   "hero": "Diala Passil",
+   "name": "Plasteel Staff",
+   "xp": null,
+   "image": "hero-class-cards/diala-passil-plasteel-staff.png"
+  },
+  {
+   "hero": "Diala Passil",
+   "name": "Force Throw",
+   "xp": 1,
+   "image": "hero-class-cards/diala-passil-force-throw.png"
+  },
+  {
+   "hero": "Fenn Signis",
+   "name": "Infantry Rifle",
+   "xp": null,
+   "image": "hero-class-cards/fenn-signis-infantry-rifle.png"
+  },
+  {
+   "hero": "Diala Passil",
+   "name": "Force Adept",
+   "xp": 1,
+   "image": "hero-class-cards/diala-passil-force-adept.png"
+  },
+  {
+   "hero": "Fenn Signis",
+   "name": "Tactical Movement",
+   "xp": 1,
+   "image": "hero-class-cards/fenn-signis-tactical-movement.png"
+  },
+  {
+   "hero": "Diala Passil",
+   "name": "Battle Meditation",
+   "xp": 2,
+   "image": "hero-class-cards/diala-passil-battle-meditation.png"
+  },
+  {
+   "hero": "Fenn Signis",
+   "name": "Take Cover",
+   "xp": 1,
+   "image": "hero-class-cards/fenn-signis-take-cover.png"
+  },
+  {
+   "hero": "Diala Passil",
+   "name": "Defensive Stance",
+   "xp": 2,
+   "image": "hero-class-cards/diala-passil-defensive-stance.png"
+  },
+  {
+   "hero": "Fenn Signis",
+   "name": "Adrenaline Rush",
+   "xp": 2,
+   "image": "hero-class-cards/fenn-signis-adrenaline-rush.png"
+  },
+  {
+   "hero": "Diala Passil",
+   "name": "Art of Movement",
+   "xp": 3,
+   "image": "hero-class-cards/diala-passil-art-of-movement.png"
+  },
+  {
+   "hero": "Fenn Signis",
+   "name": "Weapon Expert",
+   "xp": 2,
+   "image": "hero-class-cards/fenn-signis-weapon-expert.png"
+  },
+  {
+   "hero": "Diala Passil",
+   "name": "Snap Kick",
+   "xp": 3,
+   "image": "hero-class-cards/diala-passil-snap-kick.png"
+  },
+  {
+   "hero": "Fenn Signis",
+   "name": "Suppressive Fire",
+   "xp": 3,
+   "image": "hero-class-cards/fenn-signis-suppressive-fire.png"
+  },
+  {
+   "hero": "Diala Passil",
+   "name": "Way of the Sarlacc",
+   "xp": 4,
+   "image": "hero-class-cards/diala-passil-way-of-the-sarlacc.png"
+  },
+  {
+   "hero": "Fenn Signis",
+   "name": "Trench Fighter",
+   "xp": 3,
+   "image": "hero-class-cards/fenn-signis-trench-fighter.png"
+  },
+  {
+   "hero": "Diala Passil",
+   "name": "Dancing Weapon",
+   "xp": 4,
+   "image": "hero-class-cards/diala-passil-dancing-weapon.png"
+  },
+  {
+   "hero": "Fenn Signis",
+   "name": "Rebel Elite",
+   "xp": 4,
+   "image": "hero-class-cards/fenn-signis-rebel-elite.png"
+  },
+  {
+   "hero": "Gaarkhan",
+   "name": "Vibro-Ax",
+   "xp": null,
+   "image": "hero-class-cards/gaarkhan-vibro-ax.png"
+  },
+  {
+   "hero": "Fenn Signis",
+   "name": "Superior Positioning",
+   "xp": 4,
+   "image": "hero-class-cards/fenn-signis-superior-positioning.png"
+  },
+  {
+   "hero": "Gaarkhan",
+   "name": "Wookiee Fortitude",
+   "xp": 1,
+   "image": "hero-class-cards/gaarkhan-wookiee-fortitude.png"
+  },
+  {
+   "hero": "Gaarkhan",
+   "name": "Wookie Loyalty",
+   "xp": 1,
+   "image": "hero-class-cards/gaarkhan-wookie-loyalty.png"
+  },
+  {
+   "hero": "Gaarkhan",
+   "name": "Ferocity",
+   "xp": 2,
+   "image": "hero-class-cards/gaarkhan-ferocity.png"
+  },
+  {
+   "hero": "Gaarkhan",
+   "name": "Staggering Blow",
+   "xp": 2,
+   "image": "hero-class-cards/gaarkhan-staggering-blow.png"
+  },
+  {
+   "hero": "Gaarkhan",
+   "name": "Rampage",
+   "xp": 3,
+   "image": "hero-class-cards/gaarkhan-rampage.png"
+  },
+  {
+   "hero": "Gaarkhan",
+   "name": "Vicious Strike",
+   "xp": 3,
+   "image": "hero-class-cards/gaarkhan-vicious-strike.png"
+  },
+  {
+   "hero": "Gaarkhan",
+   "name": "Brutal Cleave",
+   "xp": 4,
+   "image": "hero-class-cards/gaarkhan-brutal-cleave.png"
+  },
+  {
+   "hero": "Gaarkhan",
+   "name": "Unstoppable",
+   "xp": 4,
+   "image": "hero-class-cards/gaarkhan-unstoppable.png"
+  },
+  {
+   "hero": "Gideon Argus",
+   "name": "Holdout Blaster",
+   "xp": null,
+   "image": "hero-class-cards/gideon-argus-holdout-blaster.png"
+  },
+  {
+   "hero": "Gideon Argus",
+   "name": "Called Shot",
+   "xp": 1,
+   "image": "hero-class-cards/gideon-argus-called-shot.png"
+  },
+  {
+   "hero": "Gideon Argus",
+   "name": "Military Efficiency",
+   "xp": 1,
+   "image": "hero-class-cards/gideon-argus-military-efficiency.png"
+  },
+  {
+   "hero": "Gideon Argus",
+   "name": "Air of Command",
+   "xp": 2,
+   "image": "hero-class-cards/gideon-argus-air-of-command.png"
+  },
+  {
+   "hero": "Gideon Argus",
+   "name": "Mobile Tactician",
+   "xp": 2,
+   "image": "hero-class-cards/gideon-argus-mobile-tactician.png"
+  },
+  {
+   "hero": "Gideon Argus",
+   "name": "For the Cause",
+   "xp": 3,
+   "image": "hero-class-cards/gideon-argus-for-the-cause.png"
+  },
+  {
+   "hero": "Gideon Argus",
+   "name": "Rallying Shout",
+   "xp": 3,
+   "image": "hero-class-cards/gideon-argus-rallying-shout.png"
+  },
+  {
+   "hero": "Gideon Argus",
+   "name": "Hammer and Anvil",
+   "xp": 4,
+   "image": "hero-class-cards/gideon-argus-hammer-and-anvil.png"
+  },
+  {
+   "hero": "Gideon Argus",
+   "name": "Masterstroke",
+   "xp": 4,
+   "image": "hero-class-cards/gideon-argus-masterstroke.png"
+  },
+  {
+   "hero": "Biv Bodhrik",
+   "name": "Repeating Blaster",
+   "xp": null,
+   "image": "hero-class-cards/biv-bodhrik-repeating-blaster.png"
+  },
+  {
+   "hero": "Biv Bodhrik",
+   "name": "Advance",
+   "xp": 1,
+   "image": "hero-class-cards/biv-bodhrik-advance.png"
+  },
+  {
+   "hero": "Biv Bodhrik",
+   "name": "Shake It Off",
+   "xp": 1,
+   "image": "hero-class-cards/biv-bodhrik-shake-it-off.png"
+  },
+  {
+   "hero": "Biv Bodhrik",
+   "name": "Crushing Blow",
+   "xp": 2,
+   "image": "hero-class-cards/biv-bodhrik-crushing-blow.png"
+  },
+  {
+   "hero": "Biv Bodhrik",
+   "name": "Into The Fray",
+   "xp": 2,
+   "image": "hero-class-cards/biv-bodhrik-into-the-fray.png"
+  },
+  {
+   "hero": "Biv Bodhrik",
+   "name": "Trophy Armor",
+   "xp": 3,
+   "image": "hero-class-cards/biv-bodhrik-trophy-armor.png"
+  },
+  {
+   "hero": "Biv Bodhrik",
+   "name": "Vibrobayonet",
+   "xp": 3,
+   "image": "hero-class-cards/biv-bodhrik-vibrobayonet.png"
+  },
+  {
+   "hero": "Biv Bodhrik",
+   "name": "Stay Down",
+   "xp": 4,
+   "image": "hero-class-cards/biv-bodhrik-stay-down.png"
+  },
+  {
+   "hero": "Saska Teft",
+   "name": "Modified Blaster",
+   "xp": null,
+   "image": "hero-class-cards/saska-teft-modified-blaster.png"
+  },
+  {
+   "hero": "Biv Bodhrik",
+   "name": "Final Stand",
+   "xp": 4,
+   "image": "hero-class-cards/biv-bodhrik-final-stand.png"
+  },
+  {
+   "hero": "Saska Teft",
+   "name": "Unstable Device",
+   "xp": 1,
+   "image": "hero-class-cards/saska-teft-unstable-device.png"
+  },
+  {
+   "hero": "Saska Teft",
+   "name": "Tool Kit",
+   "xp": 1,
+   "image": "hero-class-cards/saska-teft-tool-kit.png"
+  },
+  {
+   "hero": "Saska Teft",
+   "name": "Structural Weakness",
+   "xp": 2,
+   "image": "hero-class-cards/saska-teft-structural-weakness.png"
+  },
+  {
+   "hero": "Saska Teft",
+   "name": "Energy Shield",
+   "xp": 2,
+   "image": "hero-class-cards/saska-teft-energy-shield.png"
+  },
+  {
+   "hero": "Saska Teft",
+   "name": "Gadgeteer",
+   "xp": 3,
+   "image": "hero-class-cards/saska-teft-gadgeteer.png"
+  },
+  {
+   "hero": "Saska Teft",
+   "name": "Power Converter",
+   "xp": 3,
+   "image": "hero-class-cards/saska-teft-power-converter.png"
+  },
+  {
+   "hero": "Saska Teft",
+   "name": "Adrenaline Injector",
+   "xp": 4,
+   "image": "hero-class-cards/saska-teft-adrenaline-injector.png"
+  },
+  {
+   "hero": "Saska Teft",
+   "name": "Remote Distribution",
+   "xp": 4,
+   "image": "hero-class-cards/saska-teft-remote-distribution.png"
+  },
+  {
+   "hero": "Jyn Odan",
+   "name": "Vintage Blaster",
+   "xp": null,
+   "image": "hero-class-cards/jyn-odan-vintage-blaster.png"
+  },
+  {
+   "hero": "Jyn Odan",
+   "name": "Quick As A Whip",
+   "xp": 1,
+   "image": "hero-class-cards/jyn-odan-quick-as-a-whip.png"
+  },
+  {
+   "hero": "Mak Eshka'rey",
+   "name": "Longblaster",
+   "xp": null,
+   "image": "hero-class-cards/mak-eshkarey-longblaster.png"
+  },
+  {
+   "hero": "Jyn Odan",
+   "name": "Smugglers Luck",
+   "xp": 1,
+   "image": "hero-class-cards/jyn-odan-smugglers-luck.png"
+  },
+  {
+   "hero": "Mak Eshka'rey",
+   "name": "Disengage",
+   "xp": 1,
+   "image": "hero-class-cards/mak-eshkarey-disengage.png"
+  },
+  {
+   "hero": "Jyn Odan",
+   "name": "Cheap Shot",
+   "xp": 2,
+   "image": "hero-class-cards/jyn-odan-cheap-shot.png"
+  },
+  {
+   "hero": "Mak Eshka'rey",
+   "name": "Supply Network",
+   "xp": 1,
+   "image": "hero-class-cards/mak-eshkarey-supply-network.png"
+  },
+  {
+   "hero": "Jyn Odan",
+   "name": "Roll With It",
+   "xp": 2,
+   "image": "hero-class-cards/jyn-odan-roll-with-it.png"
+  },
+  {
+   "hero": "Mak Eshka'rey",
+   "name": "Target Acquired",
+   "xp": 2,
+   "image": "hero-class-cards/mak-eshkarey-target-acquired.png"
+  },
+  {
+   "hero": "Jyn Odan",
+   "name": "Get Cocky",
+   "xp": 3,
+   "image": "hero-class-cards/jyn-odan-get-cocky.png"
+  },
+  {
+   "hero": "Mak Eshka'rey",
+   "name": "Jeswandi Training",
+   "xp": 2,
+   "image": "hero-class-cards/mak-eshkarey-jeswandi-training.png"
+  },
+  {
+   "hero": "Jyn Odan",
+   "name": "Gunslinger",
+   "xp": 3,
+   "image": "hero-class-cards/jyn-odan-gunslinger.png"
+  },
+  {
+   "hero": "Mak Eshka'rey",
+   "name": "Execute",
+   "xp": 3,
+   "image": "hero-class-cards/mak-eshkarey-execute.png"
+  },
+  {
+   "hero": "Jyn Odan",
+   "name": "Trick Shot",
+   "xp": 4,
+   "image": "hero-class-cards/jyn-odan-trick-shot.png"
+  },
+  {
+   "hero": "Mak Eshka'rey",
+   "name": "Expertise",
+   "xp": 3,
+   "image": "hero-class-cards/mak-eshkarey-expertise.png"
+  },
+  {
+   "hero": "Jyn Odan",
+   "name": "Sidewinder",
+   "xp": 4,
+   "image": "hero-class-cards/jyn-odan-sidewinder.png"
+  },
+  {
+   "hero": "Mak Eshka'rey",
+   "name": "No Escape",
+   "xp": 4,
+   "image": "hero-class-cards/mak-eshkarey-no-escape.png"
+  },
+  {
+   "hero": "Mak Eshka'rey",
+   "name": "Decoy",
+   "xp": 4,
+   "image": "hero-class-cards/mak-eshkarey-decoy.png"
+  },
+  {
+   "hero": "Loku Kanoloa",
+   "name": "All-Weather Rifle",
+   "xp": null,
+   "image": "hero-class-cards/loku-kanoloa-all-weather-rifle.png"
+  },
+  {
+   "hero": "Loku Kanoloa",
+   "name": "Combat Spotter",
+   "xp": 1,
+   "image": "hero-class-cards/loku-kanoloa-combat-spotter.png"
+  },
+  {
+   "hero": "Loku Kanoloa",
+   "name": "Scouting Report",
+   "xp": 1,
+   "image": "hero-class-cards/loku-kanoloa-scouting-report.png"
+  },
+  {
+   "hero": "Loku Kanoloa",
+   "name": "Overwatch",
+   "xp": 2,
+   "image": "hero-class-cards/loku-kanoloa-overwatch.png"
+  },
+  {
+   "hero": "Loku Kanoloa",
+   "name": "Spectrum Scanner",
+   "xp": 2,
+   "image": "hero-class-cards/loku-kanoloa-spectrum-scanner.png"
+  },
+  {
+   "hero": "Loku Kanoloa",
+   "name": "Scouts Guidance",
+   "xp": 3,
+   "image": "hero-class-cards/loku-kanoloa-scouts-guidance.png"
+  },
+  {
+   "hero": "Loku Kanoloa",
+   "name": "Study of Enemies",
+   "xp": 3,
+   "image": "hero-class-cards/loku-kanoloa-study-of-enemies.png"
+  },
+  {
+   "hero": "Loku Kanoloa",
+   "name": "Coordinated Attack",
+   "xp": 4,
+   "image": "hero-class-cards/loku-kanoloa-coordinated-attack.png"
+  },
+  {
+   "hero": "MHD-19",
+   "name": "Sidearm Blaster",
+   "xp": null,
+   "image": "hero-class-cards/mhd-19-sidearm-blaster.png"
+  },
+  {
+   "hero": "Loku Kanoloa",
+   "name": "Mon Cala Special Forces",
+   "xp": 4,
+   "image": "hero-class-cards/loku-kanoloa-mon-cala-special-forces.png"
+  },
+  {
+   "hero": "MHD-19",
+   "name": "Bacta Injector",
+   "xp": 1,
+   "image": "hero-class-cards/mhd-19-bacta-injector.png"
+  },
+  {
+   "hero": "Verena Talos",
+   "name": "Fighting Knife",
+   "xp": null,
+   "image": "hero-class-cards/verena-talos-fighting-knife.png"
+  },
+  {
+   "hero": "MHD-19",
+   "name": "Improper Procedure",
+   "xp": 1,
+   "image": "hero-class-cards/mhd-19-improper-procedure.png"
+  },
+  {
+   "hero": "Verena Talos",
+   "name": "Military Blaster",
+   "xp": null,
+   "image": "hero-class-cards/verena-talos-military-blaster.png"
+  },
+  {
+   "hero": "MHD-19",
+   "name": "Field Surgeon",
+   "xp": 2,
+   "image": "hero-class-cards/mhd-19-field-surgeon.png"
+  },
+  {
+   "hero": "Verena Talos",
+   "name": "Combat Momentum",
+   "xp": 1,
+   "image": "hero-class-cards/verena-talos-combat-momentum.png"
+  },
+  {
+   "hero": "MHD-19",
+   "name": "Fuel Injection",
+   "xp": 2,
+   "image": "hero-class-cards/mhd-19-fuel-injection.png"
+  },
+  {
+   "hero": "Verena Talos",
+   "name": "Create Opening",
+   "xp": 1,
+   "image": "hero-class-cards/verena-talos-create-opening.png"
+  },
+  {
+   "hero": "MHD-19",
+   "name": "Adrenal Vapor",
+   "xp": 3,
+   "image": "hero-class-cards/mhd-19-adrenal-vapor.png"
+  },
+  {
+   "hero": "Verena Talos",
+   "name": "Ktara Maneuver",
+   "xp": 2,
+   "image": "hero-class-cards/verena-talos-ktara-maneuver.png"
+  },
+  {
+   "hero": "MHD-19",
+   "name": "Miracle Worker",
+   "xp": 3,
+   "image": "hero-class-cards/mhd-19-miracle-worker.png"
+  },
+  {
+   "hero": "Verena Talos",
+   "name": "Student of Battle",
+   "xp": 2,
+   "image": "hero-class-cards/verena-talos-student-of-battle.png"
+  },
+  {
+   "hero": "MHD-19",
+   "name": "Bacta Radiator",
+   "xp": 4,
+   "image": "hero-class-cards/mhd-19-bacta-radiator.png"
+  },
+  {
+   "hero": "Verena Talos",
+   "name": "Improvised Cover",
+   "xp": 3,
+   "image": "hero-class-cards/verena-talos-improvised-cover.png"
+  },
+  {
+   "hero": "MHD-19",
+   "name": "Combat Override",
+   "xp": 4,
+   "image": "hero-class-cards/mhd-19-combat-override.png"
+  },
+  {
+   "hero": "Verena Talos",
+   "name": "Point Blank Shot",
+   "xp": 3,
+   "image": "hero-class-cards/verena-talos-point-blank-shot.png"
+  },
+  {
+   "hero": "Verena Talos",
+   "name": "Combat Mastery",
+   "xp": 4,
+   "image": "hero-class-cards/verena-talos-combat-mastery.png"
+  },
+  {
+   "hero": "Verena Talos",
+   "name": "Master Operative",
+   "xp": 4,
+   "image": "hero-class-cards/verena-talos-master-operative.png"
+  },
+  {
+   "hero": "Davith Elso",
+   "name": "Heirloom Dagger",
+   "xp": null,
+   "image": "hero-class-cards/davith-elso-heirloom-dagger.png"
+  },
+  {
+   "hero": "Davith Elso",
+   "name": "Covert Operative",
+   "xp": 1,
+   "image": "hero-class-cards/davith-elso-covert-operative.png"
+  },
+  {
+   "hero": "Davith Elso",
+   "name": "Elusive Agent",
+   "xp": 1,
+   "image": "hero-class-cards/davith-elso-elusive-agent.png"
+  },
+  {
+   "hero": "Davith Elso",
+   "name": "Blindside",
+   "xp": 2,
+   "image": "hero-class-cards/davith-elso-blindside.png"
+  },
+  {
+   "hero": "Davith Elso",
+   "name": "Falling Leaf",
+   "xp": 2,
+   "image": "hero-class-cards/davith-elso-falling-leaf.png"
+  },
+  {
+   "hero": "Davith Elso",
+   "name": "Force Illusion",
+   "xp": 3,
+   "image": "hero-class-cards/davith-elso-force-illusion.png"
+  },
+  {
+   "hero": "Davith Elso",
+   "name": "Shrouded Lightsaber",
+   "xp": 3,
+   "image": "hero-class-cards/davith-elso-shrouded-lightsaber.png"
+  },
+  {
+   "hero": "Davith Elso",
+   "name": "Fell Swoop",
+   "xp": 4,
+   "image": "hero-class-cards/davith-elso-fell-swoop.png"
+  },
+  {
+   "hero": "Murne Rin",
+   "name": "Diplomats Blaster",
+   "xp": null,
+   "image": "hero-class-cards/murne-rin-diplomats-blaster.png"
+  },
+  {
+   "hero": "Davith Elso",
+   "name": "Embody the Force",
+   "xp": 4,
+   "image": "hero-class-cards/davith-elso-embody-the-force.png"
+  },
+  {
+   "hero": "Murne Rin",
+   "name": "Company of Heroes",
+   "xp": 1,
+   "image": "hero-class-cards/murne-rin-company-of-heroes.png"
+  },
+  {
+   "hero": "Murne Rin",
+   "name": "Sonic Bellow",
+   "xp": 1,
+   "image": "hero-class-cards/murne-rin-sonic-bellow.png"
+  },
+  {
+   "hero": "Murne Rin",
+   "name": "Rebel Propaganda",
+   "xp": 2,
+   "image": "hero-class-cards/murne-rin-rebel-propaganda.png"
+  },
+  {
+   "hero": "Murne Rin",
+   "name": "Professional Aide",
+   "xp": 2,
+   "image": "hero-class-cards/murne-rin-professional-aide.png"
+  },
+  {
+   "hero": "Murne Rin",
+   "name": "Solidarity",
+   "xp": 3,
+   "image": "hero-class-cards/murne-rin-solidarity.png"
+  },
+  {
+   "hero": "Murne Rin",
+   "name": "Double Agent",
+   "xp": 3,
+   "image": "hero-class-cards/murne-rin-double-agent.png"
+  },
+  {
+   "hero": "Murne Rin",
+   "name": "Waylay",
+   "xp": 4,
+   "image": "hero-class-cards/murne-rin-waylay.png"
+  },
+  {
+   "hero": "Murne Rin",
+   "name": "Lead from the Front",
+   "xp": 4,
+   "image": "hero-class-cards/murne-rin-lead-from-the-front.png"
+  },
+  {
+   "hero": "Onar Koma",
+   "name": "Bodyguard Rifle",
+   "xp": null,
+   "image": "hero-class-cards/onar-koma-bodyguard-rifle.png"
+  },
+  {
+   "hero": "Onar Koma",
+   "name": "Get Down",
+   "xp": 1,
+   "image": "hero-class-cards/onar-koma-get-down.png"
+  },
+  {
+   "hero": "Onar Koma",
+   "name": "Keep Up",
+   "xp": 1,
+   "image": "hero-class-cards/onar-koma-keep-up.png"
+  },
+  {
+   "hero": "Onar Koma",
+   "name": "Mutual Destruction",
+   "xp": 2,
+   "image": "hero-class-cards/onar-koma-mutual-destruction.png"
+  },
+  {
+   "hero": "Onar Koma",
+   "name": "Stay Behind Me",
+   "xp": 2,
+   "image": "hero-class-cards/onar-koma-stay-behind-me.png"
+  },
+  {
+   "hero": "Onar Koma",
+   "name": "Brute Strength",
+   "xp": 3,
+   "image": "hero-class-cards/onar-koma-brute-strength.png"
+  },
+  {
+   "hero": "Onar Koma",
+   "name": "Hold Still",
+   "xp": 3,
+   "image": "hero-class-cards/onar-koma-hold-still.png"
+  },
+  {
+   "hero": "Onar Koma",
+   "name": "Black Sun Armor",
+   "xp": 4,
+   "image": "hero-class-cards/onar-koma-black-sun-armor.png"
+  },
+  {
+   "hero": "Shyla Varad",
+   "name": "Duelists Blade",
+   "xp": null,
+   "image": "hero-class-cards/shyla-varad-duelists-blade.png"
+  },
+  {
+   "hero": "Onar Koma",
+   "name": "Dont Make Me Hurt You",
+   "xp": 4,
+   "image": "hero-class-cards/onar-koma-dont-make-me-hurt-you.png"
+  },
+  {
+   "hero": "Shyla Varad",
+   "name": "All-Out Attack",
+   "xp": 1,
+   "image": "hero-class-cards/shyla-varad-all-out-attack.png"
+  },
+  {
+   "hero": "Vinto Hreeda",
+   "name": "Hair-Trigger Pistol",
+   "xp": null,
+   "image": "hero-class-cards/vinto-hreeda-hair-trigger-pistol.png"
+  },
+  {
+   "hero": "Shyla Varad",
+   "name": "Responsiveness",
+   "xp": 1,
+   "image": "hero-class-cards/shyla-varad-responsiveness.png"
+  },
+  {
+   "hero": "Vinto Hreeda",
+   "name": "Pinpoint Shot",
+   "xp": 1,
+   "image": "hero-class-cards/vinto-hreeda-pinpoint-shot.png"
+  },
+  {
+   "hero": "Shyla Varad",
+   "name": "Proximity Strike",
+   "xp": 2,
+   "image": "hero-class-cards/shyla-varad-proximity-strike.png"
+  },
+  {
+   "hero": "Vinto Hreeda",
+   "name": "Shot on the Run",
+   "xp": 1,
+   "image": "hero-class-cards/vinto-hreeda-shot-on-the-run.png"
+  },
+  {
+   "hero": "Shyla Varad",
+   "name": "Smoke Bombs",
+   "xp": 2,
+   "image": "hero-class-cards/shyla-varad-smoke-bombs.png"
+  },
+  {
+   "hero": "Vinto Hreeda",
+   "name": "Battlefield Experience",
+   "xp": 2,
+   "image": "hero-class-cards/vinto-hreeda-battlefield-experience.png"
+  },
+  {
+   "hero": "Shyla Varad",
+   "name": "Remote Detonator",
+   "xp": 3,
+   "image": "hero-class-cards/shyla-varad-remote-detonator.png"
+  },
+  {
+   "hero": "Vinto Hreeda",
+   "name": "Sharpshooter",
+   "xp": 2,
+   "image": "hero-class-cards/vinto-hreeda-sharpshooter.png"
+  },
+  {
+   "hero": "Shyla Varad",
+   "name": "Swords Dance",
+   "xp": 3,
+   "image": "hero-class-cards/shyla-varad-swords-dance.png"
+  },
+  {
+   "hero": "Vinto Hreeda",
+   "name": "Dead On",
+   "xp": 3,
+   "image": "hero-class-cards/vinto-hreeda-dead-on.png"
+  },
+  {
+   "hero": "Shyla Varad",
+   "name": "Full Sweep",
+   "xp": 4,
+   "image": "hero-class-cards/shyla-varad-full-sweep.png"
+  },
+  {
+   "hero": "Vinto Hreeda",
+   "name": "Off-Hand Blaster",
+   "xp": 3,
+   "image": "hero-class-cards/vinto-hreeda-off-hand-blaster.png"
+  },
+  {
+   "hero": "Shyla Varad",
+   "name": "Deadly Grace",
+   "xp": 4,
+   "image": "hero-class-cards/shyla-varad-deadly-grace.png"
+  },
+  {
+   "hero": "Vinto Hreeda",
+   "name": "Merciless",
+   "xp": 4,
+   "image": "hero-class-cards/vinto-hreeda-merciless.png"
+  },
+  {
+   "hero": "Vinto Hreeda",
+   "name": "Rapid Fire",
+   "xp": 4,
+   "image": "hero-class-cards/vinto-hreeda-rapid-fire.png"
+  },
+  {
+   "hero": "Drokkatta",
+   "name": "MGL-9 Boomer",
+   "xp": null,
+   "image": "hero-class-cards/drokkatta-mgl-9-boomer.png"
+  },
+  {
+   "hero": "Drokkatta",
+   "name": "Charging Up",
+   "xp": 1,
+   "image": "hero-class-cards/drokkatta-charging-up.png"
+  },
+  {
+   "hero": "Drokkatta",
+   "name": "Leave No One Behind",
+   "xp": 1,
+   "image": "hero-class-cards/drokkatta-leave-no-one-behind.png"
+  },
+  {
+   "hero": "Drokkatta",
+   "name": "Bank Shot",
+   "xp": 2,
+   "image": "hero-class-cards/drokkatta-bank-shot.png"
+  },
+  {
+   "hero": "Drokkatta",
+   "name": "Shrapnel Rounds",
+   "xp": 2,
+   "image": "hero-class-cards/drokkatta-shrapnel-rounds.png"
+  },
+  {
+   "hero": "Drokkatta",
+   "name": "Repeater Cannon",
+   "xp": 3,
+   "image": "hero-class-cards/drokkatta-repeater-cannon.png"
+  },
+  {
+   "hero": "Drokkatta",
+   "name": "Structural Exploitation",
+   "xp": 3,
+   "image": "hero-class-cards/drokkatta-structural-exploitation.png"
+  },
+  {
+   "hero": "Drokkatta",
+   "name": "Thermal Explosives",
+   "xp": 4,
+   "image": "hero-class-cards/drokkatta-thermal-explosives.png"
+  },
+  {
+   "hero": "Jarrod Kelvin",
+   "name": "Vibro-Claws",
+   "xp": null,
+   "image": "hero-class-cards/jarrod-kelvin-vibro-claws.png"
+  },
+  {
+   "hero": "Drokkatta",
+   "name": "Wookiee Wrath",
+   "xp": 4,
+   "image": "hero-class-cards/drokkatta-wookiee-wrath.png"
+  },
+  {
+   "hero": "Jarrod Kelvin",
+   "name": "Balanced Approach",
+   "xp": 1,
+   "image": "hero-class-cards/jarrod-kelvin-balanced-approach.png"
+  },
+  {
+   "hero": "Ko-Tun Feralo",
+   "name": "Service Rifle",
+   "xp": null,
+   "image": "hero-class-cards/ko-tun-feralo-service-rifle.png"
+  },
+  {
+   "hero": "Jarrod Kelvin",
+   "name": "Forward Momentum",
+   "xp": 1,
+   "image": "hero-class-cards/jarrod-kelvin-forward-momentum.png"
+  },
+  {
+   "hero": "Ko-Tun Feralo",
+   "name": "Auxiliary Training",
+   "xp": 1,
+   "image": "hero-class-cards/ko-tun-feralo-auxiliary-training.png"
+  },
+  {
+   "hero": "Jarrod Kelvin",
+   "name": "Scouts Loadout",
+   "xp": 2,
+   "image": "hero-class-cards/jarrod-kelvin-scouts-loadout.png"
+  },
+  {
+   "hero": "Ko-Tun Feralo",
+   "name": "Inch By Inch",
+   "xp": 1,
+   "image": "hero-class-cards/ko-tun-feralo-inch-by-inch.png"
+  },
+  {
+   "hero": "Jarrod Kelvin",
+   "name": "Slicers Upgrades",
+   "xp": 2,
+   "image": "hero-class-cards/jarrod-kelvin-slicers-upgrades.png"
+  },
+  {
+   "hero": "Ko-Tun Feralo",
+   "name": "Combat Logistics",
+   "xp": 2,
+   "image": "hero-class-cards/ko-tun-feralo-combat-logistics.png"
+  },
+  {
+   "hero": "Jarrod Kelvin",
+   "name": "Explosive Reflexes",
+   "xp": 3,
+   "image": "hero-class-cards/jarrod-kelvin-explosive-reflexes.png"
+  },
+  {
+   "hero": "Ko-Tun Feralo",
+   "name": "Dig In",
+   "xp": 2,
+   "image": "hero-class-cards/ko-tun-feralo-dig-in.png"
+  },
+  {
+   "hero": "Jarrod Kelvin",
+   "name": "Mutual Progression",
+   "xp": 3,
+   "image": "hero-class-cards/jarrod-kelvin-mutual-progression.png"
+  },
+  {
+   "hero": "Ko-Tun Feralo",
+   "name": "Fire Support Specialist",
+   "xp": 3,
+   "image": "hero-class-cards/ko-tun-feralo-fire-support-specialist.png"
+  },
+  {
+   "hero": "Jarrod Kelvin",
+   "name": "Leaping Slash",
+   "xp": 4,
+   "image": "hero-class-cards/jarrod-kelvin-leaping-slash.png"
+  },
+  {
+   "hero": "Ko-Tun Feralo",
+   "name": "Opportunist",
+   "xp": 3,
+   "image": "hero-class-cards/ko-tun-feralo-opportunist.png"
+  },
+  {
+   "hero": "Jarrod Kelvin",
+   "name": "Mechanical Master",
+   "xp": 4,
+   "image": "hero-class-cards/jarrod-kelvin-mechanical-master.png"
+  },
+  {
+   "hero": "Ko-Tun Feralo",
+   "name": "Self-sufficient",
+   "xp": 4,
+   "image": "hero-class-cards/ko-tun-feralo-self-sufficient.png"
+  },
+  {
+   "hero": "Ko-Tun Feralo",
+   "name": "Squad Cohesion",
+   "xp": 4,
+   "image": "hero-class-cards/ko-tun-feralo-squad-cohesion.png"
+  }
+ ],
+ "imperial-class-cards": [
+  {
+   "class": "Military Might",
+   "name": "Assault Armor",
+   "xp": 2,
+   "image": "imperial-class-cards/military-might-assault-armor.png"
+  },
+  {
+   "class": "Military Might",
+   "name": "Combat Medic",
+   "xp": 1,
+   "image": "imperial-class-cards/military-might-combat-medic.png"
+  },
+  {
+   "class": "Military Might",
+   "name": "Combat Veterans",
+   "xp": 4,
+   "image": "imperial-class-cards/military-might-combat-veterans.png"
+  },
+  {
+   "class": "Military Might",
+   "name": "Endless Ranks",
+   "xp": 2,
+   "image": "imperial-class-cards/military-might-endless-ranks.png"
+  },
+  {
+   "class": "Military Might",
+   "name": "Riot Grenades",
+   "xp": 1,
+   "image": "imperial-class-cards/military-might-riot-grenades.png"
+  },
+  {
+   "class": "Military Might",
+   "name": "Shock Troopers",
+   "xp": 3,
+   "image": "imperial-class-cards/military-might-shock-troopers.png"
+  },
+  {
+   "class": "Military Might",
+   "name": "Shock and Awe",
+   "xp": 4,
+   "image": "imperial-class-cards/military-might-shock-and-awe.png"
+  },
+  {
+   "class": "Military Might",
+   "name": "Show of Force",
+   "xp": null,
+   "image": "imperial-class-cards/military-might-show-of-force.png"
+  },
+  {
+   "class": "Military Might",
+   "name": "Sustained Fire",
+   "xp": 3,
+   "image": "imperial-class-cards/military-might-sustained-fire.png"
+  },
+  {
+   "class": "Inspiring Leadership",
+   "name": "Field General",
+   "xp": 3,
+   "image": "imperial-class-cards/inspiring-leadership-field-general.png"
+  },
+  {
+   "class": "Inspiring Leadership",
+   "name": "Field Officer",
+   "xp": null,
+   "image": "imperial-class-cards/inspiring-leadership-field-officer.png"
+  },
+  {
+   "class": "Inspiring Leadership",
+   "name": "Imperial Dedication",
+   "xp": 3,
+   "image": "imperial-class-cards/inspiring-leadership-imperial-dedication.png"
+  },
+  {
+   "class": "Inspiring Leadership",
+   "name": "Lead By Example",
+   "xp": 4,
+   "image": "imperial-class-cards/inspiring-leadership-lead-by-example.png"
+  },
+  {
+   "class": "Inspiring Leadership",
+   "name": "Noble Sacrifice",
+   "xp": 2,
+   "image": "imperial-class-cards/inspiring-leadership-noble-sacrifice.png"
+  },
+  {
+   "class": "Inspiring Leadership",
+   "name": "Optimal Tactics",
+   "xp": 4,
+   "image": "imperial-class-cards/inspiring-leadership-optimal-tactics.png"
+  },
+  {
+   "class": "Inspiring Leadership",
+   "name": "Press On",
+   "xp": 1,
+   "image": "imperial-class-cards/inspiring-leadership-press-on.png"
+  },
+  {
+   "class": "Inspiring Leadership",
+   "name": "Strategic Planning",
+   "xp": 2,
+   "image": "imperial-class-cards/inspiring-leadership-strategic-planning.png"
+  },
+  {
+   "class": "Inspiring Leadership",
+   "name": "Supervisory Agent",
+   "xp": 1,
+   "image": "imperial-class-cards/inspiring-leadership-supervisory-agent.png"
+  },
+  {
+   "class": "Armored Onslaught",
+   "name": "Armor Corps",
+   "xp": 1,
+   "image": "imperial-class-cards/armored-onslaught-armor-corps.png"
+  },
+  {
+   "class": "Armored Onslaught",
+   "name": "Automated Repairs",
+   "xp": 1,
+   "image": "imperial-class-cards/armored-onslaught-automated-repairs.png"
+  },
+  {
+   "class": "Armored Onslaught",
+   "name": "Explosive Entry",
+   "xp": 2,
+   "image": "imperial-class-cards/armored-onslaught-explosive-entry.png"
+  },
+  {
+   "class": "Armored Onslaught",
+   "name": "Explosive Munitions",
+   "xp": null,
+   "image": "imperial-class-cards/armored-onslaught-explosive-munitions.png"
+  },
+  {
+   "class": "Armored Onslaught",
+   "name": "Heavy Firepower",
+   "xp": 2,
+   "image": "imperial-class-cards/armored-onslaught-heavy-firepower.png"
+  },
+  {
+   "class": "Armored Onslaught",
+   "name": "Mortar",
+   "xp": 3,
+   "image": "imperial-class-cards/armored-onslaught-mortar.png"
+  },
+  {
+   "class": "Armored Onslaught",
+   "name": "Power to Shields",
+   "xp": 4,
+   "image": "imperial-class-cards/armored-onslaught-power-to-shields.png"
+  },
+  {
+   "class": "Armored Onslaught",
+   "name": "Rapid Dominance",
+   "xp": 4,
+   "image": "imperial-class-cards/armored-onslaught-rapid-dominance.png"
+  },
+  {
+   "class": "Armored Onslaught",
+   "name": "Reactive Armor",
+   "xp": 3,
+   "image": "imperial-class-cards/armored-onslaught-reactive-armor.png"
+  },
+  {
+   "class": "Precision Training",
+   "name": "Assassins",
+   "xp": 3,
+   "image": "imperial-class-cards/precision-training-assassins.png"
+  },
+  {
+   "class": "Precision Training",
+   "name": "Exacting Strike",
+   "xp": 3,
+   "image": "imperial-class-cards/precision-training-exacting-strike.png"
+  },
+  {
+   "class": "Precision Training",
+   "name": "Find the Weakness",
+   "xp": 4,
+   "image": "imperial-class-cards/precision-training-find-the-weakness.png"
+  },
+  {
+   "class": "Precision Training",
+   "name": "Knowledge of Attack",
+   "xp": 2,
+   "image": "imperial-class-cards/precision-training-knowledge-of-attack.png"
+  },
+  {
+   "class": "Precision Training",
+   "name": "Pinpoint Accuracy",
+   "xp": 1,
+   "image": "imperial-class-cards/precision-training-pinpoint-accuracy.png"
+  },
+  {
+   "class": "Precision Training",
+   "name": "Sharpshooters",
+   "xp": 1,
+   "image": "imperial-class-cards/precision-training-sharpshooters.png"
+  },
+  {
+   "class": "Precision Training",
+   "name": "Single Minded",
+   "xp": 4,
+   "image": "imperial-class-cards/precision-training-single-minded.png"
+  },
+  {
+   "class": "Precision Training",
+   "name": "Strike Force",
+   "xp": null,
+   "image": "imperial-class-cards/precision-training-strike-force.png"
+  },
+  {
+   "class": "Precision Training",
+   "name": "Versatile Attack",
+   "xp": 2,
+   "image": "imperial-class-cards/precision-training-versatile-attack.png"
+  },
+  {
+   "class": "Imperial Black Ops",
+   "name": "Execution Squad",
+   "xp": 3,
+   "image": "imperial-class-cards/imperial-black-ops-execution-squad.png"
+  },
+  {
+   "class": "Imperial Black Ops",
+   "name": "In the Shadows",
+   "xp": null,
+   "image": "imperial-class-cards/imperial-black-ops-in-the-shadows.png"
+  },
+  {
+   "class": "Imperial Black Ops",
+   "name": "Shadow Armor",
+   "xp": 2,
+   "image": "imperial-class-cards/imperial-black-ops-shadow-armor.png"
+  },
+  {
+   "class": "Imperial Black Ops",
+   "name": "Shadow Corps",
+   "xp": 1,
+   "image": "imperial-class-cards/imperial-black-ops-shadow-corps.png"
+  },
+  {
+   "class": "Imperial Black Ops",
+   "name": "Stealth",
+   "xp": 1,
+   "image": "imperial-class-cards/imperial-black-ops-stealth.png"
+  },
+  {
+   "class": "Imperial Black Ops",
+   "name": "Strategic Redeployment",
+   "xp": 3,
+   "image": "imperial-class-cards/imperial-black-ops-strategic-redeployment.png"
+  },
+  {
+   "class": "Imperial Black Ops",
+   "name": "Surprise Attack",
+   "xp": 2,
+   "image": "imperial-class-cards/imperial-black-ops-surprise-attack.png"
+  },
+  {
+   "class": "Imperial Black Ops",
+   "name": "True Shadow",
+   "xp": 4,
+   "image": "imperial-class-cards/imperial-black-ops-true-shadow.png"
+  },
+  {
+   "class": "Imperial Black Ops",
+   "name": "Versatility",
+   "xp": 4,
+   "image": "imperial-class-cards/imperial-black-ops-versatility.png"
+  },
+  {
+   "class": "Hutt Mercenaries",
+   "name": "Cheap Shot",
+   "xp": 2,
+   "image": "imperial-class-cards/hutt-mercenaries-cheap-shot.png"
+  },
+  {
+   "class": "Hutt Mercenaries",
+   "name": "Guild Hunters",
+   "xp": 4,
+   "image": "imperial-class-cards/hutt-mercenaries-guild-hunters.png"
+  },
+  {
+   "class": "Hutt Mercenaries",
+   "name": "Most Wanted",
+   "xp": 4,
+   "image": "imperial-class-cards/hutt-mercenaries-most-wanted.png"
+  },
+  {
+   "class": "Hutt Mercenaries",
+   "name": "Nowhere to Hide",
+   "xp": 3,
+   "image": "imperial-class-cards/hutt-mercenaries-nowhere-to-hide.png"
+  },
+  {
+   "class": "Hutt Mercenaries",
+   "name": "Nowhere to Run",
+   "xp": 3,
+   "image": "imperial-class-cards/hutt-mercenaries-nowhere-to-run.png"
+  },
+  {
+   "class": "Hutt Mercenaries",
+   "name": "Savage Motivation",
+   "xp": 2,
+   "image": "imperial-class-cards/hutt-mercenaries-savage-motivation.png"
+  },
+  {
+   "class": "Hutt Mercenaries",
+   "name": "Scouted",
+   "xp": 1,
+   "image": "imperial-class-cards/hutt-mercenaries-scouted.png"
+  },
+  {
+   "class": "Hutt Mercenaries",
+   "name": "Vendetta",
+   "xp": 1,
+   "image": "imperial-class-cards/hutt-mercenaries-vendetta.png"
+  },
+  {
+   "class": "Hutt Mercenaries",
+   "name": "Wanted Dead",
+   "xp": null,
+   "image": "imperial-class-cards/hutt-mercenaries-wanted-dead.png"
+  },
+  {
+   "class": "Nemeses",
+   "name": "Devastating Legion",
+   "xp": 4,
+   "image": "imperial-class-cards/nemeses-devastating-legion.png"
+  },
+  {
+   "class": "Nemeses",
+   "name": "Fearsome Presence",
+   "xp": 1,
+   "image": "imperial-class-cards/nemeses-fearsome-presence.png"
+  },
+  {
+   "class": "Nemeses",
+   "name": "Im on the Leader",
+   "xp": 2,
+   "image": "imperial-class-cards/nemeses-im-on-the-leader.png"
+  },
+  {
+   "class": "Nemeses",
+   "name": "Indomitable",
+   "xp": 4,
+   "image": "imperial-class-cards/nemeses-indomitable.png"
+  },
+  {
+   "class": "Nemeses",
+   "name": "Inspirational",
+   "xp": null,
+   "image": "imperial-class-cards/nemeses-inspirational.png"
+  },
+  {
+   "class": "Nemeses",
+   "name": "Leave Them to Me",
+   "xp": 3,
+   "image": "imperial-class-cards/nemeses-leave-them-to-me.png"
+  },
+  {
+   "class": "Nemeses",
+   "name": "Powerful Foes",
+   "xp": null,
+   "image": "imperial-class-cards/nemeses-powerful-foes.png"
+  },
+  {
+   "class": "Nemeses",
+   "name": "Prepare the Ambush",
+   "xp": 1,
+   "image": "imperial-class-cards/nemeses-prepare-the-ambush.png"
+  },
+  {
+   "class": "Nemeses",
+   "name": "Punishing Force",
+   "xp": 3,
+   "image": "imperial-class-cards/nemeses-punishing-force.png"
+  },
+  {
+   "class": "Nemeses",
+   "name": "Ringleader",
+   "xp": 2,
+   "image": "imperial-class-cards/nemeses-ringleader.png"
+  },
+  {
+   "class": "Subversive Tactics",
+   "name": "Executioner",
+   "xp": 3,
+   "image": "imperial-class-cards/subversive-tactics-executioner.png"
+  },
+  {
+   "class": "Subversive Tactics",
+   "name": "Exploit Weakness",
+   "xp": 2,
+   "image": "imperial-class-cards/subversive-tactics-exploit-weakness.png"
+  },
+  {
+   "class": "Subversive Tactics",
+   "name": "Heavy Pressure",
+   "xp": 2,
+   "image": "imperial-class-cards/subversive-tactics-heavy-pressure.png"
+  },
+  {
+   "class": "Subversive Tactics",
+   "name": "No Quarter",
+   "xp": 4,
+   "image": "imperial-class-cards/subversive-tactics-no-quarter.png"
+  },
+  {
+   "class": "Subversive Tactics",
+   "name": "Oppression",
+   "xp": 4,
+   "image": "imperial-class-cards/subversive-tactics-oppression.png"
+  },
+  {
+   "class": "Subversive Tactics",
+   "name": "Prey Upon Doubt",
+   "xp": null,
+   "image": "imperial-class-cards/subversive-tactics-prey-upon-doubt.png"
+  },
+  {
+   "class": "Subversive Tactics",
+   "name": "Savage Weaponry",
+   "xp": 1,
+   "image": "imperial-class-cards/subversive-tactics-savage-weaponry.png"
+  },
+  {
+   "class": "Subversive Tactics",
+   "name": "Surgical Strike",
+   "xp": 1,
+   "image": "imperial-class-cards/subversive-tactics-surgical-strike.png"
+  },
+  {
+   "class": "Subversive Tactics",
+   "name": "Weary Target",
+   "xp": 3,
+   "image": "imperial-class-cards/subversive-tactics-weary-target.png"
+  },
+  {
+   "class": "Technological Superiority",
+   "name": "Adaptive Weapons",
+   "xp": 4,
+   "image": "imperial-class-cards/technological-superiority-adaptive-weapons.png"
+  },
+  {
+   "class": "Technological Superiority",
+   "name": "Arc Blasters",
+   "xp": 3,
+   "image": "imperial-class-cards/technological-superiority-arc-blasters.png"
+  },
+  {
+   "class": "Technological Superiority",
+   "name": "Cloaking Device",
+   "xp": 3,
+   "image": "imperial-class-cards/technological-superiority-cloaking-device.png"
+  },
+  {
+   "class": "Technological Superiority",
+   "name": "Experimental Arms",
+   "xp": null,
+   "image": "imperial-class-cards/technological-superiority-experimental-arms.png"
+  },
+  {
+   "class": "Technological Superiority",
+   "name": "Failsafe",
+   "xp": 2,
+   "image": "imperial-class-cards/technological-superiority-failsafe.png"
+  },
+  {
+   "class": "Technological Superiority",
+   "name": "Hidden Detonators",
+   "xp": 2,
+   "image": "imperial-class-cards/technological-superiority-hidden-detonators.png"
+  },
+  {
+   "class": "Technological Superiority",
+   "name": "Jetpacks",
+   "xp": 1,
+   "image": "imperial-class-cards/technological-superiority-jetpacks.png"
+  },
+  {
+   "class": "Technological Superiority",
+   "name": "Superior Augments",
+   "xp": 4,
+   "image": "imperial-class-cards/technological-superiority-superior-augments.png"
+  },
+  {
+   "class": "Technological Superiority",
+   "name": "Technical Support",
+   "xp": 1,
+   "image": "imperial-class-cards/technological-superiority-technical-support.png"
+  },
+  {
+   "class": "Power of the Dark Side",
+   "name": "Dark Resurgence",
+   "xp": 1,
+   "image": "imperial-class-cards/power-of-the-dark-side-dark-resurgence.png"
+  },
+  {
+   "class": "Power of the Dark Side",
+   "name": "Embrace Anger",
+   "xp": 2,
+   "image": "imperial-class-cards/power-of-the-dark-side-embrace-anger.png"
+  },
+  {
+   "class": "Power of the Dark Side",
+   "name": "Embrace Fear",
+   "xp": 1,
+   "image": "imperial-class-cards/power-of-the-dark-side-embrace-fear.png"
+  },
+  {
+   "class": "Power of the Dark Side",
+   "name": "Embrace Hate",
+   "xp": 3,
+   "image": "imperial-class-cards/power-of-the-dark-side-embrace-hate.png"
+  },
+  {
+   "class": "Power of the Dark Side",
+   "name": "Embrace Suffering",
+   "xp": 4,
+   "image": "imperial-class-cards/power-of-the-dark-side-embrace-suffering.png"
+  },
+  {
+   "class": "Power of the Dark Side",
+   "name": "Manifest Agression",
+   "xp": null,
+   "image": "imperial-class-cards/power-of-the-dark-side-manifest-agression.png"
+  },
+  {
+   "class": "Power of the Dark Side",
+   "name": "Supernatural Vigor",
+   "xp": 2,
+   "image": "imperial-class-cards/power-of-the-dark-side-supernatural-vigor.png"
+  },
+  {
+   "class": "Power of the Dark Side",
+   "name": "The Power of Passion",
+   "xp": 4,
+   "image": "imperial-class-cards/power-of-the-dark-side-the-power-of-passion.png"
+  },
+  {
+   "class": "Power of the Dark Side",
+   "name": "Unnatural Abilities",
+   "xp": 3,
+   "image": "imperial-class-cards/power-of-the-dark-side-unnatural-abilities.png"
+  },
+  {
+   "class": "Reactive Defenses",
+   "name": "Active Surveillance",
+   "xp": null,
+   "image": "imperial-class-cards/reactive-defenses-active-surveillance.png"
+  },
+  {
+   "class": "Reactive Defenses",
+   "name": "Blaster Emplacements",
+   "xp": 1,
+   "image": "imperial-class-cards/reactive-defenses-blaster-emplacements.png"
+  },
+  {
+   "class": "Reactive Defenses",
+   "name": "Electromagnetic Disruptors",
+   "xp": 3,
+   "image": "imperial-class-cards/reactive-defenses-electromagnetic-disruptors.png"
+  },
+  {
+   "class": "Reactive Defenses",
+   "name": "Infrared Scanners",
+   "xp": 3,
+   "image": "imperial-class-cards/reactive-defenses-infrared-scanners.png"
+  },
+  {
+   "class": "Reactive Defenses",
+   "name": "Mechanical Protocol",
+   "xp": 2,
+   "image": "imperial-class-cards/reactive-defenses-mechanical-protocol.png"
+  },
+  {
+   "class": "Reactive Defenses",
+   "name": "Overclock",
+   "xp": 4,
+   "image": "imperial-class-cards/reactive-defenses-overclock.png"
+  },
+  {
+   "class": "Reactive Defenses",
+   "name": "Remote Activator",
+   "xp": 2,
+   "image": "imperial-class-cards/reactive-defenses-remote-activator.png"
+  },
+  {
+   "class": "Reactive Defenses",
+   "name": "Shielded",
+   "xp": 1,
+   "image": "imperial-class-cards/reactive-defenses-shielded.png"
+  },
+  {
+   "class": "Reactive Defenses",
+   "name": "Targeting Sensors",
+   "xp": 4,
+   "image": "imperial-class-cards/reactive-defenses-targeting-sensors.png"
+  }
+ ],
+ "deployment-cards": [
+  {
+   "id": 0,
+   "name": "0-0-0",
+   "elite": true,
+   "image": "deployment-cards/0-0-0-specialized-in-pain.png"
+  },
+  {
+   "id": 1,
+   "name": "AT-ST",
+   "elite": true,
+   "image": "deployment-cards/at-st-elite.png"
+  },
+  {
+   "id": 2,
+   "name": "Advanced Com Systems",
+   "elite": false,
+   "image": "deployment-cards/advanced-com-systems-skirmish.png"
+  },
+  {
+   "id": 3,
+   "name": "Agent Blaise",
+   "elite": true,
+   "image": "deployment-cards/agent-blaise-isb-interrogator-campaign.png"
+  },
+  {
+   "id": 4,
+   "name": "Agent Blaise",
+   "elite": true,
+   "image": "deployment-cards/agent-blaise-isb-interrogator-skirmish.png"
+  },
+  {
+   "id": 5,
+   "name": "Alliance Ranger",
+   "elite": false,
+   "image": "deployment-cards/alliance-ranger.png"
+  },
+  {
+   "id": 6,
+   "name": "Alliance Ranger",
+   "elite": true,
+   "image": "deployment-cards/alliance-ranger-elite.png"
+  },
+  {
+   "id": 7,
+   "name": "Alliance Smuggler",
+   "elite": false,
+   "image": "deployment-cards/alliance-smuggler.png"
+  },
+  {
+   "id": 8,
+   "name": "Alliance Smuggler",
+   "elite": true,
+   "image": "deployment-cards/alliance-smuggler-elite.png"
+  },
+  {
+   "id": 9,
+   "name": "BT-1",
+   "elite": true,
+   "image": "deployment-cards/bt-1-destructive-assassin.png"
+  },
+  {
+   "id": 10,
+   "name": "Balance of the Force",
+   "elite": false,
+   "image": "deployment-cards/balance-of-the-force-skirmish.png"
+  },
+  {
+   "id": 11,
+   "name": "Bantha Rider",
+   "elite": true,
+   "image": "deployment-cards/bantha-rider-elite.png"
+  },
+  {
+   "id": 12,
+   "name": "Beast Tamer",
+   "elite": false,
+   "image": "deployment-cards/beast-tamer-skirmish.png"
+  },
+  {
+   "id": 13,
+   "name": "Biv Bodhrik",
+   "elite": false,
+   "image": "deployment-cards/biv-bodhrik-skirmish.png"
+  },
+  {
+   "id": 14,
+   "name": "Black Market",
+   "elite": false,
+   "image": "deployment-cards/black-market-skirmish.png"
+  },
+  {
+   "id": 15,
+   "name": "Boba Fett",
+   "elite": true,
+   "image": "deployment-cards/boba-fett-infamous-bounty-hunter.png"
+  },
+  {
+   "id": 16,
+   "name": "Bossk",
+   "elite": true,
+   "image": "deployment-cards/bossk-born-hunter.png"
+  },
+  {
+   "id": 17,
+   "name": "Bossk",
+   "elite": true,
+   "image": "deployment-cards/bossk-born-hunter.png"
+  },
+  {
+   "id": 18,
+   "name": "C-3PO",
+   "elite": true,
+   "image": "deployment-cards/c-3po-human-cyborg-relations.png"
+  },
+  {
+   "id": 19,
+   "name": "C1-10P",
+   "elite": true,
+   "image": "deployment-cards/c1-10p-chopper.png"
+  },
+  {
+   "id": 20,
+   "name": "Captain Terro",
+   "elite": true,
+   "image": "deployment-cards/captain-terro-wasteland-enforcer.png"
+  },
+  {
+   "id": 21,
+   "name": "Channel the Force",
+   "elite": false,
+   "image": "deployment-cards/channel-the-force-skirmish.png"
+  },
+  {
+   "id": 22,
+   "name": "Chewbacca",
+   "elite": true,
+   "image": "deployment-cards/chewbacca-loyal-wookiee.png"
+  },
+  {
+   "id": 23,
+   "name": "Combat Suit",
+   "elite": false,
+   "image": "deployment-cards/combat-suit-skirmish.png"
+  },
+  {
+   "id": 24,
+   "name": "Cross-Training",
+   "elite": true,
+   "image": "deployment-cards/cross-training-elite-skirmish.png"
+  },
+  {
+   "id": 25,
+   "name": "Darth Vader",
+   "elite": true,
+   "image": "deployment-cards/darth-vader-lord-of-the-sith.png"
+  },
+  {
+   "id": 26,
+   "name": "Davith Elso",
+   "elite": false,
+   "image": "deployment-cards/davith-elso-skirmish.png"
+  },
+  {
+   "id": 27,
+   "name": "Dengar",
+   "elite": true,
+   "image": "deployment-cards/dengar-ruthless-killer.png"
+  },
+  {
+   "id": 28,
+   "name": "Devious Scheme",
+   "elite": false,
+   "image": "deployment-cards/devious-scheme-skirmish.png"
+  },
+  {
+   "id": 29,
+   "name": "Dewback Rider",
+   "elite": true,
+   "image": "deployment-cards/dewback-rider-elite.png"
+  },
+  {
+   "id": 30,
+   "name": "Diala Passil",
+   "elite": false,
+   "image": "deployment-cards/diala-passil-skirmish.png"
+  },
+  {
+   "id": 31,
+   "name": "E-Web Engineer",
+   "elite": false,
+   "image": "deployment-cards/e-web-engineer.png"
+  },
+  {
+   "id": 32,
+   "name": "E-Web Engineer",
+   "elite": true,
+   "image": "deployment-cards/e-web-engineer-elite.png"
+  },
+  {
+   "id": 33,
+   "name": "Echo Base Trooper",
+   "elite": false,
+   "image": "deployment-cards/echo-base-trooper.png"
+  },
+  {
+   "id": 34,
+   "name": "Echo Base Trooper",
+   "elite": true,
+   "image": "deployment-cards/echo-base-trooper-elite.png"
+  },
+  {
+   "id": 35,
+   "name": "Explosive Armaments",
+   "elite": false,
+   "image": "deployment-cards/explosive-armaments-skirmish.png"
+  },
+  {
+   "id": 36,
+   "name": "Feeding Frenzy",
+   "elite": true,
+   "image": "deployment-cards/feeding-frenzy-elite-skirmish.png"
+  },
+  {
+   "id": 37,
+   "name": "Fenn Signis",
+   "elite": false,
+   "image": "deployment-cards/fenn-signis-skirmish.png"
+  },
+  {
+   "id": 38,
+   "name": "First Strike",
+   "elite": false,
+   "image": "deployment-cards/first-strike-skirmish.png"
+  },
+  {
+   "id": 39,
+   "name": "Focused on the Kill",
+   "elite": false,
+   "image": "deployment-cards/focused-on-the-kill-skirmish.png"
+  },
+  {
+   "id": 40,
+   "name": "Fury Of Kashyyyk",
+   "elite": false,
+   "image": "deployment-cards/fury-of-kashyyyk-skirmish.png"
+  },
+  {
+   "id": 41,
+   "name": "Gaarkhan",
+   "elite": false,
+   "image": "deployment-cards/gaarkhan-skirmish.png"
+  },
+  {
+   "id": 42,
+   "name": "Gamorrean Guard",
+   "elite": false,
+   "image": "deployment-cards/gamorrean-guard.png"
+  },
+  {
+   "id": 43,
+   "name": "Gamorrean Guard",
+   "elite": true,
+   "image": "deployment-cards/gamorrean-guard-elite.png"
+  },
+  {
+   "id": 44,
+   "name": "General Sorin",
+   "elite": true,
+   "image": "deployment-cards/general-sorin-vicious-tactician.png"
+  },
+  {
+   "id": 45,
+   "name": "General Weiss",
+   "elite": true,
+   "image": "deployment-cards/general-weiss-field-commander.png"
+  },
+  {
+   "id": 46,
+   "name": "Gideon Argus",
+   "elite": false,
+   "image": "deployment-cards/gideon-argus-skirmish.png"
+  },
+  {
+   "id": 47,
+   "name": "Greedo",
+   "elite": true,
+   "image": "deployment-cards/greedo-ambitious-mercenary.png"
+  },
+  {
+   "id": 48,
+   "name": "HK Assassin Droid",
+   "elite": false,
+   "image": "deployment-cards/hk-assassin-droid.png"
+  },
+  {
+   "id": 49,
+   "name": "HK Assassin Droid",
+   "elite": true,
+   "image": "deployment-cards/hk-assassin-droid-elite.png"
+  },
+  {
+   "id": 50,
+   "name": "Han Solo",
+   "elite": true,
+   "image": "deployment-cards/han-solo-scoundrel.png"
+  },
+  {
+   "id": 51,
+   "name": "Headhunter",
+   "elite": false,
+   "image": "deployment-cards/headhunter-skirmish.png"
+  },
+  {
+   "id": 52,
+   "name": "Heavy Stormtrooper",
+   "elite": false,
+   "image": "deployment-cards/heavy-stormtrooper.png"
+  },
+  {
+   "id": 53,
+   "name": "Heavy Stormtrooper",
+   "elite": true,
+   "image": "deployment-cards/heavy-stormtrooper-elite.png"
+  },
+  {
+   "id": 54,
+   "name": "Hera Syndulla",
+   "elite": true,
+   "image": "deployment-cards/hera-syndulla-spectre-2.png"
+  },
+  {
+   "id": 55,
+   "name": "Heroic Effort",
+   "elite": false,
+   "image": "deployment-cards/heroic-effort-skirmish.png"
+  },
+  {
+   "id": 56,
+   "name": "Hired Gun",
+   "elite": false,
+   "image": "deployment-cards/hired-gun.png"
+  },
+  {
+   "id": 57,
+   "name": "Hired Gun",
+   "elite": true,
+   "image": "deployment-cards/hired-gun-elite.png"
+  },
+  {
+   "id": 58,
+   "name": "IG-88",
+   "elite": true,
+   "image": "deployment-cards/ig-88-assassin-droid.png"
+  },
+  {
+   "id": 59,
+   "name": "ISB Infiltrator",
+   "elite": false,
+   "image": "deployment-cards/isb-infiltrator.png"
+  },
+  {
+   "id": 60,
+   "name": "ISB Infiltrator",
+   "elite": true,
+   "image": "deployment-cards/isb-infiltrator-elite.png"
+  },
+  {
+   "id": 61,
+   "name": "Imperial Officer",
+   "elite": false,
+   "image": "deployment-cards/imperial-officer.png"
+  },
+  {
+   "id": 62,
+   "name": "Imperial Officer",
+   "elite": true,
+   "image": "deployment-cards/imperial-officer-elite.png"
+  },
+  {
+   "id": 63,
+   "name": "Indentured Jester",
+   "elite": false,
+   "image": "deployment-cards/indentured-jester-skirmish.png"
+  },
+  {
+   "id": 64,
+   "name": "Jabba the Hutt",
+   "elite": true,
+   "image": "deployment-cards/jabba-the-hutt-vile-gangster-campaign.png"
+  },
+  {
+   "id": 65,
+   "name": "Jabba the Hutt",
+   "elite": true,
+   "image": "deployment-cards/jabba-the-hutt-vile-gangster-skirmish.png"
+  },
+  {
+   "id": 66,
+   "name": "Jawa Scavenger",
+   "elite": false,
+   "image": "deployment-cards/jawa-scavenger.png"
+  },
+  {
+   "id": 67,
+   "name": "Jawa Scavenger",
+   "elite": true,
+   "image": "deployment-cards/jawa-scavenger-elite-campaign.png"
+  },
+  {
+   "id": 68,
+   "name": "Jawa Scavenger",
+   "elite": true,
+   "image": "deployment-cards/jawa-scavenger-elite-skirmish.png"
+  },
+  {
+   "id": 69,
+   "name": "Jet Trooper",
+   "elite": false,
+   "image": "deployment-cards/jet-trooper.png"
+  },
+  {
+   "id": 70,
+   "name": "Jet Trooper",
+   "elite": true,
+   "image": "deployment-cards/jet-trooper-elite.png"
+  },
+  {
+   "id": 71,
+   "name": "Jyn Odan",
+   "elite": false,
+   "image": "deployment-cards/jyn-odan-skirmish.png"
+  },
+  {
+   "id": 72,
+   "name": "Kayn Somos",
+   "elite": true,
+   "image": "deployment-cards/kayn-somos-trooper-commander.png"
+  },
+  {
+   "id": 73,
+   "name": "Lando Calrissian",
+   "elite": true,
+   "image": "deployment-cards/lando-calrissian-charming-gambler.png"
+  },
+  {
+   "id": 74,
+   "name": "Last Resort",
+   "elite": false,
+   "image": "deployment-cards/last-resort-skirmish.png"
+  },
+  {
+   "id": 75,
+   "name": "Leia Organa",
+   "elite": true,
+   "image": "deployment-cards/leia-organa-rebel-commander-campaign.png"
+  },
+  {
+   "id": 76,
+   "name": "Leia Organa",
+   "elite": true,
+   "image": "deployment-cards/leia-organa-rebel-commander-skirmish.png"
+  },
+  {
+   "id": 77,
+   "name": "Loku Kanoloa",
+   "elite": false,
+   "image": "deployment-cards/loku-kanoloa-skirmish.png"
+  },
+  {
+   "id": 78,
+   "name": "Luke Skywalker",
+   "elite": true,
+   "image": "deployment-cards/luke-skywalker-hero-of-the-rebellion.png"
+  },
+  {
+   "id": 79,
+   "name": "Luke Skywalker",
+   "elite": true,
+   "image": "deployment-cards/luke-skywalker-jedi-knight.png"
+  },
+  {
+   "id": 80,
+   "name": "MHD-19",
+   "elite": false,
+   "image": "deployment-cards/mhd-19-skirmish.png"
+  },
+  {
+   "id": 81,
+   "name": "Mak Eshka'rey",
+   "elite": false,
+   "image": "deployment-cards/mak-eshkarey-skirmish.png"
+  },
+  {
+   "id": 82,
+   "name": "Motivation",
+   "elite": false,
+   "image": "deployment-cards/motivation-skirmish.png"
+  },
+  {
+   "id": 83,
+   "name": "Murne Rin",
+   "elite": false,
+   "image": "deployment-cards/murne-rin-skirmish.png"
+  },
+  {
+   "id": 84,
+   "name": "Nexu",
+   "elite": false,
+   "image": "deployment-cards/nexu.png"
+  },
+  {
+   "id": 85,
+   "name": "Nexu",
+   "elite": true,
+   "image": "deployment-cards/nexu-elite.png"
+  },
+  {
+   "id": 86,
+   "name": "Obi-Wan Kenobi",
+   "elite": true,
+   "image": "deployment-cards/obi-wan-kenobi-jedi-knight-skirmish.png"
+  },
+  {
+   "id": 87,
+   "name": "Obi-Wan Kenobi",
+   "elite": true,
+   "image": "deployment-cards/obi-wan-kenobi-jedi-knight-campaign.png"
+  },
+  {
+   "id": 88,
+   "name": "On a Diplomatic Mission",
+   "elite": false,
+   "image": "deployment-cards/on-a-diplomatic-mission-skirmish.png"
+  },
+  {
+   "id": 89,
+   "name": "Onar Koma",
+   "elite": false,
+   "image": "deployment-cards/onar-koma-skirmish.png"
+  },
+  {
+   "id": 90,
+   "name": "Prey on the Weak",
+   "elite": false,
+   "image": "deployment-cards/prey-on-the-weak-skirmish.png"
+  },
+  {
+   "id": 91,
+   "name": "Probe Droid",
+   "elite": false,
+   "image": "deployment-cards/probe-droid.png"
+  },
+  {
+   "id": 92,
+   "name": "Probe Droid",
+   "elite": true,
+   "image": "deployment-cards/probe-droid-elite.png"
+  },
+  {
+   "id": 93,
+   "name": "Punishing Strike",
+   "elite": false,
+   "image": "deployment-cards/punishing-strike-skirmish.png"
+  },
+  {
+   "id": 94,
+   "name": "R2-D2",
+   "elite": true,
+   "image": "deployment-cards/r2-d2-loyal-astromech-campaign.png"
+  },
+  {
+   "id": 95,
+   "name": "R2-D2",
+   "elite": true,
+   "image": "deployment-cards/r2-d2-loyal-astromech-skirmish.png"
+  },
+  {
+   "id": 96,
+   "name": "Rancor",
+   "elite": true,
+   "image": "deployment-cards/rancor-elite-campaign.png"
+  },
+  {
+   "id": 97,
+   "name": "Rancor",
+   "elite": true,
+   "image": "deployment-cards/rancor-elite-skirmish.png"
+  },
+  {
+   "id": 98,
+   "name": "Rebel High Command",
+   "elite": false,
+   "image": "deployment-cards/rebel-high-command-skirmish.png"
+  },
+  {
+   "id": 99,
+   "name": "Rebel Saboteur",
+   "elite": false,
+   "image": "deployment-cards/rebel-saboteur.png"
+  },
+  {
+   "id": 100,
+   "name": "Rebel Saboteur",
+   "elite": true,
+   "image": "deployment-cards/rebel-saboteur-elite.png"
+  },
+  {
+   "id": 101,
+   "name": "Rebel Trooper",
+   "elite": false,
+   "image": "deployment-cards/rebel-trooper.png"
+  },
+  {
+   "id": 102,
+   "name": "Rebel Trooper",
+   "elite": true,
+   "image": "deployment-cards/rebel-trooper-elite.png"
+  },
+  {
+   "id": 103,
+   "name": "Royal Guard",
+   "elite": false,
+   "image": "deployment-cards/royal-guard.png"
+  },
+  {
+   "id": 104,
+   "name": "Royal Guard",
+   "elite": true,
+   "image": "deployment-cards/royal-guard-elite.png"
+  },
+  {
+   "id": 105,
+   "name": "Royal Guard Champion",
+   "elite": true,
+   "image": "deployment-cards/royal-guard-champion.png"
+  },
+  {
+   "id": 106,
+   "name": "Rule by Fear",
+   "elite": false,
+   "image": "deployment-cards/rule-by-fear-skirmish.png"
+  },
+  {
+   "id": 107,
+   "name": "SC2-M Repulsor Tank",
+   "elite": true,
+   "image": "deployment-cards/sc2-m-repulsor-tank-elite.png"
+  },
+  {
+   "id": 108,
+   "name": "Saska Teft",
+   "elite": false,
+   "image": "deployment-cards/saska-teft-skirmish.png"
+  },
+  {
+   "id": 109,
+   "name": "Scavenged Weaponry",
+   "elite": false,
+   "image": "deployment-cards/scavenged-weaponry-skirmish.png"
+  },
+  {
+   "id": 110,
+   "name": "Shyla Varad",
+   "elite": false,
+   "image": "deployment-cards/shyla-varad-skirmish.png"
+  },
+  {
+   "id": 111,
+   "name": "Smuggler's Run",
+   "elite": false,
+   "image": "deployment-cards/smugglers-run-skirmish.png"
+  },
+  {
+   "id": 112,
+   "name": "Snowtrooper",
+   "elite": false,
+   "image": "deployment-cards/snowtrooper.png"
+  },
+  {
+   "id": 113,
+   "name": "Snowtrooper",
+   "elite": true,
+   "image": "deployment-cards/snowtrooper-elite.png"
+  },
+  {
+   "id": 114,
+   "name": "Stormtrooper",
+   "elite": false,
+   "image": "deployment-cards/stormtrooper.png"
+  },
+  {
+   "id": 115,
+   "name": "Stormtrooper",
+   "elite": true,
+   "image": "deployment-cards/stormtrooper-elite.png"
+  },
+  {
+   "id": 116,
+   "name": "Survivalist",
+   "elite": false,
+   "image": "deployment-cards/survivalist-skirmish.png"
+  },
+  {
+   "id": 117,
+   "name": "Targeting Computer",
+   "elite": false,
+   "image": "deployment-cards/targeting-computer-skirmish.png"
+  },
+  {
+   "id": 118,
+   "name": "Temporary Alliance",
+   "elite": false,
+   "image": "deployment-cards/temporary-alliance-a-common-enemy-skirmish.png"
+  },
+  {
+   "id": 119,
+   "name": "Temporary Alliance",
+   "elite": false,
+   "image": "deployment-cards/temporary-alliance-hired-guns-skirmish.png"
+  },
+  {
+   "id": 120,
+   "name": "The General's Ranks",
+   "elite": false,
+   "image": "deployment-cards/the-generals-ranks-skirmish.png"
+  },
+  {
+   "id": 121,
+   "name": "The Grand Inquisitor",
+   "elite": true,
+   "image": "deployment-cards/the-grand-inquisitor-sith-loyalist.png"
+  },
+  {
+   "id": 122,
+   "name": "Trandoshan Hunter",
+   "elite": false,
+   "image": "deployment-cards/trandoshan-hunter.png"
+  },
+  {
+   "id": 123,
+   "name": "Trandoshan Hunter",
+   "elite": true,
+   "image": "deployment-cards/trandoshan-hunter-elite.png"
+  },
+  {
+   "id": 124,
+   "name": "Trusted Ally",
+   "elite": false,
+   "image": "deployment-cards/trusted-ally-skirmish.png"
+  },
+  {
+   "id": 125,
+   "name": "Tusken Raider",
+   "elite": false,
+   "image": "deployment-cards/tusken-raider.png"
+  },
+  {
+   "id": 126,
+   "name": "Tusken Raider",
+   "elite": true,
+   "image": "deployment-cards/tusken-raider-elite.png"
+  },
+  {
+   "id": 127,
+   "name": "Ugnaught Tinkerer",
+   "elite": false,
+   "image": "deployment-cards/ugnaught-tinkerer.png"
+  },
+  {
+   "id": 128,
+   "name": "Ugnaught Tinkerer",
+   "elite": true,
+   "image": "deployment-cards/ugnaught-tinkerer-elite.png"
+  },
+  {
+   "id": 129,
+   "name": "Under Duress",
+   "elite": false,
+   "image": "deployment-cards/under-duress-skirmish.png"
+  },
+  {
+   "id": 130,
+   "name": "Unshakable",
+   "elite": false,
+   "image": "deployment-cards/unshakable-skirmish.png"
+  },
+  {
+   "id": 131,
+   "name": "Vader's Finest",
+   "elite": false,
+   "image": "deployment-cards/vaders-finest-skirmish.png"
+  },
+  {
+   "id": 132,
+   "name": "Verena Talos",
+   "elite": false,
+   "image": "deployment-cards/verena-talos-skirmish.png"
+  },
+  {
+   "id": 133,
+   "name": "Vinto Hreeda",
+   "elite": false,
+   "image": "deployment-cards/vinto-hreeda-skirmish.png"
+  },
+  {
+   "id": 134,
+   "name": "Wampa",
+   "elite": false,
+   "image": "deployment-cards/wampa.png"
+  },
+  {
+   "id": 135,
+   "name": "Wampa",
+   "elite": true,
+   "image": "deployment-cards/wampa-elite.png"
+  },
+  {
+   "id": 136,
+   "name": "Weequay Pirate",
+   "elite": false,
+   "image": "deployment-cards/weequay-pirate.png"
+  },
+  {
+   "id": 137,
+   "name": "Weequay Pirate",
+   "elite": true,
+   "image": "deployment-cards/weequay-pirate-elite.png"
+  },
+  {
+   "id": 138,
+   "name": "Wing Guard",
+   "elite": false,
+   "image": "deployment-cards/wing-guard.png"
+  },
+  {
+   "id": 139,
+   "name": "Wing Guard",
+   "elite": true,
+   "image": "deployment-cards/wing-guard-elite.png"
+  },
+  {
+   "id": 140,
+   "name": "Wookiee Warrior",
+   "elite": false,
+   "image": "deployment-cards/wookiee-warrior.png"
+  },
+  {
+   "id": 141,
+   "name": "Wookiee Warrior",
+   "elite": true,
+   "image": "deployment-cards/wookiee-warrior-elite.png"
+  },
+  {
+   "id": 142,
+   "name": "Zillo Technique",
+   "elite": false,
+   "image": "deployment-cards/zillo-technique-skirmish.png"
+  },
+  {
+   "id": 143,
+   "name": "AT-DP",
+   "elite": true,
+   "image": "deployment-cards/at-dp-elite.png"
+  },
+  {
+   "id": 144,
+   "name": "Ahsoka Tano",
+   "elite": true,
+   "image": "deployment-cards/ahsoka-tano-rebel-instigator.png"
+  },
+  {
+   "id": 145,
+   "name": "Clawdite Shapeshifter",
+   "elite": false,
+   "image": "deployment-cards/clawdite-shapeshifter.png"
+  },
+  {
+   "id": 146,
+   "name": "Clawdite Shapeshifter",
+   "elite": true,
+   "image": "deployment-cards/clawdite-shapeshifter-elite.png"
+  },
+  {
+   "id": 147,
+   "name": "Driven by Hatred",
+   "elite": false,
+   "image": "deployment-cards/driven-by-hatred-skirmish.png"
+  },
+  {
+   "id": 148,
+   "name": "Drokkatta",
+   "elite": false,
+   "image": "deployment-cards/drokkatta-skirmish.png"
+  },
+  {
+   "id": 149,
+   "name": "Emperor Palpatine",
+   "elite": true,
+   "image": "deployment-cards/emperor-palpatine-sith-master.png"
+  },
+  {
+   "id": 150,
+   "name": "Jarrod Kelvin",
+   "elite": false,
+   "image": "deployment-cards/jarrod-kelvin-skirmish.png"
+  },
+  {
+   "id": 151,
+   "name": "Ko-Tun Feralo",
+   "elite": false,
+   "image": "deployment-cards/ko-tun-feralo-skirmish.png"
+  },
+  {
+   "id": 152,
+   "name": "Maul",
+   "elite": true,
+   "image": "deployment-cards/maul-seeker-of-vengeance.png"
+  },
+  {
+   "id": 153,
+   "name": "Riot Trooper",
+   "elite": false,
+   "image": "deployment-cards/riot-trooper-campaign.png"
+  },
+  {
+   "id": 154,
+   "name": "Riot Trooper",
+   "elite": false,
+   "image": "deployment-cards/riot-trooper-skirmish.png"
+  },
+  {
+   "id": 155,
+   "name": "Riot Trooper",
+   "elite": true,
+   "image": "deployment-cards/riot-trooper-elite-campaign.png"
+  },
+  {
+   "id": 156,
+   "name": "Riot Trooper",
+   "elite": true,
+   "image": "deployment-cards/riot-trooper-elite-skirmish.png"
+  },
+  {
+   "id": 157,
+   "name": "Rogue Smuggler",
+   "elite": false,
+   "image": "deployment-cards/rogue-smuggler-skirmish.png"
+  },
+  {
+   "id": 158,
+   "name": "Sentry Droid",
+   "elite": false,
+   "image": "deployment-cards/sentry-droid.png"
+  },
+  {
+   "id": 159,
+   "name": "Sentry Droid",
+   "elite": true,
+   "image": "deployment-cards/sentry-droid-elite.png"
+  },
+  {
+   "id": 160,
+   "name": "Wookiee Avenger",
+   "elite": false,
+   "image": "deployment-cards/wookiee-avenger-skirmish.png"
+  }
+ ],
+ "upgrade-cards": [
+  {
+   "id": 0,
+   "name": "Armored Gauntlets",
+   "image": "upgrade-cards/armored-gauntlets.png"
+  },
+  {
+   "id": 1,
+   "name": "Bacta Pump",
+   "image": "upgrade-cards/bacta-pump.png"
+  },
+  {
+   "id": 2,
+   "name": "Balanced Hilt",
+   "image": "upgrade-cards/balanced-hilt.png"
+  },
+  {
+   "id": 3,
+   "name": "Combat Coat",
+   "image": "upgrade-cards/combat-coat.png"
+  },
+  {
+   "id": 4,
+   "name": "DDC Defender",
+   "image": "upgrade-cards/ddc-defender.png"
+  },
+  {
+   "id": 5,
+   "name": "DH-17",
+   "image": "upgrade-cards/dh-17.png"
+  },
+  {
+   "id": 6,
+   "name": "DL-44",
+   "image": "upgrade-cards/dl-44.png"
+  },
+  {
+   "id": 7,
+   "name": "E-11",
+   "image": "upgrade-cards/e-11.png"
+  },
+  {
+   "id": 8,
+   "name": "Emergency Injector",
+   "image": "upgrade-cards/emergency-injector.png"
+  },
+  {
+   "id": 9,
+   "name": "Extended Haft",
+   "image": "upgrade-cards/extended-haft.png"
+  },
+  {
+   "id": 10,
+   "name": "Gaffi Stick",
+   "image": "upgrade-cards/gaffi-stick.png"
+  },
+  {
+   "id": 11,
+   "name": "Hand Cannon",
+   "image": "upgrade-cards/hand-cannon.png"
+  },
+  {
+   "id": 12,
+   "name": "Marksman Barrel",
+   "image": "upgrade-cards/marksman-barrel.png"
+  },
+  {
+   "id": 13,
+   "name": "Portable Medkit",
+   "image": "upgrade-cards/portable-medkit.png"
+  },
+  {
+   "id": 14,
+   "name": "Shadowsilk Cloak",
+   "image": "upgrade-cards/shadowsilk-cloak.png"
+  },
+  {
+   "id": 15,
+   "name": "Survival Gear",
+   "image": "upgrade-cards/survival-gear.png"
+  },
+  {
+   "id": 16,
+   "name": "Tactical Display",
+   "image": "upgrade-cards/tactical-display.png"
+  },
+  {
+   "id": 17,
+   "name": "Tatooine Hunting Rifle",
+   "image": "upgrade-cards/tatooine-hunting-rifle.png"
+  },
+  {
+   "id": 18,
+   "name": "Under-Barrel HH-4",
+   "image": "upgrade-cards/under-barrel-hh-4.png"
+  },
+  {
+   "id": 19,
+   "name": "Vibroblade",
+   "image": "upgrade-cards/vibroblade.png"
+  },
+  {
+   "id": 20,
+   "name": "Vibroknife",
+   "image": "upgrade-cards/vibroknife.png"
+  },
+  {
+   "id": 21,
+   "name": "Vibrosword",
+   "image": "upgrade-cards/vibrosword.png"
+  },
+  {
+   "id": 22,
+   "name": "434 \"Deathhammer\"",
+   "image": "upgrade-cards/434-deathhammer.png"
+  },
+  {
+   "id": 23,
+   "name": "A280",
+   "image": "upgrade-cards/a280.png"
+  },
+  {
+   "id": 24,
+   "name": "BD-1 Vibro-Ax",
+   "image": "upgrade-cards/bd-1-vibro-ax.png"
+  },
+  {
+   "id": 25,
+   "name": "Bolt Upgrade",
+   "image": "upgrade-cards/bolt-upgrade.png"
+  },
+  {
+   "id": 26,
+   "name": "Combat Coat",
+   "image": "upgrade-cards/combat-coat.png"
+  },
+  {
+   "id": 27,
+   "name": "Cybernetic Arm",
+   "image": "upgrade-cards/cybernetic-arm.png"
+  },
+  {
+   "id": 28,
+   "name": "DT-12 Heavy Blaster Pistol",
+   "image": "upgrade-cards/dt-12-heavy-blaster-pistol.png"
+  },
+  {
+   "id": 29,
+   "name": "Double Vibrosword",
+   "image": "upgrade-cards/double-vibrosword.png"
+  },
+  {
+   "id": 30,
+   "name": "EE-3 Carbine",
+   "image": "upgrade-cards/ee-3-carbine.png"
+  },
+  {
+   "id": 31,
+   "name": "Energized Hilt",
+   "image": "upgrade-cards/energized-hilt.png"
+  },
+  {
+   "id": 32,
+   "name": "Environmental Hazard Suit",
+   "image": "upgrade-cards/environmental-hazard-suit.png"
+  },
+  {
+   "id": 33,
+   "name": "Extra Ammunition",
+   "image": "upgrade-cards/extra-ammunition.png"
+  },
+  {
+   "id": 34,
+   "name": "High-Impact Guard",
+   "image": "upgrade-cards/high-impact-guard.png"
+  },
+  {
+   "id": 35,
+   "name": "Laminate Armor",
+   "image": "upgrade-cards/laminate-armor.png"
+  },
+  {
+   "id": 36,
+   "name": "Overcharger",
+   "image": "upgrade-cards/overcharger.png"
+  },
+  {
+   "id": 37,
+   "name": "Plasma Cell",
+   "image": "upgrade-cards/plasma-cell.png"
+  },
+  {
+   "id": 38,
+   "name": "R5 Astromech",
+   "image": "upgrade-cards/r5-astromech.png"
+  },
+  {
+   "id": 39,
+   "name": "Slicing Tools",
+   "image": "upgrade-cards/slicing-tools.png"
+  },
+  {
+   "id": 40,
+   "name": "Spread Barrel",
+   "image": "upgrade-cards/spread-barrel.png"
+  },
+  {
+   "id": 41,
+   "name": "Stun Baton",
+   "image": "upgrade-cards/stun-baton.png"
+  },
+  {
+   "id": 42,
+   "name": "T-21",
+   "image": "upgrade-cards/t-21.png"
+  },
+  {
+   "id": 43,
+   "name": "Vibro Knucklers",
+   "image": "upgrade-cards/vibro-knucklers.png"
+  },
+  {
+   "id": 44,
+   "name": "Weighted Head",
+   "image": "upgrade-cards/weighted-head.png"
+  },
+  {
+   "id": 45,
+   "name": "Admiral's Uniform",
+   "image": "upgrade-cards/admirals-uniform.png"
+  },
+  {
+   "id": 46,
+   "name": "Ancient Lightsaber",
+   "image": "upgrade-cards/ancient-lightsaber.png"
+  },
+  {
+   "id": 47,
+   "name": "Combat Knife",
+   "image": "upgrade-cards/combat-knife.png"
+  },
+  {
+   "id": 48,
+   "name": "Combat Visor",
+   "image": "upgrade-cards/combat-visor.png"
+  },
+  {
+   "id": 49,
+   "name": "Concussion Grenades",
+   "image": "upgrade-cards/concussion-grenades.png"
+  },
+  {
+   "id": 50,
+   "name": "DLT-19",
+   "image": "upgrade-cards/dlt-19.png"
+  },
+  {
+   "id": 51,
+   "name": "DXR-6",
+   "image": "upgrade-cards/dxr-6.png"
+  },
+  {
+   "id": 52,
+   "name": "Disruption Cell",
+   "image": "upgrade-cards/disruption-cell.png"
+  },
+  {
+   "id": 53,
+   "name": "Disruptor Pistol",
+   "image": "upgrade-cards/disruptor-pistol.png"
+  },
+  {
+   "id": 54,
+   "name": "Electrostaff",
+   "image": "upgrade-cards/electrostaff.png"
+  },
+  {
+   "id": 55,
+   "name": "Force Pike",
+   "image": "upgrade-cards/force-pike.png"
+  },
+  {
+   "id": 56,
+   "name": "Hidden Blade",
+   "image": "upgrade-cards/hidden-blade.png"
+  },
+  {
+   "id": 57,
+   "name": "Laminate Armor",
+   "image": "upgrade-cards/laminate-armor.png"
+  },
+  {
+   "id": 58,
+   "name": "Modified Energy Cannon",
+   "image": "upgrade-cards/modified-energy-cannon.png"
+  },
+  {
+   "id": 59,
+   "name": "Personal Shields",
+   "image": "upgrade-cards/personal-shields.png"
+  },
+  {
+   "id": 60,
+   "name": "Pulse Cannon",
+   "image": "upgrade-cards/pulse-cannon.png"
+  },
+  {
+   "id": 61,
+   "name": "Reinforced Helmet",
+   "image": "upgrade-cards/reinforced-helmet.png"
+  },
+  {
+   "id": 62,
+   "name": "Ryyk Blades",
+   "image": "upgrade-cards/ryyk-blades.png"
+  },
+  {
+   "id": 63,
+   "name": "Shock Emitter",
+   "image": "upgrade-cards/shock-emitter.png"
+  },
+  {
+   "id": 64,
+   "name": "Sniper Scope",
+   "image": "upgrade-cards/sniper-scope.png"
+  },
+  {
+   "id": 65,
+   "name": "Sporting Blaster",
+   "image": "upgrade-cards/sporting-blaster.png"
+  },
+  {
+   "id": 66,
+   "name": "Telescoping Sights",
+   "image": "upgrade-cards/telescoping-sights.png"
+  },
+  {
+   "id": 67,
+   "name": "Valken-38 Carbine",
+   "image": "upgrade-cards/valken-38-carbine.png"
+  },
+  {
+   "id": 68,
+   "name": "Vibrogenerator",
+   "image": "upgrade-cards/vibrogenerator.png"
+  },
+  {
+   "id": 70,
+   "name": "Charge Pistol",
+   "image": "upgrade-cards/charge-pistol.png"
+  },
+  {
+   "id": 69,
+   "name": "Charged Ammo Pack",
+   "image": "upgrade-cards/charged-ammo-pack.png"
+  },
+  {
+   "id": 72,
+   "name": "Responsive Armor",
+   "image": "upgrade-cards/responsive-armor.png"
+  },
+  {
+   "id": 71,
+   "name": "Focusing Beam",
+   "image": "upgrade-cards/focusing-beam.png"
+  },
+  {
+   "id": 73,
+   "name": "Hunter's Rifle",
+   "image": "upgrade-cards/hunters-rifle.png"
+  },
+  {
+   "id": 75,
+   "name": "Polearm",
+   "image": "upgrade-cards/polearm.png"
+  },
+  {
+   "id": 74,
+   "name": "A-12 Sniper Rifle",
+   "image": "upgrade-cards/a-12-sniper-rifle.png"
+  },
+  {
+   "id": 76,
+   "name": "Power Charger",
+   "image": "upgrade-cards/power-charger.png"
+  },
+  {
+   "id": 77,
+   "name": "Supply Pack",
+   "image": "upgrade-cards/supply-pack.png"
+  }
+ ],
+ "supply-cards": [
+  {
+   "id": 0,
+   "name": "Adrenal Stim",
+   "image": "supply-cards/adrenal-stim.png"
+  },
+  {
+   "id": 1,
+   "name": "Artificial Stimulants",
+   "image": "supply-cards/artificial-stimulants.png"
+  },
+  {
+   "id": 2,
+   "name": "Bacta Infusion",
+   "image": "supply-cards/bacta-infusion.png"
+  },
+  {
+   "id": 3,
+   "name": "C1 Comlink",
+   "image": "supply-cards/c1-comlink.png"
+  },
+  {
+   "id": 4,
+   "name": "C22 Frag Grenade",
+   "image": "supply-cards/c22-frag-grenade.png"
+  },
+  {
+   "id": 5,
+   "name": "Chance Cubes",
+   "image": "supply-cards/chance-cubes.png"
+  },
+  {
+   "id": 6,
+   "name": "Emergency Medpac",
+   "image": "supply-cards/emergency-medpac.png"
+  },
+  {
+   "id": 7,
+   "name": "Flash Bomb",
+   "image": "supply-cards/flash-bomb.png"
+  },
+  {
+   "id": 8,
+   "name": "Flash Emitter",
+   "image": "supply-cards/flash-emitter.png"
+  },
+  {
+   "id": 9,
+   "name": "Grappling Hook",
+   "image": "supply-cards/grappling-hook.png"
+  },
+  {
+   "id": 10,
+   "name": "Macrobinoculars",
+   "image": "supply-cards/macrobinoculars.png"
+  },
+  {
+   "id": 11,
+   "name": "Painkillers",
+   "image": "supply-cards/painkillers.png"
+  },
+  {
+   "id": 12,
+   "name": "Pit Droid",
+   "image": "supply-cards/pit-droid.png"
+  },
+  {
+   "id": 13,
+   "name": "Power Generator",
+   "image": "supply-cards/power-generator.png"
+  },
+  {
+   "id": 14,
+   "name": "Shock Grenade",
+   "image": "supply-cards/shock-grenade.png"
+  },
+  {
+   "id": 15,
+   "name": "Troop Data",
+   "image": "supply-cards/troop-data.png"
+  },
+  {
+   "id": 16,
+   "name": "Turbocharger",
+   "image": "supply-cards/turbocharger.png"
+  },
+  {
+   "id": 17,
+   "name": "Valuable Goods",
+   "image": "supply-cards/valuable-goods.png"
+  },
+  {
+   "id": 18,
+   "name": "Weapons Cache",
+   "image": "supply-cards/weapons-cache.png"
+  },
+  {
+   "id": 19,
+   "name": "Grappler Arm",
+   "image": "supply-cards/grappler-arm.png"
+  },
+  {
+   "id": 20,
+   "name": "Shield Pack",
+   "image": "supply-cards/shield-pack.png"
+  },
+  {
+   "id": 21,
+   "name": "Supply Chest",
+   "image": "supply-cards/supply-chest.png"
+  }
+ ],
+ "reward-cards": [
+  {
+   "id": 0,
+   "name": "Bounty",
+   "image": "reward-cards/bounty.png"
+  },
+  {
+   "id": 1,
+   "name": "Counterparts",
+   "image": "reward-cards/counterparts.png"
+  },
+  {
+   "id": 2,
+   "name": "Hunt Them Down",
+   "image": "reward-cards/hunt-them-down.png"
+  },
+  {
+   "id": 3,
+   "name": "Surveillance Operatives",
+   "image": "reward-cards/surveillance-operatives.png"
+  },
+  {
+   "id": 4,
+   "name": "Tech Goggles",
+   "image": "reward-cards/tech-goggles.png"
+  },
+  {
+   "id": 5,
+   "name": "Adrenalin Implant",
+   "image": "reward-cards/adrenalin-implant.png"
+  },
+  {
+   "id": 6,
+   "name": "Allied Operations",
+   "image": "reward-cards/allied-operations.png"
+  },
+  {
+   "id": 7,
+   "name": "Fearless Leader",
+   "image": "reward-cards/fearless-leader.png"
+  },
+  {
+   "id": 8,
+   "name": "Imperial Industry",
+   "image": "reward-cards/imperial-industry.png"
+  },
+  {
+   "id": 9,
+   "name": "Life Debt",
+   "image": "reward-cards/life-debt.png"
+  },
+  {
+   "id": 10,
+   "name": "Old Wounds",
+   "image": "reward-cards/old-wounds.png"
+  },
+  {
+   "id": 11,
+   "name": "Peacemaker",
+   "image": "reward-cards/peacemaker.png"
+  },
+  {
+   "id": 12,
+   "name": "Rebel Recon",
+   "image": "reward-cards/rebel-recon.png"
+  },
+  {
+   "id": 13,
+   "name": "Shadow Suit",
+   "image": "reward-cards/shadow-suit.png"
+  },
+  {
+   "id": 14,
+   "name": "Shu Yen's Lightsaber",
+   "image": "reward-cards/shu-yens-lightsaber.png"
+  },
+  {
+   "id": 15,
+   "name": "Special Operations",
+   "image": "reward-cards/special-operations.png"
+  },
+  {
+   "id": 16,
+   "name": "Supply Deficit",
+   "image": "reward-cards/supply-deficit.png"
+  },
+  {
+   "id": 17,
+   "name": "The Ways of the Force",
+   "image": "reward-cards/the-ways-of-the-force.png"
+  },
+  {
+   "id": 18,
+   "name": "Veteran Prowess",
+   "image": "reward-cards/veteran-prowess.png"
+  },
+  {
+   "id": 19,
+   "name": "Battle Vision",
+   "image": "reward-cards/battle-vision.png"
+  },
+  {
+   "id": 20,
+   "name": "Iron Hand",
+   "image": "reward-cards/iron-hand.png"
+  },
+  {
+   "id": 21,
+   "name": "Systems Upgrade",
+   "image": "reward-cards/systems-upgrade.png"
+  },
+  {
+   "id": 22,
+   "name": "Cam Droid",
+   "image": "reward-cards/cam-droid.png"
+  },
+  {
+   "id": 23,
+   "name": "Lobots Favor",
+   "image": "reward-cards/lobots-favor.png"
+  },
+  {
+   "id": 24,
+   "name": "Radiant Holocron",
+   "image": "reward-cards/radiant-holocron.png"
+  },
+  {
+   "id": 25,
+   "name": "Relief Effort",
+   "image": "reward-cards/relief-effort.png"
+  },
+  {
+   "id": 26,
+   "name": "Under the Radar",
+   "image": "reward-cards/under-the-radar.png"
+  },
+  {
+   "id": 27,
+   "name": "Bred for War",
+   "image": "reward-cards/bred-for-war.png"
+  },
+  {
+   "id": 28,
+   "name": "Desperado",
+   "image": "reward-cards/desperado.png"
+  },
+  {
+   "id": 29,
+   "name": "Haymaker",
+   "image": "reward-cards/haymaker.png"
+  },
+  {
+   "id": 30,
+   "name": "Mandalorian Heritage",
+   "image": "reward-cards/mandalorian-heritage.png"
+  },
+  {
+   "id": 31,
+   "name": "Mercenary Ties",
+   "image": "reward-cards/mercenary-ties.png"
+  },
+  {
+   "id": 32,
+   "name": "501st Training",
+   "image": "reward-cards/501st-training.png"
+  },
+  {
+   "id": 33,
+   "name": "Tusken Weaponry",
+   "image": "reward-cards/tusken-weaponry.png"
+  },
+  {
+   "id": 34,
+   "name": "Cautious Approach",
+   "image": "reward-cards/cautious-approach.png"
+  },
+  {
+   "id": 35,
+   "name": "Tactical Advance",
+   "image": "reward-cards/tactical-advance.png"
+  },
+  {
+   "id": 36,
+   "name": "Lady Luck",
+   "image": "reward-cards/lady-luck.png"
+  },
+  {
+   "id": 37,
+   "name": "Mechanical Salvage",
+   "image": "reward-cards/mechanical-salvage.png"
+  },
+  {
+   "id": 38,
+   "name": "Intimidation",
+   "image": "reward-cards/intimidation.png"
+  },
+  {
+   "id": 39,
+   "name": "Quickdraw Holster",
+   "image": "reward-cards/quickdraw-holster.png"
+  },
+  {
+   "id": 40,
+   "name": "Alliance Efficiency",
+   "image": "reward-cards/alliance-efficiency.png"
+  },
+  {
+   "id": 41,
+   "name": "Bardottan Shard",
+   "image": "reward-cards/bardottan-shard.png"
+  },
+  {
+   "id": 42,
+   "name": "Explosives Clearance",
+   "image": "reward-cards/explosives-clearance.png"
+  },
+  {
+   "id": 43,
+   "name": "Inside Source",
+   "image": "reward-cards/inside-source.png"
+  },
+  {
+   "id": 44,
+   "name": "Intercepted Plans",
+   "image": "reward-cards/intercepted-plans.png"
+  },
+  {
+   "id": 45,
+   "name": "Lessons of History",
+   "image": "reward-cards/lessons-of-history.png"
+  },
+  {
+   "id": 46,
+   "name": "Mercenary Aid",
+   "image": "reward-cards/mercenary-aid.png"
+  },
+  {
+   "id": 47,
+   "name": "Populist Support",
+   "image": "reward-cards/populist-support.png"
+  },
+  {
+   "id": 48,
+   "name": "Power of the Shard",
+   "image": "reward-cards/power-of-the-shard.png"
+  },
+  {
+   "id": 49,
+   "name": "Scouted Enemies",
+   "image": "reward-cards/scouted-enemies.png"
+  },
+  {
+   "id": 50,
+   "name": "Tracked Movements",
+   "image": "reward-cards/tracked-movements.png"
+  },
+  {
+   "id": 51,
+   "name": "Vaders Legion",
+   "image": "reward-cards/vaders-legion.png"
+  },
+  {
+   "id": 52,
+   "name": "Wookiee Roar",
+   "image": "reward-cards/wookiee-roar.png"
+  },
+  {
+   "id": 53,
+   "name": "X-8 Upgrade",
+   "image": "reward-cards/x-8-upgrade.png"
+  }
+ ],
+ "agenda-cards": [
+  {
+   "id": 0,
+   "name": "Imperial Informants",
+   "deck": "Agents of the Empire",
+   "image": "agenda-cards/agents-of-the-empire-imperial-informants.png"
+  },
+  {
+   "id": 1,
+   "name": "Impounded",
+   "deck": "Agents of the Empire",
+   "image": "agenda-cards/agents-of-the-empire-impounded.png"
+  },
+  {
+   "id": 2,
+   "name": "Tracking Beacon",
+   "deck": "Agents of the Empire",
+   "image": "agenda-cards/agents-of-the-empire-tracking-beacon.png"
+  },
+  {
+   "id": 3,
+   "name": "High-Value Target",
+   "deck": "For The Right Price",
+   "image": "agenda-cards/for-the-right-price-high-value-target.png"
+  },
+  {
+   "id": 4,
+   "name": "Hired Help",
+   "deck": "For The Right Price",
+   "image": "agenda-cards/for-the-right-price-hired-help.png"
+  },
+  {
+   "id": 5,
+   "name": "Wanted",
+   "deck": "For The Right Price",
+   "image": "agenda-cards/for-the-right-price-wanted.png"
+  },
+  {
+   "id": 6,
+   "name": "Fire at Will",
+   "deck": "Imperial Discipline",
+   "image": "agenda-cards/imperial-discipline-fire-at-will.png"
+  },
+  {
+   "id": 7,
+   "name": "Impending Doom",
+   "deck": "Imperial Discipline",
+   "image": "agenda-cards/imperial-discipline-impending-doom.png"
+  },
+  {
+   "id": 8,
+   "name": "Tactical Maneuvering",
+   "deck": "Imperial Discipline",
+   "image": "agenda-cards/imperial-discipline-tactical-maneuvering.png"
+  },
+  {
+   "id": 9,
+   "name": "Interrogation Protocol",
+   "deck": "Imperial Industry",
+   "image": "agenda-cards/imperial-industry-interrogation-protocol.png"
+  },
+  {
+   "id": 10,
+   "name": "Means of Production",
+   "deck": "Imperial Industry",
+   "image": "agenda-cards/imperial-industry-means-of-production.png"
+  },
+  {
+   "id": 11,
+   "name": "Restorative Supplies",
+   "deck": "Imperial Industry",
+   "image": "agenda-cards/imperial-industry-restorative-supplies.png"
+  },
+  {
+   "id": 12,
+   "name": "ISB Enforcers",
+   "deck": "Imperial Security Bureau",
+   "image": "agenda-cards/imperial-security-bureau-isb-enforcers.png"
+  },
+  {
+   "id": 13,
+   "name": "Imperial Operative",
+   "deck": "Imperial Security Bureau",
+   "image": "agenda-cards/imperial-security-bureau-imperial-operative.png"
+  },
+  {
+   "id": 14,
+   "name": "Internal Affairs",
+   "deck": "Imperial Security Bureau",
+   "image": "agenda-cards/imperial-security-bureau-internal-affairs.png"
+  },
+  {
+   "id": 15,
+   "name": "A Dark Power",
+   "deck": "Lord Vaders Command",
+   "image": "agenda-cards/lord-vaders-command-a-dark-power.png"
+  },
+  {
+   "id": 16,
+   "name": "As You Wish",
+   "deck": "Lord Vaders Command",
+   "image": "agenda-cards/lord-vaders-command-as-you-wish.png"
+  },
+  {
+   "id": 17,
+   "name": "Dark Obsession",
+   "deck": "Lord Vaders Command",
+   "image": "agenda-cards/lord-vaders-command-dark-obsession.png"
+  },
+  {
+   "id": 18,
+   "name": "Breaking Point",
+   "deck": "Retaliation",
+   "image": "agenda-cards/retaliation-breaking-point.png"
+  },
+  {
+   "id": 19,
+   "name": "Tactical Explosives",
+   "deck": "Retaliation",
+   "image": "agenda-cards/retaliation-tactical-explosives.png"
+  },
+  {
+   "id": 20,
+   "name": "Weakness Revealed",
+   "deck": "Retaliation",
+   "image": "agenda-cards/retaliation-weakness-revealed.png"
+  },
+  {
+   "id": 21,
+   "name": "Death Mark",
+   "deck": "Pursuit of the Enemy",
+   "image": "agenda-cards/pursuit-of-the-enemy-death-mark.png"
+  },
+  {
+   "id": 22,
+   "name": "Fire in the Sky",
+   "deck": "Pursuit of the Enemy",
+   "image": "agenda-cards/pursuit-of-the-enemy-fire-in-the-sky.png"
+  },
+  {
+   "id": 23,
+   "name": "Strike and Subdue",
+   "deck": "Pursuit of the Enemy",
+   "image": "agenda-cards/pursuit-of-the-enemy-strike-and-subdue.png"
+  },
+  {
+   "id": 24,
+   "name": "Advanced Prototypes",
+   "deck": "The Empires Reach",
+   "image": "agenda-cards/the-empires-reach-advanced-prototypes.png"
+  },
+  {
+   "id": 25,
+   "name": "Data Security",
+   "deck": "The Empires Reach",
+   "image": "agenda-cards/the-empires-reach-data-security.png"
+  },
+  {
+   "id": 26,
+   "name": "Infiltrated",
+   "deck": "The Empires Reach",
+   "image": "agenda-cards/the-empires-reach-infiltrated.png"
+  },
+  {
+   "id": 27,
+   "name": "Counter Strike",
+   "deck": "Defensive Tactics",
+   "image": "agenda-cards/defensive-tactics-counter-strike.png"
+  },
+  {
+   "id": 28,
+   "name": "Enhanced Armor",
+   "deck": "Defensive Tactics",
+   "image": "agenda-cards/defensive-tactics-enhanced-armor.png"
+  },
+  {
+   "id": 29,
+   "name": "Personal Shield Generators",
+   "deck": "Defensive Tactics",
+   "image": "agenda-cards/defensive-tactics-personal-shield-generators.png"
+  },
+  {
+   "id": 30,
+   "name": "Bestial Fury",
+   "deck": "Natural Warfare",
+   "image": "agenda-cards/natural-warfare-bestial-fury.png"
+  },
+  {
+   "id": 31,
+   "name": "Exposed to the Elements",
+   "deck": "Natural Warfare",
+   "image": "agenda-cards/natural-warfare-exposed-to-the-elements.png"
+  },
+  {
+   "id": 32,
+   "name": "Unchained",
+   "deck": "Natural Warfare",
+   "image": "agenda-cards/natural-warfare-unchained.png"
+  },
+  {
+   "id": 33,
+   "name": "Blackmail",
+   "deck": "Enhanced Interrogation",
+   "image": "agenda-cards/enhanced-interrogation-blackmail.png"
+  },
+  {
+   "id": 34,
+   "name": "Learn Their Weaknesses",
+   "deck": "Enhanced Interrogation",
+   "image": "agenda-cards/enhanced-interrogation-learn-their-weaknesses.png"
+  },
+  {
+   "id": 35,
+   "name": "Weak Links",
+   "deck": "Enhanced Interrogation",
+   "image": "agenda-cards/enhanced-interrogation-weak-links.png"
+  },
+  {
+   "id": 36,
+   "name": "Contingency Plan",
+   "deck": "Evasive Maneuvers",
+   "image": "agenda-cards/evasive-maneuvers-contingency-plan.png"
+  },
+  {
+   "id": 37,
+   "name": "Feigned Retreat",
+   "deck": "Evasive Maneuvers",
+   "image": "agenda-cards/evasive-maneuvers-feigned-retreat.png"
+  },
+  {
+   "id": 38,
+   "name": "Hasty Ambush",
+   "deck": "Evasive Maneuvers",
+   "image": "agenda-cards/evasive-maneuvers-hasty-ambush.png"
+  },
+  {
+   "id": 39,
+   "name": "Abandoned Contract",
+   "deck": "Guild Hunters",
+   "image": "agenda-cards/guild-hunters-abandoned-contract.png"
+  },
+  {
+   "id": 40,
+   "name": "Call Your Shot",
+   "deck": "Guild Hunters",
+   "image": "agenda-cards/guild-hunters-call-your-shot.png"
+  },
+  {
+   "id": 41,
+   "name": "Shoot First",
+   "deck": "Guild Hunters",
+   "image": "agenda-cards/guild-hunters-shoot-first.png"
+  },
+  {
+   "id": 42,
+   "name": "Jetpacks",
+   "deck": "Persistence",
+   "image": "agenda-cards/persistence-jetpacks.png"
+  },
+  {
+   "id": 43,
+   "name": "No Rest for the Weary",
+   "deck": "Persistence",
+   "image": "agenda-cards/persistence-no-rest-for-the-weary.png"
+  },
+  {
+   "id": 44,
+   "name": "Snap Fire",
+   "deck": "Persistence",
+   "image": "agenda-cards/persistence-snap-fire.png"
+  },
+  {
+   "id": 45,
+   "name": "Binary Revolution",
+   "deck": "Droid Uprising",
+   "image": "agenda-cards/droid-uprising-binary-revolution.png"
+  },
+  {
+   "id": 46,
+   "name": "Firepower Upgrade",
+   "deck": "Droid Uprising",
+   "image": "agenda-cards/droid-uprising-firepower-upgrade.png"
+  },
+  {
+   "id": 47,
+   "name": "Sabotaged Plans",
+   "deck": "Droid Uprising",
+   "image": "agenda-cards/droid-uprising-sabotaged-plans.png"
+  },
+  {
+   "id": 48,
+   "name": "Best of the Best",
+   "deck": "Crimson Empire",
+   "image": "agenda-cards/crimson-empire-best-of-the-best.png"
+  },
+  {
+   "id": 49,
+   "name": "Infection",
+   "deck": "Crimson Empire",
+   "image": "agenda-cards/crimson-empire-infection.png"
+  },
+  {
+   "id": 50,
+   "name": "Pulling the Strings",
+   "deck": "Crimson Empire",
+   "image": "agenda-cards/crimson-empire-pulling-the-strings.png"
+  },
+  {
+   "id": 51,
+   "name": "By Any Means Necessary",
+   "deck": "Soldiers for Hire",
+   "image": "agenda-cards/soldiers-for-hire-by-any-means-necessary.png"
+  },
+  {
+   "id": 52,
+   "name": "No Disintegrations",
+   "deck": "Soldiers for Hire",
+   "image": "agenda-cards/soldiers-for-hire-no-disintegrations.png"
+  },
+  {
+   "id": 53,
+   "name": "Predator and Prey",
+   "deck": "Soldiers for Hire",
+   "image": "agenda-cards/soldiers-for-hire-predator-and-prey.png"
+  },
+  {
+   "id": 54,
+   "name": "Military Presence",
+   "deck": "Stormtrooper support",
+   "image": "agenda-cards/stormtrooper-support-military-presence.png"
+  },
+  {
+   "id": 55,
+   "name": "Perpetual Reinforcements",
+   "deck": "Stormtrooper support",
+   "image": "agenda-cards/stormtrooper-support-perpetual-reinforcements.png"
+  },
+  {
+   "id": 56,
+   "name": "Strength Of Command",
+   "deck": "Stormtrooper support",
+   "image": "agenda-cards/stormtrooper-support-strength-of-command.png"
+  },
+  {
+   "id": 57,
+   "name": "Back-Room Bargains",
+   "deck": "Nefarious Dealings",
+   "image": "agenda-cards/nefarious-dealings-back-room-bargains.png"
+  },
+  {
+   "id": 58,
+   "name": "Final Blast",
+   "deck": "Nefarious Dealings",
+   "image": "agenda-cards/nefarious-dealings-final-blast.png"
+  },
+  {
+   "id": 59,
+   "name": "Trade Routes Disrupted",
+   "deck": "Nefarious Dealings",
+   "image": "agenda-cards/nefarious-dealings-trade-routes-disrupted.png"
+  },
+  {
+   "id": 60,
+   "name": "Bunker Buster",
+   "deck": "Vader's Fist",
+   "image": "agenda-cards/vaders-fist-bunker-buster.png"
+  },
+  {
+   "id": 61,
+   "name": "Set For Stun",
+   "deck": "Vader's Fist",
+   "image": "agenda-cards/vaders-fist-set-for-stun.png"
+  },
+  {
+   "id": 62,
+   "name": "To The Last Man",
+   "deck": "Vader's Fist",
+   "image": "agenda-cards/vaders-fist-to-the-last-man.png"
+  },
+  {
+   "id": 63,
+   "name": "Grievous Wound",
+   "deck": "Tusken Treachery",
+   "image": "agenda-cards/tusken-treachery-grievous-wound.png"
+  },
+  {
+   "id": 64,
+   "name": "Into the Wastes",
+   "deck": "Tusken Treachery",
+   "image": "agenda-cards/tusken-treachery-into-the-wastes.png"
+  },
+  {
+   "id": 65,
+   "name": "Relocated",
+   "deck": "Tusken Treachery",
+   "image": "agenda-cards/tusken-treachery-relocated.png"
+  },
+  {
+   "id": 66,
+   "name": "A Bounty Protected",
+   "deck": "Punishing Tactics",
+   "image": "agenda-cards/punishing-tactics-a-bounty-protected.png"
+  },
+  {
+   "id": 67,
+   "name": "Beaten Down",
+   "deck": "Punishing Tactics",
+   "image": "agenda-cards/punishing-tactics-beaten-down.png"
+  },
+  {
+   "id": 68,
+   "name": "Targeted Cruelty",
+   "deck": "Punishing Tactics",
+   "image": "agenda-cards/punishing-tactics-targeted-cruelty.png"
+  },
+  {
+   "id": 69,
+   "name": "Armored Division",
+   "deck": "Bombardment",
+   "image": "agenda-cards/bombardment-armored-division.png"
+  },
+  {
+   "id": 70,
+   "name": "Explosive Shrapnel",
+   "deck": "Bombardment",
+   "image": "agenda-cards/bombardment-explosive-shrapnel.png"
+  },
+  {
+   "id": 71,
+   "name": "Fully Charged",
+   "deck": "Bombardment",
+   "image": "agenda-cards/bombardment-fully-charged.png"
+  },
+  {
+   "id": 72,
+   "name": "Classified Techniques",
+   "deck": "Imperial Intelligence",
+   "image": "agenda-cards/imperial-intelligence-classified-techniques.png"
+  },
+  {
+   "id": 73,
+   "name": "Security Breach",
+   "deck": "Imperial Intelligence",
+   "image": "agenda-cards/imperial-intelligence-security-breach.png"
+  },
+  {
+   "id": 74,
+   "name": "Under Surveillance",
+   "deck": "Imperial Intelligence",
+   "image": "agenda-cards/imperial-intelligence-under-surveillance.png"
+  },
+  {
+   "id": 75,
+   "name": "Furious Retaliation",
+   "deck": "Base Instincts",
+   "image": "agenda-cards/base-instincts-furious-retaliation.png"
+  },
+  {
+   "id": 76,
+   "name": "Gunrunner",
+   "deck": "Base Instincts",
+   "image": "agenda-cards/base-instincts-gunrunner.png"
+  },
+  {
+   "id": 77,
+   "name": "On the Hunt",
+   "deck": "Base Instincts",
+   "image": "agenda-cards/base-instincts-on-the-hunt.png"
+  },
+  {
+   "id": 78,
+   "name": "Misdirection",
+   "deck": "Infiltration",
+   "image": "agenda-cards/infiltration-misdirection.png"
+  },
+  {
+   "id": 79,
+   "name": "Quiet Entry",
+   "deck": "Infiltration",
+   "image": "agenda-cards/infiltration-quiet-entry.png"
+  },
+  {
+   "id": 80,
+   "name": "Trip Mine",
+   "deck": "Infiltration",
+   "image": "agenda-cards/infiltration-trip-mine.png"
+  },
+  {
+   "id": 81,
+   "name": "Hunter for a Fee",
+   "deck": "Contract Gunmen",
+   "image": "agenda-cards/contract-gunmen-hunter-for-a-fee.png"
+  },
+  {
+   "id": 82,
+   "name": "Stealth Squad",
+   "deck": "Contract Gunmen",
+   "image": "agenda-cards/contract-gunmen-stealth-squad.png"
+  },
+  {
+   "id": 83,
+   "name": "Top Target",
+   "deck": "Contract Gunmen",
+   "image": "agenda-cards/contract-gunmen-top-target.png"
+  },
+  {
+   "id": 84,
+   "name": "Cornered",
+   "deck": "Inquisition",
+   "image": "agenda-cards/inquisition-cornered.png"
+  },
+  {
+   "id": 85,
+   "name": "Targeted by the Empire",
+   "deck": "Inquisition",
+   "image": "agenda-cards/inquisition-targeted-by-the-empire.png"
+  },
+  {
+   "id": 86,
+   "name": "When They Least Expect It",
+   "deck": "Inquisition",
+   "image": "agenda-cards/inquisition-when-they-least-expect-it.png"
+  },
+  {
+   "id": 87,
+   "name": "Anchorhead Affair",
+   "deck": "Wasteland Patrol",
+   "image": "agenda-cards/wasteland-patrol-anchorhead-affair.png"
+  },
+  {
+   "id": 88,
+   "name": "Dewback Patrol",
+   "deck": "Wasteland Patrol",
+   "image": "agenda-cards/wasteland-patrol-dewback-patrol.png"
+  },
+  {
+   "id": 89,
+   "name": "Flamethrower",
+   "deck": "Wasteland Patrol",
+   "image": "agenda-cards/wasteland-patrol-flamethrower.png"
+  },
+  {
+   "id": 90,
+   "name": "Head-Hunting",
+   "deck": "Jabba's Empire",
+   "image": "agenda-cards/jabbas-empire-head-hunting.png"
+  },
+  {
+   "id": 91,
+   "name": "On Jabbas Orders",
+   "deck": "Jabba's Empire",
+   "image": "agenda-cards/jabbas-empire-on-jabbas-orders.png"
+  },
+  {
+   "id": 92,
+   "name": "One Fat Slug",
+   "deck": "Jabba's Empire",
+   "image": "agenda-cards/jabbas-empire-one-fat-slug.png"
+  },
+  {
+   "id": 93,
+   "name": "Etiquette and Torture",
+   "deck": "Devious Droids",
+   "image": "agenda-cards/devious-droids-etiquette-and-torture.png"
+  },
+  {
+   "id": 94,
+   "name": "Invasive Procedure",
+   "deck": "Devious Droids",
+   "image": "agenda-cards/devious-droids-invasive-procedure.png"
+  },
+  {
+   "id": 95,
+   "name": "Missile Salvo",
+   "deck": "Devious Droids",
+   "image": "agenda-cards/devious-droids-missile-salvo.png"
+  },
+  {
+   "id": 96,
+   "name": "Ion Blasters",
+   "deck": "Desert Scavengers",
+   "image": "agenda-cards/desert-scavengers-ion-blasters.png"
+  },
+  {
+   "id": 97,
+   "name": "Jawa Raid",
+   "deck": "Desert Scavengers",
+   "image": "agenda-cards/desert-scavengers-jawa-raid.png"
+  },
+  {
+   "id": 98,
+   "name": "Salvage Operatives",
+   "deck": "Desert Scavengers",
+   "image": "agenda-cards/desert-scavengers-salvage-operatives.png"
+  },
+  {
+   "id": 99,
+   "name": "Forest Ambush",
+   "deck": "The General's Scheme",
+   "image": "agenda-cards/the-generals-scheme-forest-ambush.png"
+  },
+  {
+   "id": 100,
+   "name": "Inspiring Command",
+   "deck": "The General's Scheme",
+   "image": "agenda-cards/the-generals-scheme-inspiring-command.png"
+  },
+  {
+   "id": 101,
+   "name": "Special Modifications",
+   "deck": "The General's Scheme",
+   "image": "agenda-cards/the-generals-scheme-special-modifications.png"
+  },
+  {
+   "id": 102,
+   "name": "Assault Coordination",
+   "deck": "Field Commander",
+   "image": "agenda-cards/field-commander-assault-coordination.png"
+  },
+  {
+   "id": 103,
+   "name": "Reinforcements En Route",
+   "deck": "Field Commander",
+   "image": "agenda-cards/field-commander-reinforcements-en-route.png"
+  },
+  {
+   "id": 104,
+   "name": "Unyieldng Dedication",
+   "deck": "Field Commander",
+   "image": "agenda-cards/field-commander-unyieldng-dedication.png"
+  },
+  {
+   "id": 105,
+   "name": "Heavy Riot Gear",
+   "deck": "Security Protocols",
+   "image": "agenda-cards/security-protocols-heavy-riot-gear.png"
+  },
+  {
+   "id": 106,
+   "name": "Shields Online",
+   "deck": "Security Protocols",
+   "image": "agenda-cards/security-protocols-shields-online.png"
+  },
+  {
+   "id": 107,
+   "name": "Surveillance Cams",
+   "deck": "Security Protocols",
+   "image": "agenda-cards/security-protocols-surveillance-cams.png"
+  },
+  {
+   "id": 108,
+   "name": "For the Emperor",
+   "deck": "The Emperor's Plots",
+   "image": "agenda-cards/the-emperors-plots-for-the-emperor.png"
+  },
+  {
+   "id": 109,
+   "name": "Insidious",
+   "deck": "The Emperor's Plots",
+   "image": "agenda-cards/the-emperors-plots-insidious.png"
+  },
+  {
+   "id": 110,
+   "name": "Isolation",
+   "deck": "The Emperor's Plots",
+   "image": "agenda-cards/the-emperors-plots-isolation.png"
+  },
+  {
+   "id": 111,
+   "name": "Critical Strikes",
+   "deck": "A Former Sith",
+   "image": "agenda-cards/a-former-sith-critical-strikes.png"
+  },
+  {
+   "id": 112,
+   "name": "Dubious Disposition",
+   "deck": "A Former Sith",
+   "image": "agenda-cards/a-former-sith-dubious-disposition.png"
+  },
+  {
+   "id": 113,
+   "name": "Imminent Reprisal",
+   "deck": "A Former Sith",
+   "image": "agenda-cards/a-former-sith-imminent-reprisal.png"
+  }
+ ],
+ "companion-cards": [
+  {
+   "id": 0,
+   "name": "Cam Droid",
+   "image": "companion-cards/cam-droid.png"
+  },
+  {
+   "id": 1,
+   "name": "Junk Droid",
+   "image": "companion-cards/junk-droid.png"
+  },
+  {
+   "id": 2,
+   "name": "R5 Astromech",
+   "image": "companion-cards/r5-astromech.png"
+  },
+  {
+   "id": 3,
+   "name": "Pit Droid",
+   "image": "companion-cards/pit-droid.png"
+  },
+  {
+   "id": 4,
+   "name": "Salacious B. Crumb",
+   "image": "companion-cards/salacious-b-crumb.png"
+  },
+  {
+   "id": 5,
+   "name": "88-Z",
+   "image": "companion-cards/88-z.png"
+  },
+  {
+   "id": 6,
+   "name": "J4X-7",
+   "image": "companion-cards/j4x-7.png"
+  }
+ ],
+ "form-cards": [
+  {
+   "id": 0,
+   "name": "Streetrat",
+   "image": "form-cards/clawdite-shapeshifter-streetrat.png"
+  },
+  {
+   "id": 1,
+   "name": "Senator",
+   "image": "form-cards/clawdite-shapeshifter-senator.png"
+  },
+  {
+   "id": 2,
+   "name": "Scout",
+   "image": "form-cards/clawdite-shapeshifter-scout.png"
+  }
+ ]
+}

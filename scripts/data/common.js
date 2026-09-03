@@ -241,3 +241,45 @@ export function sanitizeLabelHTML(value) {
   for (const child of template.content.childNodes) container.appendChild(sanitizeLabelNode(child, document));
   return container.innerHTML;
 }
+
+/* ------------------------------------------------------------------ */
+/* Stat glyphs                                                         */
+/* ------------------------------------------------------------------ */
+
+/** Icon file per stat. One place owns the mapping; templates use the `swiaGlyph` helper. */
+export const STAT_GLYPHS = {
+  damage: "Damage.png",
+  surge: "Surge.png",
+  accuracy: "Reticle.png",
+  block: "Block.png",
+  evade: "Evade.png",
+  dodge: "Dodge.png",
+  strain: "Strain.png",
+  pierce: "Reticle.png"
+};
+
+/** Localized stat name for a glyph key (falls back to the key). */
+export function statLabel(stat) {
+  const key = `SWIA.Dice.${String(stat).charAt(0).toUpperCase()}${String(stat).slice(1)}`;
+  const label = game?.i18n?.localize?.(key);
+  return label && label !== key ? label : String(stat);
+}
+
+/**
+ * Inline stat glyph: an <img> at text height with the stat name in alt/title.
+ * Returns "" for unknown stats so a typo shows nothing rather than a broken image.
+ */
+export function statGlyphHTML(stat, { label = null } = {}) {
+  const file = STAT_GLYPHS[stat];
+  if (!file) return "";
+  const text = escapeHTML(label ?? statLabel(stat));
+  return `<img class="swia-glyph" src="systems/swia/icons/${file}" alt="${text}" title="${text}" />`;
+}
+
+/** Inline die swatch for condition notes and similar ("+1 [green]"). */
+export function dieSwatchHTML(color, { label = null } = {}) {
+  const c = String(color);
+  const key = `SWIA.Roll.Die.${c.charAt(0).toUpperCase()}${c.slice(1)}`;
+  const text = escapeHTML(label ?? (game?.i18n?.localize?.(key) ?? c));
+  return `<span class="dice-block ${c} swia-glyph-die" title="${text}"></span>`;
+}

@@ -1,0 +1,83 @@
+[
+ {
+  "id": 2,
+  "name": "Scout",
+  "text": "+2 Accuracy",
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠, +2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Rifleman",
+    "text": "When you declare an attack, replace 1 red die in your attack pool with 1 blue die."
+   },
+   {
+    "name": "Priority Target",
+    "text": "Figures do not block line of sight for your attacks."
+   }
+  ],
+  "notes": "Unique (dot before name). Subtitle: Clawdite Shapeshifter. Bottom boxed rows: '+2 Accuracy' keyword plus two surge lines.",
+  "verified": true
+ },
+ {
+  "id": 1,
+  "name": "Senator",
+  "text": "+1 Accuracy",
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Gain 1 [power token]."
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Conspire",
+    "text": "⟶ Conspire: Roll your attack pool plus 1 yellow die. For each ⚡ result, to a maximum of 3, you or an adjacent friendly figure gains 1 [power token]."
+   }
+  ],
+  "notes": "Unique (dot before name). Subtitle: Clawdite Shapeshifter. The token icon in Conspire and in the 'Gain 1' surge line is a question mark inside a disc (a wildcard power token, not one of the four named token types); transcribed as [power token]. Bottom boxed rows: '+1 Accuracy' keyword plus three surge lines.",
+  "verified": true
+ },
+ {
+  "id": 0,
+  "name": "Streetrat",
+  "text": "",
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Assassin's Blade: After this attack resolves, choose an adjacent hostile figure and roll 1 red die. That figure suffers ⊠ equal to the ⊠ results."
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Gain 1 [damage token]."
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Fleet",
+    "text": "At the start of your activation, gain 2 movement points."
+   }
+  ],
+  "notes": "Unique (dot before name). Subtitle: Clawdite Shapeshifter. Bottom boxed row holds the two short surge lines (⚡: +1⊠ and ⚡: Gain 1 [damage token]).",
+  "verified": true
+ }
+]

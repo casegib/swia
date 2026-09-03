@@ -1,0 +1,9398 @@
+[
+ {
+  "id": 0,
+  "name": "0-0-0",
+  "description": "Specialized in Pain",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Droid"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 4,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Shocking Palm: The attack misses and the defender becomes Stunned."
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Invasive Procedure",
+    "text": "⟶: An adjacent figure suffers 1⊠, 1✦, and becomes Bleeding. You become Focused."
+   },
+   {
+    "name": "Unnerving",
+    "text": "At the end of your activation, each adjacent hostile figure becomes Weakened."
+   }
+  ],
+  "figures": 1,
+  "notes": "Shocking Palm is a named surge ability (⚡ Shocking Palm).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 143,
+  "name": "AT-DP",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Heavy Weapon",
+   "Vehicle"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 9,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 16,
+  "speed": 3,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "Massive",
+   "+1 [Block], +3 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Assault",
+    "text": "You can perform multiple attacks during your activation."
+   },
+   {
+    "name": "Charge Generators",
+    "text": "While attacking, if you have suffered fewer than 9⊠, apply +1⊠ to the attack results and you may reroll 1 attack die."
+   }
+  ],
+  "figures": 1,
+  "notes": "Massive vehicle.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 1,
+  "name": "AT-ST",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Heavy Weapon",
+   "Vehicle"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 14,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 15,
+  "speed": 4,
+  "defense": {
+   "black": 2,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 2,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Massive",
+   "+3 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Blast 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Targeting Computer",
+    "text": "While attacking, you may reroll 1 attack die."
+   },
+   {
+    "name": "Awkward",
+    "text": "You cannot attack adjacent figures."
+   }
+  ],
+  "figures": 1,
+  "notes": "Massive vehicle.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 2,
+  "name": "Advanced Com Systems",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment",
+   "Leader only"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Abilities on your Deployment card that choose or affect adjacent friendly figures or friendly figures within 2 spaces can choose or affect other friendly figures within 3 spaces instead."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats box.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 3,
+  "name": "Agent Blaise",
+  "description": "ISB Interrogator",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Leader",
+   "Spy"
+  ],
+  "modes": [
+   "Campaign"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 2
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   },
+   {
+    "cost": 1,
+    "text": "Menace: Increase ◆ by 1."
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Activate Agent",
+    "text": "⟶: Resolve an optional deployment. During this deployment, reduce the deployment cost of Spy and Trooper groups by 1."
+   }
+  ],
+  "figures": 1,
+  "notes": "Campaign-side icon next to name.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 4,
+  "name": "Agent Blaise",
+  "description": "ISB Interrogator",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Leader",
+   "Spy"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 2
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   },
+   {
+    "cost": 1,
+    "text": "Interrogate: Look at your opponent's hand and choose a Command card. You may discard a card of equal or greater cost from your hand to discard the chosen card."
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Adapt",
+    "text": "The first time your opponent plays a Command card each round, choose 1 Spy or Trooper. That figure becomes Hidden."
+   }
+  ],
+  "figures": 1,
+  "notes": "Skirmish-side icon next to name.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 144,
+  "name": "Ahsoka Tano",
+  "description": "Rebel Instigator",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Force User",
+   "Leader",
+   "Spy"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 12,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 3"
+   },
+   {
+    "cost": 1,
+    "text": "Gain 1 [damage token]"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Force Leap",
+    "text": "⟶: Place your figure in an empty space within 6 spaces."
+   },
+   {
+    "name": "Vigor",
+    "text": "At the start of your activation, you may gain 2 movement points or 1 [block token]."
+   },
+   {
+    "name": "Twin Sabers",
+    "text": "While attacking, you may reroll all attack dice or force the defender to reroll all defense dice."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 5,
+  "name": "Alliance Ranger",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Hunter",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 9,
+  "reinforce_cost": 3,
+  "deployment_group": 3,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 2,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Guerrilla",
+    "text": "After you resolve an attack, if the defender was defeated, become Hidden."
+   },
+   {
+    "name": "Sniper",
+    "text": "While attacking, if the target space is 5 or more spaces away, you may reroll 1 attack die."
+   }
+  ],
+  "figures": 3,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 6,
+  "name": "Alliance Ranger",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Hunter",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 12,
+  "reinforce_cost": 4,
+  "deployment_group": 3,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 2,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 Accuracy, Pierce 1"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Guerrilla",
+    "text": "After you resolve an attack, if the defender was defeated, become Hidden."
+   },
+   {
+    "name": "Elite Sniper",
+    "text": "While attacking, if the target space is 5 or more spaces away, you may reroll up to 2 attack dice."
+   }
+  ],
+  "figures": 3,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 7,
+  "name": "Alliance Smuggler",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 3,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Smuggler's Instincts",
+    "text": "⟶: Perform an interact, then move up to 2 spaces."
+   },
+   {
+    "name": "Slippery",
+    "text": "While defending, apply -2 Accuracy to the attack results. After an attack targeting you resolves, gain 2 movement points."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 8,
+  "name": "Alliance Smuggler",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 4,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 5,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "Focus"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Improved Smuggler's Instincts",
+    "text": "⟶: Perform an interact, then move up to 3 spaces."
+   },
+   {
+    "name": "Slippery",
+    "text": "While defending, apply -2 Accuracy to the attack results. After an attack targeting you resolves, gain 2 movement points."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 9,
+  "name": "BT-1",
+  "description": "Destructive Assassin",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Droid",
+   "Heavy Weapon",
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Blast 1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Missile Salvo",
+    "text": "⟶: Perform up to 3 [ranged] attacks with different targets using 1 blue, 1 red, or 1 yellow die. Limit once per die. Apply +3 Accuracy to each of these attacks."
+   },
+   {
+    "name": "Assassin",
+    "text": "Before you declare an attack, become Focused."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 10,
+  "name": "Balance of the Force",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "You may include an additional 3 points worth of Command cards in your deck."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats box.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 11,
+  "name": "Bantha Rider",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Creature"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 9,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 21,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Massive",
+   "Habitat: Desert"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Trample",
+    "text": "⟶: Choose up to 3 adjacent hostile figures and roll 1 red die. Each of those figures suffers ⊠ equal to the ⊠ results."
+   },
+   {
+    "name": "Stampede",
+    "text": "When you end your movement in spaces that contain other figures, each hostile figure in your spaces suffers 1⊠."
+   }
+  ],
+  "figures": 1,
+  "notes": "Massive creature; Defense box shows a dash (no defense dice).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 12,
+  "name": "Beast Tamer",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Exhaust this card at the start of a Creature's activation for that figure to perform a move."
+   },
+   {
+    "name": "",
+    "text": "Exhaust this card at the start of a figure's activation if that figure has the \"Non-Sentient\" ability. During this activation, that figure can interact."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats box. Two separate text blocks divided by a rule.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 13,
+  "name": "Biv Bodhrik",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Brawler",
+   "Hunter"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 9,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2 Accuracy, +1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Close and Personal",
+    "text": "⟶: Perform a [melee] attack using 1 red and 1 yellow die. Then, if the target was not defeated, perform your [ranged] attack with the same target."
+   },
+   {
+    "name": "Into the Fray",
+    "text": "While defending, if you are within 3 spaces of 2 or more hostile figures, apply +1 [Block] to the defense results."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 14,
+  "name": "Black Market",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "At the end of each round, a friendly Smuggler may suffer 1✦. If it does, reveal the top Command card of your deck. Then, you may either: Spend VPs equal to the card's cost to draw it, or Discard that card and gain VPs equal to its cost, or Return that card to the top of the deck."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats box. The three options are printed as bullet points.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 15,
+  "name": "Boba Fett",
+  "description": "Infamous Bounty Hunter",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 13,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 12,
+  "speed": 6,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1 [Block], +1 [Evade]",
+   "Mobile"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "Weaken"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Battle Presence",
+    "text": "After a hostile figure voluntarily exits a space adjacent to you, that figure suffers 1✦. Limit once per figure per round."
+   },
+   {
+    "name": "Battle Discipline",
+    "text": "When you declare an attack, choose 1 of the following abilities to apply to that attack: +2 Accuracy | ⚡: +2⊠ | ⚡: Recover 2⊠"
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 16,
+  "name": "Bossk",
+  "description": "Born Hunter",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 [Block]",
+   "+2⊠",
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Indiscriminate Fire",
+    "text": "⟶: Choose a space within 3 spaces and in your line of sight. Then, roll 1 green die. Each figure on or adjacent to that space suffers ⊠ equal to the ⊠ results and ✦ equal to the ⚡ results."
+   },
+   {
+    "name": "Regenerate",
+    "text": "At the end of each round, recover 2⊠ and discard all Harmful conditions."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 17,
+  "name": "Bossk",
+  "description": "Born Hunter",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Brawler",
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 [Block]",
+   "+2⊠",
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Indiscriminate Fire",
+    "text": "⟶: Choose a space within 3 spaces and in your line of sight. Then, roll 1 green die. Each figure on or adjacent to that space suffers ⊠ equal to the ⊠ results and ✦ equal to the ⚡ results."
+   },
+   {
+    "name": "Regenerate",
+    "text": "At the end of each round, recover 2⊠ and discard all Harmful conditions."
+   }
+  ],
+  "figures": 1,
+  "notes": "Printed card on the sheet shows the Mercenary affiliation icon, identical to the previous card; manifest lists this copy as Rebel.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 18,
+  "name": "C-3PO",
+  "description": "Human-Cyborg Relations",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Droid"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 4,
+  "speed": 3,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "Inform",
+    "text": "⟶: Choose an adjacent friendly figure. That figure becomes Focused."
+   },
+   {
+    "name": "Cower",
+    "text": "While defending, while adjacent to a friendly figure, you may reroll 1 defense die."
+   },
+   {
+    "name": "Distracting",
+    "text": "While a friendly figure is defending, and you are adjacent to the targeted space, apply +1 [Evade] to the defense results."
+   },
+   {
+    "name": "Non-Combatant",
+    "text": "You cannot attack."
+   }
+  ],
+  "figures": 1,
+  "notes": "Attack box shows a dash (no attack).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 19,
+  "name": "C1-10P",
+  "description": "\"Chopper\"",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Droid"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 3,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Ram",
+    "text": "⟶: Move up to 2 spaces, then choose an adjacent figure. If that figure is hostile, roll 1 green die. It suffers ⊠ equal to the ⊠ results. Then, if that figure is small, push it up to 1 space."
+   },
+   {
+    "name": "System Shock",
+    "text": "⟶: Use while on or adjacent to a terminal. Choose a figure on or adjacent to any terminal. That figure suffers 2⊠ and 1✦."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 20,
+  "name": "Captain Terro",
+  "description": "Wasteland Enforcer",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Creature",
+   "Leader",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 13,
+  "speed": 5,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Flamethrower",
+    "text": "⟶: Choose a space within 2 spaces. Each other figure on or adjacent to that space suffers 1⊠ and 1✦, then becomes Weakened."
+   },
+   {
+    "name": "Mounted",
+    "text": "At the start of your activation, gain 3 movement points."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 21,
+  "name": "Channel the Force",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Neutral",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Exhaust this card when you would draw 1 or more Command cards. Draw 1 fewer card than you would have. Then, search your Command deck for a card with the Force User trait, reveal it, and put it in your hand. Then, shuffle your Command deck. Then, choose a friendly Force User. That figure suffers ✦ equal to the cost of the revealed card."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats box.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 22,
+  "name": "Chewbacca",
+  "description": "Loyal Wookiee",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Guardian",
+   "Smuggler",
+   "Wookiee"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 15,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 14,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Slam",
+    "text": "⟶: Choose 1 adjacent hostile figure and roll 1 red die. That figure suffers ⊠ equal to the ⊠ results. Then, if it is a small figure, you may push it 1 space."
+   },
+   {
+    "name": "Protector",
+    "text": "While a friendly figure is defending, and you are adjacent to the targeted space, apply +1 [Block] to the defense results. Limit 1 \"Protector\" ability used per attack."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 145,
+  "name": "Clawdite Shapeshifter",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Hunter",
+   "Spy"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 4,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 6,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "Shape",
+    "text": "When you are deployed, you may gain 1 Form card of your choice from the supply."
+   },
+   {
+    "name": "Shift",
+    "text": "At the start of each round, you may switch your Form card with 1 other Form card of your choice."
+   }
+  ],
+  "figures": 1,
+  "notes": "Alternate layout: stats box sits directly under the art, text box below it. Uses Form cards.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 146,
+  "name": "Clawdite Shapeshifter",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Hunter",
+   "Spy"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "Shape",
+    "text": "When you are deployed, you may gain 1 Form card of your choice from the supply."
+   },
+   {
+    "name": "Shift",
+    "text": "At the start of each round, you may switch your Form card with 1 other Form card of your choice."
+   }
+  ],
+  "figures": 1,
+  "notes": "Alternate layout: stats box sits directly under the art, text box below it. Uses Form cards.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 23,
+  "name": "Combat Suit",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment",
+   "Trooper, Leader, or Guardian only"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "While you are defending, reduce the Pierce value of the attack results by 1, to a minimum of 0."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats box.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 24,
+  "name": "Cross-Training",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment",
+   "Trooper only"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "This group gains the Spy trait."
+   },
+   {
+    "name": "",
+    "text": "When an attack targeting you is declared, you may replace 1 die in your defense pool with a white die."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats box.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 25,
+  "name": "Darth Vader",
+  "description": "Lord of the Sith",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Brawler",
+   "Force User",
+   "Leader"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 18,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 16,
+  "speed": 4,
+  "defense": {
+   "black": 2,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 2,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 3"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Brutality",
+    "text": "⟶: Perform 2 attacks. Each attack must have a different target."
+   },
+   {
+    "name": "Force Choke",
+    "text": "⟶: Choose a hostile figure in your line of sight. That figure suffers 2⊠ and 1✦."
+   },
+   {
+    "name": "Foresight",
+    "text": "While defending, you may reroll 1 defense die."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 26,
+  "name": "Davith Elso",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Force User",
+   "Spy"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠, Hide"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 3"
+   },
+   {
+    "cost": 2,
+    "text": "Fell Swoop: After this attack resolves, become Hidden, move up to 2 spaces, then perform another attack. Limit once per round."
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Stealthy",
+    "text": "At the start of each mission, become Hidden."
+   },
+   {
+    "name": "Cut and Run",
+    "text": "When you exit a space containing a hostile figure, that figure suffers 1⊠. Limit once per figure per round."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 27,
+  "name": "Dengar",
+  "description": "Ruthless Killer",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Punishment: After the attack resolves, if the target suffered 1 or more ⊠, choose 1 Harmful condition. The target gains that condition. This ability can be triggered multiple times in the same attack."
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Contempt",
+    "text": "While attacking, if the target does not have a Harmful condition, apply +1⚡ to the attack results."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 28,
+  "name": "Devious Scheme",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "After setup, choose your Deployment zone. Your opponent starts the game with initiative and must deploy his figures first."
+   },
+   {
+    "name": "",
+    "text": "If your opponent also has \"Devious Scheme,\" this card has no effect."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats box.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 29,
+  "name": "Dewback Rider",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Creature",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 9,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Shock Lance",
+    "text": "⟶: Choose a figure within 2 spaces and roll 1 yellow die. That figure suffers ⊠ equal to the ⊠ results. Then, if you rolled 1 or more ⚡, it becomes Weakened."
+   },
+   {
+    "name": "Mounted",
+    "text": "At the start of your activation, gain 3 movement points."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 30,
+  "name": "Diala Passil",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Brawler",
+   "Force User"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 3"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Shattering Blow",
+    "text": "When you declare an attack, you may discard 1 Command card from your hand to choose and remove 1 die from the target's defense pool."
+   },
+   {
+    "name": "Foresight",
+    "text": "While defending, you may reroll 1 defense die."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 147,
+  "name": "Driven by Hatred",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": -5,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment",
+   "Darth Vader (Lord of the Sith) only"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "+1⊠. You lose \"Brutality.\" While attacking, you may reroll 1 attack die."
+   },
+   {
+    "name": "",
+    "text": "At the end of each round, move up to 2 spaces. Then, you may use \"Force Choke\" or perform an attack. When you declare this attack, remove 1 die from your attack pool."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment with a printed cost of -5; no stats box.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 148,
+  "name": "Drokkatta",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Heavy Weapon",
+   "Wookiee"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 9,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 12,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1⊠, +1 Accuracy, +1 [Block]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Shrapnel: Choose one: This attack gains Blast 2⊠, or after this attack resolves, if it did not miss, each figure and object within 2 spaces of the target space suffers 1⊠."
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Demolish",
+    "text": "Once during your activation, you may choose a space within 3 spaces and line of sight. Each figure on or adjacent to that space suffers 1⊠. Then, place a rubble token in that space and you suffer 1✦."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 31,
+  "name": "E-Web Engineer",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Heavy Weapon",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 5,
+  "speed": 2,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+3 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Tripod",
+    "text": "During your activation, you cannot voluntarily exit your space if you attack, and you cannot attack if you exit your space."
+   },
+   {
+    "name": "Assault",
+    "text": "You can perform multiple attacks each activation."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 32,
+  "name": "E-Web Engineer",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Heavy Weapon",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 7,
+  "speed": 3,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1 [Block]",
+   "+3 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Tripod",
+    "text": "During your activation, you cannot voluntarily exit your space if you attack, and you cannot attack if you exit your space."
+   },
+   {
+    "name": "Assault",
+    "text": "You can perform multiple attacks each activation."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 33,
+  "name": "Echo Base Trooper",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Front Line",
+    "text": "While attacking, if the target is within 3 spaces of you, you may replace 1 blue die in your attack pool with 1 red die."
+   },
+   {
+    "name": "Efficient Travel",
+    "text": "You ignore additional movement point costs for difficult terrain and hostile figures."
+   }
+  ],
+  "figures": 2,
+  "notes": "Small number next to the threat cost (3) is the reinforcement cost.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 34,
+  "name": "Echo Base Trooper",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": 4,
+  "deployment_group": 2,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Front Line",
+    "text": "While attacking, if the target is within 3 spaces of you, you may replace 1 blue die in your attack pool with 1 red die."
+   },
+   {
+    "name": "Efficient Travel",
+    "text": "You ignore additional movement point costs for difficult terrain and hostile figures."
+   },
+   {
+    "name": "Combat Suit",
+    "text": "While you are defending, reduce the Pierce value of the attack results by 1, to a minimum of 0."
+   }
+  ],
+  "figures": 2,
+  "notes": "Small number next to the threat cost (4) is the reinforcement cost.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 149,
+  "name": "Emperor Palpatine",
+  "description": "Sith Master",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Force User",
+   "Leader"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 13,
+  "speed": 3,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Pierce 3"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Emperor",
+    "text": "Once during your activation, you may choose another figure within 4 spaces. That figure interrupts to perform an attack."
+   },
+   {
+    "name": "Tempt",
+    "text": "At the start of your activation, a figure of your choice suffers 1⊠ and gains 1 [damage token]."
+   },
+   {
+    "name": "Force Lightning",
+    "text": "⟶: Choose a figure within 4 spaces and line of sight. That figure suffers 3⊠ and becomes Weakened. Each figure adjacent to that figure suffers 1⊠."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 35,
+  "name": "Explosive Armaments",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 2,
+    "text": "+1⊠, Blast 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "",
+    "text": "ATTACHMENT. Hunter or Droid only. Each figure in this group gains: ⚡⚡: +1⊠, Blast 2⊠"
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish upgrade attachment; the surge ability is granted to each figure in the attached group.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 36,
+  "name": "Feeding Frenzy",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Neutral",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "",
+    "text": "ATTACHMENT. Creature only. Exhaust this card while attacking a figure that has suffered ⊠ to apply +1⊠ to the attack results. While attacking an adjacent figure, you gain: ⚡: Recover 2⊠."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish upgrade attachment; the surge ability applies only while attacking an adjacent figure.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 37,
+  "name": "Fenn Signis",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Leader",
+   "Trooper"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 9,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Blast 1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Assault",
+    "text": "You can perform multiple attacks each activation."
+   },
+   {
+    "name": "Trooper Assault",
+    "text": "After a friendly Trooper within 3 spaces resolves an attack, it may gain \"Assault.\" Limit once per round."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 38,
+  "name": "First Strike",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "After setup, you and your opponent both receive 4 VPs."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish upgrade (not an attachment).",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 39,
+  "name": "Focused on the Kill",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 0,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+5 Health"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "",
+    "text": "ATTACHMENT. IG-88 (Assassin Droid) only. +5 Health. At the start of your activation, gain 2 movement points. Before you declare an attack, you become Focused. You lose \"⚡: Recover 3⊠.\" You gain \"⚡: Pierce 1.\""
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish upgrade attachment; replaces IG-88's \"⚡: Recover 3⊠\" with \"⚡: Pierce 1\".",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 40,
+  "name": "Fury Of Kashyyyk",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "ATTACHMENT. Wookiee only. After an attack targeting a figure in this group is resolved, if that figure suffered 3 or more ⊠, it becomes Focused."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish upgrade attachment.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 41,
+  "name": "Gaarkhan",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Brawler",
+   "Guardian",
+   "Wookiee"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1[Block]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 1, Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "Focus"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Enraged",
+    "text": "If you have suffered at least 1⊠, you can perform multiple attacks each activation."
+   },
+   {
+    "name": "Charge",
+    "text": "⟶: Move a number of spaces up to your Speed. Then, you may perform an attack."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 42,
+  "name": "Gamorrean Guard",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Guardian"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 2,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Reach",
+   "-1⊠"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Cleave 1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Gamorrean Honor",
+    "text": "While defending during a [ranged] attack, you may reroll 1 defense die."
+   },
+   {
+    "name": "Labored Attack",
+    "text": "While attacking, you may suffer 1✦ to reroll 1 attack die."
+   }
+  ],
+  "figures": 2,
+  "notes": "Number next to the threat cost (3) is the reinforce cost; group of 2 figures.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 43,
+  "name": "Gamorrean Guard",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Guardian"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": 4,
+  "deployment_group": 2,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 2,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Reach"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Gamorrean Honor Guard",
+    "text": "While defending during a [ranged] attack, apply +1[Block] to the defense results."
+   },
+   {
+    "name": "Professional",
+    "text": "While attacking, you may reroll 1 attack die."
+   }
+  ],
+  "figures": 2,
+  "notes": "Number next to the threat cost (4) is the reinforce cost; group of 2 figures.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 44,
+  "name": "General Sorin",
+  "description": "Vicious Tactician",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Leader"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "Focus"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Bombardment",
+    "text": "⟶: Choose an adjacent friendly figure. That figure may interrupt to perform an attack. The attack gains Blast 1⊠."
+   },
+   {
+    "name": "Advanced Firepower",
+    "text": "Adjacent friendly Droids and Vehicles can use your surge abilities."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 45,
+  "name": "General Weiss",
+  "description": "Field Commander",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Heavy Weapon",
+   "Leader",
+   "Vehicle"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 16,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 15,
+  "speed": 4,
+  "defense": {
+   "black": 2,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Massive",
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 2,
+    "text": "Blast 3⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "General's Orders",
+    "text": "⟶: Choose up to 2 other friendly figures on the map. Those figures may each interrupt to perform a move."
+   },
+   {
+    "name": "Epic Arsenal",
+    "text": "Your attack pool consists of any combination of 3 attack dice. You may not roll more than 2 dice of a single color."
+   }
+  ],
+  "figures": 1,
+  "notes": "Massive. Attack box shows three \"?\" dice (any combination of 3 attack dice per Epic Arsenal), so no fixed dice colours are listed.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 46,
+  "name": "Gideon Argus",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Leader"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 3,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Focus"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Tactical Maneuver",
+    "text": "⟶: Choose another friendly figure in your line of sight. That figure gains 2 movement points."
+   },
+   {
+    "name": "On My Mark",
+    "text": "⟶: Choose another friendly figure in your line of sight. That figure becomes Focused."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 47,
+  "name": "Greedo",
+  "description": "Ambitious Mercenary",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Hunter",
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 4,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 7,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 Accuracy, +1⊠"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Slow on the Draw",
+    "text": "When you declare an attack, the target may interrupt to perform an attack targeting you."
+   },
+   {
+    "name": "Parting Shot",
+    "text": "When you have suffered ⊠ equal to your Health, before you are defeated, you may interrupt to perform an attack. Then, you are defeated."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 48,
+  "name": "HK Assassin Droid",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Droid",
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": 4,
+  "deployment_group": 2,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 2,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Weaken"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Versatile Weaponry",
+    "text": "While attacking, you may force the defender to reroll 1 defense die."
+   },
+   {
+    "name": "Targeting Computer",
+    "text": "While attacking, you may reroll 1 attack die."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 49,
+  "name": "HK Assassin Droid",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Droid",
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 11,
+  "reinforce_cost": 6,
+  "deployment_group": 2,
+  "health": 6,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 2,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Weaken"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Versatile Weaponry",
+    "text": "While attacking, you may force the defender to reroll 1 defense die."
+   },
+   {
+    "name": "Targeting Computer",
+    "text": "While attacking, you may reroll 1 attack die."
+   },
+   {
+    "name": "Priority Target",
+    "text": "Figures do not block line of sight for your attacks."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 50,
+  "name": "Han Solo",
+  "description": "Scoundrel",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Leader",
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 12,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 12,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2 Accuracy, +1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Return Fire",
+    "text": "After an attack targeting you is resolved, if you did not suffer any ⊠, you can interrupt to perform an attack targeting that attacker. Limit once per round."
+   },
+   {
+    "name": "Distracting",
+    "text": "While a friendly figure is defending, and you are adjacent to the targeted space, apply +1[Evade] to the defense results."
+   },
+   {
+    "name": "Cunning",
+    "text": "While defending, apply +1[Block] to the defense results for each [Evade] result."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 51,
+  "name": "Headhunter",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Exhaust this card when a hostile figure suffers ✦ during your activation. Reduce the amount of ✦ suffered by 1. Then, the player controlling that figure must discard 1 random Command card from his hand. If he cannot, that figure suffers 1⊠."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; ATTACHMENT. No health/speed/defense/attack boxes.",
+  "verified_note": "Card carries the ATTACHMENT banner (no trait restriction); keywords was empty, banner only mentioned in notes.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 52,
+  "name": "Heavy Stormtrooper",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Heavy Weapon",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 6,
+  "speed": 3,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Blast 1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Composite Plating",
+    "text": "While defending, if the attacker is 4 or more spaces away, apply +1[Block] to the defense results."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 53,
+  "name": "Heavy Stormtrooper",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Heavy Weapon",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": 4,
+  "deployment_group": 2,
+  "health": 8,
+  "speed": 3,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Blast 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Composite Plating",
+    "text": "While defending, if the attacker is 4 or more spaces away, apply +1[Block] to the defense results."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 54,
+  "name": "Hera Syndulla",
+  "description": "Spectre-2",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Leader",
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 4,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 2,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Call the Shots",
+    "text": "While another friendly figure within 3 spaces is attacking, you may apply +2 Accuracy, +1⊠, or +1⚡ to the attack results. Limit once per round."
+   },
+   {
+    "name": "Smooth Landing",
+    "text": "After deployment, you and each adjacent friendly figure gains 1 movement point."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 55,
+  "name": "Heroic Effort",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 0,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Include this card in your army only if all Deployment cards in your army are unique."
+   },
+   {
+    "name": "",
+    "text": "When one of your unique figures is defeated, you may draw 1 Command card, then place 1 Command card from your hand on the bottom of your deck."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade. No health/speed/defense/attack boxes.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 56,
+  "name": "Hired Gun",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 4,
+  "reinforce_cost": 2,
+  "deployment_group": 2,
+  "health": 3,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "+1 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Parting Shot",
+    "text": "When you have suffered ⊠ equal to your Health, before you are defeated, you may interrupt to perform an attack."
+   },
+   {
+    "name": "Disposable",
+    "text": "While defending, apply -1[Dodge] to your defense results."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 57,
+  "name": "Hired Gun",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 4,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1[Evade]",
+   "+1 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Parting Shot",
+    "text": "When you have suffered ⊠ equal to your Health, before you are defeated, you may interrupt to perform an attack."
+   },
+   {
+    "name": "Disposable",
+    "text": "While defending, apply -1[Dodge] to your defense results."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 58,
+  "name": "IG-88",
+  "description": "Assassin Droid",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Droid",
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 12,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 5,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1[Block]",
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Recover 3⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Arsenal",
+    "text": "Your attack pool consists of any combination of 2 attack dice."
+   },
+   {
+    "name": "Relentless",
+    "text": "When you declare an attack targeting a figure within 3 spaces, that figure suffers 1✦."
+   },
+   {
+    "name": "Assault",
+    "text": "You can perform multiple attacks each activation."
+   }
+  ],
+  "figures": 1,
+  "notes": "Attack box shows two '?' dice (any combination of 2 attack dice, per Arsenal).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 59,
+  "name": "ISB Infiltrator",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Spy"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 4,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Hide"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Coordinated Raid",
+    "text": "⟶: Another figure in your group may interrupt to perform an attack targeting a hostile figure in your line of sight. Limit once per group per round."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 60,
+  "name": "ISB Infiltrator",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Spy"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": 4,
+  "deployment_group": 2,
+  "health": 6,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 1, Hide"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1, +2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Coordinated Raid",
+    "text": "⟶: Another figure in your group may interrupt to perform an attack targeting a hostile figure in your line of sight. Limit once per group per round."
+   },
+   {
+    "name": "Deadly",
+    "text": "⚡: Apply -1[Dodge] to the defense results."
+   }
+  ],
+  "figures": 2,
+  "notes": "Deadly is a named surge ability (1⚡).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 61,
+  "name": "Imperial Officer",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Leader"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 3,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Focus"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Order",
+    "text": "⟶: Choose another friendly figure within 2 spaces. That figure may interrupt to perform a move."
+   },
+   {
+    "name": "Cower",
+    "text": "While defending, while adjacent to a friendly figure, you may reroll 1 defense die."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 62,
+  "name": "Imperial Officer",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Leader"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Focus"
+   },
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Executive Order",
+    "text": "⟶: Choose another friendly figure within 2 spaces. That figure may interrupt to perform a move or attack."
+   },
+   {
+    "name": "Cower",
+    "text": "While defending, while adjacent to a friendly figure, you may reroll 1 defense die."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 63,
+  "name": "Indentured Jester",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "UNIQUE FIGURE ONLY"
+   },
+   {
+    "name": "",
+    "text": "At the start of the mission, place the Salacious B. Crumb companion in your space. Salacious B. Crumb activates at the start or end of your activation. Salacious B. Crumb is not counted for the purposes of control."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; ATTACHMENT. No health/speed/defense/attack boxes.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 64,
+  "name": "Jabba the Hutt",
+  "description": "Vile Gangster",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Hunter",
+   "Leader",
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 2,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "Bully",
+    "text": "⟶: A figure of your choice within 3 spaces suffers 3✦."
+   },
+   {
+    "name": "Execution Order",
+    "text": "⟶: Another Mercenary figure of your choice may interrupt to perform an attack."
+   },
+   {
+    "name": "Financial Incentive",
+    "text": "⟶: A friendly figure of your choice recovers 2⊠ and becomes Focused."
+   },
+   {
+    "name": "Plot",
+    "text": "⟶: Increase ◆ by 2."
+   },
+   {
+    "name": "Hutt Syndicate",
+    "text": "If you are on the map at the end of the mission, the Imperial player may gain 1 influence."
+   }
+  ],
+  "figures": 1,
+  "notes": "Campaign version. Name line carries a campaign-mode marker icon after the name. Execution Order uses the Mercenary affiliation icon.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 65,
+  "name": "Jabba the Hutt",
+  "description": "Vile Gangster",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Hunter",
+   "Leader",
+   "Smuggler"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 2,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "Bully",
+    "text": "⟶: A figure of your choice within 3 spaces suffers 3✦."
+   },
+   {
+    "name": "Incentivize",
+    "text": "⟶: A Mercenary figure of your choice becomes Focused."
+   },
+   {
+    "name": "Scheme",
+    "text": "⟶: Draw 1 Command card."
+   },
+   {
+    "name": "Order Hit",
+    "text": "⟶⟶: Spend 2 VPs. A Mercenary figure of your choice may interrupt to perform an attack. Then, it gains 2 movement points."
+   },
+   {
+    "name": "Nefarious Gains",
+    "text": "When a hostile figure is defeated, gain 1 VP."
+   }
+  ],
+  "figures": 1,
+  "notes": "Skirmish version. Name line carries a skirmish-mode marker icon after the name. Incentivize/Order Hit use the Mercenary affiliation icon.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 150,
+  "name": "Jarrod Kelvin",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Brawler",
+   "Leader",
+   "Spy"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 7,
+  "speed": 5,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 2
+   }
+  },
+  "keywords": [
+   "+1⊠, +1[Evade]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Gain 1[damage token]"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Leaping Slash",
+    "text": "⟶: Move up to 2 spaces, then perform an attack."
+   },
+   {
+    "name": "Droid Master",
+    "text": "At the start of the mission, put J4X-7 into play in an adjacent space. J4X-7 activates at the start or end of your activation. J4X-7 is not counted for the purposes of control."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified_note": "Scan shows the Rebel affiliation icon; transcription carried the manifest's 'Imperial'. Corrected to Rebel and cleared the now-obsolete note.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 66,
+  "name": "Jawa Scavenger",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 3,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 2
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Harass",
+    "text": "⚡: After the attack resolves, if it did not miss, the defender suffers 1✦."
+   },
+   {
+    "name": "Take Cover",
+    "text": "While defending, you may apply +1[Block] and -1[Evade] to the defense results."
+   }
+  ],
+  "figures": 1,
+  "notes": "Harass is a named surge ability (1⚡).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 67,
+  "name": "Jawa Scavenger",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Leader",
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign"
+  ],
+  "deployment_cost": 3,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 2
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Haggle",
+    "text": "⚡: Spend 1◆ to roll 1 green die. For each ⊠ result, increase ◆ by 1."
+   },
+   {
+    "name": "Motivators",
+    "text": "Friendly Droids gain +1 Speed and +1 Accuracy."
+   },
+   {
+    "name": "Take Cover",
+    "text": "While defending, you may apply +1[Block] and -1[Evade] to the defense results."
+   }
+  ],
+  "figures": 1,
+  "notes": "Campaign version (campaign-mode marker icon after name). Haggle is a named surge ability (1⚡).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 68,
+  "name": "Jawa Scavenger",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Leader",
+   "Smuggler"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 3,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 2
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Bargain",
+    "text": "⚡: Spend 1 VP to roll 1 green die. For each ⊠ result, gain 1 VP."
+   },
+   {
+    "name": "Take Cover",
+    "text": "While defending, you may apply +1[Block] and -1[Evade] to the defense results."
+   },
+   {
+    "name": "Scavenged Stock",
+    "text": "If your army's affiliation is Mercenary, you may include up to 3 Droid groups from any other affiliations in your army."
+   }
+  ],
+  "figures": 1,
+  "notes": "Skirmish version (skirmish-mode marker icon after name). Bargain is a named surge ability (1⚡). Scavenged Stock uses the Mercenary affiliation icon.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 69,
+  "name": "Jet Trooper",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Trooper",
+   "Vehicle"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 4,
+  "reinforce_cost": 2,
+  "deployment_group": 2,
+  "health": 3,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Mobile"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Agile",
+    "text": "While defending, you may convert 1[Block] to 1[Evade]."
+   },
+   {
+    "name": "Jets",
+    "text": "After you resolve an attack, if the target space is within 2 spaces, gain 1 movement point."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 70,
+  "name": "Jet Trooper",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Trooper",
+   "Vehicle"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": 4,
+  "deployment_group": 2,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Mobile"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Agile",
+    "text": "While defending, you may convert 1[Block] to 1[Evade]."
+   },
+   {
+    "name": "Fly-By",
+    "text": "When you declare an attack, if the target space is within 2 spaces, add 1 blue die to your attack pool. After the attack resolves, gain 2 movement points."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 71,
+  "name": "Jyn Odan",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Smuggler"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 6,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun, Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy, +2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Hair Trigger",
+    "text": "At the start of a hostile figure's activation, you may interrupt to perform an attack that targets that figure. Limit once per round."
+   },
+   {
+    "name": "Nimble",
+    "text": "After an attack targeting you is resolved, gain 2 movement points for each of your [Evade] results."
+   },
+   {
+    "name": "Cunning",
+    "text": "While defending, apply +1[Block] to the defense results for each [Evade] result."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 72,
+  "name": "Kayn Somos",
+  "description": "Trooper Commander",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Leader",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 10,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 12,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 2,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Firing Squad",
+    "text": "⟶: Choose up to 2 adjacent friendly Troopers. Each of those figures may interrupt to perform an attack targeting the same figure."
+   },
+   {
+    "name": "Squad Command",
+    "text": "⚡: Choose an adjacent friendly Trooper. That figure becomes Focused."
+   }
+  ],
+  "figures": 1,
+  "notes": "Squad Command is a named surge ability (1⚡).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 151,
+  "name": "Ko-Tun Feralo",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Leader",
+   "Trooper"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 9,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 2,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Arms Distribution",
+    "text": "At the start of your activation, you may choose another friendly figure within 3 spaces. That figure gains 1[damage token] or 1[block token]."
+   },
+   {
+    "name": "Dead Precise",
+    "text": "When another friendly figure within 3 spaces spends a power token while attacking, apply -1[Dodge] to the defense results."
+   },
+   {
+    "name": "Professional",
+    "text": "While attacking, you may reroll 1 attack die."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 73,
+  "name": "Lando Calrissian",
+  "description": "Charming Gambler",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Leader",
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Hide, Stun"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Resourceful",
+    "text": "While attacking or defending, you may reroll 1 of your attack or defense dice."
+   },
+   {
+    "name": "Gambit",
+    "text": "Before you reroll a die, you may replace it with another die of the same type. After rolling, the new die is considered rerolled."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 74,
+  "name": "Last Resort",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Deplete this card when a figure in this group has suffered ⊠ equal to its Health. Before that figure is defeated, roll 1 red die. Each figure and object on or adjacent to that figure suffers ⊠ equal to the ⊠ results."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; ATTACHMENT. No health/speed/defense/attack boxes.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 75,
+  "name": "Leia Organa",
+  "description": "Rebel Commander",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Leader",
+   "Spy"
+  ],
+  "modes": [
+   "Campaign"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 2
+   }
+  },
+  "keywords": [
+   "+1[Evade]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Battlefield Leadership",
+    "text": "⟶: Perform an attack, then choose a friendly figure within 3 spaces. That figure may interrupt to perform an attack with the same target."
+   },
+   {
+    "name": "Aggressive Negotiations",
+    "text": "⚡: Choose and exhaust 1 Imperial Class card."
+   }
+  ],
+  "figures": 1,
+  "notes": "Campaign version (campaign-mode marker icon after name). Aggressive Negotiations is a named surge ability (1⚡).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 76,
+  "name": "Leia Organa",
+  "description": "Rebel Commander",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Leader",
+   "Spy"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 2
+   }
+  },
+  "keywords": [
+   "+1[Evade]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Battlefield Leadership",
+    "text": "⟶: Perform an attack, then choose a friendly figure within 3 spaces. That figure may interrupt to perform an attack with the same target."
+   },
+   {
+    "name": "Military Efficiency",
+    "text": "⚡: Choose 1 Command card in your discard pile and shuffle it into your Command deck."
+   }
+  ],
+  "figures": 1,
+  "notes": "Skirmish version (skirmish-mode marker icon after name). Military Efficiency is a named surge ability (1⚡).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 77,
+  "name": "Loku Kanoloa",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Spy"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 4,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 4,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Set Your Sights",
+    "text": "⟶⟶: Perform an attack. Figures do not block line of sight for this attack. Apply +2 Accuracy to the attack results."
+   },
+   {
+    "name": "Mon Cala Special Forces",
+    "text": "When you defeat a figure while using \"Set Your Sights,\" you become Focused."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 78,
+  "name": "Luke Skywalker",
+  "description": "Hero of the Rebellion",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Force User"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 10,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1[Block]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Saber Strike",
+    "text": "⟶: Perform a [melee] attack using 1 red and 1 yellow die. This attack gains Pierce 3."
+   },
+   {
+    "name": "Inspiring",
+    "text": "While another friendly figure within 3 spaces is attacking, it may reroll 1 die."
+   }
+  ],
+  "figures": 1,
+  "notes": "Second attack profile via Saber Strike: melee, 1 red + 1 yellow, Pierce 3.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 79,
+  "name": "Luke Skywalker",
+  "description": "Jedi Knight",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Brawler",
+   "Force User",
+   "Leader"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 12,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 16,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1⊠",
+   "+1[Evade]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 3"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Deflect",
+    "text": "After a [ranged] attack targeting you or an adjacent friendly figure resolves, a hostile figure of your choice in your line of sight suffers 1⊠."
+   },
+   {
+    "name": "Heroic",
+    "text": "Once during your activation, you may perform an attack without spending an action."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 80,
+  "name": "MHD-19",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Droid"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Focus"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Medical Loadout",
+    "text": "⟶: You or an adjacent friendly figure recovers 3⊠."
+   },
+   {
+    "name": "Improper Procedure",
+    "text": "⟶: Choose an adjacent hostile figure. That figure suffers 1⊠ and becomes Weakened."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 81,
+  "name": "Mak Eshka'rey",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Spy"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 3,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 4,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 2,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Priority Target",
+    "text": "Figures do not block line of sight for your attacks."
+   },
+   {
+    "name": "Critical Hit",
+    "text": "⚡: This attack gains Pierce 2. If this attack defeats a hostile figure, your opponent must discard 1 random Command card from his hand."
+   }
+  ],
+  "figures": 1,
+  "notes": "Critical Hit is a named surge ability (1⚡).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 152,
+  "name": "Maul",
+  "description": "Seeker of Vengeance",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Force User"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 12,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1⊠"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 3"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Dual-Bladed Fury",
+    "text": "Before you declare an attack, choose one: This attack gains Reach and Cleave 2⊠ or you become Focused."
+   },
+   {
+    "name": "Stalk Prey",
+    "text": "⚡: After this attack resolves, you gain 2 movement points and 1[damage token]."
+   },
+   {
+    "name": "Sustained by Rage",
+    "text": "You cannot recover ⊠. If you have not resolved an activation this round, you cannot be defeated."
+   }
+  ],
+  "figures": 1,
+  "notes": "Stalk Prey is a named surge ability (1⚡).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 82,
+  "name": "Motivation",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Neutral",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "UNIQUE FIGURE ONLY"
+   },
+   {
+    "name": "",
+    "text": "Exhaust this card during your activation and choose a friendly figure with a lower figure cost than you with line of sight to you. That figure may discard a Harmful condition or recover 1⊠. Then, that figure gains 1 movement point."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; ATTACHMENT; Neutral affiliation. No health/speed/defense/attack boxes.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 83,
+  "name": "Murne Rin",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Leader",
+   "Spy"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 4,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 6,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "False Orders",
+    "text": "⟶: Choose a hostile figure with a figure cost of 3 or less within 3 spaces. Perform a move or attack with that figure."
+   },
+   {
+    "name": "Field Report",
+    "text": "At the end of your activation, if you have more Command cards in your hand than your opponent does in his, you and another friendly figure within 3 spaces may become Hidden."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 84,
+  "name": "Nexu",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Creature"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 4,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 6,
+  "speed": 6,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Mobile",
+   "Bleed"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Cleave 1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Pounce",
+    "text": "⟶: Place your figure in an empty space within 3 spaces. Then, you may perform an attack."
+   },
+   {
+    "name": "Cunning",
+    "text": "While defending, apply +1[Block] to the defense results for each [Evade] result."
+   },
+   {
+    "name": "Non-Sentient",
+    "text": "You cannot interact."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 85,
+  "name": "Nexu",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Creature"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 6,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Mobile",
+   "Bleed",
+   "Cleave 2⊠"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Pounce",
+    "text": "⟶: Place your figure in an empty space within 3 spaces. Then, you may perform an attack."
+   },
+   {
+    "name": "Cunning",
+    "text": "While defending, apply +1[Block] to the defense results for each [Evade] result."
+   },
+   {
+    "name": "Non-Sentient",
+    "text": "You cannot interact."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 86,
+  "name": "Obi-Wan Kenobi",
+  "description": "Jedi Knight",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Force User"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 12,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1[Evade]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 3"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Alter Mind",
+    "text": "Hostile figures with a figure cost of 6 or less within 3 spaces of you cannot interact and are not counted for the purposes of control."
+   },
+   {
+    "name": "Into the Force",
+    "text": "When you are defeated, choose another friendly figure. That figure becomes Focused."
+   }
+  ],
+  "figures": 1,
+  "notes": "Skirmish version (skirmish-mode marker icon after name).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 87,
+  "name": "Obi-Wan Kenobi",
+  "description": "Jedi Knight",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Force User"
+  ],
+  "modes": [
+   "Campaign"
+  ],
+  "deployment_cost": 10,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 12,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1[Evade]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 3"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Use the Force",
+    "text": "While another friendly figure within 3 spaces is performing an attribute test, apply +1⚡ to the results."
+   },
+   {
+    "name": "Mind Trick",
+    "text": "Once during your activation, you may choose up to 2 hostile figures within 4 spaces of you. Push each of those figures 1 space."
+   }
+  ],
+  "figures": 1,
+  "notes": "Campaign version (campaign-mode marker icon after name).",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 88,
+  "name": "On a Diplomatic Mission",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "LEADER ONLY"
+   },
+   {
+    "name": "",
+    "text": "Exhaust this card at the end of your activation, if you did not perform an attack, to choose 1 of the following: You gain 2 movement points. Until the end of the round, apply +1[Evade] to your defense results. You gain 1 VP."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; ATTACHMENT. No health/speed/defense/attack boxes.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 89,
+  "name": "Onar Koma",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Guardian",
+   "Hunter"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 15,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠, -2 Accuracy"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠, -1 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Rush",
+    "text": "⟶: Move up to 4 spaces, then you may push an adjacent, small figure up to 1 space. If you do, you and that figure suffer 1⊠."
+   },
+   {
+    "name": "Get Down",
+    "text": "While a small figure within 2 spaces is defending, you may apply +1[Block] or +1[Evade] to the defense results. Limit once per round."
+   },
+   {
+    "name": "Immune",
+    "text": "You cannot gain Harmful conditions."
+   }
+  ],
+  "figures": 1,
+  "notes": "Defense box shows a dash (no defense dice). Skirmish-mode marker icon printed after the name in the title bar.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 90,
+  "name": "Prey on the Weak",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "ATTACHMENT. Hunter only. While attacking a figure with a figure cost lower than yours, apply Pierce 1 and +1 Accuracy to the attack results."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish upgrade attachment.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 91,
+  "name": "Probe Droid",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Droid"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 3,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 5,
+  "speed": 3,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 2
+   }
+  },
+  "keywords": [
+   "Mobile"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Self-Destruct",
+    "text": "At the end of a round, you may roll 1 red die. Each adjacent figure and object suffers ⊠ equal to the ⊠ results. Then, you are defeated."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 92,
+  "name": "Probe Droid",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Droid"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 2
+   }
+  },
+  "keywords": [
+   "Mobile"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Targeting Computer",
+    "text": "While attacking, you may reroll 1 attack die."
+   },
+   {
+    "name": "Self-Destruct",
+    "text": "At the end of a round, you may roll 1 red die. Each adjacent figure and object suffers ⊠ equal to the ⊠ results. Then, you are defeated."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 93,
+  "name": "Punishing Strike",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Exhaust this card when one of your figures applies a Harmful condition to a figure. Discard that condition and apply a different Harmful condition of your choice."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish upgrade (not an attachment).",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 94,
+  "name": "R2-D2",
+  "description": "Loyal Astromech",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Droid"
+  ],
+  "modes": [
+   "Campaign"
+  ],
+  "deployment_cost": 3,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 6,
+  "speed": 3,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+2 Accuracy, +1⚡"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "Weaken"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Service",
+    "text": "⟶: You or an adjacent friendly Droid or Vehicle recovers 1⊠."
+   },
+   {
+    "name": "Computer Interface Arm",
+    "text": "You can perform [Tech] tests on objects on which heroes can perform [Tech] tests (elite figures receive 1 success)."
+   },
+   {
+    "name": "Lucky",
+    "text": "While defending, if you roll a blank result, add +1[Dodge] to the defense results."
+   }
+  ],
+  "figures": 1,
+  "notes": "Campaign-mode marker icon printed after the name in the title bar.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 95,
+  "name": "R2-D2",
+  "description": "Loyal Astromech",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Droid"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 3,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 6,
+  "speed": 3,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+2 Accuracy, +1⚡"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "Weaken"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Scomp Link",
+    "text": "⟶: If you are adjacent to a terminal, your player draws 1 Command card."
+   },
+   {
+    "name": "Service",
+    "text": "⟶: You or an adjacent friendly Droid or Vehicle recovers 1⊠."
+   },
+   {
+    "name": "Lucky",
+    "text": "While defending, if you roll a blank result, add +1[Dodge] to the defense results."
+   }
+  ],
+  "figures": 1,
+  "notes": "Skirmish-mode marker icon printed after the name in the title bar.",
+  "verified_note": "Skirmish R2-D2 has no 'Computer Interface Arm' ability on the card (only Scomp Link, Service, Lucky); removed the extra ability copied from the campaign version.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 96,
+  "name": "Rancor",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Creature"
+  ],
+  "modes": [
+   "Campaign"
+  ],
+  "deployment_cost": 10,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 15,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Massive",
+   "Reach, +1[Block]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+3⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Throw",
+    "text": "⟶: Push a small figure within 2 spaces up to 2 spaces. Then, that figure suffers 2⊠."
+   },
+   {
+    "name": "Feed",
+    "text": "At the start or end of your activation, you may choose another friendly figure within 2 spaces. Recover ⊠ equal to its Health minus the ⊠ it has suffered. That figure is defeated."
+   },
+   {
+    "name": "Non-Sentient",
+    "text": "You cannot interact."
+   }
+  ],
+  "figures": 1,
+  "notes": "Massive. Campaign-mode marker icon printed after the name.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 97,
+  "name": "Rancor",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Creature"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 10,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 15,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Massive",
+   "Reach"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Brutality",
+    "text": "⟶: Perform 2 attacks. Each attack must have a different target."
+   },
+   {
+    "name": "Non-Sentient",
+    "text": "You cannot interact."
+   },
+   {
+    "name": "Trained",
+    "text": "At the start of each round, you may add 1 black die to your defense pool during this round. If you do, lose Brutality and Non-Sentient during this round."
+   }
+  ],
+  "figures": 1,
+  "notes": "Massive. Skirmish-mode marker icon printed after the name.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 98,
+  "name": "Rebel High Command",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "At the end of each game round, draw 1 additional Command card."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 99,
+  "name": "Rebel Saboteur",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Heavy Weapon",
+   "Spy"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 4,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "Blast 1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Overload",
+    "text": "You can trigger the same ⚡ ability up to twice per attack."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 100,
+  "name": "Rebel Saboteur",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Heavy Weapon",
+   "Spy"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": 4,
+  "deployment_group": 2,
+  "health": 6,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+3 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "Blast 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Overload",
+    "text": "You can trigger the same ⚡ ability up to twice per attack."
+   },
+   {
+    "name": "Priority Target",
+    "text": "Figures do not block line of sight for this figure's attacks."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 101,
+  "name": "Rebel Trooper",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": 2,
+  "deployment_group": 3,
+  "health": 3,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "+1 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Aim",
+    "text": "If you have not exited your space during this activation, apply +1⊠ and +2 Accuracy to your attack results."
+   }
+  ],
+  "figures": 3,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 102,
+  "name": "Rebel Trooper",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 9,
+  "reinforce_cost": 3,
+  "deployment_group": 3,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Aim",
+    "text": "If you have not exited your space during this activation, apply +1⊠ and +2 Accuracy to your attack results."
+   },
+   {
+    "name": "Get Into Position",
+    "text": "⟶⟶: Gain 4 movement points and become Focused."
+   }
+  ],
+  "figures": 3,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 153,
+  "name": "Riot Trooper",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Brawler",
+   "Guardian",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": 2,
+  "deployment_group": 2,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Crowd Control",
+    "text": "While attacking, you may apply -1⊠ to the attack results. If you do and the target suffers ⊠, it also suffers 1✦."
+   },
+   {
+    "name": "Shield",
+    "text": "At the end of your activation, if you have no [block token], gain 1 [block token]."
+   }
+  ],
+  "figures": 2,
+  "notes": "Campaign-only marker icon next to name.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 154,
+  "name": "Riot Trooper",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Brawler",
+   "Guardian",
+   "Trooper"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": 2,
+  "deployment_group": 2,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Stun Batons",
+    "text": "After you resolve an attack, if the target suffered any ⊠, it also suffers 1✦."
+   },
+   {
+    "name": "Shield",
+    "text": "At the end of your activation, if you have no [block token], gain 1 [block token]."
+   }
+  ],
+  "figures": 2,
+  "notes": "Skirmish marker icon next to name.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 155,
+  "name": "Riot Trooper",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Brawler",
+   "Guardian",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Weaken"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Crowd Control",
+    "text": "While attacking, you may apply -1⊠ to the attack results. If you do and the target suffers ⊠, it also suffers 1✦."
+   },
+   {
+    "name": "Shield",
+    "text": "At the end of your activation, if you have no [block token], gain 1 [block token]."
+   },
+   {
+    "name": "Professional",
+    "text": "While attacking, you may reroll 1 attack die."
+   }
+  ],
+  "figures": 2,
+  "notes": "Campaign marker icon next to name. Card art shows Imperial affiliation symbol; manifest says Mercenary.",
+  "verified_note": "Card shows the Imperial affiliation symbol; affiliation was 'Mercenary'.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 156,
+  "name": "Riot Trooper",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Brawler",
+   "Guardian",
+   "Trooper"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Weaken"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Stun Batons",
+    "text": "After you resolve an attack, if the target suffered any ⊠, it also suffers 1✦."
+   },
+   {
+    "name": "Shield",
+    "text": "At the end of your activation, if you have no [block token], gain 1 [block token]."
+   },
+   {
+    "name": "Professional",
+    "text": "While attacking, you may reroll 1 attack die."
+   }
+  ],
+  "figures": 2,
+  "notes": "Skirmish marker icon next to name.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 157,
+  "name": "Rogue Smuggler",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": -2,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Han Solo (Scoundrel) Only"
+   },
+   {
+    "name": "",
+    "text": "You lose \"Distracting.\" While attacking, you may reroll 1 attack die."
+   },
+   {
+    "name": "",
+    "text": "You can use \"Return Fire\" even if you suffered ⊠ during the attack."
+   },
+   {
+    "name": "",
+    "text": "Exhaust this card at the end of the round to interrupt to perform an attack."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 103,
+  "name": "Royal Guard",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Brawler",
+   "Guardian"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": 4,
+  "deployment_group": 2,
+  "health": 8,
+  "speed": 5,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "Reach"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Protector",
+    "text": "While a friendly figure is defending, and you are adjacent to the targeted space, apply +1[Block] to the defense results. Limit 1 \"Protector\" ability used per attack."
+   },
+   {
+    "name": "Vengeance",
+    "text": "When an adjacent friendly figure is defeated, you become Focused."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 104,
+  "name": "Royal Guard",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Brawler",
+   "Guardian"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 12,
+  "reinforce_cost": 6,
+  "deployment_group": 2,
+  "health": 10,
+  "speed": 5,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "Reach",
+   "+1[Evade]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Protector",
+    "text": "While a friendly figure is defending, and you are adjacent to the targeted space, apply +1[Block] to the defense results. Limit 1 \"Protector\" ability used per attack."
+   },
+   {
+    "name": "Forward Vengeance",
+    "text": "When an adjacent friendly figure is defeated, you become Focused and may move 1 space."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 105,
+  "name": "Royal Guard Champion",
+  "description": null,
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Brawler",
+   "Guardian"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 15,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 13,
+  "speed": 6,
+  "defense": {
+   "black": 1,
+   "white": 1
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Brutality",
+    "text": "⟶: Perform 2 attacks. Each attack must have a different target."
+   },
+   {
+    "name": "Executor",
+    "text": "When a friendly figure within 3 spaces is defeated, this figure may interrupt to move up to 2 spaces and then perform an attack. Limit once per round."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 106,
+  "name": "Rule by Fear",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "At the start of the first game round, draw 2 Command cards, then choose 1 card in your hand to discard."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 107,
+  "name": "SC2-M Repulsor Tank",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Vehicle"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 10,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 10,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "Massive",
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Blast 1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Focus Fire",
+    "text": "⟶⟶: Perform 2 attacks targeting the same figure."
+   },
+   {
+    "name": "Defensible",
+    "text": "While defending, you may apply either +1[Block] or +1[Evade] to your defense results."
+   }
+  ],
+  "figures": 1,
+  "notes": "Massive; Vehicle.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 108,
+  "name": "Saska Teft",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Smuggler",
+   "Spy"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1 Accuracy, +1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1, Weaken"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Unstable Device",
+    "text": "⟶: Choose a space within 3 spaces and roll 1 yellow die. Each figure on or adjacent to that space suffers ⊠ equal to the ⊠ results. Then, you suffer 1⊠."
+   },
+   {
+    "name": "Shady Contacts",
+    "text": "You may include up to 1 non-upgrade Mercenary Deployment card in your army."
+   }
+  ],
+  "figures": 1,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 109,
+  "name": "Scavenged Weaponry",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Neutral",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Droid or Vehicle only"
+   },
+   {
+    "name": "",
+    "text": "Exhaust this card when you declare an attack to apply +1⊠ to the attack results."
+   },
+   {
+    "name": "",
+    "text": "When the last figure in this group is defeated, you may attach this card to a friendly Droid or Vehicle group. (Your opponent scores VPs for this attachment each time a group it is attached to is defeated.)"
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 158,
+  "name": "Sentry Droid",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Droid",
+   "Guardian",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+1 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Multi-Fire",
+    "text": "⟶: Perform 2 attacks. Each attack must have a different target. Apply -1⊠ to each attack's results."
+   },
+   {
+    "name": "Charged Shot",
+    "text": "⟶: Perform an attack. Apply +2 Accuracy to the attack results."
+   },
+   {
+    "name": "Targeting Computer",
+    "text": "While attacking, you may reroll 1 attack die."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 159,
+  "name": "Sentry Droid",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Droid",
+   "Guardian",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 10,
+  "reinforce_cost": 5,
+  "deployment_group": 2,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Multi-Fire",
+    "text": "⟶: Perform 2 attacks. Each attack must have a different target. Apply -1⊠ to each attack's results."
+   },
+   {
+    "name": "Charged Shot",
+    "text": "⟶: Perform an attack. Apply +2 Accuracy to the attack results."
+   },
+   {
+    "name": "Targeting Computer",
+    "text": "While attacking, you may reroll 1 attack die."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 110,
+  "name": "Shyla Varad",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Hunter"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 12,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1[Evade]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Mandalorian Whip",
+    "text": "⟶: Choose a small, hostile figure within 3 spaces and line of sight. Push that figure up to 3 spaces to a space adjacent to you. Then, perform an attack targeting that figure."
+   },
+   {
+    "name": "Responsive",
+    "text": "At the start of your activation, you may gain 1 movement point or recover 1⊠."
+   }
+  ],
+  "figures": 1,
+  "notes": "Skirmish marker icon next to name.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 111,
+  "name": "Smuggler's Run",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Smuggler only."
+   },
+   {
+    "name": "",
+    "text": "⟶: Deplete this card while you are in your opponent's deployment zone. You gain 5 VPs."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 112,
+  "name": "Snowtrooper",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": 2,
+  "deployment_group": 3,
+  "health": 4,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Weaken"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Environmental Recovery Gear",
+    "text": "⟶: You and each adjacent friendly Trooper may either recover 1⊠ or discard 1 Harmful condition."
+   }
+  ],
+  "figures": 3,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 113,
+  "name": "Snowtrooper",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 10,
+  "reinforce_cost": 3,
+  "deployment_group": 3,
+  "health": 6,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   },
+   {
+    "cost": 1,
+    "text": "Focus, Weaken"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Environmental Recovery Gear",
+    "text": "⟶: You and each adjacent friendly Trooper may either recover 1⊠ or discard 1 Harmful condition."
+   },
+   {
+    "name": "Efficient Travel",
+    "text": "You ignore additional movement point costs for difficult terrain and hostile figures."
+   }
+  ],
+  "figures": 3,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 114,
+  "name": "Stormtrooper",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": 2,
+  "deployment_group": 3,
+  "health": 3,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Squad Training",
+    "text": "While attacking, while adjacent to another friendly Trooper, you may reroll 1 attack die."
+   }
+  ],
+  "figures": 3,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 115,
+  "name": "Stormtrooper",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 9,
+  "reinforce_cost": 3,
+  "deployment_group": 3,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Squad Training",
+    "text": "While attacking, while adjacent to another friendly Trooper, you may reroll 1 attack die."
+   },
+   {
+    "name": "Last Stand",
+    "text": "When you are defeated, choose another figure in your group. That figure becomes Focused."
+   }
+  ],
+  "figures": 3,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 116,
+  "name": "Survivalist",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Neutral",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Hunter or Trooper only"
+   },
+   {
+    "name": "",
+    "text": "You ignore additional movement point costs for difficult terrain and hostile figures."
+   },
+   {
+    "name": "",
+    "text": "At the end of each round, if you are in an exterior space, you recover 1⊠."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 117,
+  "name": "Targeting Computer",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Neutral",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Vehicle, Droid, or Heavy Weapon only"
+   },
+   {
+    "name": "",
+    "text": "While attacking, figures in this group may reroll 1 attack die."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 118,
+  "name": "Temporary Alliance",
+  "description": "A Common Enemy",
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "You may include up to 2 Rebel Deployment cards in your army."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 119,
+  "name": "Temporary Alliance",
+  "description": "Hired Guns",
+  "elite": false,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "You may include up to 2 Mercenary Deployment cards in your army."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 120,
+  "name": "The General's Ranks",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Non-Unique only"
+   },
+   {
+    "name": "",
+    "text": "When you perform a move, if it is not your activation, you gain 2 additional movement points."
+   },
+   {
+    "name": "",
+    "text": "When you perform an attack, if it is not your activation, apply +1⊠ to the attack results."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 121,
+  "name": "The Grand Inquisitor",
+  "description": "Sith Loyalist",
+  "elite": true,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Force User",
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 9,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 15,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 3"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 3⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Deadly: Apply -1[Dodge] to the defense results."
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Lightsaber Throw",
+    "text": "⟶: Perform a [ranged] attack using 1 red and 1 yellow die. Apply +3 Accuracy to the attack results."
+   },
+   {
+    "name": "Defensive",
+    "text": "While defending, if you did not roll a [Block] result, apply +1[Block] to the defense results."
+   }
+  ],
+  "figures": 1,
+  "notes": "'Deadly' is a named surge ability (⚡ Deadly: ...) printed in the text box; listed under surgeAbilities.",
+  "verified_note": "Deadly applies -1[Dodge] (X-in-circle glyph), not -1[Block].",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 122,
+  "name": "Trandoshan Hunter",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 6,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Relentless",
+    "text": "When you declare an attack targeting a figure within 3 spaces, that figure suffers 1✦."
+   },
+   {
+    "name": "Scattergun",
+    "text": "While attacking, if you are adjacent to the target, apply +1⊠ to the attack results."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 123,
+  "name": "Trandoshan Hunter",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Hunter"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 10,
+  "reinforce_cost": 5,
+  "deployment_group": 2,
+  "health": 8,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Focus"
+   },
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Relentless",
+    "text": "When you declare an attack targeting a figure within 3 spaces, that figure suffers 1✦."
+   },
+   {
+    "name": "ACP Scattergun",
+    "text": "While attacking, if you are adjacent to the target, apply +2⊠ to the attack results."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 124,
+  "name": "Trusted Ally",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Neutral",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Droid only"
+   },
+   {
+    "name": "",
+    "text": "Exhaust this card while another friendly figure within 3 spaces is attacking. It may reroll 1 attack die."
+   },
+   {
+    "name": "",
+    "text": "Exhaust this card during your activation. An adjacent friendly figure recovers 1⊠ or discards 1 Harmful condition."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 125,
+  "name": "Tusken Raider",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": 2,
+  "deployment_group": 2,
+  "health": 4,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Habitat: Desert"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Weaken"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Tusken Cycler",
+    "text": "⟶: Perform a [ranged] attack using 1 blue and 1 red die. You cannot use abilities during this attack."
+   }
+  ],
+  "figures": 2,
+  "notes": "Second attack profile via Tusken Cycler: ranged, 1 blue + 1 red.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 126,
+  "name": "Tusken Raider",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1⊠",
+   "Habitat: Desert"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Weaken"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Tusken Cycler",
+    "text": "⟶: Perform a [ranged] attack using 1 blue and 1 red die. You cannot use abilities during this attack."
+   }
+  ],
+  "figures": 2,
+  "notes": "Second attack profile via Tusken Cycler: ranged, 1 blue + 1 red.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 127,
+  "name": "Ugnaught Tinkerer",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 3,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 4,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Spot Weld",
+    "text": "⟶: Place the Junk Droid companion in an adjacent space."
+   },
+   {
+    "name": "Scrap Batallion",
+    "text": "The Junk Droid readies at the start of your activation. It activates as though it was part of your group and may use your surge abilities."
+   }
+  ],
+  "figures": 1,
+  "notes": "Uses Junk Droid companion.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 128,
+  "name": "Ugnaught Tinkerer",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 7,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Spot Weld",
+    "text": "⟶: Place the Junk Droid companion in an adjacent space."
+   },
+   {
+    "name": "Overclock",
+    "text": "⟶: The Junk Droid may interrupt to perform a move or attack."
+   },
+   {
+    "name": "Scrap Batallion",
+    "text": "The Junk Droid readies at the start of your activation. It activates as though it was part of your group and may use your surge abilities."
+   }
+  ],
+  "figures": 1,
+  "notes": "Uses Junk Droid companion.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 129,
+  "name": "Under Duress",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "When a hostile figure suffers ✦, for each resulting ⊠ he wishes to prevent, the player controlling that figure must discard 2 Command cards from the top of his deck instead of 1."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 130,
+  "name": "Unshakable",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Neutral",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Exhaust this card at the start of one of your activations and choose 1 of your figures with a figure cost of 9 or greater. That figure discards 1 Harmful condition and suffers 1✦."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 131,
+  "name": "Vader's Finest",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Imperial",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 2,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Trooper only."
+   },
+   {
+    "name": "",
+    "text": "Figures in this group gain:"
+   },
+   {
+    "name": "",
+    "text": "⟶: Perform an attack, then gain 2 movement points."
+   },
+   {
+    "name": "",
+    "text": "⟶⟶: Discard 1 Harmful condition and become Focused."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 132,
+  "name": "Verena Talos",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Brawler",
+   "Spy"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 11,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1[Evade]"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "Fighting Knife: After this attack resolves, perform an additional [melee] attack using 1 red die. Apply +1⊠ to that attack's results. Limit once per round."
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Close Quarters",
+    "text": "⟶: Perform an attack targeting an adjacent hostile figure using that figure's attack type and attack pool."
+   }
+  ],
+  "figures": 1,
+  "notes": "'Fighting Knife' is a named surge ability (⚡ Fighting Knife: ...) printed in the text box; listed under surgeAbilities.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 133,
+  "name": "Vinto Hreeda",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Hunter",
+   "Smuggler"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 8,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠, Weaken"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2, Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy, Hide"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Rapid Fire",
+    "text": "⟶: Perform 2 attacks."
+   },
+   {
+    "name": "Boltslinger",
+    "text": "After you resolve an attack during your activation, you may choose a hostile figure other than the defender in your line of sight and within 3 spaces of you. That figure suffers 1⊠."
+   }
+  ],
+  "figures": 1,
+  "notes": "Skirmish marker icon next to name.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 134,
+  "name": "Wampa",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Creature"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 9,
+  "speed": 3,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 2,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1⊠",
+   "Habitat: Snow"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Efficient Travel",
+    "text": "You ignore additional movement point costs for difficult terrain and hostile figures."
+   },
+   {
+    "name": "Hunger",
+    "text": "At the start of your activation, if there are no hostile figures within 3 spaces, gain 2 movement points."
+   },
+   {
+    "name": "Non-Sentient",
+    "text": "You cannot interact."
+   }
+  ],
+  "figures": 1,
+  "notes": "Creature.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 135,
+  "name": "Wampa",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Brawler",
+   "Creature"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": null,
+  "deployment_group": 1,
+  "health": 12,
+  "speed": 3,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 2,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2⊠",
+   "Habitat: Snow"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Bleed, Stun"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 3⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Efficient Travel",
+    "text": "You ignore additional movement point costs for difficult terrain and hostile figures."
+   },
+   {
+    "name": "Hunger",
+    "text": "At the start of your activation, if there are no hostile figures within 3 spaces, gain 2 movement points."
+   },
+   {
+    "name": "Non-Sentient",
+    "text": "You cannot interact."
+   }
+  ],
+  "figures": 1,
+  "notes": "Creature.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 136,
+  "name": "Weequay Pirate",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Hunter",
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 5,
+  "reinforce_cost": 3,
+  "deployment_group": 2,
+  "health": 4,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Raider",
+    "text": "While attacking, you may choose 1 die. The player that rolled that die must reroll that die."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 137,
+  "name": "Weequay Pirate",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Hunter",
+   "Smuggler"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 7,
+  "reinforce_cost": 4,
+  "deployment_group": 2,
+  "health": 6,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Prowl",
+    "text": "⟶: You become Hidden."
+   },
+   {
+    "name": "Raider",
+    "text": "While attacking, you may choose 1 die. The player that rolled that die must reroll that die."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 138,
+  "name": "Wing Guard",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Guardian",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 6,
+  "reinforce_cost": 2,
+  "deployment_group": 3,
+  "health": 3,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Keep the Peace",
+    "text": "When a hostile figure declares an attack targeting a space adjacent to you, if that space does not contain a friendly Guardian, you may suffer 1✦. If you do, the attacker suffers 1✦. Limit 1 \"Keep the Peace\" ability used per attack."
+   }
+  ],
+  "figures": 3,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 139,
+  "name": "Wing Guard",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Mercenary",
+  "traits": [
+   "Guardian",
+   "Trooper"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 9,
+  "reinforce_cost": 3,
+  "deployment_group": 3,
+  "health": 5,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Keep the Peace",
+    "text": "When a hostile figure declares an attack targeting a space adjacent to you, if that space does not contain a friendly Guardian, you may suffer 1✦. If you do, the attacker suffers 1✦. Limit 1 \"Keep the Peace\" ability used per attack."
+   },
+   {
+    "name": "Squad Training",
+    "text": "While attacking, while adjacent to another friendly Trooper, you may reroll 1 attack die."
+   }
+  ],
+  "figures": 3,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 160,
+  "name": "Wookiee Avenger",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Rebel",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": -4,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Chewbacca (Loyal Wookiee) Only"
+   },
+   {
+    "name": "",
+    "text": "+1⊠. You lose \"Protector.\" While defending, convert all [Dodge] to [Evade]."
+   },
+   {
+    "name": "",
+    "text": "During setup, search your Command deck for \"Debts Repaid,\" reveal it, put it into your hand, and shuffle your deck. Then, draw 1 fewer card into your initial hand."
+   },
+   {
+    "name": "",
+    "text": "Once during your activation, you may use \"Slam\" without spending an action."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish Upgrade attachment; no stats.",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ },
+ {
+  "id": 140,
+  "name": "Wookiee Warrior",
+  "description": null,
+  "elite": false,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Brawler",
+   "Wookiee"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 8,
+  "reinforce_cost": 4,
+  "deployment_group": 2,
+  "health": 11,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Fury",
+    "text": "While attacking, if you have suffered 5 or more ⊠, apply +1⚡ to the attack results."
+   }
+  ],
+  "figures": 2,
+  "notes": "",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 141,
+  "name": "Wookiee Warrior",
+  "description": null,
+  "elite": true,
+  "unique": false,
+  "affiliation": "Rebel",
+  "traits": [
+   "Brawler",
+   "Wookiee"
+  ],
+  "modes": [
+   "Campaign",
+   "Skirmish"
+  ],
+  "deployment_cost": 11,
+  "reinforce_cost": 6,
+  "deployment_group": 2,
+  "health": 13,
+  "speed": 4,
+  "defense": {
+   "black": 1,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Fury",
+    "text": "While attacking, if you have suffered 5 or more ⊠, apply +1⚡ to the attack results."
+   }
+  ],
+  "figures": 2,
+  "notes": "Number next to the threat cost (6) is the reinforce cost; group of 2 figures.",
+  "verified": true,
+  "kind": "figure"
+ },
+ {
+  "id": 142,
+  "name": "Zillo Technique",
+  "description": null,
+  "elite": false,
+  "unique": true,
+  "affiliation": "Imperial",
+  "traits": [
+   "Skirmish Upgrade"
+  ],
+  "modes": [
+   "Skirmish"
+  ],
+  "deployment_cost": 1,
+  "reinforce_cost": null,
+  "deployment_group": null,
+  "health": null,
+  "speed": null,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "",
+    "text": "Exhaust this card while a friendly figure is defending to reduce the Pierce value of the attack results by 2, to a minimum of 0. While a friendly figure is defending, you may discard 1 Command card to apply +1[Block] to the defense results. Limit once per attack."
+   }
+  ],
+  "figures": 0,
+  "notes": "Skirmish upgrade (not an attachment).",
+  "verified": true,
+  "kind": "skirmishUpgrade"
+ }
+]

@@ -2360,101 +2360,6 @@
 /* =========================================
    Inventory Tab Strip (right-side vertical tabs)
    ========================================= */
-.swia-sheet .inv-tab-strip {
-  display: flex;
-  flex-direction: column;
-  width: 36px;
-  flex-shrink: 0;
-  border-left: 2px solid rgba(var(--accent-rgb), 0.35);
-  background: rgba(var(--accent-rgb), 0.05);
-  padding: 8px 0;
-  gap: 6px;
-}
-
-.swia-sheet .inv-tab-btn {
-  all: unset;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 4px;
-  cursor: pointer;
-  padding: 10px 0;
-  border-left: 3px solid transparent;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.swia-sheet .inv-tab-btn:hover {
-  background: rgba(var(--accent-rgb), 0.12);
-  border-left-color: rgba(var(--accent-rgb), 0.5);
-}
-
-.swia-sheet .inv-tab-btn.active {
-  background: rgba(var(--accent-rgb), 0.18);
-  border-left-color: var(--accent);
-}
-
-.swia-sheet .inv-tab-label {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: rgba(var(--label-rgb), 0.65);
-  white-space: nowrap;
-}
-
-.swia-sheet .inv-tab-btn.active .inv-tab-label {
-  color: var(--accent);
-}
-
-.swia-sheet .inv-tab-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 3px;
-  border-radius: 8px;
-  background: rgba(var(--accent-rgb), 0.2);
-  color: rgba(var(--label-rgb), 0.7);
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.swia-sheet .inv-tab-btn.active .inv-tab-count {
-  background: var(--accent);
-  color: #fff;
-}
-
-/* =========================================
-   Inventory Panels (slide-out from right)
-   ========================================= */
-.swia-sheet .inv-panels {
-  display: none;
-  flex-shrink: 0;
-  width: 280px;
-  border-left: 2px solid rgba(var(--accent-rgb), 0.35);
-}
-
-.swia-sheet.inv-panel-open .inv-panels {
-  display: block;
-}
-
-.swia-sheet .inv-panel {
-  width: 280px;
-  display: none;
-  flex-direction: column;
-  height: 100%;
-  overflow-y: auto;
-}
-
-.swia-sheet.inv-open-abilities .inv-panel[data-panel="abilities"] { display: flex; }
-.swia-sheet.inv-open-gear     .inv-panel[data-panel="gear"]      { display: flex; }
-.swia-sheet.inv-open-weapons  .inv-panel[data-panel="weapons"]   { display: flex; }
-
 .swia-sheet .inv-panel-header {
   display: flex;
   align-items: center;
@@ -2487,11 +2392,6 @@
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
-}
-
-.swia-sheet .inv-panel > .item-list,
-.swia-sheet .inv-panel > .inventory-empty {
-  padding: 8px;
 }
 
 .swia-sheet .item-list {
@@ -3113,7 +3013,8 @@
   align-items: center;
 }
 
-.swia-player-portal .identity img {
+/* Portrait only — the token and condition trays inside .identity carry their own <img>s. */
+.swia-player-portal .identity > img {
   width: 68px;
   height: 68px;
   border-radius: 50%;
@@ -7261,4 +7162,216 @@ input:checked + .defeated-label { color: #8b0000; }
   display: flex;
   justify-content: space-between;
   gap: 8px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Sheet layout pass: scrolling sheet, sticky combat header,          */
+/* hero-abilities disclosure                                          */
+/* ------------------------------------------------------------------ */
+
+/* The form is the scroll container. Core's window-content clips overflow,
+   so without this anything past the window height is simply cut off. */
+.swia-sheet {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* Sticky combat header (display mode): health/endurance/speed/XP, the dice
+   row and Weapon Attack stay pinned while name, abilities and inventory
+   scroll. Opaque parchment so content doesn't show through. */
+.swia-sheet:not(.editing) .stats-section-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  background: #d9c9a8;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.05));
+  box-shadow: 0 6px 10px -6px rgba(0, 0, 0, 0.45);
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.35);
+}
+
+/* Hero abilities disclosure */
+.swia-sheet .hero-ability-disclosure > summary {
+  cursor: pointer;
+  list-style: none;
+  margin-bottom: 0;
+  user-select: none;
+}
+.swia-sheet .hero-ability-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+.swia-sheet .hero-ability-disclosure[open] > summary {
+  margin-bottom: 6px;
+}
+.swia-sheet .hero-ability-disclosure .disclosure-count {
+  min-width: 18px;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: rgba(var(--accent-rgb), 0.15);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 18px;
+}
+.swia-sheet .hero-ability-disclosure .disclosure-chevron {
+  font-size: 10px;
+  opacity: 0.6;
+  transition: transform 0.15s ease;
+}
+.swia-sheet .hero-ability-disclosure[open] .disclosure-chevron {
+  transform: rotate(180deg);
+}
+.swia-sheet .hero-ability-disclosure > summary:hover .list-section-title {
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout pass 2 — stat glyphs                                         */
+/* ------------------------------------------------------------------ */
+
+/* Inline stat/symbol glyph. Lives inside rich text on every surface (hero
+   abilities, item descriptions, chat cards, portals), each of which has its
+   own broad `img` rule (max-width, height:auto, borders, margins). A glyph is
+   always text-height, so it overrides all of them unconditionally. */
+img.swia-glyph {
+  height: 1em !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  vertical-align: -0.15em !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: none !important;
+  margin: 0 1px !important;
+  padding: 0 !important;
+  display: inline !important;
+}
+.swia-glyph-die {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  vertical-align: -0.1em;
+  border-radius: 2px;
+  margin: 0 1px;
+}
+/* Bonus rows / token rows: glyph is the label; the word stays for screen readers + tooltip */
+.swia-combat-window .pool-label .pool-label-text,
+.swia-roll-dialog .roll-token-row .pool-label .pool-label-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.swia-combat-window .pool-label,
+.swia-roll-dialog .roll-token-row .pool-label {
+  min-width: 26px;
+}
+.swia-combat-window .pool-label .swia-glyph,
+.swia-roll-dialog .roll-token-row .pool-label .swia-glyph {
+  height: 1.3em;
+}
+.swia-roll-card .roll-card-totals .swia-glyph,
+.swia-combat-window .roll-card-totals .swia-glyph {
+  height: 1.1em;
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout pass 2 — compact weapon rows                                 */
+/* ------------------------------------------------------------------ */
+
+.swia-sheet .weapon-entry .weapon-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin-top: 2px;
+}
+.swia-sheet .weapon-surge-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: 9px;
+  border: 1px solid rgba(122, 75, 10, 0.5);
+  background: rgba(255, 251, 239, 0.7);
+  color: #7a4b0a;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  width: auto;
+}
+.swia-sheet .weapon-surge-chip:hover {
+  background: #d8a35c;
+  color: #fff;
+}
+.swia-sheet .weapon-surge-chip .swia-glyph {
+  height: 1.1em;
+}
+.swia-sheet .item-expand-btn {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid rgba(95, 67, 35, 0.35);
+  background: rgba(255, 255, 255, 0.5);
+  color: #5f4323;
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.swia-sheet .item-expand-btn i {
+  transition: transform 0.15s ease;
+}
+.swia-sheet .item-expand-btn[aria-expanded="true"] i {
+  transform: rotate(180deg);
+}
+.swia-sheet .item-expand-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.swia-sheet .weapon-entry .weapon-details {
+  grid-column: 1 / -1;
+  margin: 2px 0 2px 38px;
+  padding: 4px 0 2px 8px;
+  border-left: 2px solid rgba(var(--accent-rgb), 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.swia-sheet .weapon-entry .weapon-details[hidden] {
+  display: none;
+}
+/* Mods now live inside the details block; drop the old spanning margin. */
+.swia-sheet .weapon-entry .weapon-details .weapon-mods {
+  margin: 0;
+}
+
+/* Die swatches inside condition notes render anywhere (chat cards have no .dice-block scope). */
+.swia-glyph-die.red    { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border: 1px solid #a12a1f; }
+.swia-glyph-die.blue   { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border: 1px solid #1c5d8f; }
+.swia-glyph-die.green  { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); border: 1px solid #1e8449; }
+.swia-glyph-die.yellow { background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); border: 1px solid #c87f0a; }
+.swia-glyph-die.black  { background: linear-gradient(135deg, #4a4a4a 0%, #1f1f1f 100%); border: 1px solid #000; }
+.swia-glyph-die.white  { background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%); border: 1px solid #b0b0b0; }
+
+/* Trays inside the portal identity block: never inherit the portrait sizing. */
+.swia-player-portal .identity .power-token-chip img,
+.swia-player-portal .identity .condition-chip img {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  object-fit: contain;
 }

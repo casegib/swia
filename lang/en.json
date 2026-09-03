@@ -540,6 +540,8 @@
   "SWIA.Item.Weapon.ExhaustToUseHint": "Spending this surge exhausts the card; readying it (or undoing the spend) restores it",
   "SWIA.Combat.ExhaustsSource": "Exhausts its card when spent",
   "SWIA.Inventory.ReadyAll": "Ready All",
+  "SWIA.Inventory.SurgeChipHint": "{count} surge abilities \u2014 click to show",
+  "SWIA.Inventory.ToggleDetails": "Show or hide surge abilities and attached mods",
   "SWIA.Inventory.ReadyAllHint": "Status phase: ready every exhausted card on this figure",
   "SWIA.Inventory.ReadyAllDone": "{count} card(s) readied.",
   "SWIA.Inventory.ReadyAllNone": "Nothing to ready.",

@@ -49,7 +49,7 @@
         <span class="combat-pre-bonus-label">{{localize "SWIA.Combat.PreRollBonus"}}</span>
         {{#each attacker.preBonusRows}}
         <div class="roll-pool-row bonus-row {{#if takesTokens}}has-token-slot{{/if}}">
-          <span class="pool-label" title="{{breakdown}}">{{label}}{{#if armor}} <span class="pool-armor-hint" title="{{localize 'SWIA.Roll.FromArmor' count=armor}}">&#9632;{{armor}}</span>{{/if}}</span>
+          <span class="pool-label" title="{{label}} &mdash; {{breakdown}}">{{{swiaGlyph stat}}}<span class="pool-label-text">{{label}}</span>{{#if armor}} <span class="pool-armor-hint" title="{{localize 'SWIA.Roll.FromArmor' count=armor}}">&#9632;{{armor}}</span>{{/if}}</span>
           <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="attacker" data-stat="{{stat}}" data-delta="-1" {{#unless ../canAttacker}}disabled{{/unless}}>&minus;</button>
           <span class="pool-count {{#if count}}has-bonus{{/if}}" title="{{breakdown}}">{{count}}</span>
           <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="attacker" data-stat="{{stat}}" data-delta="1" {{#unless ../canAttacker}}disabled{{/unless}}>+</button>
@@ -81,12 +81,6 @@
 
     <section class="combat-panel defender-panel">
       <h3>{{localize "SWIA.Combat.Defender"}}</h3>
-      <p class="combat-meta combat-tokens-held">
-        {{localize "SWIA.Combat.PowerTokens"}}:
-        {{localize "SWIA.Dice.Block"}} {{defender.tokensHeld.block}} &middot;
-        {{localize "SWIA.Dice.Evade"}} {{defender.tokensHeld.evade}}
-        {{#if defender.tokensHeld.any}}&middot; {{localize "SWIA.PowerTokens.AnyToken"}} {{defender.tokensHeld.any}}{{/if}}
-      </p>
       {{#if defender.conditionNotes.length}}
       <p class="combat-meta combat-conditions"><i class="fas fa-notes-medical"></i> {{#each defender.conditionNotes}}<span class="roll-condition-note">{{{this}}}</span>{{/each}}</p>
       {{/if}}
@@ -107,7 +101,7 @@
         <span class="combat-pre-bonus-label">{{localize "SWIA.Combat.PreRollBonus"}}</span>
         {{#each defender.preBonusRows}}
         <div class="roll-pool-row bonus-row {{#if takesTokens}}has-token-slot{{/if}}">
-          <span class="pool-label" title="{{breakdown}}">{{label}}{{#if armor}} <span class="pool-armor-hint" title="{{localize 'SWIA.Roll.FromArmor' count=armor}}">&#9632;{{armor}}</span>{{/if}}</span>
+          <span class="pool-label" title="{{label}} &mdash; {{breakdown}}">{{{swiaGlyph stat}}}<span class="pool-label-text">{{label}}</span>{{#if armor}} <span class="pool-armor-hint" title="{{localize 'SWIA.Roll.FromArmor' count=armor}}">&#9632;{{armor}}</span>{{/if}}</span>
           <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="defender" data-stat="{{stat}}" data-delta="-1" {{#unless ../canDefender}}disabled{{/unless}}>&minus;</button>
           <span class="pool-count {{#if count}}has-bonus{{/if}}" title="{{breakdown}}">{{count}}</span>
           <button type="button" class="pool-adjust" data-action="combatAdjustBonus" data-side="defender" data-stat="{{stat}}" data-delta="1" {{#unless ../canDefender}}disabled{{/unless}}>+</button>
@@ -164,9 +158,9 @@
     </div>
     {{/if}}
     <div class="roll-card-totals">
-      <span class="total damage">{{localize "SWIA.Dice.Damage"}} {{result.damage}}</span>
-      <span class="total surge">{{localize "SWIA.Dice.Surge"}} {{result.surge}}</span>
-      <span class="total accuracy">{{localize "SWIA.Dice.Accuracy"}} {{result.totalAccuracy}}</span>
+      <span class="total damage" title="{{localize 'SWIA.Dice.Damage'}}">{{{swiaGlyph "damage"}}} {{result.damage}}</span>
+      <span class="total surge" title="{{localize 'SWIA.Dice.Surge'}}">{{{swiaGlyph "surge"}}} {{result.surge}}</span>
+      <span class="total accuracy" title="{{localize 'SWIA.Dice.Accuracy'}}">{{{swiaGlyph "accuracy"}}} {{result.totalAccuracy}}</span>
     </div>
     <footer class="combat-actions">
       <button type="button" class="combat-roll-btn" data-action="combatRollDefense" {{#unless canDefender}}disabled{{/unless}}>
@@ -207,12 +201,12 @@
     {{/if}}
 
     <div class="roll-card-totals">
-      <span class="total damage">{{localize "SWIA.Dice.Damage"}} {{result.totalDamage}}</span>
-      <span class="total surge">{{localize "SWIA.Dice.Surge"}} {{result.usableSurge}}</span>
-      <span class="total accuracy">{{localize "SWIA.Dice.Accuracy"}} {{result.totalAccuracy}}</span>
-      <span class="total block">{{localize "SWIA.Dice.Block"}} {{#if result.pierceTotal}}{{result.effectiveBlock}} ({{result.block}}+{{result.bonusBlock}}&minus;{{result.pierceTotal}}){{else}}{{result.effectiveBlock}}{{#if result.bonusBlock}} ({{result.block}}+{{result.bonusBlock}}){{/if}}{{/if}}</span>
-      {{#if result.totalEvade}}<span class="total evade">{{localize "SWIA.Dice.Evade"}} {{result.totalEvade}}{{#if result.bonusEvade}} ({{result.evade}}+{{result.bonusEvade}}){{/if}}</span>{{/if}}
-      {{#if result.dodged}}<span class="total dodge">{{localize "SWIA.Dice.Dodge"}}!</span>{{/if}}
+      <span class="total damage" title="{{localize 'SWIA.Dice.Damage'}}">{{{swiaGlyph "damage"}}} {{result.totalDamage}}</span>
+      <span class="total surge" title="{{localize 'SWIA.Dice.Surge'}}">{{{swiaGlyph "surge"}}} {{result.usableSurge}}</span>
+      <span class="total accuracy" title="{{localize 'SWIA.Dice.Accuracy'}}">{{{swiaGlyph "accuracy"}}} {{result.totalAccuracy}}</span>
+      <span class="total block" title="{{localize 'SWIA.Dice.Block'}}">{{{swiaGlyph "block"}}} {{#if result.pierceTotal}}{{result.effectiveBlock}} ({{result.block}}+{{result.bonusBlock}}&minus;{{result.pierceTotal}}){{else}}{{result.effectiveBlock}}{{#if result.bonusBlock}} ({{result.block}}+{{result.bonusBlock}}){{/if}}{{/if}}</span>
+      {{#if result.totalEvade}}<span class="total evade" title="{{localize 'SWIA.Dice.Evade'}}">{{{swiaGlyph "evade"}}} {{result.totalEvade}}{{#if result.bonusEvade}} ({{result.evade}}+{{result.bonusEvade}}){{/if}}</span>{{/if}}
+      {{#if result.dodged}}<span class="total dodge" title="{{localize 'SWIA.Dice.Dodge'}}">{{{swiaGlyph "dodge"}}} {{localize "SWIA.Dice.Dodge"}}!</span>{{/if}}
     </div>
 
     {{#if result.hasConditionNotes}}
@@ -223,10 +217,10 @@
     {{#if result.hasDeclaredTokens}}
     <p class="combat-meta combat-declared-tokens">
       {{localize "SWIA.Combat.DeclaredTokens"}}:
-      {{#if result.tokenDamage}}<span>+{{result.tokenDamage}} {{localize "SWIA.Dice.Damage"}}</span>{{/if}}
-      {{#if result.tokenSurge}}<span>+{{result.tokenSurge}} {{localize "SWIA.Dice.Surge"}}</span>{{/if}}
-      {{#if result.tokenBlock}}<span>+{{result.tokenBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
-      {{#if result.tokenEvade}}<span>+{{result.tokenEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
+      {{#if result.tokenDamage}}<span>+{{result.tokenDamage}} {{{swiaGlyph "damage"}}}</span>{{/if}}
+      {{#if result.tokenSurge}}<span>+{{result.tokenSurge}} {{{swiaGlyph "surge"}}}</span>{{/if}}
+      {{#if result.tokenBlock}}<span>+{{result.tokenBlock}} {{{swiaGlyph "block"}}}</span>{{/if}}
+      {{#if result.tokenEvade}}<span>+{{result.tokenEvade}} {{{swiaGlyph "evade"}}}</span>{{/if}}
     </p>
     {{/if}}
     <div class="roll-card-result {{#if result.dodged}}dodged{{/if}}">

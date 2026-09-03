@@ -1,0 +1,4071 @@
+[
+ {
+  "id": 32,
+  "family": "reward",
+  "name": "501st Training",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [
+   "Attachment",
+   "Trooper only"
+  ],
+  "surgeAbilities": [],
+  "text": "Figures in this group gain: ⟶: Perform an attack, then gain 2 movement points. ⟶⟶: Recover 3⊠ and become Focused.",
+  "shape": "action",
+  "notes": "Imperial reward; printed ATTACHMENT banner, 'Trooper only'. Grants one single-action and one double-action ability.",
+  "verified": true
+ },
+ {
+  "id": 5,
+  "family": "reward",
+  "name": "Adrenal Implant",
+  "tier": null,
+  "credits": null,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card after resting. You become Focused.",
+  "shape": "equipment",
+  "notes": "Card is printed 'Adrenal Implant' (manifest says 'Adrenalin Implant'). Rebel reward; accessory slot icon.",
+  "verified": true
+ },
+ {
+  "id": 40,
+  "family": "reward",
+  "name": "Alliance Efficiency",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Exhaust this card while attacking or defending to reroll 1 of your dice. | Exhaust this card when you perform a rest to recover 1 additional ⊠. | Deplete this card after a player discards a Supply card to draw that card from the discard pile.",
+  "shape": "declared",
+  "notes": "Rebel reward. Three paragraphs separated by printed rule lines; first is declared during a roll, the other two are action-shaped.",
+  "verified": true
+ },
+ {
+  "id": 6,
+  "family": "reward",
+  "name": "Allied Operations",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "When you deploy an ally, reduce its deployment cost by 2.",
+  "shape": "passive",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 41,
+  "family": "reward",
+  "name": "Bardottan Shard",
+  "tier": null,
+  "credits": null,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "1✦: Exhaust this card and choose a hostile figure within 3 spaces. That figure suffers 1⊠. You may increase ◆ by 1 to cause that figure to suffer 2 additional ⊠.",
+  "shape": "equipment",
+  "notes": "Rebel reward; accessory slot icon.",
+  "verified": true
+ },
+ {
+  "id": 19,
+  "family": "reward",
+  "name": "Battle Vision",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "While a friendly figure is attacking a figure adjacent to a figure with a recon token, apply +1⊠ to the attack results.",
+  "shape": "passive",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 0,
+  "family": "reward",
+  "name": "Bounty",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "When you deploy a Hunter, reduce its deployment cost by 1.",
+  "shape": "passive",
+  "notes": "Imperial reward (dark card frame).",
+  "verified": true
+ },
+ {
+  "id": 27,
+  "family": "reward",
+  "name": "Bred for War",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Return this card to the game box when you deploy a Rancor. Reduce its deployment cost by 4, and it becomes Focused.",
+  "shape": "action",
+  "notes": "Imperial reward.",
+  "verified": true
+ },
+ {
+  "id": 22,
+  "family": "reward",
+  "name": "Cam Droid",
+  "tier": null,
+  "credits": null,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "When you deploy your hero, place the Cam Droid companion in your space. | The Cam Droid activates at the start or end of your activation.",
+  "shape": "equipment",
+  "notes": "Rebel reward; accessory slot icon. Two paragraphs separated by a printed rule line.",
+  "verified": true
+ },
+ {
+  "id": 34,
+  "family": "reward",
+  "name": "Cautious Approach",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "During your activation, you may spend 1 movement point to recover 1✦. Limit twice per activation.",
+  "shape": "action",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 1,
+  "family": "reward",
+  "name": "Counterparts",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "During setup of any mission, when deploying Rebel figures, return this card to the game box to deploy either R2-D2 (Loyal Astromech) or C-3PO (Human-Cyborg Relations) as an ally at no threat cost. This does not count against the 1 ally per mission limit.",
+  "shape": "action",
+  "notes": "Rebel reward (red card frame).",
+  "verified": true
+ },
+ {
+  "id": 28,
+  "family": "reward",
+  "name": "Desperado",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Exhaust this card while attacking. For each hostile figure within 3 spaces of you, apply +1⚡ to the attack results. | Exhaust this card while defending. For each hostile figure within 3 spaces of you, apply +1[Evade] to the defense results.",
+  "shape": "declared",
+  "notes": "Rebel reward. Two paragraphs separated by a printed rule line.",
+  "verified": true
+ },
+ {
+  "id": 42,
+  "family": "reward",
+  "name": "Explosives Clearance",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [
+   "Attachment",
+   "Non-Creature Only"
+  ],
+  "surgeAbilities": [],
+  "text": "Exhaust this card during your activation to place a rubble token in any space within 3 spaces. | Deplete this card at the end of a round to place a rubble token in any space within 3 spaces. Then, each figure on or adjacent to that space suffers 1⊠ and 1✦.",
+  "shape": "action",
+  "notes": "Imperial reward; printed ATTACHMENT banner, 'Non-Creature Only'. Two paragraphs separated by a printed rule line.",
+  "verified": true
+ },
+ {
+  "id": 7,
+  "family": "reward",
+  "name": "Fearless Leader",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "When you deploy a Rebel Trooper, reduce the deployment cost by 2. | After you resolve a \"Command\" the chosen friendly figure recovers 1✦.",
+  "shape": "passive",
+  "notes": "Rebel reward. Two paragraphs separated by a printed rule line.",
+  "verified": true
+ },
+ {
+  "id": 29,
+  "family": "reward",
+  "name": "Haymaker",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "1✦: Exhaust this card during your activation and choose an adjacent, small, hostile figure. Test [Str]. For each success, to a maximum of 3, push that figure up to 1 space and that figure suffers 1⊠.",
+  "shape": "action",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 2,
+  "family": "reward",
+  "name": "Hunt Them Down",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "While attacking an [Imperial] Trooper, apply +1⚡ to the attack results. The attack gains Pierce 1.",
+  "shape": "passive",
+  "notes": "Rebel reward. The Imperial affiliation icon (cog) precedes 'Trooper'.",
+  "verified": true
+ },
+ {
+  "id": 8,
+  "family": "reward",
+  "name": "Imperial Industry",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "After the attack resolves, gain 2 movement points"
+   }
+  ],
+  "text": "Each figure in this group gains:",
+  "shape": "passive",
+  "notes": "Imperial reward; printed ATTACHMENT banner (attaches to a deployment group).",
+  "verified": true
+ },
+ {
+  "id": 43,
+  "family": "reward",
+  "name": "Inside Source",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "At the start of the first round, the Imperial player must choose and reveal the trigger and rules for 1 mission event, excluding \"Mission Briefing\" and \"End of Mission.\"",
+  "shape": "passive",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 44,
+  "family": "reward",
+  "name": "Intercepted Plans",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Deplete this card at the start of a round to exhaust an Imperial Class card.",
+  "shape": "action",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 38,
+  "family": "reward",
+  "name": "Intimidation",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Deplete this card when you defeat the last figure in a group. Until the end of this mission, the deployment cost of that group increases by 2.",
+  "shape": "action",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 20,
+  "family": "reward",
+  "name": "Iron Hand",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "At the end of your activation, recover 1✦ for each adjacent hostile figure, to a maximum of 3.",
+  "shape": "passive",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 36,
+  "family": "reward",
+  "name": "Lady Luck",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Exhaust this card while attacking or performing an attribute test to reroll all of your dice.",
+  "shape": "declared",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 45,
+  "family": "reward",
+  "name": "Lessons of History",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Deplete this card at the start of a Status Phase to reduce the threat level by 1 until the end of the round.",
+  "shape": "action",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 9,
+  "family": "reward",
+  "name": "Life Debt",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Exhaust this card after an attack targeting another friendly figure within 3 spaces is resolved. If that figure suffered 3 or more ⊠ you become Focused.",
+  "shape": "declared",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 23,
+  "family": "reward",
+  "name": "Lobot's Favor",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Deplete this card while a hero is performing an attribute test to apply +2⚡ to the test results. | Deplete this card during a hero's activation. That hero may interrupt to interact with an adjacent door, or a door adjacent to that hero suffers 4⊠.",
+  "shape": "declared",
+  "notes": "Rebel reward. Two alternative deplete effects separated by a printed rule line; first is declared during a test, second is an action-shaped use.",
+  "verified": true
+ },
+ {
+  "id": 30,
+  "family": "reward",
+  "name": "Mandalorian Heritage",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Recover 2⊠"
+   }
+  ],
+  "text": "Apply +2 Health to your hero. | Before you declare an attack with a [melee] weapon, you may have the attack gain 1 of the following: ⚡: +2⊠ / ⚡: Recover 2⊠ / Reach",
+  "shape": "passive",
+  "notes": "Rebel reward. Two paragraphs separated by a printed rule line. The surge lines and 'Reach' are the options granted by the second paragraph (choose 1 per attack), not standing surge abilities.",
+  "verified": true
+ },
+ {
+  "id": 37,
+  "family": "reward",
+  "name": "Mechanical Salvage",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [
+   "Attachment",
+   "-1 Speed"
+  ],
+  "surgeAbilities": [],
+  "text": "When you deploy a Droid group, you may reduce its cost by 3. If you do, attach this card to it. Limit once per mission.",
+  "shape": "passive",
+  "notes": "Imperial reward; printed ATTACHMENT banner. '-1 Speed' is printed above a rule line as the attachment's modifier.",
+  "verified": true
+ },
+ {
+  "id": 46,
+  "family": "reward",
+  "name": "Mercenary Aid",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Deplete this card when you deploy a [Mercenary] group to decrease that group's cost by 1.",
+  "shape": "action",
+  "notes": "Imperial reward. The Mercenary affiliation icon precedes 'group'.",
+  "verified": true
+ },
+ {
+  "id": 31,
+  "family": "reward",
+  "name": "Mercenary Ties",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Exhaust this card when an Imperial figure declares an attack. After the attack resolves, if the target suffered 1 or more ⊠, he also suffers 1✦.",
+  "shape": "declared",
+  "notes": "Imperial reward (Mercenary-styled frame).",
+  "verified": true
+ },
+ {
+  "id": 10,
+  "family": "reward",
+  "name": "Old Wounds",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "While a wounded hero is attacking, apply -1⊠ to the attack results.",
+  "shape": "passive",
+  "notes": "Imperial reward.",
+  "verified": true
+ },
+ {
+  "id": 11,
+  "family": "reward",
+  "name": "Peacemaker",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "1✦: Exhaust this card after a hostile figure resolves an attack targeting you. Interrupt to perform an attack targeting that figure.",
+  "shape": "action",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 47,
+  "family": "reward",
+  "name": "Populist Support",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Deplete this card when ◆ is increased to reduce the amount by which ◆ is increased by 2, to a minimum of 0.",
+  "shape": "action",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 48,
+  "family": "reward",
+  "name": "Power of the Shard",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "At the end of each round, choose one: • The heroes suffer 3✦ distributed as you choose (limit 1✦ per activation token). • A hero of your choice suffers 2⊠ (3⊠ instead if that hero has 2 activation tokens). • Increase ◆ by 1.",
+  "shape": "passive",
+  "notes": "Imperial reward. Three bulleted options.",
+  "verified": true
+ },
+ {
+  "id": 39,
+  "family": "reward",
+  "name": "Quickdraw Holster",
+  "tier": null,
+  "credits": null,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "1✦: Deplete this card when an attack targeting you is declared. Interrupt to perform an attack targeting the attacker.",
+  "shape": "equipment",
+  "notes": "Rebel reward; accessory slot icon.",
+  "verified": true
+ },
+ {
+  "id": 24,
+  "family": "reward",
+  "name": "Radiant Holocron",
+  "tier": null,
+  "credits": null,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card during your activation or at the start of another activation to interrupt to ready 1 of your class cards.",
+  "shape": "equipment",
+  "notes": "Rebel reward; accessory slot icon.",
+  "verified": true
+ },
+ {
+  "id": 12,
+  "family": "reward",
+  "name": "Rebel Recon",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "When a hero draws a Supply card, he draws 1 additional Supply card. He chooses 1 to keep and places the other on the bottom of the Supply deck.",
+  "shape": "passive",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 25,
+  "family": "reward",
+  "name": "Relief Effort",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Exhaust this card after a hero becomes wounded. Each hero recovers 2✦.",
+  "shape": "action",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 49,
+  "family": "reward",
+  "name": "Scouted Enemies",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Exhaust this card when an Imperial group is defeated. That group cannot be redeployed until the start of the next round.",
+  "shape": "action",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 13,
+  "family": "reward",
+  "name": "Shadow Suit",
+  "tier": null,
+  "credits": null,
+  "type": "Armor",
+  "traits": [
+   "Armor",
+   "Light"
+  ],
+  "kind": "armor",
+  "keywords": [
+   "+1 [Evade]"
+  ],
+  "surgeAbilities": [],
+  "armor": {
+   "health": 0,
+   "block": 0,
+   "evade": 1
+  },
+  "modSlots": 0,
+  "text": "You can use \"Ambush\" while attacking figures who have line of sight to you.",
+  "shape": "equipment",
+  "notes": "Rebel reward; armor slot icon.",
+  "verified": true
+ },
+ {
+  "id": 14,
+  "family": "reward",
+  "name": "Shu Yen's Lightsaber",
+  "tier": null,
+  "credits": null,
+  "type": "Melee Weapon",
+  "traits": [
+   "Lightsaber",
+   "Blade"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 3"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠, Cleave 2⊠"
+   }
+  ],
+  "modSlots": 0,
+  "text": "When you use \"Foresight,\" the attacker suffers 1⊠ after the attack resolves.",
+  "shape": "equipment",
+  "notes": "Rebel reward weapon. No modification slots visible.",
+  "verified": true
+ },
+ {
+  "id": 15,
+  "family": "reward",
+  "name": "Special Operations",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [
+   "Attachment",
+   "Leader only"
+  ],
+  "surgeAbilities": [],
+  "text": "⟶: Increase ◆ by 1.",
+  "shape": "action",
+  "notes": "Imperial reward; printed ATTACHMENT banner, 'Leader only' restriction.",
+  "verified": true
+ },
+ {
+  "id": 16,
+  "family": "reward",
+  "name": "Supply Deficit",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "At the start of each mission, the heroes may spend 100 credits. If they do not, each hero suffers 2✦.",
+  "shape": "passive",
+  "notes": "Imperial reward.",
+  "verified": true
+ },
+ {
+  "id": 3,
+  "family": "reward",
+  "name": "Surveillance Operatives",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "Deplete this card during any activation to choose up to 3 Trooper or Leader figures. Each of the chosen figures may interrupt to perform a move.",
+  "shape": "action",
+  "notes": "Imperial reward.",
+  "verified": true
+ },
+ {
+  "id": 21,
+  "family": "reward",
+  "name": "Systems Upgrade",
+  "tier": null,
+  "credits": null,
+  "type": "Equipment",
+  "traits": [
+   "Enhancement"
+  ],
+  "kind": "gear",
+  "keywords": [
+   "+2 Health"
+  ],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Deplete this card during your activation to search the Supply deck for a Medical card and gain that card. Then, shuffle the Supply deck.",
+  "shape": "equipment",
+  "notes": "Rebel reward; accessory slot icon. '+2 Health' printed as a boxed line above a rule line.",
+  "verified": true
+ },
+ {
+  "id": 35,
+  "family": "reward",
+  "name": "Tactical Advance",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [
+   "Attachment"
+  ],
+  "surgeAbilities": [],
+  "text": "⟶: Another figure in this group gains 2 movement points and becomes Hidden.",
+  "shape": "action",
+  "notes": "Imperial reward; printed ATTACHMENT banner.",
+  "verified": true
+ },
+ {
+  "id": 4,
+  "family": "reward",
+  "name": "Tech Goggles",
+  "tier": null,
+  "credits": null,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card when a friendly figure in your line of sight discards a device token to claim a device token.",
+  "shape": "equipment",
+  "notes": "Rebel reward; equipment slot icon: accessory.",
+  "verified": true
+ },
+ {
+  "id": 17,
+  "family": "reward",
+  "name": "The Ways of the Force",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "1✦: Use this card before performing an attribute test to become Focused.",
+  "shape": "declared",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 50,
+  "family": "reward",
+  "name": "Tracked Movements",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "surgeAbilities": [],
+  "text": "At the start of each round, choose up to 3 Imperial figures. Each of those figures may move 1 space.",
+  "shape": "action",
+  "notes": "Imperial reward (grey frame).",
+  "verified": true
+ },
+ {
+  "id": 33,
+  "family": "reward",
+  "name": "Tusken Weaponry",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [
+   "Attachment",
+   "Non-Creature only"
+  ],
+  "surgeAbilities": [],
+  "text": "⟶: Perform a [melee] attack using 1 red and 1 green die. Apply +1⊠ to the attack results. You cannot use abilities during this attack. | ⟶: Perform a [ranged] attack using 1 red and 1 blue die. You cannot use abilities during this attack.",
+  "shape": "action",
+  "notes": "Imperial reward; printed ATTACHMENT banner, 'Non-Creature only'. Two action abilities separated by a printed rule line.",
+  "verified": true
+ },
+ {
+  "id": 26,
+  "family": "reward",
+  "name": "Under the Radar",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "At the start of each mission, each hero becomes Hidden.",
+  "shape": "passive",
+  "notes": "Rebel reward.",
+  "verified": true
+ },
+ {
+  "id": 51,
+  "family": "reward",
+  "name": "Vader's Legion",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "surgeAbilities": [],
+  "text": "At the start of each mission, you may add 1 regular Stormtrooper group to your hand of open groups. | When you deploy a regular Stormtrooper group, you may choose to deploy only 1 figure, paying only 2◆, or deploy only 2 figures, paying only 4◆.",
+  "shape": "action",
+  "notes": "Imperial reward (grey frame). Two paragraphs separated by a printed rule line.",
+  "verified": true,
+  "verified_note": "Card is printed Vader's Legion (apostrophe missing in name); the two rules paragraphs are separated by a printed rule line, marked with | per convention."
+ },
+ {
+  "id": 18,
+  "family": "reward",
+  "name": "Veteran Prowess",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "keywords": [],
+  "surgeAbilities": [],
+  "text": "When you use \"Havoc Shot,\" apply +1⊠ to your attack results. | Exhaust this card after resting. You recover 2⊠.",
+  "shape": "passive",
+  "notes": "Rebel reward. Two paragraphs separated by a printed rule line; second is an exhaust effect (action-like).",
+  "verified": true
+ },
+ {
+  "id": 52,
+  "family": "reward",
+  "name": "Wookiee Roar",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "surgeAbilities": [],
+  "text": "Exhaust this card when a hostile figure is defeated during your activation to test [Str]. Choose an effect based on the number of ⚡ results: 0 or more ⚡: Gain 1 [power token] (\"?\" in a disc, token of your choice). 1 or more ⚡: Recover 1✦. 2 or more ⚡: Become Focused.",
+  "shape": "action",
+  "notes": "Rebel reward (red frame). Exhaust trigger happens outside an attack roll, hence action.",
+  "verified": true
+ },
+ {
+  "id": 53,
+  "family": "reward",
+  "name": "X-8 Upgrade",
+  "tier": null,
+  "credits": null,
+  "type": "Feat",
+  "traits": null,
+  "kind": "feat",
+  "surgeAbilities": [],
+  "text": "Apply +2 Health to J4X-7. | J4X-7 loses \"Pierce 1\" and gains \"+1⊠.\" | While using \"Supporting Fire\" on J4X-7, apply +1⊠ to the attack results instead of Pierce 1.",
+  "shape": "passive",
+  "notes": "Rebel reward (red frame); modifies the J4X-7 companion. Three paragraphs separated by printed rule lines.",
+  "verified": true,
+  "verified_note": "Three rules paragraphs are separated by printed rule lines; added | separators per convention. Wording otherwise correct."
+ },
+ {
+  "id": 0,
+  "family": "supply",
+  "name": "Adrenal Stim",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Medical"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Discard this card during your activation to choose yourself or an adjacent friendly figure. The chosen figure recovers 3✦ and becomes Focused.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 1,
+  "family": "supply",
+  "name": "Artificial Stimulants",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Medical"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "When you suffer ✦, place that ✦ on this card instead of your hero sheet. Discard this card when it has 4 or more ✦. During your activation, an adjacent hero may claim this card.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 2,
+  "family": "supply",
+  "name": "Bacta Infusion",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Medical"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Discard this card during your activation to choose yourself or an adjacent friendly figure. The chosen figure recovers 3⊠ and may discard 1 or more Harmful conditions.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 3,
+  "family": "supply",
+  "name": "C1 Comlink",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Tool"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Discard this card at the start of a round to choose and exhaust a regular Deployment card.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 4,
+  "family": "supply",
+  "name": "C22 Frag Grenade",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Explosive"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "⟶: Choose a space within 3 spaces and roll 1 red die. Each figure and object on or adjacent to that space suffers ⊠ equal to the ⊠ results. Then, discard this card.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 5,
+  "family": "supply",
+  "name": "Chance Cubes",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Valuable"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "At the end of a mission, you may discard 1 crate token to roll 1 blue die. If the accuracy result is 4 or higher, the heroes receive 200 credits.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 6,
+  "family": "supply",
+  "name": "Emergency Medpac",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Medical"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Discard this card after you rest. You or an adjacent friendly figure recovers 5⊠.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 7,
+  "family": "supply",
+  "name": "Flash Bomb",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Explosive"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "2✦: Choose a space within 3 spaces. Each figure on or adjacent to the chosen space suffers 1⊠ and becomes Weakened.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 8,
+  "family": "supply",
+  "name": "Flash Emitter",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Energy"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Discard this card at the start of a round. Each Rebel figure within 5 spaces becomes Hidden.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 19,
+  "family": "supply",
+  "name": "Grappler Arm",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Tool"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "You can interact with objects up to 2 spaces away from you. During your activation, you may give this card to an adjacent hero.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 9,
+  "family": "supply",
+  "name": "Grappling Hook",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Tool"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Discard this card during your activation to place your figure in an empty space within 3 spaces.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 10,
+  "family": "supply",
+  "name": "Macrobinoculars",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Tool"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Discard this card while a friendly figure is attacking a figure in your line of sight. Apply +1⚡ and +3 Accuracy to the attack results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 11,
+  "family": "supply",
+  "name": "Painkillers",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Medical"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "While wounded, you gain +1 Speed and +1 Endurance. | During your activation, if you are healthy, you may give this card to an adjacent hero.",
+  "shape": "equipment",
+  "notes": "Two rules paragraphs separated by a printed rule line.",
+  "verified": true
+ },
+ {
+  "id": 12,
+  "family": "supply",
+  "name": "Pit Droid",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Droid"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Place the Pit Droid companion in your space. | The Pit Droid activates at the start or end of your activation.",
+  "shape": "equipment",
+  "notes": "Two rules paragraphs separated by a printed rule line.",
+  "verified": true
+ },
+ {
+  "id": 13,
+  "family": "supply",
+  "name": "Power Generator",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Energy"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Discard this card and a crate token in your play area while attacking. Apply +2⊠ and Pierce 2 to the attack results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 20,
+  "family": "supply",
+  "name": "Shield Pack",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Tool"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card during your activation. A friendly figure within 3 spaces gains 1 [block token]. Then, you may deplete this card for that or another friendly figure within 3 spaces to gain 1 [block token].",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 14,
+  "family": "supply",
+  "name": "Shock Grenade",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Consumable",
+   "Explosive"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "⟶: Choose a space within 3 spaces. Roll 1 yellow die. Each figure on or adjacent to that space suffers ⊠ equal to the ⊠ results and becomes Stunned. Then, discard this card.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 21,
+  "family": "supply",
+  "name": "Supply Chest",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Valuable"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "When you draw this card, immediately discard it and draw 3 Supply cards. Choose 1 to keep and shuffle the other 2 back into the deck.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 15,
+  "family": "supply",
+  "name": "Troop Data",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Intel"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "When this card is drawn, reveal all Deployment cards in the Imperial player's hand and reserve. Then, return those cards to his hand and reserve and discard this card.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 16,
+  "family": "supply",
+  "name": "Turbocharger",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Energy"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Place this card in your play area with 2 strain tokens on it. While attacking, you may discard 1 strain token from this card to apply +1⚡ to the attack results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 17,
+  "family": "supply",
+  "name": "Valuable Goods",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Valuable"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Discard this card at the end of the mission to receive 100 credits.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 18,
+  "family": "supply",
+  "name": "Weapons Cache",
+  "tier": null,
+  "credits": null,
+  "type": null,
+  "traits": [
+   "Tool"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Place this card in your play area with 4 damage tokens on it. When you or an adjacent friendly figure declares an attack, discard 1 token from this card to apply +1⊠ to the attack results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 22,
+  "family": "upgrade",
+  "name": "434 \"Deathhammer\"",
+  "tier": 2,
+  "credits": 600,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Pistol"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1⊠"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "modSlots": 1,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 74,
+  "family": "upgrade",
+  "name": "A-12 Sniper Rifle",
+  "tier": 3,
+  "credits": 1150,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Rifle"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 2,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "Gain 1[surge token]"
+   },
+   {
+    "cost": 1,
+    "text": "Apply -1[Dodge] to the defense results."
+   }
+  ],
+  "modSlots": 2,
+  "text": "",
+  "shape": "equipment",
+  "notes": "Two modification slot tabs at bottom right. Three dots by the title are the tier marker.",
+  "verified": true
+ },
+ {
+  "id": 23,
+  "family": "upgrade",
+  "name": "A280",
+  "tier": 2,
+  "credits": 600,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Rifle"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "modSlots": 2,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 45,
+  "family": "upgrade",
+  "name": "Admiral's Uniform",
+  "tier": 3,
+  "credits": 350,
+  "type": "Armor",
+  "traits": [
+   "Armor"
+  ],
+  "kind": "armor",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 Health"
+  ],
+  "surgeAbilities": [],
+  "armor": {
+   "health": 1,
+   "block": 0,
+   "evade": 0
+  },
+  "modSlots": 0,
+  "text": "Exhaust this card after a Rebel figure within 3 spaces rolls any number of dice. That figure may reroll any number of those dice.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 46,
+  "family": "upgrade",
+  "name": "Ancient Lightsaber",
+  "tier": 3,
+  "credits": 1000,
+  "type": "Melee Weapon",
+  "traits": [
+   "Blade",
+   "Energy"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 2,
+    "text": "+1⊠, Pierce 3"
+   }
+  ],
+  "modSlots": 1,
+  "text": "Your attack pool with this weapon is your [Ins] pool.",
+  "shape": "equipment",
+  "notes": "Attack box shows three '?' dice (pool is the wielder's Insight pool).",
+  "verified": true
+ },
+ {
+  "id": 0,
+  "family": "upgrade",
+  "name": "Armored Gauntlets",
+  "tier": 1,
+  "credits": 300,
+  "type": "Melee Weapon",
+  "traits": [
+   "Fist"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   }
+  ],
+  "modSlots": 0,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 24,
+  "family": "upgrade",
+  "name": "BD-1 Vibro-Ax",
+  "tier": 2,
+  "credits": 600,
+  "type": "Melee Weapon",
+  "traits": [
+   "Blade",
+   "Staff"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Reach"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠, Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "modSlots": 2,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 1,
+  "family": "upgrade",
+  "name": "Bacta Pump",
+  "tier": 1,
+  "credits": 300,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "At the start of your activation, recover 1✦ or discard a Harmful condition.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 2,
+  "family": "upgrade",
+  "name": "Balanced Hilt",
+  "tier": 1,
+  "credits": 300,
+  "type": "Melee Weapon Modification",
+  "traits": [
+   "Modification",
+   "Balance"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card while attacking to apply +1⚡ to the attack results.",
+  "shape": "equipment",
+  "notes": "Melee modification (saber icon).",
+  "verified": true
+ },
+ {
+  "id": 25,
+  "family": "upgrade",
+  "name": "Bolt Upgrade",
+  "tier": 2,
+  "credits": 250,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Energy"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card when you declare an attack. Replace 1 die in your attack pool with 1 attack die of your choice.",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 70,
+  "family": "upgrade",
+  "name": "Charge Pistol",
+  "tier": 1,
+  "credits": 350,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Pistol"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Gain 1 [damage token]."
+   }
+  ],
+  "modSlots": 2,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 69,
+  "family": "upgrade",
+  "name": "Charged Ammo Pack",
+  "tier": 1,
+  "credits": 100,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Ammunition"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Gain 1 [damage token]."
+   }
+  ],
+  "modSlots": 0,
+  "text": "",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 3,
+  "family": "upgrade",
+  "name": "Combat Coat",
+  "tier": 1,
+  "credits": 500,
+  "type": "Armor",
+  "traits": [
+   "Armor",
+   "Light"
+  ],
+  "kind": "armor",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Health"
+  ],
+  "surgeAbilities": [],
+  "armor": {
+   "health": 2,
+   "block": 0,
+   "evade": 0
+  },
+  "modSlots": 0,
+  "text": "While defending, you may convert 1 or more [Evade] results to [Block] results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 26,
+  "family": "upgrade",
+  "name": "Combat Coat",
+  "tier": 2,
+  "credits": 500,
+  "type": "Armor",
+  "traits": [
+   "Armor",
+   "Light"
+  ],
+  "kind": "armor",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Health"
+  ],
+  "surgeAbilities": [],
+  "armor": {
+   "health": 2,
+   "block": 0,
+   "evade": 0
+  },
+  "modSlots": 0,
+  "text": "While defending, you may convert 1 or more [Evade] results to [Block] results.",
+  "shape": "equipment",
+  "notes": "Same text as the tier 1 Combat Coat.",
+  "verified": true
+ },
+ {
+  "id": 47,
+  "family": "upgrade",
+  "name": "Combat Knife",
+  "tier": 3,
+  "credits": 500,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "1✦: Exhaust this card during your activation to choose an adjacent hostile figure and roll 1 green die. That figure suffers ⊠ equal to the ⊠ results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 48,
+  "family": "upgrade",
+  "name": "Combat Visor",
+  "tier": 3,
+  "credits": 350,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card while performing a [Ins] test to reroll 1 die. 1✦: Use this card while attacking to apply +2 Accuracy to the attack results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 49,
+  "family": "upgrade",
+  "name": "Concussion Grenades",
+  "tier": 3,
+  "credits": 400,
+  "type": "Equipment",
+  "traits": [
+   "Consumable",
+   "Explosive"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "⟶: Deplete this card to choose a space within 3 spaces and roll 1 green die. Each figure and object on or adjacent to the chosen space suffers ⊠ equal to the ⊠ results and becomes Stunned.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 27,
+  "family": "upgrade",
+  "name": "Cybernetic Arm",
+  "tier": 2,
+  "credits": 350,
+  "type": "Equipment",
+  "traits": [
+   "Medical",
+   "Enhancement"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "-2 Health, +1 Endurance"
+  ],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Once assigned to a hero, this item cannot be traded or sold. You must bring this item to each mission.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 4,
+  "family": "upgrade",
+  "name": "DDC Defender",
+  "tier": 1,
+  "credits": 550,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Pistol"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1 Accuracy, Weaken"
+   }
+  ],
+  "modSlots": 1,
+  "text": "⟶⟶: Perform 3 attacks with this weapon.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 5,
+  "family": "upgrade",
+  "name": "DH-17",
+  "tier": 1,
+  "credits": 200,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Pistol"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠, Pierce 1"
+   }
+  ],
+  "modSlots": 2,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 6,
+  "family": "upgrade",
+  "name": "DL-44",
+  "tier": 1,
+  "credits": 500,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Pistol"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠, +2 Accuracy"
+   }
+  ],
+  "modSlots": 2,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 50,
+  "family": "upgrade",
+  "name": "DLT-19",
+  "tier": 3,
+  "credits": 950,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Heavy"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 2,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 2,
+    "text": "Focus"
+   }
+  ],
+  "modSlots": 1,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 28,
+  "family": "upgrade",
+  "name": "DT-12 Heavy Blaster Pistol",
+  "tier": 2,
+  "credits": 600,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Pistol"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy, Pierce 1"
+   }
+  ],
+  "modSlots": 1,
+  "text": "2✦: Use when an attack targeting you resolves to interrupt to perform an attack with this weapon targeting the attacker.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 51,
+  "family": "upgrade",
+  "name": "DXR-6",
+  "tier": 3,
+  "credits": 1000,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Disruptor",
+   "Rifle"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 2,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+6 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "modSlots": 0,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 52,
+  "family": "upgrade",
+  "name": "Disruption Cell",
+  "tier": 3,
+  "credits": 600,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Energy"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "When you declare an attack, replace 1 die in your attack pool with a red die.",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 53,
+  "family": "upgrade",
+  "name": "Disruptor Pistol",
+  "tier": 3,
+  "credits": 700,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Pistol"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+3⊠"
+   }
+  ],
+  "modSlots": 1,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 29,
+  "family": "upgrade",
+  "name": "Double Vibrosword",
+  "tier": 2,
+  "credits": 650,
+  "type": "Melee Weapon",
+  "traits": [
+   "Blade"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   }
+  ],
+  "modSlots": 1,
+  "text": "1✦: After you resolve an attack with this weapon, each adjacent hostile figure suffers 1⊠.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 7,
+  "family": "upgrade",
+  "name": "E-11",
+  "tier": 1,
+  "credits": 400,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Rifle"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "modSlots": 2,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 30,
+  "family": "upgrade",
+  "name": "EE-3 Carbine",
+  "tier": 2,
+  "credits": 550,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Rifle"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   }
+  ],
+  "modSlots": 2,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 54,
+  "family": "upgrade",
+  "name": "Electrostaff",
+  "tier": 3,
+  "credits": 1250,
+  "type": "Melee Weapon",
+  "traits": [
+   "Staff",
+   "Energy"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "modSlots": 1,
+  "text": "When you declare an attack with this weapon, that attack may gain either Reach or Cleave 2⊠.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 8,
+  "family": "upgrade",
+  "name": "Emergency Injector",
+  "tier": 1,
+  "credits": 150,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Deplete this card during your activation. You or an adjacent friendly figure recovers 2✦ and discards a Harmful condition.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 31,
+  "family": "upgrade",
+  "name": "Energized Hilt",
+  "tier": 2,
+  "credits": 250,
+  "type": "Melee Weapon Modification",
+  "traits": [
+   "Modification",
+   "Energy"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card when you declare an attack. Replace 1 die in your attack pool with 1 attack die of your choice.",
+  "shape": "equipment",
+  "notes": "Melee modification (saber icon).",
+  "verified": true
+ },
+ {
+  "id": 32,
+  "family": "upgrade",
+  "name": "Environmental Hazard Suit",
+  "tier": 2,
+  "credits": 600,
+  "type": "Armor",
+  "traits": [
+   "Armor"
+  ],
+  "kind": "armor",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "armor": {
+   "health": 0,
+   "block": 0,
+   "evade": 0
+  },
+  "modSlots": 0,
+  "text": "When you perform a rest, you recover 1 additional ⊠. Deplete this card to recover 5⊠ or remove all Harmful conditions.",
+  "shape": "equipment",
+  "notes": "Printed name reads \"Environment Hazard Suit\".",
+  "verified": true
+ },
+ {
+  "id": 9,
+  "family": "upgrade",
+  "name": "Extended Haft",
+  "tier": 1,
+  "credits": 300,
+  "type": "Melee Weapon Modification",
+  "traits": [
+   "Modification",
+   "Balance"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "If this weapon has Reach, gain Pierce 1. Otherwise, gain Reach.",
+  "shape": "equipment",
+  "notes": "Melee modification (saber icon).",
+  "verified": true
+ },
+ {
+  "id": 33,
+  "family": "upgrade",
+  "name": "Extra Ammunition",
+  "tier": 2,
+  "credits": 300,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card while attacking with a [ranged] weapon to reroll 1 attack die.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 71,
+  "family": "upgrade",
+  "name": "Focusing Beam",
+  "tier": 2,
+  "credits": 250,
+  "type": "Melee Weapon Modification",
+  "traits": [
+   "Modification",
+   "Sights"
+  ],
+  "kind": "weaponmod",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card while attacking to apply Pierce 1 to the attack results. 1✦: Exhaust this card while attacking to apply -1[Dodge] to the defense results.",
+  "shape": "equipment",
+  "notes": "Melee weapon modification (melee icon on the disc). The two dots by the title are the tier marker.",
+  "verified": true
+ },
+ {
+  "id": 55,
+  "family": "upgrade",
+  "name": "Force Pike",
+  "tier": 3,
+  "credits": 1100,
+  "type": "Melee Weapon",
+  "traits": [
+   "Staff"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 2
+   }
+  },
+  "keywords": [
+   "Reach"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Stun"
+   }
+  ],
+  "modSlots": 1,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 10,
+  "family": "upgrade",
+  "name": "Gaffi Stick",
+  "tier": 1,
+  "credits": 200,
+  "type": "Melee Weapon",
+  "traits": [
+   "Club"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "Pierce 1"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Weaken"
+   }
+  ],
+  "modSlots": 1,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 11,
+  "family": "upgrade",
+  "name": "Hand Cannon",
+  "tier": 1,
+  "credits": 400,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Pistol"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 2,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 Accuracy"
+  ],
+  "surgeAbilities": [],
+  "modSlots": 1,
+  "text": "When you declare an attack with this weapon, you may apply -1⊠ and +2 Accuracy to the attack results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 56,
+  "family": "upgrade",
+  "name": "Hidden Blade",
+  "tier": 3,
+  "credits": 300,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Deplete this card at the start of your activation and choose an adjacent hostile figure. That figure suffers 2⊠ and becomes Weakened.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 34,
+  "family": "upgrade",
+  "name": "High-Impact Guard",
+  "tier": 2,
+  "credits": 500,
+  "type": "Melee Weapon Modification",
+  "traits": [
+   "Modification",
+   "Impact"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "modSlots": 0,
+  "text": "Exhaust this card while defending to apply +1[Block] to your defense results.",
+  "shape": "equipment",
+  "notes": "Melee modification (saber icon).",
+  "verified": true
+ },
+ {
+  "id": 73,
+  "family": "upgrade",
+  "name": "Hunter's Rifle",
+  "tier": 2,
+  "credits": 600,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Rifle"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "modSlots": 1,
+  "text": "While attacking with this weapon, if the target is defeated, gain 1 [damage token].",
+  "shape": "equipment",
+  "notes": "One modification slot tab at bottom right. Two dots by the title are the tier marker.",
+  "verified": true
+ },
+ {
+  "id": 35,
+  "family": "upgrade",
+  "name": "Laminate Armor",
+  "tier": 2,
+  "credits": 700,
+  "type": "Armor",
+  "traits": [
+   "Armor",
+   "Medium"
+  ],
+  "kind": "armor",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+3 Health"
+  ],
+  "surgeAbilities": [],
+  "armor": {
+   "health": 3,
+   "block": 0,
+   "evade": 0
+  },
+  "modSlots": 0,
+  "text": "Exhaust this card while defending to apply +1[Block] to your defense results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 57,
+  "family": "upgrade",
+  "name": "Laminate Armor",
+  "tier": 3,
+  "credits": 700,
+  "type": "Armor",
+  "traits": [
+   "Armor",
+   "Medium"
+  ],
+  "kind": "armor",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+3 Health"
+  ],
+  "surgeAbilities": [],
+  "armor": {
+   "health": 3,
+   "block": 0,
+   "evade": 0
+  },
+  "modSlots": 0,
+  "text": "Exhaust this card while defending to apply +1[Block] to your defense results.",
+  "shape": "equipment",
+  "notes": "Same text as the tier 2 Laminate Armor.",
+  "verified": true
+ },
+ {
+  "id": 12,
+  "family": "upgrade",
+  "name": "Marksman Barrel",
+  "tier": 1,
+  "credits": 300,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Barrel"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 58,
+  "family": "upgrade",
+  "name": "Modified Energy Cannon",
+  "tier": 3,
+  "credits": 1000,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Rifle"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠, +2 Accuracy"
+   }
+  ],
+  "modSlots": 2,
+  "text": "Your attack pool with this weapon is your [Tech] pool. While attacking with this weapon you may reroll 1 attack die.",
+  "shape": "equipment",
+  "notes": "Attack box shows three '?' dice (pool is the wielder's Tech pool).",
+  "verified": true
+ },
+ {
+  "id": 36,
+  "family": "upgrade",
+  "name": "Overcharger",
+  "tier": 2,
+  "credits": 300,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Energy"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Deplete this card when you declare an attack. Remove 1 die from the target's defense pool.",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 59,
+  "family": "upgrade",
+  "name": "Personal Shields",
+  "tier": 3,
+  "credits": 550,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Deplete this card while defending. Apply +5[Block] to the defense results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 37,
+  "family": "upgrade",
+  "name": "Plasma Cell",
+  "tier": 2,
+  "credits": 450,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Energy"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Pierce 1"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "modSlots": 0,
+  "text": "",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 75,
+  "family": "upgrade",
+  "name": "Polearm",
+  "tier": 2,
+  "credits": 650,
+  "type": "Melee Weapon",
+  "traits": [
+   "Blade",
+   "Staff"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 2,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Reach"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "modSlots": 1,
+  "text": "",
+  "shape": "equipment",
+  "notes": "One modification slot tab at bottom right. Two dots by the title are the tier marker.",
+  "verified": true
+ },
+ {
+  "id": 13,
+  "family": "upgrade",
+  "name": "Portable Medkit",
+  "tier": 1,
+  "credits": 450,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Deplete this card after you rest. You or an adjacent friendly figure recovers 3⊠ and 1✦.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 76,
+  "family": "upgrade",
+  "name": "Power Charger",
+  "tier": 3,
+  "credits": 400,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Gain 1[damage token] or [surge token] (granted while attacking)"
+   }
+  ],
+  "modSlots": 0,
+  "text": "While attacking, gain ⚡: Gain 1[damage token] or [surge token]. Exhaust this card when you spend a [damage token] or [surge token] to apply +2 of the symbol on that token to the results instead of +1.",
+  "shape": "equipment",
+  "notes": "Accessory equipment.",
+  "verified": true
+ },
+ {
+  "id": 60,
+  "family": "upgrade",
+  "name": "Pulse Cannon",
+  "tier": 3,
+  "credits": 1200,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Rifle"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 1"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "modSlots": 1,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 38,
+  "family": "upgrade",
+  "name": "R5 Astromech",
+  "tier": 2,
+  "credits": 250,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "When you deploy your hero, place the R5 Astromech companion in your space. The R5 Astromech activates at the start or end of your activation.",
+  "shape": "equipment",
+  "notes": "Companion card R5 Astromech is separate.",
+  "verified": true
+ },
+ {
+  "id": 61,
+  "family": "upgrade",
+  "name": "Reinforced Helmet",
+  "tier": 3,
+  "credits": 300,
+  "type": "Equipment",
+  "traits": [
+   "Helmet"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card while defending to choose 1 attack die. The attacking figure rerolls that die. Limit 1 Helmet per hero.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 72,
+  "family": "upgrade",
+  "name": "Responsive Armor",
+  "tier": 1,
+  "credits": 250,
+  "type": "Armor",
+  "traits": [
+   "Armor"
+  ],
+  "kind": "armor",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+2 Health"
+  ],
+  "surgeAbilities": [],
+  "armor": {
+   "health": 2,
+   "block": 0,
+   "evade": 0
+  },
+  "modSlots": 0,
+  "text": "While attacking, you gain ⚡: Gain 1 [block token] or 1 [evade token].",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 62,
+  "family": "upgrade",
+  "name": "Ryyk Blades",
+  "tier": 3,
+  "credits": 950,
+  "type": "Melee Weapon",
+  "traits": [
+   "Blade"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "modSlots": 1,
+  "text": "Your attack pool with this weapon is your [Str] pool. While attacking with this weapon, you may convert any number of ⚡ results to ⊠ results.",
+  "shape": "equipment",
+  "notes": "Attack box shows three '?' dice (pool is the wielder's Strength pool).",
+  "verified": true
+ },
+ {
+  "id": 14,
+  "family": "upgrade",
+  "name": "Shadowsilk Cloak",
+  "tier": 1,
+  "credits": 350,
+  "type": "Armor",
+  "traits": [
+   "Armor",
+   "Light"
+  ],
+  "kind": "armor",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "armor": {
+   "health": 0,
+   "block": 0,
+   "evade": 0
+  },
+  "modSlots": 0,
+  "text": "Exhaust this card when an attack targeting you is declared to apply -2 Accuracy or +1[Evade] to the results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 63,
+  "family": "upgrade",
+  "name": "Shock Emitter",
+  "tier": 3,
+  "credits": 500,
+  "type": "Melee Weapon Modification",
+  "traits": [
+   "Modification",
+   "Impact"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   }
+  ],
+  "modSlots": 0,
+  "text": "Exhaust this card while attacking to apply +1⊠ to the attack results.",
+  "shape": "equipment",
+  "notes": "Melee modification (saber icon).",
+  "verified": true
+ },
+ {
+  "id": 39,
+  "family": "upgrade",
+  "name": "Slicing Tools",
+  "tier": 2,
+  "credits": 250,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card while performing a [Tech] test to reroll 1 die. ⟶: Choose an adjacent Droid and test [Tech]. If you pass, that figure suffers 1⊠ and becomes Stunned.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 64,
+  "family": "upgrade",
+  "name": "Sniper Scope",
+  "tier": 3,
+  "credits": 250,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Sights"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "While attacking, if the target space is 5 or more spaces away, apply +1⚡ to the attack results.",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 65,
+  "family": "upgrade",
+  "name": "Sporting Blaster",
+  "tier": 3,
+  "credits": 900,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Pistol"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 2
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "modSlots": 1,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 40,
+  "family": "upgrade",
+  "name": "Spread Barrel",
+  "tier": 2,
+  "credits": 300,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Barrel"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card while attacking a target within 3 spaces. Apply +1⊠ to the attack results.",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 41,
+  "family": "upgrade",
+  "name": "Stun Baton",
+  "tier": 2,
+  "credits": 500,
+  "type": "Melee Weapon",
+  "traits": [
+   "Staff"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "modSlots": 1,
+  "text": "1✦: Choose an adjacent hostile figure. That figure becomes Weakened.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 77,
+  "family": "upgrade",
+  "name": "Supply Pack",
+  "tier": 3,
+  "credits": 200,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "At the start of each mission, you gain 2 [power token]. Deplete this card during your activation to recover 2⊠ or discard 1 Harmful condition.",
+  "shape": "equipment",
+  "notes": "Accessory equipment. Power-token icon is a '?' in a disc (power tokens of your choice).",
+  "verified": true,
+  "verified_note": "Card text field contained an editorial parenthetical not printed on the card; moved it to notes. All printed values verified correct."
+ },
+ {
+  "id": 15,
+  "family": "upgrade",
+  "name": "Survival Gear",
+  "tier": 1,
+  "credits": 250,
+  "type": "Equipment",
+  "traits": [
+   "Accessory"
+  ],
+  "kind": "gear",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card while performing a [Str] test to reroll 1 die. You ignore additional movement point costs when entering difficult terrain.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 42,
+  "family": "upgrade",
+  "name": "T-21",
+  "tier": 2,
+  "credits": 900,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Heavy"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Stun"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   },
+   {
+    "cost": 1,
+    "text": "+3 Accuracy"
+   }
+  ],
+  "modSlots": 0,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 16,
+  "family": "upgrade",
+  "name": "Tactical Display",
+  "tier": 1,
+  "credits": 300,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Sights"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Exhaust this card while attacking to apply +1⚡ to the attack results.",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 17,
+  "family": "upgrade",
+  "name": "Tatooine Hunting Rifle",
+  "tier": 1,
+  "credits": 250,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Projectile",
+   "Rifle"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 2,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Weaken"
+   },
+   {
+    "cost": 2,
+    "text": "Focus"
+   }
+  ],
+  "modSlots": 1,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 66,
+  "family": "upgrade",
+  "name": "Telescoping Sights",
+  "tier": 3,
+  "credits": 400,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Sights"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "⟶⟶: You become Focused. Then, perform an attack.",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 18,
+  "family": "upgrade",
+  "name": "Under-Barrel HH-4",
+  "tier": 1,
+  "credits": 300,
+  "type": "Ranged Weapon Modification",
+  "traits": [
+   "Modification",
+   "Barrel"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Blast 1⊠"
+   }
+  ],
+  "modSlots": 0,
+  "text": "",
+  "shape": "equipment",
+  "notes": "Ranged modification (blaster icon).",
+  "verified": true
+ },
+ {
+  "id": 67,
+  "family": "upgrade",
+  "name": "Valken-38 Carbine",
+  "tier": 3,
+  "credits": 1250,
+  "type": "Ranged Weapon",
+  "traits": [
+   "Blaster",
+   "Rifle"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 1,
+    "blue": 2,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   }
+  ],
+  "modSlots": 1,
+  "text": "⟶⟶: Become Focused and perform an attack. Figures do not block line of sight for this attack.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 43,
+  "family": "upgrade",
+  "name": "Vibro Knucklers",
+  "tier": 2,
+  "credits": 400,
+  "type": "Melee Weapon",
+  "traits": [
+   "Fist",
+   "Blade"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2, Bleed"
+   }
+  ],
+  "modSlots": 0,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 19,
+  "family": "upgrade",
+  "name": "Vibroblade",
+  "tier": 1,
+  "credits": 300,
+  "type": "Melee Weapon",
+  "traits": [
+   "Blade"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 2⊠"
+   }
+  ],
+  "modSlots": 1,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 68,
+  "family": "upgrade",
+  "name": "Vibrogenerator",
+  "tier": 3,
+  "credits": 350,
+  "type": "Melee Weapon Modification",
+  "traits": [
+   "Modification",
+   "Energy"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "modSlots": 0,
+  "text": "Use when you declare an attack to apply -2⚡ and +2⊠ to the attack results.",
+  "shape": "equipment",
+  "notes": "Melee modification (saber icon).",
+  "verified": true
+ },
+ {
+  "id": 20,
+  "family": "upgrade",
+  "name": "Vibroknife",
+  "tier": 1,
+  "credits": 150,
+  "type": "Melee Weapon",
+  "traits": [
+   "Blade"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Pierce 2"
+   }
+  ],
+  "modSlots": 0,
+  "text": "",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 21,
+  "family": "upgrade",
+  "name": "Vibrosword",
+  "tier": 1,
+  "credits": 350,
+  "type": "Melee Weapon",
+  "traits": [
+   "Blade"
+  ],
+  "kind": "weapon",
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Bleed"
+   },
+   {
+    "cost": 1,
+    "text": "+2⊠"
+   }
+  ],
+  "modSlots": 2,
+  "text": "1✦: Use while attacking to apply Pierce 1 to the attack results.",
+  "shape": "equipment",
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 44,
+  "family": "upgrade",
+  "name": "Weighted Head",
+  "tier": 2,
+  "credits": 400,
+  "type": "Melee Weapon Modification",
+  "traits": [
+   "Modification",
+   "Balance"
+  ],
+  "kind": "weaponmod",
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Cleave 1⊠"
+   },
+   {
+    "cost": 1,
+    "text": "Cleave 1⊠"
+   }
+  ],
+  "modSlots": 0,
+  "text": "Exhaust this card while attacking. The attack gains Cleave 1⊠.",
+  "shape": "equipment",
+  "notes": "Melee modification (saber icon). Two identical surge lines printed.",
+  "verified": true
+ }
+]

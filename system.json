@@ -2,7 +2,7 @@
   "id": "swia",
   "title": "Star Wars Imperial Assault",
   "description": "Foundry VTT system scaffold for Star Wars: Imperial Assault (unofficial).",
-  "version": "0.1.7.0",
+  "version": "0.1.8.1",
   "compatibility": {
     "minimum": "13",
     "verified": "13.351"
@@ -14,8 +14,8 @@
     }
   ],
   "url": "https://github.com/CaseGib/swia",
-  "manifest": "https://raw.githubusercontent.com/CaseGib/swia/master/system.json",
-  "download": "https://github.com/casegib/swia/releases/download/v0.1.7.0/swia.zip",
+  "manifest": "https://raw.githubusercontent.com/CaseGib/swia/main/system.json",
+  "download": "https://github.com/casegib/swia/releases/download/v0.1.8.1/swia.zip",
   "readme": "README.md",
   "primaryTokenAttribute": "attributes.health",
   "documentTypes": {
@@ -56,7 +56,88 @@
       "path": "lang/en.json"
     }
   ],
-  "packs": [],
+  "packs": [
+    {
+      "name": "class-cards",
+      "label": "Class Cards (Hero)",
+      "path": "packs/class-cards",
+      "type": "Item",
+      "system": "swia",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "imperial-class-cards",
+      "label": "Class Cards (Imperial)",
+      "path": "packs/imperial-class-cards",
+      "type": "Item",
+      "system": "swia",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "items",
+      "label": "Items, Supply & Rewards",
+      "path": "packs/items",
+      "type": "Item",
+      "system": "swia",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "agendas",
+      "label": "Agenda Cards",
+      "path": "packs/agendas",
+      "type": "Item",
+      "system": "swia",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "deployment",
+      "label": "Deployment Groups",
+      "path": "packs/deployment",
+      "type": "Actor",
+      "system": "swia",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "heroes",
+      "label": "Heroes",
+      "path": "packs/heroes",
+      "type": "Actor",
+      "system": "swia",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    }
+  ],
   "socket": true,
-  "scripts": []
+  "scripts": [],
+  "packFolders": [
+    {
+      "name": "Imperial Assault",
+      "sorting": "m",
+      "packs": [
+        "class-cards",
+        "imperial-class-cards",
+        "items",
+        "agendas",
+        "deployment",
+        "heroes"
+      ]
+    }
+  ]
 }

@@ -22,6 +22,7 @@ import { registerRollCardHooks } from "./dice/roll-dialog.js";
 import { registerCombatHooks, SWIACombatWindow } from "./dice/combat-window.js";
 import { definePowerTokenActorClass, registerPowerTokenBadgeHooks } from "./token-badge.js";
 import { registerConditionSettings, rebuildConditionRegistry, applyStatusEffects } from "./conditions.js";
+import { statGlyphHTML } from "./data/common.js";
 
 // Foundry v13+ namespaced APIs (system.json minimum is v13)
 // The appv1 sheet classes are referenced only to unregister the core-registered defaults.
@@ -150,6 +151,9 @@ Hooks.once("init", async function initSWIA() {
 
   // Helper for greater-than comparison in templates
   Handlebars.registerHelper("gt", (a, b) => a > b);
+
+  // Inline stat glyph (icon with the stat name in alt/title): {{{swiaGlyph "damage"}}}
+  Handlebars.registerHelper("swiaGlyph", (stat) => new Handlebars.SafeString(statGlyphHTML(stat)));
 
   // Define system namespace for shared data and config
   game.swia = {

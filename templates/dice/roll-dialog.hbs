@@ -67,7 +67,7 @@
     <div class="roll-pool-grid">
       {{#each tokenRows}}
       <div class="roll-pool-row roll-token-row {{#if declared}}has-declared{{/if}}">
-        <span class="pool-label"><img class="roll-token-icon" src="{{icon}}" alt="" />{{label}}</span>
+        <span class="pool-label" title="{{label}}">{{{swiaGlyph stat}}}<span class="pool-label-text">{{label}}</span></span>
         {{#if typedHeld}}
         <span class="roll-token-stepper" title="{{localize 'SWIA.Roll.TypedTokensHeld' label=label count=typedHeld}}">
           <button type="button" class="pool-adjust" data-action="adjustToken" data-stat="{{stat}}" data-kind="typed" data-delta="-1" {{#unless typed}}disabled{{/unless}}>&minus;</button>

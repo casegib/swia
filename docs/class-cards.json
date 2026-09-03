@@ -1,0 +1,4750 @@
+[
+ {
+  "group": "Biv Bodhrik",
+  "kind": "hero",
+  "name": "Repeating Blaster",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: [ranged] blue + red. Traits: Blaster - Heavy. ⚡: +1 Accuracy.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Biv Bodhrik",
+  "kind": "hero",
+  "name": "Advance",
+  "xp": 1,
+  "type": "Feat",
+  "text": "When an adjacent hostile figure is defeated, you may interrupt to place your figure in one of the spaces that the defeated figure occupied.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Biv Bodhrik",
+  "kind": "hero",
+  "name": "Shake It Off",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card at the start of your activation to test [Str]. If you roll 2 or more successes, you may recover 1✦ or discard 1 Harmful condition.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified_note": "attribute test is Strength (fist), not Insight",
+  "verified": true
+ },
+ {
+  "group": "Biv Bodhrik",
+  "kind": "hero",
+  "name": "Crushing Blow",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Exhaust this card while performing the [melee] attack of \"Close and Personal\" to choose one of the following: The attack gains: ⚡: Weaken, Stun. The attack gains: ⚡: +2⊠.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "Close and Personal",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡: Weaken, Stun",
+    "⚡: +2⊠"
+   ],
+   "other": "choose one of two surge grants"
+  },
+  "verified": true
+ },
+ {
+  "group": "Biv Bodhrik",
+  "kind": "hero",
+  "name": "Into the Fray",
+  "xp": 2,
+  "type": "Feat",
+  "text": "While defending, if you are within 3 spaces of 2 or more hostile figures, apply +1[Block] to your defense results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "within 3 spaces of 2 or more hostile figures",
+   "bonus": {
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Biv Bodhrik",
+  "kind": "hero",
+  "name": "Trophy Armor",
+  "xp": 3,
+  "type": "Armor",
+  "text": "Traits: Armor - Heavy. +4 Health. Exhaust this card while defending to reroll 1 defense die.",
+  "shape": "equipment",
+  "secondary": "declared",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Biv Bodhrik",
+  "kind": "hero",
+  "name": "Vibrobayonet",
+  "xp": 3,
+  "type": "Ranged Weapon Modification",
+  "text": "Traits: Modification - Blade. While performing \"Close and Personal,\" the [melee] attack gains: +1⊠, Pierce 1, Bleed.",
+  "shape": "equipment",
+  "secondary": "declared",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Biv Bodhrik",
+  "kind": "hero",
+  "name": "Final Stand",
+  "xp": 4,
+  "type": "Feat",
+  "text": "⟶: Deplete this card to recover ✦ equal to your Endurance, move a number of spaces up to your Speed, and perform \"Close and Personal\" without using an action or suffering the ✦ cost. Then, you suffer 2⊠ and become Stunned.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Biv Bodhrik",
+  "kind": "hero",
+  "name": "Stay Down",
+  "xp": 4,
+  "type": "Feat",
+  "text": "2✦: Exhaust this card after you resolve \"Close and Personal.\" If the target was not defeated, perform the [melee] attack from \"Close and Personal\" again, targeting the same figure.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Davith Elso",
+  "kind": "hero",
+  "name": "Heirloom Dagger",
+  "xp": null,
+  "type": "Melee Weapon",
+  "text": "Attack: [melee] green + yellow. Traits: Blade. ⚡: +1⊠. ⚡: Pierce 1, Bleed.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified_note": "attack dice are green + yellow only; no blue die",
+  "verified": true
+ },
+ {
+  "group": "Davith Elso",
+  "kind": "hero",
+  "name": "Covert Operative",
+  "xp": 1,
+  "type": "Feat",
+  "text": "At the start of each mission, become Hidden. While defending, you may discard the Hidden condition to apply +1[Block] to the defense results. After an attack targeting you resolves, if you did not suffer any ⊠, become Hidden.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "discard the Hidden condition",
+   "bonus": {
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Cost is discarding Hidden. Also: become Hidden at start of mission and after an attack targeting you resolves if you suffered no damage."
+  },
+  "verified": true
+ },
+ {
+  "group": "Davith Elso",
+  "kind": "hero",
+  "name": "Elusive Agent",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card when you become Hidden to recover 1✦.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Davith Elso",
+  "kind": "hero",
+  "name": "Blindside",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Exhaust this card when you exit a space containing a hostile figure and roll 1 blue die. That figure suffers ⊠ equal to the ⊠ results. Apply +1⊠ to the results if you are Hidden.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Davith Elso",
+  "kind": "hero",
+  "name": "Falling Leaf",
+  "xp": 2,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card when you declare an attack with a [melee] weapon to add 1 yellow die to the attack pool.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust, strain 1",
+   "condition": "melee weapon",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "yellow"
+    ]
+   },
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Davith Elso",
+  "kind": "hero",
+  "name": "Force Illusion",
+  "xp": 3,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card while a hostile figure in your line of sight is attacking. The defender becomes Hidden.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Davith Elso",
+  "kind": "hero",
+  "name": "Shrouded Lightsaber",
+  "xp": 3,
+  "type": "Melee Weapon",
+  "text": "Attack: [melee] green + yellow. Traits: Lightsaber - Blade. ⚡: Pierce 3. ⚡: +1⊠. ⚡: +1⊠. ⚡: +2⊠. Use only while Hidden.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified_note": "attack dice are green + yellow only; no blue die",
+  "verified": true
+ },
+ {
+  "group": "Davith Elso",
+  "kind": "hero",
+  "name": "Embody the Force",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Apply +1 Endurance and +3 Health to your hero. Exhaust this card while attacking to apply +1⊠ to the attack results. Exhaust this card while defending to apply +1[Block] to the defense results.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "both",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {
+    "damage": 1,
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Damage bonus applies when attacking, evade bonus when defending (one exhaust, either use). Passive: +1 Endurance, +3 Health."
+  },
+  "verified": true
+ },
+ {
+  "group": "Davith Elso",
+  "kind": "hero",
+  "name": "Fell Swoop",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Exhaust this card while attacking with a [melee] weapon. The attack gains: ⚡⚡: After this attack resolves, become Hidden, move up to 2 spaces, then perform another attack.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "melee weapon",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡⚡: After this attack resolves, become Hidden, move up to 2 spaces, then perform another attack."
+   ],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Diala Passil",
+  "kind": "hero",
+  "name": "Plasteel Staff",
+  "xp": null,
+  "type": "Melee Weapon",
+  "text": "Attack: [melee] green + yellow. Traits: Staff. Reach. ⚡: Stun. ⚡: +1⊠.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified_note": "attack dice are green + yellow only; no blue die",
+  "verified": true
+ },
+ {
+  "group": "Diala Passil",
+  "kind": "hero",
+  "name": "Force Adept",
+  "xp": 1,
+  "type": "Feat",
+  "text": "1✦: Use while you or a friendly figure is performing an attack or attribute test. That figure may reroll 1 die. Exhaust this card when you perform a [Str] or [Tech] test. Add 1 blue die to your dice pool.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "both",
+   "cost": "strain 1",
+   "condition": "you or a friendly figure performing an attack or attribute test",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "reroll 1 die (attack or attribute test, self or friendly figure). Separate ability: exhaust when you perform a [Str] or [Tech] test to add 1 blue die to your dice pool."
+  },
+  "verified": true
+ },
+ {
+  "group": "Diala Passil",
+  "kind": "hero",
+  "name": "Force Throw",
+  "xp": 1,
+  "type": "Feat",
+  "text": "2✦: Exhaust this card during your activation to choose another small figure within 3 spaces and test [Ins]. If you pass, push that figure 3 spaces. Then, if the figure is hostile, it suffers 1⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Diala Passil",
+  "kind": "hero",
+  "name": "Battle Meditation",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Use when you rest during your activation. Test [Ins]. If you pass, choose yourself or a friendly figure. That figure becomes Focused.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Diala Passil",
+  "kind": "hero",
+  "name": "Defensive Stance",
+  "xp": 2,
+  "type": "Feat",
+  "text": "When you use \"Foresight,\" apply +1[Block] to your defense results. After an attack targeting you is resolved, if you suffered no ⊠, you become Focused.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "when you use \"Foresight\"",
+   "bonus": {
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "After an attack targeting you resolves, if you suffered no damage, become Focused."
+  },
+  "verified": true
+ },
+ {
+  "group": "Diala Passil",
+  "kind": "hero",
+  "name": "Art of Movement",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Apply +1 Speed to your hero. You ignore additional movement point costs when entering difficult terrain or spaces containing hostile figures.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+1 Speed; ignore additional movement point costs for difficult terrain and spaces containing hostile figures."
+  },
+  "verified": true
+ },
+ {
+  "group": "Diala Passil",
+  "kind": "hero",
+  "name": "Snap Kick",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Exhaust this card after you resolve an attack with a [melee] weapon to choose 1 hostile figure adjacent to you and roll 1 green die. That figure suffers ⊠ equal to the ⊠ results.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Diala Passil",
+  "kind": "hero",
+  "name": "Dancing Weapon",
+  "xp": 4,
+  "type": "Feat",
+  "text": "⟶1✦: Perform a [ranged] attack using a [melee] weapon. Add 1 blue die to the attack pool and gain: ⚡: +2 Accuracy, +1⊠.",
+  "shape": "action",
+  "secondary": "declared",
+  "model": {
+   "when": "attack",
+   "cost": "strain 1",
+   "condition": "action: ranged attack using a melee weapon",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "blue"
+    ]
+   },
+   "surges": [
+    "⚡: +2 Accuracy, +1⊠"
+   ],
+   "other": "Spent as an action."
+  },
+  "verified": true
+ },
+ {
+  "group": "Diala Passil",
+  "kind": "hero",
+  "name": "Way of the Sarlacc",
+  "xp": 4,
+  "type": "Feat",
+  "text": "⟶2✦: For each hostile figure adjacent to you, perform 1 attack with a [melee] weapon targeting that figure.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Drokkatta",
+  "kind": "hero",
+  "name": "MGL-9 Boomer",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: blue + red [ranged]. Traits: Projectile - Explosive. ⚡: Blast 1⊠. ⚡: +1 Accuracy.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Drokkatta",
+  "kind": "hero",
+  "name": "Charging Up",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Apply +2 Health to your hero. At the end of each of your activations, gain 1 [damage token].",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+2 Health. At the end of each of your activations, gain 1 [damage token] (power token)."
+  },
+  "verified_note": "token gained is a damage power token, not a block",
+  "verified": true
+ },
+ {
+  "group": "Drokkatta",
+  "kind": "hero",
+  "name": "Leave No One Behind",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card during your activation to gain 1 movement point. Exhaust this card during your activation to choose a friendly figure in your line of sight and 4 or more spaces away. That figure gains 2 movement points.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Drokkatta",
+  "kind": "hero",
+  "name": "Bank Shot",
+  "xp": 2,
+  "type": "Feat",
+  "text": "+1 Accuracy. When you declare an attack with a [ranged] weapon, you may target a figure adjacent to an empty space in your line of sight.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {
+    "accuracy": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "When declaring a [ranged] attack, may target a figure adjacent to an empty space in your line of sight."
+  },
+  "verified": true
+ },
+ {
+  "group": "Drokkatta",
+  "kind": "hero",
+  "name": "Shrapnel Rounds",
+  "xp": 2,
+  "type": "Ranged Weapon Modification",
+  "text": "Traits: Explosive. Blast 1⊠. Exhaust this card while attacking to reduce the Blast by X to a minimum of 0. A figure other than the target within 2 spaces of the target suffers X⊠.",
+  "shape": "equipment",
+  "secondary": "declared",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Drokkatta",
+  "kind": "hero",
+  "name": "Repeater Cannon",
+  "xp": 3,
+  "type": "Ranged Weapon",
+  "text": "Attack: blue + green [ranged]. Traits: Projectile - Explosive. +1⊠. ⚡: Pierce 2. ⚡: Blast 1⊠. ⚡⚡: Each hostile figure within 2 spaces of the target space suffers 1⊠.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Drokkatta",
+  "kind": "hero",
+  "name": "Structural Exploitation",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Exhaust this card while attacking to apply +1⊠, +1 Accuracy, and Pierce 1 to the attack results. If the target is an object, apply an additional +1⊠ and Pierce 1 to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {
+    "damage": 1,
+    "accuracy": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Pierce 1. If target is an object: additional +1⊠ and Pierce 1."
+  },
+  "verified": true
+ },
+ {
+  "group": "Drokkatta",
+  "kind": "hero",
+  "name": "Thermal Explosives",
+  "xp": 4,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card when you declare an attack with a [ranged] weapon to add 1 yellow die to the attack pool. When you use \"Demolish\", up to 2 figures or objects of your choice on or adjacent to the chosen space each suffer an additional 1⊠.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust, strain 1",
+   "condition": "when you declare an attack with a [ranged] weapon",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "yellow"
+    ]
+   },
+   "surges": [],
+   "other": "When you use Demolish, up to 2 figures or objects on or adjacent to the chosen space each suffer an additional 1⊠."
+  },
+  "verified_note": "cost is 1 strain (✦), not an action (⟶)",
+  "verified": true
+ },
+ {
+  "group": "Drokkatta",
+  "kind": "hero",
+  "name": "Wookiee Wrath",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Exhaust this card during your activation and choose an adjacent hostile figure. Roll 1 red die. That figure suffers ⊠ equal to the ⊠ results. Then, you may push that figure up to two spaces.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Fenn Signis",
+  "kind": "hero",
+  "name": "Infantry Rifle",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: [ranged] blue + green. Traits: Blaster - Rifle. ⚡: +1⊠. ⚡: +1 Accuracy.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Fenn Signis",
+  "kind": "hero",
+  "name": "Tactical Movement",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card at the start of your activation. Choose yourself or a friendly figure within 3 spaces. That figure gains 2 movement points.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Fenn Signis",
+  "kind": "hero",
+  "name": "Take Cover",
+  "xp": 1,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card when an attack targeting you is declared. Add 1 white die to your defense pool.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust, strain 1",
+   "condition": "",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "white"
+    ]
+   },
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Fenn Signis",
+  "kind": "hero",
+  "name": "Adrenaline Rush",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Exhaust this card after an attack targeting you is resolved. If you suffered 1 or more ⊠, test [Str]. If you pass, recover 3✦.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Fenn Signis",
+  "kind": "hero",
+  "name": "Weapon Expert",
+  "xp": 2,
+  "type": "Feat",
+  "text": "1✦: Use while attacking to gain Pierce 1 and apply +2 Accuracy to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "strain 1",
+   "condition": "",
+   "bonus": {
+    "accuracy": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": "gain Pierce 1"
+  },
+  "verified": true
+ },
+ {
+  "group": "Fenn Signis",
+  "kind": "hero",
+  "name": "Suppressive Fire",
+  "xp": 3,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card after resolving an attack using \"Havoc Shot.\" Each figure that suffered 1 or more ⊠ chooses to either suffer 1⊠ or become Stunned. If that figure was already Stunned, it must choose to suffer 1⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Fenn Signis",
+  "kind": "hero",
+  "name": "Trench Fighter",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Exhaust this card when you declare an attack targeting a figure within 3 spaces. Apply +2⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "targeting a figure within 3 spaces",
+   "bonus": {
+    "damage": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Fenn Signis",
+  "kind": "hero",
+  "name": "Rebel Elite",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Apply +3 Health and +1 Endurance to your hero. When you use \"Havoc Shot,\" it applies Blast 2⊠ instead of Blast 1⊠.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+3 Health, +1 Endurance; \"Havoc Shot\" applies Blast 2⊠ instead of Blast 1⊠."
+  },
+  "verified": true
+ },
+ {
+  "group": "Fenn Signis",
+  "kind": "hero",
+  "name": "Superior Positioning",
+  "xp": 4,
+  "type": "Feat",
+  "text": "⟶1✦: Move a number of spaces up to your Speed and become Focused. While defending, while you are Focused, apply +1[Block] to your defense results.",
+  "shape": "action",
+  "secondary": "declared",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "while you are Focused",
+   "bonus": {
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Action (1✦): move up to your Speed and become Focused."
+  },
+  "verified": true
+ },
+ {
+  "group": "Gaarkhan",
+  "kind": "hero",
+  "name": "Vibro-Ax",
+  "xp": null,
+  "type": "Melee Weapon",
+  "text": "Attack: [melee] red + yellow. Traits: Blade. ⚡: Pierce 1. ⚡: Cleave 1⊠.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Gaarkhan",
+  "kind": "hero",
+  "name": "Wookiee Fortitude",
+  "xp": 1,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card during your activation to either recover 2⊠ or discard one of your conditions.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Gaarkhan",
+  "kind": "hero",
+  "name": "Wookiee Loyalty",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card while you or an adjacent friendly figure is defending to apply +1[Block] to the defense results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust",
+   "condition": "you or an adjacent friendly figure",
+   "bonus": {
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "may apply to an adjacent friendly figure's defense"
+  },
+  "verified": true
+ },
+ {
+  "group": "Gaarkhan",
+  "kind": "hero",
+  "name": "Ferocity",
+  "xp": 2,
+  "type": "Feat",
+  "text": "When you declare an attack while you are Focused, add 1 red die to your attack pool instead of 1 green die. This attack also gains: ⚡: Cleave 1⊠.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "while Focused",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "red"
+    ],
+    "remove": [
+     "green"
+    ]
+   },
+   "surges": [
+    "⚡: Cleave 1⊠"
+   ],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Gaarkhan",
+  "kind": "hero",
+  "name": "Staggering Blow",
+  "xp": 2,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card after you resolve an attack. If the target suffered 3 or more ⊠, it becomes Stunned.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Gaarkhan",
+  "kind": "hero",
+  "name": "Rampage",
+  "xp": 3,
+  "type": "Feat",
+  "text": "After you resolve \"Charge,\" each hostile figure adjacent to you suffers 1⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Gaarkhan",
+  "kind": "hero",
+  "name": "Vicious Strike",
+  "xp": 3,
+  "type": "Feat",
+  "text": "1✦: Use when you declare an attack with a [melee] weapon. Apply +1⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "strain 1",
+   "condition": "melee weapon",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Gaarkhan",
+  "kind": "hero",
+  "name": "Brutal Cleave",
+  "xp": 4,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card after you resolve an attack with a [melee] weapon. Perform an additional attack targeting a different figure or object adjacent to the target of the first attack.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Gaarkhan",
+  "kind": "hero",
+  "name": "Unstoppable",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Apply +1 Endurance and +1 Speed to your hero. While attacking, while you are wounded, apply +2⊠ to your attack results.",
+  "shape": "passive",
+  "secondary": "declared",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "while wounded",
+   "bonus": {
+    "damage": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+1 Endurance, +1 Speed passive"
+  },
+  "verified": true
+ },
+ {
+  "group": "Gideon Argus",
+  "kind": "hero",
+  "name": "Holdout Blaster",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: [ranged] blue + yellow. Traits: Blaster - Pistol. ⚡: Pierce 2.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Gideon Argus",
+  "kind": "hero",
+  "name": "Called Shot",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card while you or a friendly figure is attacking. If the target is in your line of sight, apply +1⚡ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "you or a friendly figure attacking; target in your line of sight",
+   "bonus": {
+    "surge": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "can be applied to a friendly figure's attack"
+  },
+  "verified": true
+ },
+ {
+  "group": "Gideon Argus",
+  "kind": "hero",
+  "name": "Military Efficiency",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card while attacking to convert 1⊠ result to 1⚡ result. Exhaust this card while defending to convert 1[Block] result to 1[Evade] result.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "both",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "attack: convert 1⊠ result to 1⚡ result (net damage -1, surge +1); defense: convert 1[Block] result to 1[Evade] result (evade -1, dodge)."
+  },
+  "verified": true
+ },
+ {
+  "group": "Gideon Argus",
+  "kind": "hero",
+  "name": "Air of Command",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Apply +2 Health to your hero. When you use \"Command,\" you may choose any friendly figure in your line of sight.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+2 Health; \"Command\" may choose any friendly figure in your line of sight."
+  },
+  "verified": true
+ },
+ {
+  "group": "Gideon Argus",
+  "kind": "hero",
+  "name": "Mobile Tactician",
+  "xp": 2,
+  "type": "Feat",
+  "text": "After you resolve \"Command,\" gain 2 movement points.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Gideon Argus",
+  "kind": "hero",
+  "name": "For the Cause",
+  "xp": 3,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card when another friendly figure within 3 spaces declares an attack. That figure becomes Focused.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Gideon Argus",
+  "kind": "hero",
+  "name": "Rallying Shout",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Exhaust this card during your activation to choose another hero in your line of sight. That hero recovers 2✦.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Gideon Argus",
+  "kind": "hero",
+  "name": "Hammer and Anvil",
+  "xp": 4,
+  "type": "Feat",
+  "text": "⟶2✦: Choose another friendly figure. You and that figure may each perform an attack targeting the same figure. The target figure chooses the order in which these attacks resolve. During the second attack, remove all dice from the target's defense pool.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Gideon Argus",
+  "kind": "hero",
+  "name": "Masterstroke",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Exhaust this card after you resolve \"Command.\" You may perform an additional \"Command\" without using an action or suffering the ✦ cost.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Jarrod Kelvin",
+  "kind": "hero",
+  "name": "Vibro-Claws",
+  "xp": null,
+  "type": "Melee Weapon",
+  "text": "Attack: yellow + yellow [melee]. Traits: Blade - Fist. ⚡: Pierce 2. ⚡: Gain 1 ⊠ power token. This item cannot be sold.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified_note": "Second surge glyph is a damage POWER TOKEN icon (damage symbol inside a token), not [Block].",
+  "verified": true
+ },
+ {
+  "group": "Jarrod Kelvin",
+  "kind": "hero",
+  "name": "Balanced Approach",
+  "xp": 1,
+  "type": "Feat",
+  "text": "At the end of your activation: If you did not perform an attack, gain 1 [damage token]. If you did not perform a move, gain 1 movement point. If you did not perform a rest, recover 1⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified_note": "token gained is a damage power token, not a block",
+  "verified": true
+ },
+ {
+  "group": "Jarrod Kelvin",
+  "kind": "hero",
+  "name": "Forward Momentum",
+  "xp": 1,
+  "type": "Feat",
+  "text": "At the start of your activation, you or J4X-7 gains 1 movement point. After an attack targeting you resolves, if you used \"Parry,\" you gain 1 movement point.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Jarrod Kelvin",
+  "kind": "hero",
+  "name": "Scouts Loadout",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Exhaust this card while a Rebel figure is attacking a figure in your or J4X-7's line of sight to apply -1[Evade] to the defense results. When an Imperial figure deploys in J4X-7's line of sight, a Rebel figure of your choice may gain 1[Evade]. Limit once per deployment.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "while a Rebel figure is attacking a figure in your or J4X-7's line of sight",
+   "bonus": {
+    "block": 0
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Apply -1[Evade] (dodge) to the defense results. Also: when an Imperial figure deploys in J4X-7's LOS, a Rebel figure of your choice may gain 1[Evade]; limit once per deployment."
+  },
+  "verified": true
+ },
+ {
+  "group": "Jarrod Kelvin",
+  "kind": "hero",
+  "name": "Slicers Upgrades",
+  "xp": 2,
+  "type": "Feat",
+  "text": "J4X-7 gains: ⟶⟶: Move up to 1 space. Then, either interact with an object as though you are a hero, applying +1⚡ to the test results if that interaction requires a test, or an object adjacent to you suffers 3⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Jarrod Kelvin",
+  "kind": "hero",
+  "name": "Explosive Reflexes",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Apply +1 Endurance to your hero. Exhaust this card when you declare an attack with a [melee] weapon, when J4X-7 declares an attack, or when an attack targeting you is declared to replace 1 die in the attack pool with another attack die of your choice.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "both",
+   "cost": "exhaust",
+   "condition": "when you declare an attack with a [melee] weapon, when J4X-7 declares an attack, or when an attack targeting you is declared",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+1 Endurance (passive). Replace 1 die in the attack pool with another attack die of your choice."
+  },
+  "verified": true
+ },
+ {
+  "group": "Jarrod Kelvin",
+  "kind": "hero",
+  "name": "Mutual Progression",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Apply +1 Speed to your hero and to J4X-7. You and J4X-7 each gain \"1[Block].\"",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "",
+   "bonus": {
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+1 Speed to hero and J4X-7. Both gain the printed ability 1[Block] (evade)."
+  },
+  "verified": true
+ },
+ {
+  "group": "Jarrod Kelvin",
+  "kind": "hero",
+  "name": "Leaping Slash",
+  "xp": 4,
+  "type": "Feat",
+  "text": "1✦⟶: Move up to 2 spaces. Then, you may exhaust the Vibro-Claws to perform an attack with that weapon. Then, perform an attack with a different [melee] weapon.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified_note": "cost is 1 strain + 1 action (1✦⟶), not two actions (⟶⟶)",
+  "verified": true
+ },
+ {
+  "group": "Jarrod Kelvin",
+  "kind": "hero",
+  "name": "Mechanical Master",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Apply +2 Health to your hero. When J4X-7 declares an attack, it becomes Focused. Exhaust this card at the start of another hero's activation. J4X-7 may ready and activate at the start or end of that hero's activation.",
+  "shape": "action",
+  "secondary": "passive",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+2 Health (passive). J4X-7 becomes Focused when it declares an attack. Exhaust at start of another hero's activation: J4X-7 may ready and activate at the start or end of that activation."
+  },
+  "verified": true
+ },
+ {
+  "group": "Jyn Odan",
+  "kind": "hero",
+  "name": "Vintage Blaster",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: [ranged] green + green. Traits: Blaster - Pistol. ⚡: +1⊠. ⚡: +1 Accuracy.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Jyn Odan",
+  "kind": "hero",
+  "name": "Quick As A Whip",
+  "xp": 1,
+  "type": "Feat",
+  "text": "After an attack targeting you is resolved, you may move 1 space.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Jyn Odan",
+  "kind": "hero",
+  "name": "Smugglers Luck",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card while performing an attribute test to reroll any number of dice. Exhaust this card after you draw a Supply card to discard that card and draw another one. During the Rebel upgrade stage, draw 1 additional Item card.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "test",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "reroll any number of dice during an attribute test. Also: exhaust after drawing a Supply card to discard it and draw another; draw 1 additional Item card during the Rebel upgrade stage."
+  },
+  "verified": true
+ },
+ {
+  "group": "Jyn Odan",
+  "kind": "hero",
+  "name": "Cheap Shot",
+  "xp": 2,
+  "type": "Feat",
+  "text": "When you use \"Quick Draw,\" apply +1⊠ to the attack results. The attack also gains: ⚡: Stun",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "when you use \"Quick Draw\"",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [
+    "⚡: Stun"
+   ],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Jyn Odan",
+  "kind": "hero",
+  "name": "Roll With It",
+  "xp": 2,
+  "type": "Feat",
+  "text": "1✦: Use when an attack targeting you is declared to apply +1[Block] to your defense results. You may convert 1 or more [Block] results to [Evade] results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "strain 1",
+   "condition": "",
+   "bonus": {
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "may convert 1 or more [Block] results to [Evade] results"
+  },
+  "verified": true
+ },
+ {
+  "group": "Jyn Odan",
+  "kind": "hero",
+  "name": "Get Cocky",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Exhaust this card after you resolve an attack. If the target figure was defeated, recover 2✦ or become Focused.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Jyn Odan",
+  "kind": "hero",
+  "name": "Gunslinger",
+  "xp": 3,
+  "type": "Feat",
+  "text": "While attacking with a PISTOL you can use ⚡ abilities from any PISTOL you brought to the mission. 1✦: Exhaust this card while attacking to apply +1⚡ to your attack results.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust, strain 1",
+   "condition": "",
+   "bonus": {
+    "surge": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Passive: while attacking with a Pistol, can use surge abilities from any Pistol brought to the mission."
+  },
+  "verified": true
+ },
+ {
+  "group": "Jyn Odan",
+  "kind": "hero",
+  "name": "Sidewinder",
+  "xp": 4,
+  "type": "Feat",
+  "text": "After you resolve an attack, you may move up to 2 spaces.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Jyn Odan",
+  "kind": "hero",
+  "name": "Trick Shot",
+  "xp": 4,
+  "type": "Feat",
+  "text": "1✦: Use before you declare an attack with a [ranged] weapon. You can draw line of sight from any space within 3 spaces.",
+  "shape": "action",
+  "secondary": "declared",
+  "model": {
+   "when": "attack",
+   "cost": "strain 1",
+   "condition": "ranged weapon, before declaring the attack",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "draw line of sight from any space within 3 spaces"
+  },
+  "verified": true
+ },
+ {
+  "group": "Ko-Tun Feralo",
+  "kind": "hero",
+  "name": "Service Rifle",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: blue + green [ranged]. Traits: Blaster - Rifle. ⚡: +2 Accuracy. While attacking with this weapon, you may reroll 1 attack die.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Ko-Tun Feralo",
+  "kind": "hero",
+  "name": "Auxiliary Training",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card while a friendly figure is attacking or defending. If that figure spent a power token during this attack, it may reroll 1 of its dice.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "both",
+   "cost": "exhaust",
+   "condition": "while a friendly figure is attacking or defending, if that figure spent a power token during this attack",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "That figure may reroll 1 of its dice."
+  },
+  "verified": true
+ },
+ {
+  "group": "Ko-Tun Feralo",
+  "kind": "hero",
+  "name": "Inch By Inch",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card during your activation. You and another friendly figure within 3 spaces each gain 1 movement point.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Ko-Tun Feralo",
+  "kind": "hero",
+  "name": "Combat Logistics",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Exhaust this card when a friendly figure within 3 spaces performs a rest. That figure gains 1 ⊠ power token. At the start of each mission, draw 1 Supply card.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified_note": "'gains 1[Block]' -> glyph is a damage power token icon: gains 1 ⊠ power token.",
+  "verified": true
+ },
+ {
+  "group": "Ko-Tun Feralo",
+  "kind": "hero",
+  "name": "Dig In",
+  "xp": 2,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card when an attack targeting a friendly figure within 2 spaces is declared to apply +2[Block] to the defense results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust, strain 1",
+   "condition": "when an attack targeting a friendly figure within 2 spaces is declared",
+   "bonus": {
+    "block": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Applies to a friendly figure's defense."
+  },
+  "verified_note": "Cost is 1 strain (1✦), not an action icon (⟶).",
+  "verified": true
+ },
+ {
+  "group": "Ko-Tun Feralo",
+  "kind": "hero",
+  "name": "Fire Support Specialist",
+  "xp": 3,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card when a friendly figure within 3 spaces spends a power token during an attack. Remove 1 defense die from the defense pool.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust, strain 1",
+   "condition": "when a friendly figure within 3 spaces spends a power token during an attack",
+   "bonus": {},
+   "dice": {
+    "remove": [
+     "defense die"
+    ]
+   },
+   "surges": [],
+   "other": "Remove 1 defense die from the defense pool."
+  },
+  "verified_note": "Cost is 1 strain (1✦), not an action icon (⟶).",
+  "verified": true
+ },
+ {
+  "group": "Ko-Tun Feralo",
+  "kind": "hero",
+  "name": "Opportunist",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Apply +2 Health and +1 Speed to your hero. After a friendly figure within 3 spaces resolves an attack, if that figure spent a power token, you may move 1 space.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+2 Health, +1 Speed. After a friendly figure within 3 spaces resolves an attack in which it spent a power token, you may move 1 space."
+  },
+  "verified": true
+ },
+ {
+  "group": "Ko-Tun Feralo",
+  "kind": "hero",
+  "name": "Self-sufficient",
+  "xp": 4,
+  "type": "Feat",
+  "text": "When you spend a power token, apply +2 of the symbol on that token to the results instead of +1. 1✦: Exhaust this card during your activation to gain 1 power token.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "both",
+   "cost": "none",
+   "condition": "when you spend a power token",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Power tokens you spend give +2 of their symbol instead of +1. 1 strain: exhaust during your activation to gain 1 power token (any type, '?' token icon)."
+  },
+  "verified_note": "Second ability costs 1 strain (1✦), not an action (⟶).",
+  "verified": true
+ },
+ {
+  "group": "Ko-Tun Feralo",
+  "kind": "hero",
+  "name": "Squad Cohesion",
+  "xp": 4,
+  "type": "Feat",
+  "text": "At the start of each mission, distribute 4 power tokens among Rebel figures. A Rebel figure can use power tokens in the play areas of friendly figures within 3 spaces of him. Friendly figures within 2 spaces of you can use any power token as ⊠, [Evade], ⚡, or [Block].",
+  "shape": "action",
+  "secondary": "passive",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Start of mission: distribute 4 power tokens among Rebel figures. Rebel figures can use power tokens of friendly figures within 3 spaces. Friendly figures within 2 spaces of you can use any power token as ⊠, [Evade], ⚡, or [Block]."
+  },
+  "verified_note": "First token symbol is damage (⊠), not [Block]; list is ⊠, [Evade], ⚡, [Block].",
+  "verified": true
+ },
+ {
+  "group": "Loku Kanoloa",
+  "kind": "hero",
+  "name": "All-Weather Rifle",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: [ranged] blue + green. Traits: Projectile - Rifle. +1 Accuracy. ⚡: Weaken. ⚡: Pierce 1.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Loku Kanoloa",
+  "kind": "hero",
+  "name": "Combat Spotter",
+  "xp": 1,
+  "type": "Feat",
+  "text": "While performing \"Set Your Sights,\" you may ignore figures when determining line of sight. Friendly figures may ignore figures when determining line of sight to a figure with a recon token.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "ignore figures for line of sight during \"Set Your Sights\"; friendly figures ignore figures for line of sight to a figure with a recon token."
+  },
+  "verified": true
+ },
+ {
+  "group": "Loku Kanoloa",
+  "kind": "hero",
+  "name": "Scouting Report",
+  "xp": 1,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card at the start or end of your activation to place a recon token on a crate. A hero can interact with that crate during his activation without using an action.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Loku Kanoloa",
+  "kind": "hero",
+  "name": "Overwatch",
+  "xp": 2,
+  "type": "Feat",
+  "text": "⟶: Place a recon token on this card. When a hostile figure declares a move or attack, you may discard a recon token from this card to interrupt to perform an attack targeting that figure. Apply +1⚡ to the attack results.",
+  "shape": "action",
+  "secondary": "declared",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "during the Overwatch interrupt attack",
+   "bonus": {
+    "surge": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Action to place a recon token on this card; discard it to interrupt a hostile figure's move/attack declaration with an attack."
+  },
+  "verified": true
+ },
+ {
+  "group": "Loku Kanoloa",
+  "kind": "hero",
+  "name": "Spectrum Scanner",
+  "xp": 2,
+  "type": "Equipment",
+  "text": "Traits: Sights. Exhaust this card when a figure with a recon token is defeated to place 1 recon token on another figure in the same group.",
+  "shape": "equipment",
+  "secondary": "action",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Loku Kanoloa",
+  "kind": "hero",
+  "name": "Scouts Guidance",
+  "xp": 3,
+  "type": "Feat",
+  "text": "2✦: Use during your activation to place 1 recon token on another friendly figure. While a friendly figure with a recon token is defending, apply +1[Evade] to the defense results.",
+  "shape": "action",
+  "secondary": "declared",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "friendly figure with a recon token is defending",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+1[Evade] (dodge) to defense results of a friendly figure with a recon token. Action-timing: 2✦ during your activation to place a recon token on another friendly figure."
+  },
+  "verified": true
+ },
+ {
+  "group": "Loku Kanoloa",
+  "kind": "hero",
+  "name": "Study of Enemies",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Apply +2 Health to your hero. Your attacks gain: ⚡: Exhaust this card to place a recon token on a hostile figure within 2 spaces of the target.",
+  "shape": "passive",
+  "secondary": "declared",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡: Exhaust this card to place a recon token on a hostile figure within 2 spaces of the target."
+   ],
+   "other": "+2 Health."
+  },
+  "verified": true
+ },
+ {
+  "group": "Loku Kanoloa",
+  "kind": "hero",
+  "name": "Coordinated Attack",
+  "xp": 4,
+  "type": "Feat",
+  "text": "2✦: Exhaust this card when an attack targeting a figure with a recon token is declared to add 1 die of your choice to the attack pool.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust, strain 2",
+   "condition": "attack targeting a figure with a recon token (any attacker)",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "any (1 die of your choice)"
+    ]
+   },
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Loku Kanoloa",
+  "kind": "hero",
+  "name": "Mon Cala Special Forces",
+  "xp": 4,
+  "type": "Feat",
+  "text": "+1[Evade]. +1 Accuracy. Exhaust this card when a hostile figure with a recon token is defeated to recover 2✦ or become Focused.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "both",
+   "cost": "none",
+   "condition": "",
+   "bonus": {
+    "accuracy": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+1[Evade] (dodge) permanently while defending; +1 Accuracy while attacking. Also: exhaust when a hostile figure with a recon token is defeated to recover 2✦ or become Focused."
+  },
+  "verified": true
+ },
+ {
+  "group": "MHD-19",
+  "kind": "hero",
+  "name": "Sidearm Blaster",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: [ranged] blue + yellow. Traits: Blaster - Pistol. ⚡: Stun. ⚡: Pierce 1.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "MHD-19",
+  "kind": "hero",
+  "name": "Bacta Injector",
+  "xp": 1,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card during your activation and choose an adjacent friendly figure. That figure recovers 1⊠ or discards 1 HARMFUL condition.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "MHD-19",
+  "kind": "hero",
+  "name": "Improper Procedure",
+  "xp": 1,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card during your activation and choose an adjacent hostile figure. That figure suffers 1⊠ and becomes Weakened.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "MHD-19",
+  "kind": "hero",
+  "name": "Field Surgeon",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Your attacks gain: ⚡: Exhaust this card and choose an adjacent friendly figure. That figure recovers 2⊠. After another hero is defeated, you may interrupt to perform an attack targeting the figure who defeated that hero.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡: Exhaust this card and choose an adjacent friendly figure. That figure recovers 2⊠."
+   ],
+   "other": "After another hero is defeated, may interrupt to perform an attack targeting the figure who defeated that hero."
+  },
+  "verified": true
+ },
+ {
+  "group": "MHD-19",
+  "kind": "hero",
+  "name": "Fuel Injection",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Apply +1 Speed to your hero. 1✦: Exhaust this card when an attack targeting another friendly figure within 4 spaces resolves. You may interrupt to move up to 2 spaces.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+1 Speed. Also: 1✦ exhaust when an attack targeting another friendly figure within 4 spaces resolves to interrupt and move up to 2 spaces."
+  },
+  "verified": true
+ },
+ {
+  "group": "MHD-19",
+  "kind": "hero",
+  "name": "Adrenal Vapor",
+  "xp": 3,
+  "type": "Feat",
+  "text": "2✦: Use when another friendly figure within 2 spaces declares an attack. Add 1 yellow die to the attack pool. The attack gains: ⚡: Recover 1⊠",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "strain 2",
+   "condition": "another friendly figure within 2 spaces declares an attack",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "yellow"
+    ]
+   },
+   "surges": [
+    "⚡: Recover 1⊠"
+   ],
+   "other": "applies to another friendly figure's attack"
+  },
+  "verified": true
+ },
+ {
+  "group": "MHD-19",
+  "kind": "hero",
+  "name": "Miracle Worker",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Deplete this card when another hero within 4 spaces of you has suffered ⊠ equal to his Health. Instead of being defeated, that hero recovers 3⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "MHD-19",
+  "kind": "hero",
+  "name": "Bacta Radiator",
+  "xp": 4,
+  "type": "Feat",
+  "text": "At the start of each round, each friendly figure within 2 spaces recovers 1✦ and 1⊠ for each of your activation tokens.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "MHD-19",
+  "kind": "hero",
+  "name": "Combat Override",
+  "xp": 4,
+  "type": "Feat",
+  "text": "2✦: Exhaust this card during your activation to search the Supply deck for an EXPLOSIVE card and gain that card. Then, shuffle the Supply deck. ⟶⟶: Exhaust this card to perform 3 attacks, then suffer 3⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Mak Eshka'rey",
+  "kind": "hero",
+  "name": "Longblaster",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: blue + blue. Traits: Blaster - Rifle. ⚡: +1 ⊠. ⚡: Pierce 1.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Mak Eshka'rey",
+  "kind": "hero",
+  "name": "Disengage",
+  "xp": 1,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card when a hostile figure enters a space within 3 spaces of you to gain 3 movement points.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Mak Eshka'rey",
+  "kind": "hero",
+  "name": "Supply Network",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card during your activation to test [Ins]. If you pass, reveal the top card of the Supply deck and place it on the top or bottom of the deck. ⟶: Deplete this card to draw 1 card from the Supply deck.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Mak Eshka'rey",
+  "kind": "hero",
+  "name": "Jeswandi Training",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Apply +2 Health to your hero. Exhaust this card after a hostile figure within 3 spaces resolves an attack. You become Focused.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+2 Health; exhaust after a hostile figure within 3 spaces resolves an attack to become Focused"
+  },
+  "verified": true
+ },
+ {
+  "group": "Mak Eshka'rey",
+  "kind": "hero",
+  "name": "Target Acquired",
+  "xp": 2,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card before you declare an attack. During this attack, figures do not block your line of sight. Apply +2 Accuracy to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust, strain 1",
+   "condition": "before you declare an attack",
+   "bonus": {
+    "accuracy": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": "figures do not block your line of sight during this attack"
+  },
+  "verified": true
+ },
+ {
+  "group": "Mak Eshka'rey",
+  "kind": "hero",
+  "name": "Execute",
+  "xp": 3,
+  "type": "Feat",
+  "text": "After you resolve an attack, if the target figure was defeated, recover 1✦. 1✦: Exhaust this card when you use \"Ambush.\" Remove all white dice from the target's defense pool.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust, strain 1",
+   "condition": "when you use \"Ambush\"",
+   "bonus": {},
+   "dice": {
+    "remove": [
+     "white (all, from target's defense pool)"
+    ]
+   },
+   "surges": [],
+   "other": "after you resolve an attack, if the target was defeated, recover 1 strain"
+  },
+  "verified": true
+ },
+ {
+  "group": "Mak Eshka'rey",
+  "kind": "hero",
+  "name": "Expertise",
+  "xp": 3,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card during your activation after you interact. Perform 1 additional action during this activation.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Mak Eshka'rey",
+  "kind": "hero",
+  "name": "Decoy",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Deplete this card when an attack targeting you is declared. The attack misses. After the attack resolves, you may interrupt to place your figure in any empty space within 3 spaces. Then, you become Focused and may perform an attack.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "defense",
+   "cost": "deplete",
+   "condition": "when an attack targeting you is declared",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "the attack misses; after it resolves, interrupt to place your figure in any empty space within 3 spaces, become Focused, and may perform an attack"
+  },
+  "verified": true
+ },
+ {
+  "group": "Mak Eshka'rey",
+  "kind": "hero",
+  "name": "No Escape",
+  "xp": 4,
+  "type": "Feat",
+  "text": "2✦: Exhaust this card after you resolve an attack. If the target figure was not defeated, you become Focused. Then, perform 1 additional attack targeting the same figure.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Murne Rin",
+  "kind": "hero",
+  "name": "Diplomat's Blaster",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: blue + green. Traits: Blaster - Pistol. ⚡: Pierce 1. After resolving an attack with this weapon, if the target suffered 1 or more ⊠, you may push that figure 1 space.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Murne Rin",
+  "kind": "hero",
+  "name": "Company of Heroes",
+  "xp": 1,
+  "type": "Feat",
+  "text": "When you deploy a unique ALLY, reduce its deployment cost by 4 (to a minimum of 0).",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Murne Rin",
+  "kind": "hero",
+  "name": "Sonic Bellow",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card during your activation to test [Ins]. If you pass, choose a hostile figure with a figure cost of 3 or less within 3 spaces. That figure becomes Stunned.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Murne Rin",
+  "kind": "hero",
+  "name": "Professional Aide",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Exhaust this card while another Rebel figure within 3 spaces is attacking or performing an attribute test to apply +1 ⚡ to the results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "both",
+   "cost": "exhaust",
+   "condition": "another Rebel figure within 3 spaces is attacking or performing an attribute test",
+   "bonus": {
+    "surge": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "applies to another Rebel figure's attack or attribute test, not your own"
+  },
+  "verified": true
+ },
+ {
+  "group": "Murne Rin",
+  "kind": "hero",
+  "name": "Rebel Propaganda",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Apply +2 Health to your hero. 1✦: Exhaust this card during your activation and choose another hero within 3 spaces. Then, test [Ins]. For each success, discard 1 strain token from that hero's Hero sheet.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+2 Health; 1 strain + exhaust during activation: test Insight, each success discards 1 strain from another hero within 3 spaces"
+  },
+  "verified": true
+ },
+ {
+  "group": "Murne Rin",
+  "kind": "hero",
+  "name": "Double Agent",
+  "xp": 3,
+  "type": "Feat",
+  "text": "When you use \"False Orders,\" before performing the attack, you may push the chosen figure up to 2 spaces. After the attack resolves, that figure becomes Stunned.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Murne Rin",
+  "kind": "hero",
+  "name": "Solidarity",
+  "xp": 3,
+  "type": "Feat",
+  "text": "When another hero within 3 spaces performs a rest, recover 2✦. When another hero within 3 spaces performs a move, gain 2 movement points.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Murne Rin",
+  "kind": "hero",
+  "name": "Lead from the Front",
+  "xp": 4,
+  "type": "Feat",
+  "text": "While attacking or using \"False Orders\" during your activation, for each ready activation token in play, that attack may gain 1 of the following (limit once per option per attack): +1 ⊠; Pierce 1; Recover 1 ⊠; +2 Accuracy.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "while attacking or using \"False Orders\" during your activation; one option per ready activation token in play",
+   "bonus": {
+    "damage": 1,
+    "accuracy": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": "choose per ready activation token, each option at most once: +1 damage, Pierce 1, Recover 1 damage, or +2 Accuracy"
+  },
+  "verified": true
+ },
+ {
+  "group": "Murne Rin",
+  "kind": "hero",
+  "name": "Waylay",
+  "xp": 4,
+  "type": "Feat",
+  "text": "1✦: Use after \"False Orders\" resolves. Choose another hero within 3 spaces to interrupt to perform an attack. 1✦: Use after \"False Orders\" resolves. Choose a friendly ALLY within 3 spaces to interrupt to perform an attack.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Onar Koma",
+  "kind": "hero",
+  "name": "Bodyguard Rifle",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: green + red. Traits: Blaster - Rifle. When you declare an attack with this weapon, you may apply -1 ⊠ and +2 Accuracy to the attack results.",
+  "shape": "equipment",
+  "secondary": "declared",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "when you declare an attack with this weapon",
+   "bonus": {
+    "damage": -1,
+    "accuracy": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": "optional trade: -1 damage for +2 Accuracy"
+  },
+  "verified": true
+ },
+ {
+  "group": "Onar Koma",
+  "kind": "hero",
+  "name": "Get Down",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card while you or another friendly figure within 2 spaces is defending. Test [Str] or [Ins]. If you pass the [Str] test, apply +1 [Block] to the defense results. If you pass the [Ins] test, apply +1 [Evade] to the defense results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust",
+   "condition": "you or another friendly figure within 2 spaces is defending; must pass a Strength or Insight test",
+   "bonus": {
+    "block": 1,
+    "evade": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "choose one test: pass Strength for +1 block OR pass Insight for +1 evade; may apply to another friendly figure's defense"
+  },
+  "verified_note": "Insight test grants +1 [Evade], not [Block] (model already correct).",
+  "verified": true
+ },
+ {
+  "group": "Onar Koma",
+  "kind": "hero",
+  "name": "Keep Up",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card at the end of an activation to gain 1 movement point.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Onar Koma",
+  "kind": "hero",
+  "name": "Mutual Destruction",
+  "xp": 2,
+  "type": "Feat",
+  "text": "While attacking, you may suffer 1 ⊠ to apply +1 ⊠ to the attack results. Exhaust this card when you use \"Rush.\" You and the pushed figure each suffer 1 ⊠.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "while attacking; suffer 1 damage",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "costs 1 damage to yourself (not strain); exhaust when you use \"Rush\": you and the pushed figure each suffer 1 damage"
+  },
+  "verified": true
+ },
+ {
+  "group": "Onar Koma",
+  "kind": "hero",
+  "name": "Stay Behind Me",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Apply +2 Health to your hero. While an adjacent friendly figure is defending, if you are healthy, you may suffer 1 ⊠ to apply +1 [Block] to the defense results.",
+  "shape": "passive",
+  "secondary": "declared",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "an adjacent friendly figure is defending and you are healthy; suffer 1 damage",
+   "bonus": {
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+2 Health; block bonus applies to an adjacent friendly figure's defense at the cost of 1 damage to you"
+  },
+  "verified_note": "Text correct, but model bonus was {evade:1}; card grants +1 [Block].",
+  "verified": true
+ },
+ {
+  "group": "Onar Koma",
+  "kind": "hero",
+  "name": "Brute Strength",
+  "xp": 3,
+  "type": "Feat",
+  "text": "When you perform a [Tech] or [Ins] test you may use your [Str] attribute instead. Exhaust this card when you would perform an interact. Test [Str]. If you receive 2 or more successes, perform that interact without using an action.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "test",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "substitute Strength attribute for Tech or Insight tests; exhaust when you would interact: test Strength, 2+ successes performs the interact without using an action"
+  },
+  "verified": true
+ },
+ {
+  "group": "Onar Koma",
+  "kind": "hero",
+  "name": "Hold Still",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Exhaust this card while an adjacent hostile figure is defending to apply -1 [Block] or -1 [Evade] to the defense results. When a hostile figure voluntarily exits an adjacent space you become Focused.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "an adjacent hostile figure is defending",
+   "bonus": {
+    "block": -1,
+    "evade": -1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "choose -1 block OR -1 evade on the defender's results; when a hostile figure voluntarily exits an adjacent space you become Focused"
+  },
+  "verified_note": "Second option is -1 [Evade], not [Block] (model already correct).",
+  "verified": true
+ },
+ {
+  "group": "Onar Koma",
+  "kind": "hero",
+  "name": "Black Sun Armor",
+  "xp": 4,
+  "type": "Armor",
+  "text": "Traits: Armor. +3 Health. While defending, you may apply +1 [Block] or +1 [Evade] to the defense results.",
+  "shape": "equipment",
+  "secondary": "declared",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "while defending",
+   "bonus": {
+    "block": 1,
+    "evade": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+3 Health; choose +1 block OR +1 evade each defense"
+  },
+  "verified_note": "Second option is [Evade], not [Block] (text only; model already block+evade).",
+  "verified": true
+ },
+ {
+  "group": "Onar Koma",
+  "kind": "hero",
+  "name": "Don't Make Me Hurt You",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Exhaust this card when you declare an attack to add 1 red die to your attack pool. After you resolve an attack, if the target was defeated, you may suffer 1 ⊠ to ready this card.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "when you declare an attack",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "red"
+    ]
+   },
+   "surges": [],
+   "other": "after resolving an attack, if the target was defeated, may suffer 1 damage to ready this card"
+  },
+  "verified": true
+ },
+ {
+  "group": "Saska Teft",
+  "kind": "hero",
+  "name": "Modified Blaster",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: green + yellow. Traits: Blaster - Pistol. +1 Accuracy. ⚡: Weaken. ⚡: +1 ⊠. ⚡: Pierce 1. ⚡: +1 Accuracy.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Saska Teft",
+  "kind": "hero",
+  "name": "Tool Kit",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card while performing a [Tech] test to apply +1 ⚡ to the results. Exhaust this card when a friendly figure performs an attribute test using \"Practical Solutions\" to apply +1 ⚡ to that figure's test results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "test",
+   "cost": "exhaust",
+   "condition": "performing a Tech test; or a friendly figure performs an attribute test using \"Practical Solutions\"",
+   "bonus": {
+    "surge": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "second ability applies the +1 surge to a friendly figure's test"
+  },
+  "verified": true
+ },
+ {
+  "group": "Saska Teft",
+  "kind": "hero",
+  "name": "Unstable Device",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Once during a figure's activation, he may suffer 1 ⊠ and discard 1 device token to choose a space within 3 spaces of his figure and roll 1 yellow die. Each figure and object on or adjacent to that space suffers ⊠ equal to the ⊠ results.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified_note": "'suffer 1 ✦' should be damage: 'suffer 1 ⊠' (card shows damage glyph)",
+  "verified": true
+ },
+ {
+  "group": "Saska Teft",
+  "kind": "hero",
+  "name": "Energy Shield",
+  "xp": 2,
+  "type": "Feat",
+  "text": "While defending, a figure may discard 1 device token to apply either +1 [Block] or +1 [Evade] to his defense results. This ability may be used multiple times per attack.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "while defending; discard 1 device token per use",
+   "bonus": {
+    "block": 1,
+    "evade": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "choose +1 block OR +1 evade per device token discarded; usable multiple times per attack; applies to any figure holding device tokens"
+  },
+  "verified_note": "Second option is +1 [Evade], not [Block] (model already correct).",
+  "verified": true
+ },
+ {
+  "group": "Saska Teft",
+  "kind": "hero",
+  "name": "Structural Weakness",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Exhaust this card while attacking an object to apply +2 ⊠ to the attack results. Exhaust this card while attacking a DROID or VEHICLE to apply +1 ⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "attacking an object (+2) or a DROID or VEHICLE (+1)",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+2 damage vs objects, +1 damage vs Droid or Vehicle"
+  },
+  "verified": true
+ },
+ {
+  "group": "Saska Teft",
+  "kind": "hero",
+  "name": "Gadgeteer",
+  "xp": 3,
+  "type": "Feat",
+  "text": "\"Battle Technician\" can be used up to twice per activation. You can attach 1 additional modification to each of your weapons.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "\"Battle Technician\" usable twice per activation; +1 modification slot on each weapon"
+  },
+  "verified": true
+ },
+ {
+  "group": "Saska Teft",
+  "kind": "hero",
+  "name": "Power Converter",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Each figure with 1 or more device tokens gains: 1✦: When you declare an attack, if you use \"Practical Solutions,\" you may additionally replace 1 die in your attack pool with a different attack die of your choice.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "strain 1",
+   "condition": "figure has 1 or more device tokens; when you declare an attack, if you use \"Practical Solutions\"",
+   "bonus": {},
+   "dice": {
+    "swap": [
+     "replace 1 attack die with a different attack die of your choice"
+    ]
+   },
+   "surges": [],
+   "other": "granted to any figure holding device tokens"
+  },
+  "verified": true
+ },
+ {
+  "group": "Saska Teft",
+  "kind": "hero",
+  "name": "Adrenaline Injector",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Each figure with 1 or more device tokens gains: 1✦: When you perform a move, you may discard 1 device token to gain 2 additional movement points and become Focused.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Saska Teft",
+  "kind": "hero",
+  "name": "Remote Distribution",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Apply +2 Health and +1 Endurance to your hero. When using \"Battle Technician,\" instead of an adjacent friendly figure, a friendly figure up to 3 spaces away can claim 1 device token.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+2 Health, +1 Endurance; \"Battle Technician\" range extended to a friendly figure up to 3 spaces away"
+  },
+  "verified": true
+ },
+ {
+  "group": "Shyla Varad",
+  "kind": "hero",
+  "name": "Duelist's Blade",
+  "xp": null,
+  "type": "Melee Weapon",
+  "text": "Attack: green + yellow. Traits: Blade. ⚡: +1 ⊠. ⚡: Pierce 1. ⟶: Replace 1 yellow die in your attack pool with 1 red die. Then, perform an attack with this weapon.",
+  "shape": "equipment",
+  "secondary": "action",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Shyla Varad",
+  "kind": "hero",
+  "name": "All-Out Attack",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card while attacking with a [melee] weapon to apply +1 ⊠ and -1 ⚡ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "attacking with a melee weapon",
+   "bonus": {
+    "damage": 1,
+    "surge": -1
+   },
+   "dice": {},
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Shyla Varad",
+  "kind": "hero",
+  "name": "Responsiveness",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card at the start of your activation to gain 1 movement point. Exhaust this card at the start of your activation to recover 1✦.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Shyla Varad",
+  "kind": "hero",
+  "name": "Proximity Strike",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Exhaust this card while attacking with a [melee] weapon. You may force the defender to reroll 1 defense die of your choice. Then, you may reroll 1 attack die.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "attacking with a melee weapon",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "force defender to reroll 1 defense die of your choice, then you may reroll 1 attack die"
+  },
+  "verified": true
+ },
+ {
+  "group": "Shyla Varad",
+  "kind": "hero",
+  "name": "Smoke Bombs",
+  "xp": 2,
+  "type": "Equipment",
+  "text": "Traits: Accessory. 1✦: Exhaust this card at the end of your activation and choose a figure within 3 spaces. If that figure is friendly, it becomes Hidden. If not, it becomes Weakened.",
+  "shape": "equipment",
+  "secondary": "action",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Shyla Varad",
+  "kind": "hero",
+  "name": "Remote Detonator",
+  "xp": 3,
+  "type": "Equipment",
+  "text": "Traits: Accessory. 1✦: Exhaust this card during your activation and choose a hostile figure within 3 spaces. Roll 1 green die. That figure suffers ⊠ equal to the ⊠ results.",
+  "shape": "equipment",
+  "secondary": "action",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Shyla Varad",
+  "kind": "hero",
+  "name": "Swords Dance",
+  "xp": 3,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card after you resolve an attack with a [melee] weapon. Remove 1 die from your attack pool and perform an attack with the same weapon and target.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Shyla Varad",
+  "kind": "hero",
+  "name": "Deadly Grace",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Apply +1 Endurance to your hero. +1 [Evade]. At the start of your activation, gain 2 movement points.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "",
+   "bonus": {
+    "evade": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+1 Endurance; at the start of your activation, gain 2 movement points"
+  },
+  "verified_note": "+1 [Block] should be +1 [Evade]; model bonus block->evade",
+  "verified": true
+ },
+ {
+  "group": "Shyla Varad",
+  "kind": "hero",
+  "name": "Full Sweep",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Exhaust this card while attacking with a [melee] weapon. The attack gains Cleave 3 ⊠.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "attacking with a melee weapon",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "the attack gains Cleave 3 damage"
+  },
+  "verified": true
+ },
+ {
+  "group": "Verena Talos",
+  "kind": "hero",
+  "name": "Fighting Knife",
+  "xp": null,
+  "type": "Melee Weapon",
+  "text": "Attack: red. Traits: Blade. +1 ⊠. ⚡: Pierce 2. When sold, this item is worth 25 credits.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Verena Talos",
+  "kind": "hero",
+  "name": "Military Blaster",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: blue + yellow. Traits: Blaster - Pistol. ⚡⚡: +2 ⊠. ⚡: +1 Accuracy, Pierce 1. When sold, this item is worth 25 credits.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Verena Talos",
+  "kind": "hero",
+  "name": "Combat Momentum",
+  "xp": 1,
+  "type": "Feat",
+  "text": "1✦: Use when an adjacent hostile figure is defeated to gain 2 movement points. When you use \"Close Quarters,\" you can move up to 1 space before performing the attack.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Verena Talos",
+  "kind": "hero",
+  "name": "Create Opening",
+  "xp": 1,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card while a hostile figure adjacent to you is defending to apply -1 [Block] or -1 [Evade] to the defense results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust, strain 1",
+   "condition": "a hostile figure adjacent to you is defending",
+   "bonus": {
+    "block": -1,
+    "evade": -1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "choose -1 block OR -1 evade on the defender's results; works on any attack against that figure, not only yours"
+  },
+  "verified_note": "second '-1 [Block]' should be '-1 [Evade]' (model already correct)",
+  "verified": true
+ },
+ {
+  "group": "Verena Talos",
+  "kind": "hero",
+  "name": "K'tara Maneuver",
+  "xp": 2,
+  "type": "Feat",
+  "text": "⟶: Move up to 2 spaces to a space containing a small hostile figure and push that figure 1 space. Then, perform an attack with a [ranged] weapon.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Verena Talos",
+  "kind": "hero",
+  "name": "Student of Battle",
+  "xp": 2,
+  "type": "Feat",
+  "text": "When you perform an attack using \"Close Quarters,\" the attack gains: ⚡: Pierce 2. ⚡: Recover 2 ⊠. ⚡: +5 Accuracy.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "attack performed using \"Close Quarters\"",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡: Pierce 2",
+    "⚡: Recover 2 ⊠",
+    "⚡: +5 Accuracy"
+   ],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Verena Talos",
+  "kind": "hero",
+  "name": "Improvised Cover",
+  "xp": 3,
+  "type": "Feat",
+  "text": "While defending, if you are adjacent to a hostile figure other than the attacker, apply +1 [Block] to your defense results and that hostile figure suffers 1 ⊠.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "while defending, adjacent to a hostile figure other than the attacker",
+   "bonus": {
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "that adjacent hostile figure suffers 1 damage"
+  },
+  "verified_note": "text correct (+1 [Block]) but model bonus said evade:1; corrected to block:1",
+  "verified": true
+ },
+ {
+  "group": "Verena Talos",
+  "kind": "hero",
+  "name": "Point Blank Shot",
+  "xp": 3,
+  "type": "Feat",
+  "text": "When you declare an attack with a PISTOL targeting an adjacent figure, you may replace 1 die in the attack pool with a red die. Apply Pierce 1 to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "attack with a Pistol targeting an adjacent figure",
+   "bonus": {},
+   "dice": {
+    "swap": [
+     "replace 1 attack die with red"
+    ]
+   },
+   "surges": [],
+   "other": "Pierce 1 applied to the attack results"
+  },
+  "verified": true
+ },
+ {
+  "group": "Verena Talos",
+  "kind": "hero",
+  "name": "Combat Mastery",
+  "xp": 4,
+  "type": "Feat",
+  "text": "⟶ 1✦: Perform 2 attacks, 1 with a [melee] weapon and 1 with a [ranged] weapon. Each attack must have a different target.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Verena Talos",
+  "kind": "hero",
+  "name": "Master Operative",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Apply +1 Endurance to your hero. Exhaust this card when you declare an attack using \"Close Quarters\" to become Focused.",
+  "shape": "passive",
+  "secondary": "declared",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "when you declare an attack using \"Close Quarters\"",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "green (Focused)"
+    ]
+   },
+   "surges": [],
+   "other": "+1 Endurance; becoming Focused adds a green die to your next attack"
+  },
+  "verified": true
+ },
+ {
+  "group": "Vinto Hreeda",
+  "kind": "hero",
+  "name": "Hair-Trigger Pistol",
+  "xp": null,
+  "type": "Ranged Weapon",
+  "text": "Attack: blue + yellow [ranged]. Traits: Blaster - Pistol. ⚡: +1⊠. ⚡: +2 Accuracy. While attacking with this weapon, you may reroll all of your attack dice.",
+  "shape": "equipment",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Vinto Hreeda",
+  "kind": "hero",
+  "name": "Pinpoint Shot",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Exhaust this card while attacking with a [ranged] weapon to remove all ⊠, [Block], ⚡, [Evade], and [Dodge] results. Then, apply +1⊠ to the attack results and the attack gains Weaken. No abilities can modify the results further.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "while attacking with a [ranged] weapon",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Remove all ⊠, [Block], ⚡, [Evade], and [Dodge] results first; attack gains Weaken; no abilities can modify results further."
+  },
+  "verified_note": "last removed result is [Dodge], not [Block]",
+  "verified": true
+ },
+ {
+  "group": "Vinto Hreeda",
+  "kind": "hero",
+  "name": "Shot on the Run",
+  "xp": 1,
+  "type": "Feat",
+  "text": "Apply +1 Speed to your hero. Exhaust this card if you've performed a move during this activation and choose a hostile figure within 3 spaces and line of sight. Test [Ins]. If you succeed, that figure suffers 1⊠.",
+  "shape": "action",
+  "secondary": "passive",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+1 Speed (passive). Exhaust after moving this activation: hostile figure within 3 spaces and LOS suffers 1⊠ on a successful [Ins] test."
+  },
+  "verified": true
+ },
+ {
+  "group": "Vinto Hreeda",
+  "kind": "hero",
+  "name": "Battlefield Experience",
+  "xp": 2,
+  "type": "Feat",
+  "text": "Apply +1 Endurance to your hero. Exhaust this card while attacking to reroll 1 attack die.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+1 Endurance (passive). Exhaust while attacking to reroll 1 attack die."
+  },
+  "verified": true
+ },
+ {
+  "group": "Vinto Hreeda",
+  "kind": "hero",
+  "name": "Sharpshooter",
+  "xp": 2,
+  "type": "Feat",
+  "text": "+1 Accuracy. \"Boltslinger,\" \"Shot on the Run,\" and \"Rapid Fire\" can each affect hostile figures within 4 spaces.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {
+    "accuracy": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Boltslinger, Shot on the Run, and Rapid Fire range extended to 4 spaces."
+  },
+  "verified": true
+ },
+ {
+  "group": "Vinto Hreeda",
+  "kind": "hero",
+  "name": "Dead On",
+  "xp": 3,
+  "type": "Feat",
+  "text": "Exhaust this card while attacking to apply +1⊠ to the attack results. Exhaust this card when you use \"Boltslinger.\" The chosen hostile figure suffers 1 additional ⊠. Exhaust this card when you use \"Pinpoint Shot.\" The target suffers 1⊠.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Alternatively exhaust when using Boltslinger (+1 additional ⊠ to chosen figure) or when using Pinpoint Shot (target suffers 1⊠)."
+  },
+  "verified": true
+ },
+ {
+  "group": "Vinto Hreeda",
+  "kind": "hero",
+  "name": "Off-Hand Blaster",
+  "xp": 3,
+  "type": "Ranged Weapon",
+  "text": "Attack: blue [ranged]. Traits: Blaster - Pistol. Pierce 1. ⚡: +1⊠. 1✦: Exhaust this card during your activation to perform an attack using this weapon.",
+  "shape": "equipment",
+  "secondary": "action",
+  "model": null,
+  "verified_note": "'⟶:' should be '1✦:' (strain cost, not action)",
+  "verified": true
+ },
+ {
+  "group": "Vinto Hreeda",
+  "kind": "hero",
+  "name": "Merciless",
+  "xp": 4,
+  "type": "Feat",
+  "text": "Exhaust this card while attacking a figure who has suffered ⊠. Apply +3⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "while attacking a figure who has suffered ⊠",
+   "bonus": {
+    "damage": 3
+   },
+   "dice": {},
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Vinto Hreeda",
+  "kind": "hero",
+  "name": "Rapid Fire",
+  "xp": 4,
+  "type": "Feat",
+  "text": "1✦: Exhaust this card during your activation. Each hostile figure within 3 spaces and line of sight suffers 1⊠. While attacking with a [ranged] weapon, you may reroll all attack and defense dice.",
+  "shape": "action",
+  "secondary": "declared",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "while attacking with a [ranged] weapon",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "1 strain: exhaust, each hostile figure within 3 spaces and LOS suffers 1⊠. May reroll all attack and defense dice while attacking with a [ranged] weapon."
+  },
+  "verified_note": "'⟶:' should be '1✦:' (strain cost, not action)",
+  "verified": true
+ },
+ {
+  "group": "Armored Onslaught",
+  "kind": "imperial",
+  "name": "Explosive Munitions",
+  "xp": null,
+  "type": "Class Card",
+  "text": "Exhaust this card when an Imperial figure declares a [ranged] attack. You may replace 1 die in the attack pool with 1 red die and the attack gains Blast 1⊠.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "when an Imperial figure declares a [ranged] attack",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "red"
+    ],
+    "remove": [
+     "any one attack die"
+    ]
+   },
+   "surges": [],
+   "other": "Attack gains Blast 1⊠."
+  },
+  "verified": true
+ },
+ {
+  "group": "Armored Onslaught",
+  "kind": "imperial",
+  "name": "Armor Corps",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "While defending, Imperial Troopers adjacent to a friendly Droid, Heavy Weapon, or Vehicle may reroll 1 defense die.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "Imperial Troopers adjacent to a friendly Droid, Heavy Weapon, or Vehicle",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "May reroll 1 defense die."
+  },
+  "verified": true
+ },
+ {
+  "group": "Armored Onslaught",
+  "kind": "imperial",
+  "name": "Automated Repairs",
+  "xp": 1,
+  "type": "Attachment",
+  "text": "Attachment. Heavy Weapon, Droid, or Vehicle only. ⚡: Exhaust this card to recover 2⊠. ⟶: Exhaust this card to recover 1⊠.",
+  "shape": "action",
+  "secondary": "declared",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡: Exhaust this card to recover 2⊠"
+   ],
+   "other": "Action: exhaust to recover 1⊠."
+  },
+  "verified": true
+ },
+ {
+  "group": "Armored Onslaught",
+  "kind": "imperial",
+  "name": "Explosive Entry",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card when you deploy a figure to roll 1 green die. Each Rebel figure adjacent to that figure suffers ⊠ equal to the ⊠ results and becomes Weakened.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Armored Onslaught",
+  "kind": "imperial",
+  "name": "Heavy Firepower",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card when an Imperial figure declares a [ranged] attack. You may remove 1 red die from the attack pool to apply +3⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "when an Imperial figure declares a [ranged] attack",
+   "bonus": {
+    "damage": 3
+   },
+   "dice": {
+    "remove": [
+     "red"
+    ]
+   },
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Armored Onslaught",
+  "kind": "imperial",
+  "name": "Mortar",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "Exhaust this card during an Imperial figure's activation. That figure gains: ⟶: Choose a space within 3 spaces and roll 1 red die. Each figure and object on or adjacent to that space suffers ⊠ equal to the ⊠ results.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Armored Onslaught",
+  "kind": "imperial",
+  "name": "Reactive Armor",
+  "xp": 3,
+  "type": "Attachment",
+  "text": "Attachment. Droid or Vehicle only. +2 Health. While defending, if you roll an [Evade] result on a black die, apply +2[Block] to the defense results.",
+  "shape": "passive",
+  "secondary": "declared",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "if you roll an [Evade] result on a black die",
+   "bonus": {
+    "block": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+2 Health."
+  },
+  "verified": true
+ },
+ {
+  "group": "Armored Onslaught",
+  "kind": "imperial",
+  "name": "Power to Shields",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "Exhaust this card while an Imperial figure is defending and choose 1 of the following keywords: Pierce, Blast, Cleave, or any Condition keyword. During this attack, the chosen keyword has no effect. Then, you may pay 1◆ to ready this card.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust",
+   "condition": "while an Imperial figure is defending",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Chosen keyword (Pierce, Blast, Cleave, or any Condition keyword) has no effect this attack. May pay 1◆ to ready this card."
+  },
+  "verified": true
+ },
+ {
+  "group": "Armored Onslaught",
+  "kind": "imperial",
+  "name": "Rapid Dominance",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "2◆: Exhaust this card during a Heavy Weapon or Vehicle figure's activation. That figure may perform an additional action. 3◆: Deplete this card to ready 1 Heavy Weapon or Vehicle Deployment card.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Hutt Mercenaries",
+  "kind": "imperial",
+  "name": "Wanted: Dead",
+  "xp": null,
+  "type": "Class Card",
+  "text": "When no heroes have a Bounty token, each hero claims a Bounty token.\nExhaust this card while a hero with a Bounty token is defending to apply +1 ⊠ or +1 ⚡ to the results.\nWhen a hero with a Bounty token is defeated, discard that token.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "a hero with a Bounty token is defending",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Choose +1 damage or +1 surge; Bounty token setup: when no heroes have a Bounty token, each hero claims one; discard the token when that hero is defeated"
+  },
+  "verified": true
+ },
+ {
+  "group": "Hutt Mercenaries",
+  "kind": "imperial",
+  "name": "Scouted",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "Exhaust this card while a hero with a Bounty token is attacking to reroll 1 defense die. If you do, convert all [Dodge] results to [Evade] results.\nWhile choosing open groups for missions, ignore the \"No [Mercenary] figures\" restriction.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust",
+   "condition": "a hero with a Bounty token is attacking",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Reroll 1 defense die; if you do, convert all dodge results to evade results. Also: ignore the \"No Mercenary figures\" open group restriction"
+  },
+  "verified_note": "converts [Dodge] results to [Evade] results (text said Block->Evade, model said block->dodge)",
+  "verified": true
+ },
+ {
+  "group": "Hutt Mercenaries",
+  "kind": "imperial",
+  "name": "Vendetta",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "Exhaust this card while a hero with a Bounty token is defending to reroll 1 attack die.\nWhile attacking, an Imperial figure can spend 1 ⚡ to ready this card.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "a hero with a Bounty token is defending",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡: ready this card"
+   ],
+   "other": "Reroll 1 attack die"
+  },
+  "verified": true
+ },
+ {
+  "group": "Hutt Mercenaries",
+  "kind": "imperial",
+  "name": "Cheap Shot",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card during an Imperial figure's activation and choose an adjacent hostile figure. That figure may test [Str]. If it does not pass, it becomes Weakened.\nIf the Imperial figure is a [Mercenary] figure, apply -1 ⚡ to the test results.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified_note": "test [Ins] should be test [Str] (fist glyph)",
+  "verified": true
+ },
+ {
+  "group": "Hutt Mercenaries",
+  "kind": "imperial",
+  "name": "Savage Motivation",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card during an Imperial figure's activation and choose an adjacent Rebel figure. Roll 1 yellow die. That figure suffers ⊠ equal to the ⊠ results.\nIf the Imperial figure is a [Mercenary] figure, roll 1 blue die instead.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Hutt Mercenaries",
+  "kind": "imperial",
+  "name": "Nowhere to Hide",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "Exhaust this card before an attack targeting a hero with a Bounty token is declared. Figures do not block line of sight for this attack and you add 1 blue die to the attack pool.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "attack targeting a hero with a Bounty token",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "blue"
+    ]
+   },
+   "surges": [],
+   "other": "Figures do not block line of sight for this attack"
+  },
+  "verified": true
+ },
+ {
+  "group": "Hutt Mercenaries",
+  "kind": "imperial",
+  "name": "Nowhere to Run",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "Exhaust this card when an attack targeting a hero who has suffered 3 or more ✦ is declared to apply +1 ⊠ to the attack results.\nIf the attacker is a [Mercenary] figure, apply an additional +1 ⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "attack targeting a hero who has suffered 3 or more strain",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "If the attacker is a Mercenary figure, an additional +1 damage (total +2)"
+  },
+  "verified": true
+ },
+ {
+  "group": "Hutt Mercenaries",
+  "kind": "imperial",
+  "name": "Guild Hunters",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "When you deploy a [Mercenary] figure, that figure becomes Hidden.\nImperial figures gain:\n⚡: +1 ⊠, +2 Accuracy\n⚡: Pierce 2\n⚡: Hide",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡: +1 ⊠, +2 Accuracy",
+    "⚡: Pierce 2",
+    "⚡: Hide"
+   ],
+   "other": "When you deploy a Mercenary figure, it becomes Hidden"
+  },
+  "verified": true
+ },
+ {
+  "group": "Hutt Mercenaries",
+  "kind": "imperial",
+  "name": "Most Wanted",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "Exhaust this card while a hero is defending to apply +2 ⊠ to the attack results. If that hero has a Bounty token, apply an additional +1 ⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "a hero is defending",
+   "bonus": {
+    "damage": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": "If that hero has a Bounty token, an additional +1 damage (total +3)"
+  },
+  "verified": true
+ },
+ {
+  "group": "Imperial Black Ops",
+  "kind": "imperial",
+  "name": "In the Shadows",
+  "xp": null,
+  "type": "Class Card",
+  "text": "Exhaust this card at the start of an activation and choose an Imperial figure. That figure becomes Hidden.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Imperial Black Ops",
+  "kind": "imperial",
+  "name": "Shadow Corps",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "Each Hidden Imperial figure gains:\n⟶: Choose an adjacent friendly figure. That figure becomes Hidden.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Imperial Black Ops",
+  "kind": "imperial",
+  "name": "Stealth",
+  "xp": 1,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment.\n[melee] attacks targeting you require 1 or more Accuracy to not miss.\nExhaust this card at the end of your activation to become Hidden.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "[melee] attacks targeting you",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Melee attacks targeting you require 1 or more Accuracy to not miss; exhaust at end of activation to become Hidden"
+  },
+  "verified_note": "[ranged] should be [melee] (saber glyph)",
+  "verified": true
+ },
+ {
+  "group": "Imperial Black Ops",
+  "kind": "imperial",
+  "name": "Shadow Armor",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card when an attack targeting an Imperial figure is declared to apply -1 ⊠, -1 ⚡, or -2 Accuracy to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust",
+   "condition": "attack targeting an Imperial figure is declared",
+   "bonus": {
+    "damage": -1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Choose one: -1 damage, -1 surge, or -2 Accuracy to the attack results"
+  },
+  "verified": true
+ },
+ {
+  "group": "Imperial Black Ops",
+  "kind": "imperial",
+  "name": "Surprise Attack",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card when an Imperial figure declares an attack. If the target did not have line of sight to the attacker at the start of this activation, apply +2 Accuracy and +1 ⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "target did not have line of sight to the attacker at the start of this activation",
+   "bonus": {
+    "accuracy": 2,
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Imperial Black Ops",
+  "kind": "imperial",
+  "name": "Execution Squad",
+  "xp": 3,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment.\nYou gain:\nOverload: You can trigger the same ⚡ ability up to twice per attack.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Overload: can trigger the same surge ability up to twice per attack"
+  },
+  "verified": true
+ },
+ {
+  "group": "Imperial Black Ops",
+  "kind": "imperial",
+  "name": "Strategic Redeployment",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "Exhaust this card while an Imperial figure is attacking to deploy or reinforce a figure, spending ⚡ results instead of ◆.",
+  "shape": "action",
+  "secondary": "declared",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Imperial Black Ops",
+  "kind": "imperial",
+  "name": "True Shadow",
+  "xp": 4,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment.\nWhen you are deployed, you become Hidden. You cannot discard the Hidden condition.\nDeplete this card while defending to apply +1 [Dodge] to the defense results.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "defense",
+   "cost": "deplete",
+   "condition": "",
+   "bonus": {
+    "dodge": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "When deployed, becomes Hidden; cannot discard the Hidden condition"
+  },
+  "verified_note": "+1 [Block] should be +1 [Dodge] (X in circle); model bonus evade->dodge",
+  "verified": true
+ },
+ {
+  "group": "Imperial Black Ops",
+  "kind": "imperial",
+  "name": "Versatility",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "During its activation, an Imperial figure may discard 1 Beneficial condition to gain 1 Beneficial condition of your choice.\nExhaust this card while an Imperial figure is attacking. The attack gains:\n⚡: Hide",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡: Hide"
+   ],
+   "other": "During its activation, an Imperial figure may discard 1 Beneficial condition to gain 1 Beneficial condition of your choice"
+  },
+  "verified": true
+ },
+ {
+  "group": "Inspiring Leadership",
+  "kind": "imperial",
+  "name": "Field Officer",
+  "xp": null,
+  "type": "Attachment",
+  "text": "Attachment. Guardian, Leader, or Trooper only. Exhaust this card. You gain: ⟶ Order: Choose a friendly figure within 2 spaces. That figure may interrupt to perform a move.",
+  "shape": "action",
+  "secondary": "equipment",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Inspiring Leadership",
+  "kind": "imperial",
+  "name": "Press On",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "At the end of each round, choose 1 regular Imperial group. Each figure in that group recovers 1⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Inspiring Leadership",
+  "kind": "imperial",
+  "name": "Supervisory Agent",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "Deplete this card before activating a group. Deploy 1 regular Imperial Officer from your hand without paying its Deployment cost.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Inspiring Leadership",
+  "kind": "imperial",
+  "name": "Noble Sacrifice",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Deplete this card when an Imperial Leader or Guardian is defeated. Choose up to 5 Imperial figures that had line of sight to that figure. Each of those figures becomes Focused.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Inspiring Leadership",
+  "kind": "imperial",
+  "name": "Strategic Planning",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card and 1 of your Deployment cards before activating a group. Ready another of your Deployment cards of equal or lesser deployment cost. Each figure corresponding to both Deployment cards gains 1 movement point.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Inspiring Leadership",
+  "kind": "imperial",
+  "name": "Field General",
+  "xp": 3,
+  "type": "Attachment",
+  "text": "Attachment. Guardian, Leader, or Trooper only. Exhaust this card. You gain: ⟶ Executive Order: Choose a friendly figure within 2 spaces. That figure may interrupt to perform a move or attack.",
+  "shape": "action",
+  "secondary": "equipment",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Inspiring Leadership",
+  "kind": "imperial",
+  "name": "Imperial Dedication",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "1◆: Exhaust this card when an attack targeting an Imperial figure is declared. Choose an Imperial figure adjacent to the target who could also be the target of that attack. That figure becomes the target of that attack.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified_note": "'⟶:' should be '1◆:' (threat cost, not action)",
+  "verified": true
+ },
+ {
+  "group": "Inspiring Leadership",
+  "kind": "imperial",
+  "name": "Lead By Example",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "After a figure resolves an \"Order,\" it may perform a move. After a figure resolves an \"Executive Order,\" it may perform a move or attack.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Inspiring Leadership",
+  "kind": "imperial",
+  "name": "Optimal Tactics",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "While attacking, other Imperial figures within 3 spaces of a friendly Leader apply +1⊠ to their attack results and may reroll 1 attack die.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "other Imperial figures within 3 spaces of a friendly Leader",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "May reroll 1 attack die."
+  },
+  "verified": true
+ },
+ {
+  "group": "Military Might",
+  "kind": "imperial",
+  "name": "Show of Force",
+  "xp": null,
+  "type": "",
+  "text": "Exhaust this card when an Imperial figure declares an attack. That figure becomes Focused.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Military Might",
+  "kind": "imperial",
+  "name": "Combat Medic",
+  "xp": 1,
+  "type": "",
+  "text": "1◆: Exhaust this card at the end of a Trooper's activation. That figure and each adjacent Imperial figure recovers 2⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Military Might",
+  "kind": "imperial",
+  "name": "Riot Grenades",
+  "xp": 1,
+  "type": "",
+  "text": "Attachment. Trooper only. ⟶: Exhaust this card to choose a space within 3 spaces. Each figure on or adjacent to that space tests [Ins]. Each figure who fails suffers 1✦.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Military Might",
+  "kind": "imperial",
+  "name": "Assault Armor",
+  "xp": 2,
+  "type": "",
+  "text": "Attachment. +2 Health. Exhaust this card while defending to reroll 1 black die.",
+  "shape": "passive",
+  "secondary": "declared",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "+2 Health passive; reroll 1 black die"
+  },
+  "verified": true
+ },
+ {
+  "group": "Military Might",
+  "kind": "imperial",
+  "name": "Endless Ranks",
+  "xp": 2,
+  "type": "",
+  "text": "When you deploy a Trooper, reduce its deployment cost by 1.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Military Might",
+  "kind": "imperial",
+  "name": "Shock Troopers",
+  "xp": 3,
+  "type": "",
+  "text": "While an Imperial Trooper is attacking a figure within 2 spaces, apply +1⚡ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "Trooper attacking a figure within 2 spaces",
+   "bonus": {
+    "surge": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "class-wide, applies to any Trooper group"
+  },
+  "verified": true
+ },
+ {
+  "group": "Military Might",
+  "kind": "imperial",
+  "name": "Sustained Fire",
+  "xp": 3,
+  "type": "",
+  "text": "Exhaust this card after an Imperial figure resolves an attack. That figure performs an additional attack. Then that figure becomes Stunned.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Military Might",
+  "kind": "imperial",
+  "name": "Combat Veterans",
+  "xp": 4,
+  "type": "",
+  "text": "Attachment. Trooper only. While defending, apply +1[Block] to the defense results. While attacking, apply +2 Accuracy and +1⊠ to the attack results.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "both",
+   "cost": "none",
+   "condition": "",
+   "bonus": {
+    "block": 1,
+    "accuracy": 2,
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Military Might",
+  "kind": "imperial",
+  "name": "Shock and Awe",
+  "xp": 4,
+  "type": "",
+  "text": "At the end of each round, place 1 strain token on this card. Then you may spend 1◆ to place an additional strain token on this card. When an Imperial figure declares an attack, you may discard 1 strain token from this card to apply +1⊠ to the attack results. Limit once per attack.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "discard 1 strain token from this card",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "strain-token economy on the card"
+  },
+  "verified": true
+ },
+ {
+  "group": "Nemeses",
+  "kind": "imperial",
+  "name": "Inspirational",
+  "xp": null,
+  "type": "Class Card",
+  "text": "Exhaust this card when a figure declares an attack to choose a villain on the map or reveal a villain in your open or reserved groups. During this attack, non-villain Imperial figures that share a trait with the chosen or revealed villain gain +1 ⚡ and +1 [Evade].",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "both",
+   "cost": "exhaust",
+   "condition": "non-villain Imperial figures that share a trait with the chosen or revealed villain",
+   "bonus": {
+    "surge": 1,
+    "evade": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Choose a villain on the map or reveal one in open/reserved groups; qualifying figures gain +1 surge and +1 [Evade] during this attack"
+  },
+  "verified_note": "Text correct; model said '+1 dodge' but printed glyph is Evade (curved arrows)",
+  "verified": true
+ },
+ {
+  "group": "Nemeses",
+  "kind": "imperial",
+  "name": "Powerful Foes",
+  "xp": null,
+  "type": "Class Card",
+  "text": "You earn 1 [Imperial] and 1 [Mercenary] villain of your choice.\nAfter choosing open groups, add 1 earned villain to your hand of open groups.\n1◆: Deplete this card when you deploy a villain to reduce its deployment cost by the threat level.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Nemeses",
+  "kind": "imperial",
+  "name": "Fearsome Presence",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "Exhaust this card at the end of your activation. Each Rebel figure adjacent to an Imperial figure with a figure cost equal to or greater than the threat level suffers 1 ✦ for each activation token he has.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Nemeses",
+  "kind": "imperial",
+  "name": "Prepare the Ambush",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "When it is your turn to activate a group, you may exhaust this card instead of activating a group.\nAt the start of its activation, each figure in the first Imperial group to activate each round gains 2 movement points.",
+  "shape": "action",
+  "secondary": "passive",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Nemeses",
+  "kind": "imperial",
+  "name": "I'm on the Leader",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card while an Imperial figure is attacking the healthy hero who has suffered the least ⊠. Apply +2 ⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "attacking the healthy hero who has suffered the least damage",
+   "bonus": {
+    "damage": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Nemeses",
+  "kind": "imperial",
+  "name": "Ringleader",
+  "xp": 2,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment. Villain only.\nAt the start of your activation, you gain 2 movement points.\nWhile an adjacent friendly figure is attacking, apply +1 Accuracy and +1 ⊠ to the attack results.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "an adjacent friendly figure is attacking",
+   "bonus": {
+    "accuracy": 1,
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Villain only attachment; gain 2 movement points at the start of your activation"
+  },
+  "verified": true
+ },
+ {
+  "group": "Nemeses",
+  "kind": "imperial",
+  "name": "Leave Them to Me",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "After choosing open groups, add 1 earned villain to your hand of open groups.\nDeplete this card when you deploy a villain to reduce that villain's deployment cost by 5. Exhaust that villain's Deployment card.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Nemeses",
+  "kind": "imperial",
+  "name": "Punishing Force",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "Exhaust this card while an Imperial figure is attacking to reroll any number of attack dice.\nReady this card at the end of each Rebel activation.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Reroll any number of attack dice; readies at the end of each Rebel activation"
+  },
+  "verified": true
+ },
+ {
+  "group": "Nemeses",
+  "kind": "imperial",
+  "name": "Devastating Legion",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "While a Rebel figure within 3 spaces of a villain is defending, you may apply -1 [Block] or -1 [Evade] to the defense results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "a Rebel figure within 3 spaces of a villain is defending",
+   "bonus": {
+    "block": -1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Choose one: -1 [Block] or -1 [Evade] to the defense results"
+  },
+  "verified_note": "Text correct; model 'other' mislabelled glyphs as evade/dodge (printed Block/Evade)",
+  "verified": true
+ },
+ {
+  "group": "Nemeses",
+  "kind": "imperial",
+  "name": "Indomitable",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "Villains cannot receive Harmful conditions.\nExhaust this card when an attack targeting a villain is declared to add 1 black die to that villain's defense pool.\n1◆: Use when an attack targeting a villain is declared to ready this card.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust",
+   "condition": "attack targeting a villain is declared",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "black"
+    ]
+   },
+   "surges": [],
+   "other": "Villains cannot receive Harmful conditions; spend 1 threat when an attack targeting a villain is declared to ready this card"
+  },
+  "verified": true
+ },
+ {
+  "group": "Power of the Dark Side",
+  "kind": "imperial",
+  "name": "Manifest Aggression",
+  "xp": null,
+  "type": "Class Card",
+  "text": "Exhaust this card at the start or end of a round and choose up to 2 Imperial figures. Each of those figures gains 1 [Power token].\nExhaust this card at the start of an Imperial figure's activation. That figure gains 1 [Power token].",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Power of the Dark Side",
+  "kind": "imperial",
+  "name": "Dark Resurgence",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "Deplete this card when an Imperial figure would be defeated. Instead, that figure recovers 3 ⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Power of the Dark Side",
+  "kind": "imperial",
+  "name": "Embrace Fear",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "At the start of the first Rebel activation each round, the activating figure may test [Ins]. If it does not succeed, it suffers 1 ✦.\nExhaust this card at the start of an Imperial figure's activation. That figure gains 1 movement point.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Power of the Dark Side",
+  "kind": "imperial",
+  "name": "Embrace Anger",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card when an Imperial figure declares an attack. That figure suffers 1 ⊠. Then, apply +1 ⊠ to the attack results.\nReady this card at the end of each Imperial group activation.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Attacking figure suffers 1 damage; readies at the end of each Imperial group activation"
+  },
+  "verified": true
+ },
+ {
+  "group": "Power of the Dark Side",
+  "kind": "imperial",
+  "name": "Supernatural Vigor",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "At the start of each round, choose 1 Imperial figure. That figure gains +3 Health until the end of the round.",
+  "shape": "action",
+  "secondary": "passive",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Power of the Dark Side",
+  "kind": "imperial",
+  "name": "Embrace Hate",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "At the start of each Status Phase, choose a Rebel figure. The chosen figure suffers 1 ✦.\nThen, if the chosen figure is in line of sight of an Imperial figure, that Imperial figure also suffers 1 ⊠ and gains 1 [Power token].",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Power of the Dark Side",
+  "kind": "imperial",
+  "name": "Unnatural Abilities",
+  "xp": 3,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment. Non-Creature only.\n+1 [Evade]\n+1 [Block] also if the starting group size is 1.\nAt the end of this group's activation, one figure in this group gains 1 [Power token].",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "",
+   "bonus": {
+    "evade": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+1 [Evade]; also +1 [Block] if the starting group size is 1; at end of group's activation one figure gains 1 Power token; Non-Creature only attachment"
+  },
+  "verified_note": "Text correct; model 'other' had dodge/evade where card prints Evade/Block",
+  "verified": true
+ },
+ {
+  "group": "Power of the Dark Side",
+  "kind": "imperial",
+  "name": "Embrace Suffering",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "Exhaust this card at the end of a round and choose a Rebel figure. Push that figure up to 2 spaces.\n2◆: Exhaust this card at the end of a round and choose a Rebel figure. Perform an attack with that figure.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Power of the Dark Side",
+  "kind": "imperial",
+  "name": "The Power of Passion",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "When an Imperial figure spends a [Power token], apply +1 ⚡ to the attack results (in addition to the +1 ⊠ for spending the token).\nExhaust this card while an Imperial figure is attacking to reroll any number of attack dice.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Reroll any number of attack dice; passive: spending a Power token also gives +1 surge (in addition to its +1 damage)"
+  },
+  "verified": true
+ },
+ {
+  "group": "Precision Training",
+  "kind": "imperial",
+  "name": "Strike Force",
+  "xp": null,
+  "type": "Attachment",
+  "text": "Attachment. While attacking, you may reroll 1 attack die.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "May reroll 1 attack die."
+  },
+  "verified": true
+ },
+ {
+  "group": "Precision Training",
+  "kind": "imperial",
+  "name": "Pinpoint Accuracy",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "Deplete this card while an Imperial figure is attacking to apply -1[Dodge] to the defense results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "deplete",
+   "condition": "while an Imperial figure is attacking",
+   "bonus": {
+    "dodge": -1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Applied to the defender's results."
+  },
+  "verified_note": "Glyph is Dodge (X in circle), not [Block]; model bonus was 'evade'",
+  "verified": true
+ },
+ {
+  "group": "Precision Training",
+  "kind": "imperial",
+  "name": "Sharpshooters",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "While an Imperial figure is attacking, apply +1 Accuracy to the attack results.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {
+    "accuracy": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Precision Training",
+  "kind": "imperial",
+  "name": "Knowledge of Attack",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card while an Imperial figure is defending to apply -1⚡ to the attack results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust",
+   "condition": "while an Imperial figure is defending",
+   "bonus": {
+    "surge": -1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Applied to the attacker's results."
+  },
+  "verified": true
+ },
+ {
+  "group": "Precision Training",
+  "kind": "imperial",
+  "name": "Versatile Attack",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "1◆: Exhaust this card when an Imperial figure declares an attack to add 1 yellow die to the attack pool. The attack gains: ⚡: Weaken. ⚡: +1⊠. ⚡: Pierce 2.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "when an Imperial figure declares an attack; costs 1◆",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "yellow"
+    ]
+   },
+   "surges": [
+    "⚡: Weaken",
+    "⚡: +1⊠",
+    "⚡: Pierce 2"
+   ],
+   "other": "Also costs 1 threat."
+  },
+  "verified": true
+ },
+ {
+  "group": "Precision Training",
+  "kind": "imperial",
+  "name": "Assassins",
+  "xp": 3,
+  "type": "Attachment",
+  "text": "Attachment. Figures do not block line of sight for your attacks. Exhaust this card while attacking to reroll any number of attack dice.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Reroll any number of attack dice. Passive: figures do not block line of sight for your attacks."
+  },
+  "verified": true
+ },
+ {
+  "group": "Precision Training",
+  "kind": "imperial",
+  "name": "Exacting Strike",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "2◆: Exhaust this card when an Imperial figure declares an attack to remove 1 die from the target's defense pool.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "when an Imperial figure declares an attack; costs 2◆",
+   "bonus": {},
+   "dice": {
+    "remove": [
+     "1 defense die"
+    ]
+   },
+   "surges": [],
+   "other": "Also costs 2 threat."
+  },
+  "verified": true
+ },
+ {
+  "group": "Precision Training",
+  "kind": "imperial",
+  "name": "Find the Weakness",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "While an Imperial figure is attacking, apply Pierce 1 to the attack results.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Pierce 1."
+  },
+  "verified": true
+ },
+ {
+  "group": "Precision Training",
+  "kind": "imperial",
+  "name": "Single Minded",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "Exhaust this card when an Imperial figure rerolls an attack die. Instead of rerolling that die, change that die's result to another result of your choice on that die. 1◆: Ready this card.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "when an Imperial figure rerolls an attack die",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Instead of rerolling, set the die to any other face of your choice. 1◆: Ready this card."
+  },
+  "verified": true
+ },
+ {
+  "group": "Reactive Defenses",
+  "kind": "imperial",
+  "name": "Active Surveillance",
+  "xp": null,
+  "type": "Class Card",
+  "text": "At the start of each mission, deploy 88-Z.\nExhaust this card during an optional deployment to deploy 88-Z.\n88-Z activates at the start or end of an Imperial activation.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Reactive Defenses",
+  "kind": "imperial",
+  "name": "Blaster Emplacements",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "At the end of each round, choose a Rebel figure. Then, roll 1 yellow die. That figure suffers ⊠ equal to the ⊠ results.\nExhaust this card when an Imperial figure declares an attack. Apply +2 Accuracy to the results.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {
+    "accuracy": 2
+   },
+   "dice": {},
+   "surges": [],
+   "other": "At the end of each round, choose a Rebel figure and roll 1 yellow die; it suffers damage equal to the damage results"
+  },
+  "verified": true
+ },
+ {
+  "group": "Reactive Defenses",
+  "kind": "imperial",
+  "name": "Shielded",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "88-Z gains ⟶: Place 1 energy shield in an adjacent space.\nA figure can attack these energy shields (Health: 5, Defense: 1 [Block]).\nExhaust this card when an attack targeting an Imperial figure is declared to apply +1 [Block] to the defense results.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust",
+   "condition": "attack targeting an Imperial figure is declared",
+   "bonus": {
+    "block": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "88-Z gains an action to place 1 energy shield (Health 5, Defense 1 [Block]) in an adjacent space"
+  },
+  "verified_note": "Text correct; model 'other' said 'Defense 1 evade' but card prints Block",
+  "verified": true
+ },
+ {
+  "group": "Reactive Defenses",
+  "kind": "imperial",
+  "name": "Mechanical Protocol",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "88-Z gains ⟶: Up to 2 other figures within 2 spaces of you each gain 1 [surge token].\nExhaust this card while a Droid (including 88-Z) is attacking to apply +1 ⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "attacker is a Droid (including 88-Z)",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "88-Z gains an action: up to 2 other figures within 2 spaces each gain 1 surge token"
+  },
+  "verified": true
+ },
+ {
+  "group": "Reactive Defenses",
+  "kind": "imperial",
+  "name": "Remote Activator",
+  "xp": 2,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment.\n⟶: 88-Z may interrupt to perform a move, attack, or special action. Limit once per group activation.\nExhaust this card during your activation for 88-Z to gain 2 movement points.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Reactive Defenses",
+  "kind": "imperial",
+  "name": "Electromagnetic Disruptors",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "While a Rebel figure within 3 spaces of 88-Z is attacking, apply -1 Accuracy to the results.\nExhaust this card after 88-Z activates. Distribute 2 [Block token] or [Evade token] among figures within 3 spaces. A figure can gain a [Block token] only if it rolls a white die or an [Evade token] only if it rolls a black die.",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "a Rebel figure within 3 spaces of 88-Z is attacking",
+   "bonus": {
+    "accuracy": -1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Exhaust after 88-Z activates to distribute 2 block/evade tokens among figures within 3 spaces (block token only to white-die defenders, evade token only to black-die defenders)"
+  },
+  "verified_note": "Tokens printed are Block (triangle) and Evade (curved arrows), not evade/dodge",
+  "verified": true
+ },
+ {
+  "group": "Reactive Defenses",
+  "kind": "imperial",
+  "name": "Infrared Scanners",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "88-Z gains ⟶: Choose a hero in your line of sight. That hero may suffer 1 ✦ to test [Ins]. If it does not succeed, increase ◆ by 1.\nAt the start of each Imperial figure's activation, that figure gains 1 movement point.",
+  "shape": "action",
+  "secondary": "passive",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Reactive Defenses",
+  "kind": "imperial",
+  "name": "Overclock",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "Exhaust this card to ready 88-Z.\n88-Z gains:\n⟶: Gain 1 [Power token].\n88-Z can perform 3 actions each activation.",
+  "shape": "action",
+  "secondary": "passive",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Reactive Defenses",
+  "kind": "imperial",
+  "name": "Targeting Sensors",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "When another Imperial figure within 2 spaces of 88-Z declares an attack, apply +1 ⊠ and +1 Accuracy to the attack results.\nExhaust this card while an Imperial figure is attacking to apply +1 ⊠ to the attack results.",
+  "shape": "declared",
+  "secondary": "passive",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Passive: when another Imperial figure within 2 spaces of 88-Z declares an attack, +1 damage and +1 Accuracy"
+  },
+  "verified": true
+ },
+ {
+  "group": "Subversive Tactics",
+  "kind": "imperial",
+  "name": "Prey Upon Doubt",
+  "xp": null,
+  "type": "Class Card",
+  "text": "Exhaust this card when a Rebel figure declares an attack. The Rebel figure chooses to either suffer 1 ✦, or apply +1 [Evade] to the defense results.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "exhaust",
+   "condition": "a Rebel figure declares an attack",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Rebel attacker chooses: suffer 1 strain, or +1 [Evade] to the defense results"
+  },
+  "verified_note": "Text correct; model said '+1 dodge' but printed glyph is Evade",
+  "verified": true
+ },
+ {
+  "group": "Subversive Tactics",
+  "kind": "imperial",
+  "name": "Savage Weaponry",
+  "xp": 1,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment.\nPierce 1\n⚡: Bleed",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡: Bleed"
+   ],
+   "other": "Pierce 1"
+  },
+  "verified": true
+ },
+ {
+  "group": "Subversive Tactics",
+  "kind": "imperial",
+  "name": "Surgical Strike",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "Exhaust this card after an Imperial figure resolves an attack. The target suffers 1 ✦ and 1 ⊠.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Subversive Tactics",
+  "kind": "imperial",
+  "name": "Exploit Weakness",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card after a hero rests. An Imperial figure can interrupt to perform a move or perform an attack targeting that hero.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Subversive Tactics",
+  "kind": "imperial",
+  "name": "Heavy Pressure",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "Exhaust this card when a hero would suffer ⊠ from an attack. Instead of suffering ⊠, that hero suffers an equal amount of ✦.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Subversive Tactics",
+  "kind": "imperial",
+  "name": "Executioner",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "1◆: Exhaust this card when an Imperial figure declares an attack targeting a hero. Apply +1 ⊠ for each ✦ the hero has suffered, to a maximum of +3 ⊠.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "exhaust",
+   "condition": "attack targeting a hero; also costs 1 threat",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+1 damage per strain the hero has suffered, max +3; costs 1 threat in addition to exhaust"
+  },
+  "verified": true
+ },
+ {
+  "group": "Subversive Tactics",
+  "kind": "imperial",
+  "name": "Weary Target",
+  "xp": 3,
+  "type": "Class Card",
+  "text": "At the end of each round, choose 1 hero who has not suffered ✦ equal to his Endurance. That hero suffers 2 ✦.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Subversive Tactics",
+  "kind": "imperial",
+  "name": "No Quarter",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "When an Imperial figure declares an attack targeting a hero who has suffered 2 or more ✦, apply +1 ⚡ to the attack results.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "attack targeting a hero who has suffered 2 or more strain",
+   "bonus": {
+    "surge": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": ""
+  },
+  "verified": true
+ },
+ {
+  "group": "Subversive Tactics",
+  "kind": "imperial",
+  "name": "Oppression",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "When a hero who has suffered 2 or more ✦ declares an attack, apply +1 [Evade] to the defense results.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "attacking hero has suffered 2 or more strain",
+   "bonus": {
+    "evade": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+1 [Evade] to the defense results"
+  },
+  "verified_note": "Text correct; model said '+1 dodge' but printed glyph is Evade",
+  "verified": true
+ },
+ {
+  "group": "Technological Superiority",
+  "kind": "imperial",
+  "name": "Experimental Arms",
+  "xp": null,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment.\nWhile attacking, you may apply +1 ⚡ to the attack results. Then, after the attack is resolved, you suffer 1 ⊠.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {
+    "surge": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "Optional; if used, you suffer 1 damage after the attack is resolved"
+  },
+  "verified": true
+ },
+ {
+  "group": "Technological Superiority",
+  "kind": "imperial",
+  "name": "Jetpacks",
+  "xp": 1,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment. Trooper only.\nYou gain \"Mobile.\"",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "any",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Gain Mobile; Trooper only attachment"
+  },
+  "verified": true
+ },
+ {
+  "group": "Technological Superiority",
+  "kind": "imperial",
+  "name": "Technical Support",
+  "xp": 1,
+  "type": "Class Card",
+  "text": "Apply +1 Speed to each Imperial Droid. Each of those figures also gains:\n⟶: Choose an adjacent friendly figure. That figure may discard all conditions, become Focused, or recover 3 ⊠.",
+  "shape": "action",
+  "secondary": "passive",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Technological Superiority",
+  "kind": "imperial",
+  "name": "Failsafe",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "2◆: Exhaust this card when an Imperial figure suffers ⊠ equal to its Health. Instead of being defeated, that figure recovers 1 ⊠ and gains 3 movement points.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Technological Superiority",
+  "kind": "imperial",
+  "name": "Hidden Detonators",
+  "xp": 2,
+  "type": "Class Card",
+  "text": "1◆: Exhaust this card at the end of a round to choose 1 Imperial figure. Each figure and object adjacent to the Imperial figure suffers 2 ⊠. Then the Imperial figure is defeated.",
+  "shape": "action",
+  "secondary": "",
+  "model": null,
+  "verified": true
+ },
+ {
+  "group": "Technological Superiority",
+  "kind": "imperial",
+  "name": "Arc Blasters",
+  "xp": 3,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment.\nAfter resolving a [ranged] attack, each figure that suffered 1 or more ⊠ tests [Str]. Each figure that fails is Stunned.\nIf you have the [ranged] attack type, you gain:\n⚡: +1 ⊠, Blast 1 ⊠",
+  "shape": "passive",
+  "secondary": "action",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "you have the [ranged] attack type",
+   "bonus": {},
+   "dice": {},
+   "surges": [
+    "⚡: +1 ⊠, Blast 1 ⊠"
+   ],
+   "other": "After resolving a ranged attack, each figure that suffered 1+ damage tests Strength; failures are Stunned"
+  },
+  "verified_note": "Attribute test is [Str] (fist), not [Ins]",
+  "verified": true
+ },
+ {
+  "group": "Technological Superiority",
+  "kind": "imperial",
+  "name": "Cloaking Device",
+  "xp": 3,
+  "type": "Class Card (Attachment)",
+  "text": "Attachment. Trooper or Droid only.\nAdd 1 white die to your defense pool.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "defense",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {
+    "add": [
+     "white"
+    ]
+   },
+   "surges": [],
+   "other": "Trooper or Droid only attachment"
+  },
+  "verified": true
+ },
+ {
+  "group": "Technological Superiority",
+  "kind": "imperial",
+  "name": "Adaptive Weapons",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "While an Imperial figure is attacking, you may replace 1 die in its attack pool with another attack die of your choice.",
+  "shape": "declared",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "",
+   "bonus": {},
+   "dice": {},
+   "surges": [],
+   "other": "Replace 1 attack die with another attack die of your choice"
+  },
+  "verified": true
+ },
+ {
+  "group": "Technological Superiority",
+  "kind": "imperial",
+  "name": "Superior Augments",
+  "xp": 4,
+  "type": "Class Card",
+  "text": "If a group has 1 or more attachments, apply +1 Speed to each figure in that group.\nWhile a figure in a group with 1 or more attachments is attacking, it applies +1 ⊠ to the attack results.",
+  "shape": "passive",
+  "secondary": "",
+  "model": {
+   "when": "attack",
+   "cost": "none",
+   "condition": "figure's group has 1 or more attachments",
+   "bonus": {
+    "damage": 1
+   },
+   "dice": {},
+   "surges": [],
+   "other": "+1 Speed to each figure in a group with 1 or more attachments"
+  },
+  "verified": true
+ }
+]

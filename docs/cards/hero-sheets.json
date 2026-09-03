@@ -1,0 +1,1482 @@
+[
+ {
+  "id": 4,
+  "name": "Biv Bodhrik",
+  "title": "Vengeful Guerrilla",
+  "healthy": {
+   "health": 13,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Close and Personal",
+     "text": "⟶2✦: Perform a [melee] attack using 1 red and 1 yellow die. Then, perform 1 additional attack with a [ranged] weapon targeting the same figure."
+    },
+    {
+     "name": "Deadly Precision",
+     "text": "1✦: Use while attacking to reroll 1 attack die."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 13,
+   "endurance": 3,
+   "speed": 3,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Close and Personal",
+     "text": "⟶2✦: Perform a [melee] attack using 1 red and 1 yellow die. Then, perform 1 additional attack with a [ranged] weapon targeting the same figure."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/yellow (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 11,
+  "name": "Davith Elso",
+  "title": "Codename: \"Hawkbat\"",
+  "healthy": {
+   "health": 11,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Cloak and Dagger",
+     "text": "While attacking with a [melee] weapon, you gain: ⚡: Hide"
+    },
+    {
+     "name": "Force Speed",
+     "text": "1✦: Use during your activation to move up to 2 spaces. Limit once per activation."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 11,
+   "endurance": 3,
+   "speed": 3,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Cloak and Dagger",
+     "text": "While attacking with a [melee] weapon, you gain: ⚡: Hide"
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/yellow/blue (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 0,
+  "name": "Diala Passil",
+  "title": "Haunted Exile",
+  "healthy": {
+   "health": 12,
+   "endurance": 5,
+   "speed": 4,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Precise Strike",
+     "text": "2✦: Use when you declare an attack with a [melee] weapon. Choose and remove 1 die from the target's defense pool. Limit once per activation."
+    },
+    {
+     "name": "Foresight",
+     "text": "1✦: Use while defending to reroll 1 defense die."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 12,
+   "endurance": 4,
+   "speed": 3,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Foresight",
+     "text": "1✦: Use while defending to reroll 1 defense die."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/blue (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 16,
+  "name": "Drokkatta",
+  "title": "Demolitions Expert",
+  "healthy": {
+   "health": 13,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 2,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 2,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Demolish",
+     "text": "2✦: Choose a space within 3 spaces. Each figure and object on or adjacent to that space suffers 1⊠. Place a rubble token on the chosen space. Limit once per activation."
+    },
+    {
+     "name": "Dispersal Shot",
+     "text": "While attacking with a [ranged] weapon, you may apply -1⊠ and +1⚡ to the attack results."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 13,
+   "endurance": 3,
+   "speed": 3,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Demolish",
+     "text": "2✦: Choose a space within 3 spaces. Each figure and object on or adjacent to that space suffers 1⊠. Place a rubble token on the chosen space. Limit once per activation."
+    }
+   ]
+  },
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 1,
+  "name": "Fenn Signis",
+  "title": "Hardened Veteran",
+  "healthy": {
+   "health": 12,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Havoc Shot",
+     "text": "1✦: Use while attacking with a [ranged] weapon. This attack gains Blast 1⊠."
+    },
+    {
+     "name": "Lone Wolf",
+     "text": "At the end of your activation, if there are no friendly figures adjacent to you, recover 1✦."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 12,
+   "endurance": 3,
+   "speed": 3,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Havoc Shot",
+     "text": "1✦: Use while attacking with a [ranged] weapon. This attack gains Blast 1⊠."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 2,
+  "name": "Gaarkhan",
+  "title": "Fierce Warrior",
+  "healthy": {
+   "health": 14,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Charge",
+     "text": "⟶2✦: Move a number of spaces up to your Speed. Then, you may perform an attack with a [melee] weapon."
+    },
+    {
+     "name": "Rage",
+     "text": "After an attack targeting you is resolved, if you suffered 3 or more ⊠, you become Focused."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 14,
+   "endurance": 3,
+   "speed": 3,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Charge",
+     "text": "⟶2✦: Move a number of spaces up to your Speed. Then, you may perform an attack with a [melee] weapon."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/yellow (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 3,
+  "name": "Gideon Argus",
+  "title": "Valiant Commander",
+  "healthy": {
+   "health": 10,
+   "endurance": 5,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Command",
+     "text": "⟶2✦: Choose another friendly figure within 3 spaces. That figure may interrupt to either perform 1 move or 1 attack."
+    },
+    {
+     "name": "Disabling Shot",
+     "text": "While attacking with a [ranged] weapon, you gain: ⚡: Stun"
+    }
+   ]
+  },
+  "wounded": {
+   "health": 10,
+   "endurance": 4,
+   "speed": 3,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Command",
+     "text": "⟶2✦: Choose another friendly figure within 3 spaces. That figure may interrupt to either perform 1 move or 1 attack."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/yellow (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 17,
+  "name": "Jarrod Kelvin",
+  "title": "with \"Jax\"",
+  "healthy": {
+   "health": 10,
+   "endurance": 5,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "abilities": [
+    {
+     "name": "Droid Mastery",
+     "text": "2✦: Use during or immediately before your activation, if J4X-7 is not in play, to put J4X-7 into play in an adjacent space. J4X-7 activates at the start or end of your activation."
+    },
+    {
+     "name": "Parry",
+     "text": "While defending, you may exhaust 1 of your [melee] weapons to apply +1[Block] or +1[Evade] to the defense results."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 10,
+   "endurance": 4,
+   "speed": 3,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Droid Mastery",
+     "text": "2✦: Use during or immediately before your activation, if J4X-7 is not in play, to put J4X-7 into play in an adjacent space. J4X-7 activates at the start or end of your activation."
+    }
+   ]
+  },
+  "notes": "Hero comes with the companion J4X-7 (\"Jax\").",
+  "verified": true
+ },
+ {
+  "id": 6,
+  "name": "Jyn Odan",
+  "title": "Sly Smuggler",
+  "healthy": {
+   "health": 10,
+   "endurance": 4,
+   "speed": 5,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "abilities": [
+    {
+     "name": "Quick Draw",
+     "text": "2✦: Use at the start of a hostile figure's activation. Interrupt to perform an attack with a Pistol targeting that figure. Limit once per round (twice if you have 2 activation tokens)."
+    },
+    {
+     "name": "Opportunist",
+     "text": "After you resolve an attack, if the target suffered 1 or more ⊠, move 1 space."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 10,
+   "endurance": 3,
+   "speed": 4,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Quick Draw",
+     "text": "2✦: Use at the start of a hostile figure's activation. Interrupt to perform an attack with a Pistol targeting that figure. Limit once per round (twice if you have 2 activation tokens)."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/yellow (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 18,
+  "name": "Ko-Tun Feralo",
+  "title": "Rebel Quartermaster",
+  "healthy": {
+   "health": 12,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Arms Distribution",
+     "text": "1✦: Use at the start or end of your activation. You gain 1[damage token] or 1[block token]. Then, another friendly figure within 3 spaces gains 1[damage token] or 1[block token]. Limit once per activation."
+    },
+    {
+     "name": "Stockpile",
+     "text": "When a friendly figure within 3 spaces interacts with a crate, that figure may draw 5 Supply cards and choose 1 non-VALUABLE card to keep, shuffling the others back into the deck."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 12,
+   "endurance": 3,
+   "speed": 3,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Arms Distribution",
+     "text": "1✦: Use at the start or end of your activation. You gain 1[damage token] or 1[block token]. Then, another friendly figure within 3 spaces gains 1[damage token] or 1[block token]. Limit once per activation."
+    }
+   ]
+  },
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 8,
+  "name": "Loku Kanoloa",
+  "title": "Deadly Marksman",
+  "healthy": {
+   "health": 10,
+   "endurance": 5,
+   "speed": 5,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Set Your Sights",
+     "text": "2✦: Use at the start or end of your activation to place 1 recon token on a hostile figure in your line of sight. While you or a friendly figure is attacking a figure with a recon token, apply +1⊠ to the attack results."
+    },
+    {
+     "name": "Clear-Minded",
+     "text": "While attacking, apply +2 Accuracy to the attack results."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 10,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Set Your Sights",
+     "text": "2✦: Use at the start or end of your activation to place 1 recon token on a hostile figure in your line of sight. While you or a friendly figure is attacking a figure with a recon token, apply +1⊠ to the attack results."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/yellow/blue (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 9,
+  "name": "MHD-19",
+  "title": "Loyal Medic",
+  "healthy": {
+   "health": 12,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "abilities": [
+    {
+     "name": "Medical Loadout",
+     "text": "⟶1✦: Search the Supply deck for a Medical card and claim that card. Then, shuffle the supply deck."
+    },
+    {
+     "name": "Mechanical",
+     "text": "You cannot be affected by abilities on Medical cards."
+    },
+    {
+     "name": "Ready for Service",
+     "text": "At the end of your activation, if you did not perform an attack, you become Focused."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 12,
+   "endurance": 3,
+   "speed": 3,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Medical Loadout",
+     "text": "⟶1✦: Search the Supply deck for a Medical card and claim that card. Then, shuffle the supply deck."
+    },
+    {
+     "name": "Mechanical",
+     "text": "You cannot be affected by abilities on Medical cards."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/yellow/blue (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 7,
+  "name": "Mak Eshka'rey",
+  "title": "Bold Renegade",
+  "healthy": {
+   "health": 10,
+   "endurance": 5,
+   "speed": 4,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "abilities": [
+    {
+     "name": "Ambush",
+     "text": "1✦: Use when you declare an attack targeting a figure that does not have line of sight to you. This attack gains Pierce 2."
+    },
+    {
+     "name": "Covert",
+     "text": "Hostile figures 4 or more spaces away from you do not have line of sight to you. You do not block line of sight for those figures."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 10,
+   "endurance": 4,
+   "speed": 3,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Ambush",
+     "text": "1✦: Use when you declare an attack targeting a figure that does not have line of sight to you. This attack gains Pierce 2."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/yellow (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 12,
+  "name": "Murne Rin",
+  "title": "Master of Intelligence",
+  "healthy": {
+   "health": 12,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "False Orders",
+     "text": "⟶1✦: Choose a hostile figure with a figure cost equal to or less than the threat level within 3 spaces. Perform an attack with that figure."
+    },
+    {
+     "name": "Figurehead",
+     "text": "After an attack targeting you resolves, if you suffered 1 or more ⊠, choose another hero within 3 spaces that has suffered at least 1✦. That hero recovers 1✦."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 12,
+   "endurance": 3,
+   "speed": 3,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "False Orders",
+     "text": "⟶1✦: Choose a hostile figure with a figure cost equal to or less than the threat level within 3 spaces. Perform an attack with that figure."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/yellow/blue (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 13,
+  "name": "Onar Koma",
+  "title": "Furious Bodyguard",
+  "healthy": {
+   "health": 20,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 0,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 2
+   },
+   "insight": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 1
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Rush",
+     "text": "When you enter a space adjacent to a small figure, you may push that figure up to 1 space. Limit once per activation."
+    },
+    {
+     "name": "Power Through",
+     "text": "You cannot gain Harmful conditions. When you rest, you recover 2 additional ⊠. You can rest only once per activation."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 20,
+   "endurance": 3,
+   "speed": 3,
+   "defense": {
+    "black": 0,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   },
+   "insight": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 2,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Rush",
+     "text": "When you enter a space adjacent to a small figure, you may push that figure up to 1 space. Limit once per activation."
+    },
+    {
+     "name": "Power Through",
+     "text": "When you rest, you recover 2 additional ⊠."
+    }
+   ]
+  },
+  "notes": "Defense box prints a dash (no defense dice). Wounded side prints red squares in the attribute pools in place of some healthy-side colours (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 5,
+  "name": "Saska Teft",
+  "title": "Brilliant Engineer",
+  "healthy": {
+   "health": 11,
+   "endurance": 4,
+   "speed": 5,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 1
+   },
+   "abilities": [
+    {
+     "name": "Battle Technician",
+     "text": "1✦: Use during your activation for you or an adjacent friendly figure to claim 1 device token. Limit once per activation."
+    },
+    {
+     "name": "Practical Solutions",
+     "text": "When a figure declares an attack, it may discard 1 device token to apply +1⚡ to the attack results. While performing an attribute test, a figure may discard 1 device token to reroll 1 die."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 11,
+   "endurance": 3,
+   "speed": 4,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Battle Technician",
+     "text": "1✦: Use during your activation for you or an adjacent friendly figure to claim 1 device token. Limit once per activation."
+    },
+    {
+     "name": "Practical Solutions",
+     "text": "When a figure declares an attack, it may discard 1 device token to apply +1⚡ to the attack results."
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green/yellow (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 14,
+  "name": "Shyla Varad",
+  "title": "Daughter of Mandalore",
+  "healthy": {
+   "health": 12,
+   "endurance": 4,
+   "speed": 5,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 2,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 0,
+    "green": 2,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 1
+   },
+   "abilities": [
+    {
+     "name": "Mandalorian Whip",
+     "text": "⟶1✦: Choose a small, hostile figure within 3 spaces and line of sight. Push that figure up to 3 spaces to a space adjacent to you. Then, perform an attack with a [melee] weapon targeting that figure."
+    },
+    {
+     "name": "Respite",
+     "text": "At the end of your activation, if you are not adjacent to any hostile figures, recover 1✦."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 12,
+   "endurance": 3,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 2,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Mandalorian Whip",
+     "text": "⟶1✦: Choose a small, hostile figure within 3 spaces and line of sight. Push that figure up to 3 spaces to a space adjacent to you. Then, perform an attack with a [melee] weapon targeting that figure."
+    }
+   ]
+  },
+  "notes": "",
+  "verified": true
+ },
+ {
+  "id": 10,
+  "name": "Verena Talos",
+  "title": "Cunning Operative",
+  "healthy": {
+   "health": 12,
+   "endurance": 5,
+   "speed": 4,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 0,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Close Quarters",
+     "text": "2✦: Use when an adjacent hostile figure is defeated to interrupt to perform an attack using that figure's attack type and attack pool. The attack gains: ⚡: +2 Accuracy, +1⊠"
+    },
+    {
+     "name": "Duck and Weave",
+     "text": "While defending, if you are adjacent to a hostile figure other than the attacker, apply +1[Evade] to the defense results."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 12,
+   "endurance": 4,
+   "speed": 3,
+   "defense": {
+    "black": 1,
+    "white": 0
+   },
+   "strength": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Close Quarters",
+     "text": "2✦: Use when an adjacent hostile figure is defeated to interrupt to perform an attack using that figure's attack type and attack pool. The attack gains: ⚡: +2 Accuracy, +1⊠"
+    }
+   ]
+  },
+  "notes": "Wounded side prints red squares in the attribute pools where the healthy side prints green (transcribed as printed).",
+  "verified": true
+ },
+ {
+  "id": 15,
+  "name": "Vinto Hreeda",
+  "title": "Reckless Vigilante",
+  "healthy": {
+   "health": 11,
+   "endurance": 4,
+   "speed": 4,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 0,
+    "blue": 1,
+    "green": 2,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   },
+   "abilities": [
+    {
+     "name": "Boltslinger",
+     "text": "After you resolve an attack with a [ranged] weapon, if the target suffered ⊠, you may choose another hostile figure in your line of sight and within 3 spaces of you. That figure suffers 1⊠."
+    },
+    {
+     "name": "Thread the Needle",
+     "text": "1✦: Use during your activation. Figures do not block your line of sight during this activation."
+    }
+   ]
+  },
+  "wounded": {
+   "health": 11,
+   "endurance": 3,
+   "speed": 3,
+   "defense": {
+    "black": 0,
+    "white": 1
+   },
+   "strength": {
+    "red": 1,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "insight": {
+    "red": 1,
+    "blue": 1,
+    "green": 1,
+    "yellow": 0
+   },
+   "tech": {
+    "red": 2,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   },
+   "abilities": [
+    {
+     "name": "Boltslinger",
+     "text": "After you resolve an attack with a [ranged] weapon, if the target suffered ⊠, you may choose another hostile figure in your line of sight and within 3 spaces of you. That figure suffers 1⊠."
+    }
+   ]
+  },
+  "notes": "",
+  "verified_note": "Wounded Insight pool is blue+red+green (1 blue, 1 red, 1 green), not 1 blue + 2 green.",
+  "verified": true
+ }
+]

@@ -1,0 +1,26 @@
+{
+  "name": "swia",
+  "version": "0.1.8.0",
+  "description": "Star Wars: Imperial Assault system for Foundry VTT",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build:packs": "node scripts/build/build-packs.mjs --compile",
+    "build:packs:source": "node scripts/build/build-packs.mjs",
+    "survey": "python3 scripts/build/class-card-survey.py && python3 scripts/build/card-survey.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/casegib/swia.git"
+  },
+  "bugs": {
+    "url": "https://github.com/casegib/swia/issues"
+  },
+  "homepage": "https://github.com/casegib/swia#readme",
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "^3.0.4"
+  },
+  "private": true,
+  "type": "module"
+}

@@ -35,6 +35,41 @@ Unofficial system scaffold targeting Foundry VTT v13.351. Focus is on actor shee
 - Dice So Nice! integration for 3D dice, plus a startup warning if the legacy external `swia-dice` module is still active.
 - Foundry v13+ ApplicationV2 sheets with TypeDataModel schemas.
 
+## Compendiums
+
+The system ships six compendium packs, generated from transcribed card data (all 19 heroes, 172 hero class cards, 100 imperial class cards, 123 deployment groups, the full item deck, supply and reward cards, 114 agenda cards, companions and form cards):
+
+| Pack | Contents |
+|---|---|
+| Heroes | 19 hero actors (both sides, hero abilities, attribute pools) with their starting class-deck equipment embedded; 7 companions |
+| Deployment Groups | Villain (Imperial, Mercenary) and ally (Rebel) actors with dice, abilities and surge abilities, in Regular / Elite folders |
+| Class Cards (Hero) | One folder per hero; equipment cards are real weapon / armor / mod items |
+| Class Cards (Imperial) | One folder per imperial class |
+| Items, Supply & Rewards | Item deck by tier, supply cards, reward cards, form cards |
+| Agenda Cards | One folder per agenda deck; mission-spawning agendas are flagged `mission` |
+
+Drag from the compendium onto a hero sheet or into the Actors directory. Card text uses the system's inline icons; surge abilities on weapons are structured so they appear as spend buttons on roll cards.
+
+### Card art
+
+Card scans are **not** in this repository (they are © LFL/FFG). Every compendium document points at `assets/cards/<family>/<card>.png`. To see the art:
+
+1. Download `lvisintini/imperial-assault-data` from GitHub (MIT-licensed metadata; card images).
+2. Copy the folders under its `images/large/` — `heroes`, `hero-class-cards`, `imperial-class-cards`, `deployment-cards`, `upgrade-cards`, `supply-cards`, `reward-cards`, `agenda-cards`, `companion-cards`, `form-cards` — into this system's `assets/cards/`.
+
+Without the art, sheets show their placeholder and everything else works.
+
+### Regenerating the packs
+
+Card data lives in `docs/class-cards.json` and `docs/cards/*.json` (transcribed from scans, verified card by card). Fix a card there, then:
+
+```
+npm install
+npm run build:packs
+```
+
+`scripts/build/build-packs.mjs` writes `packs/_source/<pack>/*.json` and compiles them with the Foundry CLI into `packs/<pack>`. Document ids are deterministic, so a re-run updates cards in place. `npm run survey` regenerates the two survey documents in `docs/`.
+
 ## File Map
 - `system.json` – system manifest; update `manifest`, `download`, `url` when publishing. Document types declared under `documentTypes`.
 - `scripts/data/actors.js` – TypeDataModel schemas for actor types: `hero`, `villain`, `ally`, `character`.

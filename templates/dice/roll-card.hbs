@@ -38,29 +38,29 @@
 
   {{#if isTest}}
   <div class="roll-card-result">
-    <span class="roll-card-net">{{localize "SWIA.Roll.TestSurges"}}: {{usableSurge}}</span>
+    <span class="roll-card-net" title="{{localize 'SWIA.Roll.TestSurges'}}">{{localize "SWIA.Roll.TestSurges"}}: {{{swiaGlyph "surge"}}} {{usableSurge}}</span>
   </div>
   {{else}}
   <div class="roll-card-totals">
     {{#if isAttack}}
-    <span class="total damage" title="{{localize 'SWIA.Dice.Damage'}}">{{localize "SWIA.Dice.Damage"}} {{totalDamage}}</span>
-    <span class="total surge" title="{{localize 'SWIA.Roll.SurgesAvailable'}}">{{localize "SWIA.Dice.Surge"}} {{usableSurge}}</span>
-    <span class="total accuracy" title="{{localize 'SWIA.Roll.TotalAccuracy'}}">{{localize "SWIA.Dice.Accuracy"}} {{totalAccuracy}}</span>
+    <span class="total damage" title="{{localize 'SWIA.Dice.Damage'}}">{{{swiaGlyph "damage"}}} {{totalDamage}}</span>
+    <span class="total surge" title="{{localize 'SWIA.Roll.SurgesAvailable'}}">{{{swiaGlyph "surge"}}} {{usableSurge}}</span>
+    <span class="total accuracy" title="{{localize 'SWIA.Roll.TotalAccuracy'}}">{{{swiaGlyph "accuracy"}}} {{totalAccuracy}}</span>
     {{/if}}
     {{#if showDefenseTotals}}
-    <span class="total block" title="{{localize 'SWIA.Dice.Block'}}{{#if armorBlock}} ({{localize 'SWIA.Roll.FromArmor' count=armorBlock}}){{/if}}">{{localize "SWIA.Dice.Block"}} {{#if pierceTotal}}{{effectiveBlock}} ({{block}}{{#if bonusBlock}}+{{bonusBlock}}{{/if}}&minus;{{pierceTotal}}){{else}}{{effectiveBlock}}{{#if bonusBlock}} ({{block}}+{{bonusBlock}}){{/if}}{{/if}}</span>
-    {{#if totalEvade}}<span class="total evade" title="{{localize 'SWIA.Dice.Evade'}}{{#if armorEvade}} ({{localize 'SWIA.Roll.FromArmor' count=armorEvade}}){{/if}}">{{localize "SWIA.Dice.Evade"}} {{totalEvade}}{{#if bonusEvade}} ({{evade}}+{{bonusEvade}}){{/if}}</span>{{/if}}
-    {{#if dodged}}<span class="total dodge">{{localize "SWIA.Dice.Dodge"}}!</span>{{/if}}
+    <span class="total block" title="{{localize 'SWIA.Dice.Block'}}{{#if armorBlock}} ({{localize 'SWIA.Roll.FromArmor' count=armorBlock}}){{/if}}">{{{swiaGlyph "block"}}} {{#if pierceTotal}}{{effectiveBlock}} ({{block}}{{#if bonusBlock}}+{{bonusBlock}}{{/if}}&minus;{{pierceTotal}}){{else}}{{effectiveBlock}}{{#if bonusBlock}} ({{block}}+{{bonusBlock}}){{/if}}{{/if}}</span>
+    {{#if totalEvade}}<span class="total evade" title="{{localize 'SWIA.Dice.Evade'}}{{#if armorEvade}} ({{localize 'SWIA.Roll.FromArmor' count=armorEvade}}){{/if}}">{{{swiaGlyph "evade"}}} {{totalEvade}}{{#if bonusEvade}} ({{evade}}+{{bonusEvade}}){{/if}}</span>{{/if}}
+    {{#if dodged}}<span class="total dodge" title="{{localize 'SWIA.Dice.Dodge'}}">{{{swiaGlyph "dodge"}}} {{localize "SWIA.Dice.Dodge"}}!</span>{{/if}}
     {{/if}}
   </div>
 
   {{#if hasDeclaredTokens}}
   <p class="roll-card-keyword roll-card-declared-tokens">
     {{localize "SWIA.Combat.DeclaredTokens"}}:
-    {{#if tokenDamage}}+{{tokenDamage}} {{localize "SWIA.Dice.Damage"}}{{/if}}
-    {{#if tokenSurge}} +{{tokenSurge}} {{localize "SWIA.Dice.Surge"}}{{/if}}
-    {{#if tokenBlock}} +{{tokenBlock}} {{localize "SWIA.Dice.Block"}}{{/if}}
-    {{#if tokenEvade}} +{{tokenEvade}} {{localize "SWIA.Dice.Evade"}}{{/if}}
+    {{#if tokenDamage}}+{{tokenDamage}} {{{swiaGlyph "damage"}}}{{/if}}
+    {{#if tokenSurge}} +{{tokenSurge}} {{{swiaGlyph "surge"}}}{{/if}}
+    {{#if tokenBlock}} +{{tokenBlock}} {{{swiaGlyph "block"}}}{{/if}}
+    {{#if tokenEvade}} +{{tokenEvade}} {{{swiaGlyph "evade"}}}{{/if}}
   </p>
   {{/if}}
   {{#if isAttack}}

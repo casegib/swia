@@ -1,0 +1,16 @@
+# Local tooling
+node_modules/
+.claude/
+
+# Card art is not committed (FFG/LFL). Populate assets/cards/ from the
+# lvisintini/imperial-assault-data images — see README "Card art".
+assets/cards/*
+!assets/cards/.gitkeep
+
+# Working reviews and plans (kept local by choice)
+CODE_REVIEW.md
+custom-attributes-plan.md
+hero-builder-build-checklist.md
+hero-builder-plans.md
+SECURITY_REVIEW.md
+REVIEW_2026-08-25.md

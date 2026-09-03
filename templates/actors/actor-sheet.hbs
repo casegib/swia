@@ -436,9 +436,12 @@
       <button type="button" class="add-row-btn" data-action="addHeroAbility" data-field="{{#if isWounded}}woundedHeroAbilities{{else}}heroAbilities{{/if}}" title="{{localize 'SWIA.Hero.AddHeroAbility'}}"><i class="fas fa-plus"></i></button>
     </div>
     {{else}}
-    <div class="list-section-header">
+    <details class="hero-ability-disclosure" {{#if abilitiesOpen}}open{{/if}}>
+    <summary class="list-section-header">
       <span class="list-section-title">{{localize "SWIA.Hero.HeroAbility"}}</span>
-    </div>
+      <span class="disclosure-count">{{heroAbilityCount}}</span>
+      <i class="fas fa-chevron-down disclosure-chevron"></i>
+    </summary>
     {{/if}}
     <div class="collapsible-content">
     {{#if isWounded}}
@@ -495,6 +498,7 @@
       {{/if}}
     {{/if}}
     </div>
+    {{#unless editMode}}</details>{{/unless}}
   </div>
   {{/if}}
 
@@ -909,14 +913,14 @@
       {{#if weapons.length}}
       <ol class="item-list weapon-list">
         {{#each weapons}}
-        <li class="item-entry weapon-entry" data-item-id="{{this.id}}">
+        <li class="item-entry weapon-entry {{#if this.expanded}}expanded{{/if}}" data-item-id="{{this.id}}">
           <div class="item-image swia-card-preview-trigger" data-action="openItem" tabindex="0">
             <img src="{{this.img}}" alt="{{this.name}}" title="{{localize 'SWIA.Inventory.ClickToOpen'}}" />
           </div>
-          <div class="item-info weapon-info" data-action="openItem">
-            <span class="item-name">{{this.name}}</span>
-            <div class="weapon-meta" data-action="openItem">
-              <div class="weapon-dice-inline">
+          <div class="item-info weapon-info">
+            <span class="item-name" data-action="openItem">{{this.name}}</span>
+            <div class="weapon-meta">
+              <div class="weapon-dice-inline" data-action="openItem">
                 <img class="weapon-range-icon"
                      src="systems/swia/icons/{{#if (eq this.system.range 'melee')}}Melee.png{{else}}Ranged.png{{/if}}"
                      alt="{{this.system.range}}" />
@@ -928,28 +932,13 @@
                 {{#each this.modBlueDice}}<span class="dice-block blue from-mod" title="{{localize 'SWIA.Inventory.FromMod'}}"></span>{{/each}}
                 {{#each this.modGreenDice}}<span class="dice-block green from-mod" title="{{localize 'SWIA.Inventory.FromMod'}}"></span>{{/each}}
                 {{#each this.modYellowDice}}<span class="dice-block yellow from-mod" title="{{localize 'SWIA.Inventory.FromMod'}}"></span>{{/each}}
-                {{#each this.modBonusTags}}<span class="mod-bonus-tag">{{this}}</span>{{/each}}
-                {{#if this.showSlots}}<span class="mod-slots {{#if this.slotsFull}}full{{/if}}">{{localize "SWIA.Inventory.ModSlots" used=this.slotsUsed total=this.slotsTotal}}</span>{{/if}}
-                {{#if this.poolNote}}<span class="weapon-pool-note">{{this.poolNote}}</span>{{/if}}
               </div>
-              <div class="weapon-abilities-inline">
-                {{#each this.enrichedAbilities}}
-                {{#if this.enrichedDescription}}<span class="weapon-ability-tag">{{{this.enrichedDescription}}}</span>{{/if}}
-                {{/each}}
-              </div>
+              {{!-- Collapsed-line chips: surge count, slots, pool note, mod bonuses. Details (surge text, abilities, mods) open below. --}}
+              {{#if this.surgeLines.length}}<button type="button" class="weapon-surge-chip" data-action="toggleItemDetails" title="{{localize 'SWIA.Inventory.SurgeChipHint' count=this.surgeLines.length}}">{{{swiaGlyph "surge"}}} {{this.surgeLines.length}}</button>{{/if}}
+              {{#if this.showSlots}}<span class="mod-slots {{#if this.slotsFull}}full{{/if}}">{{localize "SWIA.Inventory.ModSlots" used=this.slotsUsed total=this.slotsTotal}}</span>{{/if}}
+              {{#each this.modBonusTags}}<span class="mod-bonus-tag">{{this}}</span>{{/each}}
+              {{#if this.poolNote}}<span class="weapon-pool-note">{{this.poolNote}}</span>{{/if}}
             </div>
-            {{#if this.surgeLines.length}}
-            <div class="weapon-surge-lines">
-              {{#each this.surgeLines}}
-              <div class="weapon-surge-line">
-                <span class="weapon-surge-cost">{{this.cost}}<img class="surge-cost-icon" src="systems/swia/icons/Surge.png" alt="surge" /></span>
-                <span class="weapon-surge-label">{{{this.label}}}</span>
-                {{#if this.exhausts}}<span class="surge-exhaust-flag" title="{{localize 'SWIA.Combat.ExhaustsSource'}}">&#9889;</span>{{/if}}
-                {{#if this.source}}<span class="weapon-surge-source">{{this.source}}</span>{{/if}}
-              </div>
-              {{/each}}
-            </div>
-            {{/if}}
           </div>
           <div class="item-controls">
             <button type="button" class="item-state-btn {{this.system.cardState}}" data-action="cycleItemState" title="{{this.system.cardState}}">
@@ -963,25 +952,53 @@
               <i class="fas fa-trash"></i>
             </button>
             {{/if}}
+            {{#if this.hasDetails}}
+            <button type="button" class="item-expand-btn" data-action="toggleItemDetails" aria-expanded="{{#if this.expanded}}true{{else}}false{{/if}}" title="{{localize 'SWIA.Inventory.ToggleDetails'}}">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            {{/if}}
           </div>
-          {{#if this.attachedMods.length}}
-          <div class="weapon-mods">
-            {{#each this.attachedMods}}
-            <div class="weapon-mod-row" data-mod-id="{{this.id}}" data-item-id="{{this.id}}">
-              <span class="mod-lead">&#8627;</span>
-              <span class="mod-name" data-action="openItem">{{this.name}}</span>
-              <span class="mod-dice">
-                {{#each this.bonusRedDice}}<span class="dice-block red"></span>{{/each}}
-                {{#each this.bonusBlueDice}}<span class="dice-block blue"></span>{{/each}}
-                {{#each this.bonusGreenDice}}<span class="dice-block green"></span>{{/each}}
-                {{#each this.bonusYellowDice}}<span class="dice-block yellow"></span>{{/each}}
-              </span>
-              <span class="mod-spacer"></span>
-              <button type="button" class="item-state-btn {{this.cardState}}" data-action="cycleItemState" title="{{this.cardState}}">{{this.cardState}}</button>
-              <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}"><i class="fas fa-comment"></i></button>
-              <button type="button" class="mod-detach-btn" data-action="detachMod" title="{{localize 'SWIA.Inventory.Detach'}}">&times;</button>
+          {{#if this.hasDetails}}
+          <div class="weapon-details" {{#unless this.expanded}}hidden{{/unless}}>
+            {{#if this.enrichedAbilities.length}}
+            <div class="weapon-abilities-inline">
+              {{#each this.enrichedAbilities}}
+              {{#if this.enrichedDescription}}<span class="weapon-ability-tag">{{{this.enrichedDescription}}}</span>{{/if}}
+              {{/each}}
             </div>
-            {{/each}}
+            {{/if}}
+            {{#if this.surgeLines.length}}
+            <div class="weapon-surge-lines">
+              {{#each this.surgeLines}}
+              <div class="weapon-surge-line">
+                <span class="weapon-surge-cost">{{this.cost}}<img class="surge-cost-icon" src="systems/swia/icons/Surge.png" alt="surge" /></span>
+                <span class="weapon-surge-label">{{{this.label}}}</span>
+                {{#if this.exhausts}}<span class="surge-exhaust-flag" title="{{localize 'SWIA.Combat.ExhaustsSource'}}">&#9889;</span>{{/if}}
+                {{#if this.source}}<span class="weapon-surge-source">{{this.source}}</span>{{/if}}
+              </div>
+              {{/each}}
+            </div>
+            {{/if}}
+            {{#if this.attachedMods.length}}
+            <div class="weapon-mods">
+              {{#each this.attachedMods}}
+              <div class="weapon-mod-row" data-mod-id="{{this.id}}" data-item-id="{{this.id}}">
+                <span class="mod-lead">&#8627;</span>
+                <span class="mod-name" data-action="openItem">{{this.name}}</span>
+                <span class="mod-dice">
+                  {{#each this.bonusRedDice}}<span class="dice-block red"></span>{{/each}}
+                  {{#each this.bonusBlueDice}}<span class="dice-block blue"></span>{{/each}}
+                  {{#each this.bonusGreenDice}}<span class="dice-block green"></span>{{/each}}
+                  {{#each this.bonusYellowDice}}<span class="dice-block yellow"></span>{{/each}}
+                </span>
+                <span class="mod-spacer"></span>
+                <button type="button" class="item-state-btn {{this.cardState}}" data-action="cycleItemState" title="{{this.cardState}}">{{this.cardState}}</button>
+                <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}"><i class="fas fa-comment"></i></button>
+                <button type="button" class="mod-detach-btn" data-action="detachMod" title="{{localize 'SWIA.Inventory.Detach'}}">&times;</button>
+              </div>
+              {{/each}}
+            </div>
+            {{/if}}
           </div>
           {{/if}}
         </li>

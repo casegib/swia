@@ -1,0 +1,259 @@
+[
+ {
+  "id": 5,
+  "name": "88-Z",
+  "traits": [
+   "Droid"
+  ],
+  "health": 4,
+  "speed": 3,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "Pierce 1",
+   "+2 Accuracy",
+   "+1 [Dodge]",
+   "Mobile"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+2 Accuracy"
+   },
+   {
+    "cost": 1,
+    "text": "Harass: If this attack does not miss, the target suffers 1✦"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Remote",
+    "text": "You are not an Imperial figure for mission rules."
+   }
+  ],
+  "notes": "Unique (dot before name). Defense box shows a dash. Accuracy printed abbreviated as 'Ac.'. The +1 keyword icon matches the legend's Dodge glyph.",
+  "verified": true
+ },
+ {
+  "id": 0,
+  "name": "Cam Droid",
+  "traits": [
+   "Droid"
+  ],
+  "health": 3,
+  "speed": 5,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 1
+   }
+  },
+  "keywords": [
+   "+1 [Dodge]",
+   "+2 Accuracy"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "Agitate: If this attack does not miss, the defending figure's group must be the next group to activate, if able."
+   }
+  ],
+  "abilities": [],
+  "notes": "Defense box shows a dash (no defense dice). The +1 keyword icon matches the legend's Dodge glyph (X-cut circle).",
+  "verified": true
+ },
+ {
+  "id": 6,
+  "name": "J4X-7",
+  "traits": [
+   "Droid"
+  ],
+  "health": 4,
+  "speed": 3,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "ranged",
+   "dice": {
+    "red": 0,
+    "blue": 1,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "Pierce 1"
+  ],
+  "surgeAbilities": [
+   {
+    "cost": 1,
+    "text": "+1⊠"
+   }
+  ],
+  "abilities": [
+   {
+    "name": "Supporting Fire",
+    "text": "While another friendly figure is attacking a figure adjacent to you, apply Pierce 1 to the attack results. Limit once per activation."
+   }
+  ],
+  "notes": "Unique (dot before name). Defense box shows a dash.",
+  "verified": true
+ },
+ {
+  "id": 1,
+  "name": "Junk Droid",
+  "traits": [
+   "Droid"
+  ],
+  "health": 1,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "melee",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 1,
+    "yellow": 0
+   }
+  },
+  "keywords": [
+   "+1⊠"
+  ],
+  "surgeAbilities": [],
+  "abilities": [],
+  "notes": "Defense box shows a dash (no defense dice). Text box contains only flavor text.",
+  "verified": true
+ },
+ {
+  "id": 3,
+  "name": "Pit Droid",
+  "traits": [
+   "Droid"
+  ],
+  "health": 3,
+  "speed": 4,
+  "defense": {
+   "black": 0,
+   "white": 1
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "Useful",
+    "text": "You can retrieve crates. Adjacent heroes can interact with crates you are carrying."
+   },
+   {
+    "name": "Shiny",
+    "text": "If you are on the map at the end of the mission, heroes gain 50 credits."
+   }
+  ],
+  "notes": "Attack box shows a dash (no attack).",
+  "verified": true
+ },
+ {
+  "id": 2,
+  "name": "R5 Astromech",
+  "traits": [
+   "Droid"
+  ],
+  "health": 4,
+  "speed": 3,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "Forage",
+    "text": "⟶ Forage: Use while adjacent to a crate to draw 1 Supply card. Limit once per crate."
+   },
+   {
+    "name": "Insignificant",
+    "text": "You cannot be the target of an attack while in the same space as a friendly figure."
+   }
+  ],
+  "notes": "Defense and Attack boxes both show a dash (no dice).",
+  "verified": true
+ },
+ {
+  "id": 4,
+  "name": "Salacious B. Crumb",
+  "traits": [
+   "Brawler"
+  ],
+  "health": 6,
+  "speed": 3,
+  "defense": {
+   "black": 0,
+   "white": 0
+  },
+  "attack": {
+   "type": "",
+   "dice": {
+    "red": 0,
+    "blue": 0,
+    "green": 0,
+    "yellow": 0
+   }
+  },
+  "keywords": [],
+  "surgeAbilities": [],
+  "abilities": [
+   {
+    "name": "Swipe",
+    "text": "When you activate in or enter a space containing a hostile figure, it suffers 1⊠. Limit once per figure per round."
+   },
+   {
+    "name": "Scratch",
+    "text": "⟶ Scratch: Choose an adjacent hostile figure. That figure suffers 1⊠."
+   }
+  ],
+  "notes": "Unique (dot before name). Defense and Attack boxes both show a dash.",
+  "verified": true
+ }
+]

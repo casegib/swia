@@ -61,7 +61,13 @@ export class SWIAActorSheet extends BaseActorSheet {
     super(...args);
     this._editMode = false;
     this._editStatTab = "healthy";
-    this._activeInventoryPanel = null;
+    // Compact inventory rows: ids of items whose details block is open.
+    // Lives on the instance so it survives the sheet's frequent re-renders.
+    this._expandedItems = new Set();
+    // Hero abilities are reference text; collapsed by default in display
+    // mode so the combat header and inventory get the height. Remembered
+    // while the sheet stays open.
+    this._abilitiesOpen = false;
     this._collapsedSections = foundry.utils.mergeObject({}, SWIAActorSheet.EDIT_COLLAPSE_DEFAULTS);
     this._enrichCache = new Map();
     this._enrichCacheMaxEntries = 256;
@@ -176,7 +182,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       editImage: SWIAActorSheet.prototype._onEditImage,
       changeName: SWIAActorSheet.prototype._onChangeName,
       // Item management
-      toggleInventoryPanel: SWIAActorSheet.prototype._onToggleInventoryPanel,
+      toggleItemDetails: SWIAActorSheet.prototype._onToggleItemDetails,
       openItem: SWIAActorSheet.prototype._onOpenItem,
       deleteItem: SWIAActorSheet.prototype._onDeleteItem,
       cycleItemState: SWIAActorSheet.prototype._onCycleItemState,
@@ -207,7 +213,10 @@ export class SWIAActorSheet extends BaseActorSheet {
 
   static PARTS = {
     form: {
-      template: "systems/swia/templates/actors/actor-sheet.hbs"
+      template: "systems/swia/templates/actors/actor-sheet.hbs",
+      // The form is the scroll container (core's window-content clips);
+      // listing it keeps the scroll position across re-renders.
+      scrollable: [""]
     }
   };
 
@@ -579,7 +588,12 @@ export class SWIAActorSheet extends BaseActorSheet {
           showSlots: slotsTotal > 0 || attachedMods.length > 0,
           // attachmentSlots defaults to 0 = "no slots": such weapons are
           // always full, and pre-existing over-attachment shows a red badge.
-          slotsFull: attachedMods.length >= slotsTotal
+          slotsFull: attachedMods.length >= slotsTotal,
+          // Compact rows: surge text, printed abilities and attached mods sit
+          // in a details block that opens on demand.
+          hasDetails: surgeLines.length > 0 || attachedMods.length > 0
+            || enrichedAbilities.some((a) => a?.enrichedDescription),
+          expanded: this._expandedItems.has(w.id)
         };
       })
     );
@@ -702,6 +716,8 @@ export class SWIAActorSheet extends BaseActorSheet {
       enrichedBiography: enrichedBiography,
       enrichedWoundedBiography: enrichedWoundedBiography,
       enrichedHeroAbilities: enrichedHeroAbilities,
+      abilitiesOpen: this._abilitiesOpen,
+      heroAbilityCount: (isWounded ? enrichedWoundedHeroAbilities : enrichedHeroAbilities)?.length ?? 0,
       enrichedWoundedHeroAbilities: enrichedWoundedHeroAbilities,
       enrichedSurgeAbilities: enrichedSurgeAbilities,
       enrichedSpecialAbilities: enrichedSpecialAbilities,
@@ -712,7 +728,6 @@ export class SWIAActorSheet extends BaseActorSheet {
       unattachedMods,
       hasUnattachedMods: unattachedMods.length > 0,
       hasItems: ownedItems.length > 0,
-      activeInventoryPanel: this._activeInventoryPanel,
       sectionCollapse: this._collapsedSections,
       formCards: formCards,
       activeForm: activeForm,
@@ -752,36 +767,18 @@ export class SWIAActorSheet extends BaseActorSheet {
   }
 
   // Toggle active inventory panel (Abilities / Items / Weapons)
-  _onToggleInventoryPanel(event, target) {
+  // Compact rows: open/close an item's details block in place (no re-render).
+  _onToggleItemDetails(event, target) {
     event?.preventDefault?.();
-    const btn = target ?? event?.currentTarget;
-    const panel = btn?.dataset?.panel;
-    if (!panel) return;
-
-    const wasSame = this._activeInventoryPanel === panel;
-    this._activeInventoryPanel = wasSame ? null : panel;
-
-    // Resize the Foundry window to accommodate the panel
-    const targetWidth = this._activeInventoryPanel ? 900 : 620;
-    try { this.setPosition({ width: targetWidth }); } catch (e) { /* noop */ }
-
-    // Update panel/toggle classes directly to avoid re-running full sheet context preparation.
-    const root = this.element;
-    if (!(root instanceof HTMLElement)) return;
-
-    const panelClasses = ["inv-open-abilities", "inv-open-gear", "inv-open-weapons"];
-    root.classList.remove(...panelClasses);
-    root.classList.toggle("inv-panel-open", Boolean(this._activeInventoryPanel));
-    if (this._activeInventoryPanel) {
-      root.classList.add(`inv-open-${this._activeInventoryPanel}`);
-    }
-
-    const tabButtons = root.querySelectorAll(".inv-tab-btn[data-panel]");
-    for (const tab of tabButtons) {
-      const isActive = tab.dataset.panel === this._activeInventoryPanel;
-      tab.classList.toggle("active", isActive);
-      tab.setAttribute("aria-pressed", isActive ? "true" : "false");
-    }
+    const entry = (target ?? event?.currentTarget)?.closest?.("[data-item-id]");
+    const itemId = entry?.dataset?.itemId;
+    const details = entry?.querySelector?.(":scope > .weapon-details, :scope > .item-details");
+    if (!itemId || !details) return;
+    const open = details.hasAttribute("hidden");
+    details.toggleAttribute("hidden", !open);
+    entry.classList.toggle("expanded", open);
+    entry.querySelector(".item-expand-btn")?.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) this._expandedItems.add(itemId); else this._expandedItems.delete(itemId);
   }
 
   // Toggle hero wounded state (heroes only)
@@ -1215,6 +1212,11 @@ export class SWIAActorSheet extends BaseActorSheet {
     this._cardPreviewAbort?.abort();
     this._cardPreviewAbort = new AbortController();
     bindCardPreviews(el, { signal: this._cardPreviewAbort.signal });
+
+    // Hero-abilities disclosure: remember open/closed across re-renders.
+    const disclosure = el?.querySelector?.("details.hero-ability-disclosure");
+    disclosure?.addEventListener("toggle", () => { this._abilitiesOpen = disclosure.open; },
+      { signal: this._cardPreviewAbort.signal });
     // Attach-mod selects re-render each pass; bind fresh every time.
     for (const select of el?.querySelectorAll?.(".mod-attach-select") ?? []) {
       select.addEventListener("change", (event) => {

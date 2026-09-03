@@ -8,7 +8,7 @@
 // identically. Power tokens are NOT conditions (see actor-actions.js) but
 // are appended to the status list here so there is one place that owns it.
 
-import { escapeHTML } from "./data/common.js";
+import { escapeHTML, statGlyphHTML, dieSwatchHTML } from "./data/common.js";
 
 export const CUSTOM_CONDITIONS_KEY = "customConditions";
 export const CONDITION_KINDS = ["beneficial", "harmful", "neutral"];
@@ -229,31 +229,35 @@ export function conditionEffectsFor(actor, role) {
     block: 0, evade: 0, attackerAccuracy: 0,
     cannotAttack: false, discardIds: [], notes: []
   };
+  // Notes are HTML fragments: "+1 <die swatch>", "+1 <surge glyph>". They
+  // render through triple-stash inside sanitized label spans.
+  const dieNote = (col, n) => `+${n} ${dieSwatchHTML(col)}`;
+  const statNote = (stat, n) => `${signed(n)} ${statGlyphHTML(stat)}`;
   for (const c of actorConditions(actor)) {
     const label = conditionLabel(c);
     const parts = [];
     if (role === "attack") {
       addDice(out.dice, c.attackDice);
-      for (const col of ATTACK_DICE) if (c.attackDice[col]) parts.push(`+${c.attackDice[col]} ${game.i18n.localize(`SWIA.Roll.Die.${col.charAt(0).toUpperCase()}${col.slice(1)}`)}`);
+      for (const col of ATTACK_DICE) if (c.attackDice[col]) parts.push(dieNote(col, c.attackDice[col]));
       out.damage += c.attack.damage;
       out.surge += c.attack.surge;
       out.accuracy += c.attack.accuracy;
-      if (c.attack.damage) parts.push(`${signed(c.attack.damage)} ${game.i18n.localize("SWIA.Dice.Damage")}`);
-      if (c.attack.surge) parts.push(`${signed(c.attack.surge)} ${game.i18n.localize("SWIA.Dice.Surge")}`);
-      if (c.attack.accuracy) parts.push(`${signed(c.attack.accuracy)} ${game.i18n.localize("SWIA.Dice.Accuracy")}`);
+      if (c.attack.damage) parts.push(statNote("damage", c.attack.damage));
+      if (c.attack.surge) parts.push(statNote("surge", c.attack.surge));
+      if (c.attack.accuracy) parts.push(statNote("accuracy", c.attack.accuracy));
       if (c.cannotAttack) out.cannotAttack = true;
       if (c.discard.afterAttack) out.discardIds.push(c.id);
     } else if (role === "test") {
       addDice(out.dice, c.testDice);
-      for (const col of ATTACK_DICE) if (c.testDice[col]) parts.push(`+${c.testDice[col]} ${game.i18n.localize(`SWIA.Roll.Die.${col.charAt(0).toUpperCase()}${col.slice(1)}`)}`);
+      for (const col of ATTACK_DICE) if (c.testDice[col]) parts.push(dieNote(col, c.testDice[col]));
       if (c.discard.afterTest) out.discardIds.push(c.id);
     } else if (role === "defense") {
       out.block += c.defense.block;
       out.evade += c.defense.evade;
       out.attackerAccuracy += c.defense.accuracy;
-      if (c.defense.block) parts.push(`${signed(c.defense.block)} ${game.i18n.localize("SWIA.Dice.Block")}`);
-      if (c.defense.evade) parts.push(`${signed(c.defense.evade)} ${game.i18n.localize("SWIA.Dice.Evade")}`);
-      if (c.defense.accuracy) parts.push(`${signed(c.defense.accuracy)} ${game.i18n.localize("SWIA.Conditions.AttackerAccuracy")}`);
+      if (c.defense.block) parts.push(statNote("block", c.defense.block));
+      if (c.defense.evade) parts.push(statNote("evade", c.defense.evade));
+      if (c.defense.accuracy) parts.push(`${signed(c.defense.accuracy)} ${statGlyphHTML("accuracy", { label: game.i18n.localize("SWIA.Conditions.AttackerAccuracy") })}`);
     }
     if (parts.length) out.notes.push(`${escapeHTML(label)} (${parts.join(", ")})`);
   }
