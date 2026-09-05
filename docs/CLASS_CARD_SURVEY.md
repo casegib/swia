@@ -105,7 +105,7 @@ Timing: attack 64, defense 20, both 7, test 2. Defense-side and test-side button
 
 The sample survey proposed `passive` + one `use` block. The census changes three things.
 
-**1. One modifier schema, shared.** A passive card's effect (+2 Health, +1 Accuracy, Pierce 1, +1 Block, +1 white die) is the same shape as a condition's effect and as armor's. Define it once and reuse it:
+**1. One modifier schema, shared.** *(Built in the stage 2 pass: `modifierField()` in `scripts/data/common.js`; card data carries it as a sparse `passive` object per card.)* A passive card's effect (+2 Health, +1 Accuracy, Pierce 1, +1 Block, +1 white die) is the same shape as a condition's effect and as armor's. Define it once and reuse it:
 
 ```
 modifier: {

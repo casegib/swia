@@ -49,6 +49,69 @@
       <textarea name="system.abilityText" data-dtype="String" rows="4" placeholder="{{localize 'SWIA.Item.ClassCard.Description'}}">{{systemData.abilityText}}</textarea>
     </div>
     {{/if}}
+    {{#if (eq item.type "imperialclasscard")}}
+    <div class="meta-edit-row">
+      <div class="edit-field">
+        <label>{{localize "SWIA.Item.ImperialClassCard.ImperialClass"}}</label>
+        <input name="system.imperialClass" type="text" value="{{systemData.imperialClass}}" placeholder="{{localize 'SWIA.Item.ImperialClassCard.ImperialClassPlaceholder'}}" />
+      </div>
+      <div class="edit-field">
+        <label>{{localize "SWIA.Item.ClassCard.XpCost"}}</label>
+        <input name="system.classXp" type="number" value="{{systemData.classXp}}" data-dtype="Number" min="0" />
+      </div>
+    </div>
+    <div class="edit-field">
+      <label class="keyword-toggle {{#if systemData.attachment}}is-on{{/if}}" title="{{localize 'SWIA.Item.ImperialClassCard.AttachmentHint'}}">
+        <input name="system.attachment" type="checkbox" {{#if systemData.attachment}}checked{{/if}} />
+        <span>{{localize "SWIA.Item.ImperialClassCard.Attachment"}}</span>
+      </label>
+    </div>
+    {{/if}}
+    {{#if (or (eq item.type "classcard") (eq item.type "imperialclasscard"))}}
+    <div class="edit-field">
+      <label title="{{localize 'SWIA.Item.ClassCard.PassiveHint'}}">{{localize "SWIA.Item.ClassCard.Passive"}}</label>
+      {{> "systems/swia/templates/items/parts/modifier-editor.hbs" path="system.passive" mod=systemData.passive}}
+    </div>
+    <div class="edit-field classcard-uses-edit">
+      <label title="{{localize 'SWIA.Item.ClassCard.UsesHint'}}">{{localize "SWIA.Item.ClassCard.Uses"}}</label>
+      {{#each useRows}}
+      <div class="use-row" data-index="{{index}}">
+        <div class="use-row-head">
+          <label>{{localize "SWIA.Item.ClassCard.UseWhenLabel"}}
+            <select data-field="when" data-dtype="String">
+              <option value="attack" {{#if (eq when "attack")}}selected{{/if}}>{{localize "SWIA.Item.ClassCard.UseWhen.attack"}}</option>
+              <option value="defense" {{#if (eq when "defense")}}selected{{/if}}>{{localize "SWIA.Item.ClassCard.UseWhen.defense"}}</option>
+              <option value="test" {{#if (eq when "test")}}selected{{/if}}>{{localize "SWIA.Item.ClassCard.UseWhen.test"}}</option>
+            </select>
+          </label>
+          <label title="{{localize 'SWIA.Item.ClassCard.UseScopeHint'}}">{{localize "SWIA.Item.ClassCard.UseScopeLabel"}}
+            <select data-field="scope" data-dtype="String">
+              <option value="self" {{#unless (or (eq scope "friendly") (eq scope "any"))}}selected{{/unless}}>{{localize "SWIA.Item.ClassCard.UseScope.self"}}</option>
+              <option value="friendly" {{#if (eq scope "friendly")}}selected{{/if}}>{{localize "SWIA.Item.ClassCard.UseScope.friendly"}}</option>
+              <option value="any" {{#if (eq scope "any")}}selected{{/if}}>{{localize "SWIA.Item.ClassCard.UseScope.any"}}</option>
+            </select>
+          </label>
+          <label title="{{localize 'SWIA.Item.ClassCard.UseCost'}}"><input type="checkbox" data-field="cost.exhaust" {{#if cost.exhaust}}checked{{/if}} /> {{localize "SWIA.CardUse.CostExhaust"}}</label>
+          <label><input type="checkbox" data-field="cost.deplete" {{#if cost.deplete}}checked{{/if}} /> {{localize "SWIA.CardUse.CostDeplete"}}</label>
+          <label>{{localize "SWIA.Attributes.Strain"}} <input type="number" data-field="cost.strain" value="{{cost.strain}}" min="0" /></label>
+          <button type="button" class="use-remove" data-action="removeUse" data-index="{{index}}" title="{{localize 'SWIA.Item.ClassCard.RemoveUse'}}"><i class="fas fa-trash"></i></button>
+        </div>
+        <div class="use-row-head">
+          <label>{{localize "SWIA.Item.ClassCard.UseNote"}} <input type="text" data-field="note" value="{{note}}" placeholder="{{localize 'SWIA.Item.ClassCard.UseNotePlaceholder'}}" /></label>
+          <label title="{{localize 'SWIA.Item.ClassCard.UseChoiceHint'}}">{{localize "SWIA.Item.ClassCard.UseChoice"}} <input type="text" data-field="choice" value="{{choice}}" /></label>
+        </div>
+        {{> "systems/swia/templates/items/parts/modifier-editor.hbs" path="modifier" mod=modifier attr="data-field"}}
+        {{#if surgeLines.length}}
+        <div class="classcard-use-line">
+          <span class="classcard-use-when">{{localize "SWIA.Item.ClassCard.UseSurges"}}</span>
+          {{#each surgeLines}}<span class="classcard-use-surge">{{cost}}&times;{{{swiaGlyph "surge"}}}: {{{text}}}</span>{{/each}}
+        </div>
+        {{/if}}
+      </div>
+      {{/each}}
+      <button type="button" class="use-add" data-action="addUse"><i class="fas fa-plus"></i> {{localize "SWIA.Item.ClassCard.AddUse"}}</button>
+    </div>
+    {{/if}}
   </div>
   {{else}}
   {{#if hasClasscardDetails}}
@@ -56,7 +119,31 @@
     <div class="classcard-meta-line">
       {{#if systemData.heroClass}}<span class="classcard-class">{{systemData.heroClass}}</span>{{/if}}
       {{#if systemData.xpCost}}<span class="classcard-xp">{{systemData.xpCost}} {{localize "SWIA.Item.ClassCard.XP"}}</span>{{/if}}
+      {{#if (eq item.type "imperialclasscard")}}
+      {{#if systemData.imperialClass}}<span class="classcard-class">{{systemData.imperialClass}}</span>{{/if}}
+      {{#if systemData.classXp}}<span class="classcard-xp">{{systemData.classXp}} {{localize "SWIA.Item.ClassCard.XP"}}</span>{{/if}}
+      <span class="classcard-xp" title="{{#if systemData.attachment}}{{localize 'SWIA.Item.ImperialClassCard.AttachmentHint'}}{{else}}{{localize 'SWIA.Item.ImperialClassCard.ClassWideHint'}}{{/if}}">{{#if systemData.attachment}}{{localize "SWIA.Item.ImperialClassCard.Attachment"}}{{else}}{{localize "SWIA.Inventory.ClassWide"}}{{/if}}</span>
+      {{/if}}
     </div>
+    {{#if passiveChips.length}}
+    <div class="armor-fx-chips classcard-passive-chips" title="{{localize 'SWIA.Item.ClassCard.PassiveHint'}}">
+      {{#each passiveChips}}<span class="armor-fx-chip {{this.key}}">{{this.label}}</span>{{/each}}
+    </div>
+    {{/if}}
+    {{#if useRows.length}}
+    <div class="classcard-uses" title="{{localize 'SWIA.Item.ClassCard.UsesHint'}}">
+      {{#each useRows}}
+      <div class="classcard-use-line">
+        <span class="classcard-use-when">{{whenLabel}}</span>
+        {{#if scopeLabel}}<span class="classcard-use-when">{{scopeLabel}}</span>{{/if}}
+        {{#if effectHTML}}<span class="card-use-effect">{{{effectHTML}}}</span>{{/if}}
+        {{#each costLabels}}<span class="card-use-cost">{{this}}</span>{{/each}}
+        {{#if note}}<span class="card-use-note">{{note}}</span>{{/if}}
+        {{#each surgeLines}}<span class="classcard-use-surge">{{cost}}&times;{{{swiaGlyph "surge"}}}: {{{text}}}</span>{{/each}}
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
     {{#if systemData.abilityText}}
     <div class="classcard-ability-text">{{{enrichedAbilityText}}}</div>
     {{/if}}

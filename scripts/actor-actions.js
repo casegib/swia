@@ -3,7 +3,7 @@
 // stepper, a state pill or a Ready All button behaves identically wherever it
 // is clicked.
 
-import { escapeHTML, armorEffectsFor } from "./data/common.js";
+import { escapeHTML, equipmentEffectsFor } from "./data/common.js";
 import {
   allConditions, actorConditions, conditionLabel, conditionDescription,
   addCondition, discardCondition, endActivationConditions, actionStrainFor
@@ -335,6 +335,78 @@ export async function adjustActorXp(actor, delta) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Class-card purchase (optional XP deduction)                          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Decide whether a class card dropped on a hero is paid for. With the
+ * "deduct class card XP" world setting off, or a 0-XP card, it's a plain
+ * add. Otherwise the hero's unspent XP is checked: enough → the card is
+ * added and the XP deducted after; short → a player is refused, the GM is
+ * asked whether to add it unpaid. Returns { allow, deduct }.
+ */
+export async function settleClassCardPurchase(actor, itemData) {
+  const out = { allow: true, deduct: 0 };
+  if (actor?.type !== "hero" || itemData?.type !== "classcard") return out;
+  if (!game.settings.get("swia", "deductClassCardXp")) return out;
+  const cost = Math.max(0, Number(itemData.system?.xpCost) || 0);
+  if (!cost) return out;
+  const xp = Number(actor.system?.xp) || 0;
+  if (xp >= cost) {
+    out.deduct = cost;
+    return out;
+  }
+  if (!game.user?.isGM) {
+    ui.notifications?.warn(game.i18n.format("SWIA.Purchase.NotEnoughXp", { name: actor.name, card: itemData.name, cost, xp }));
+    out.allow = false;
+    return out;
+  }
+  out.allow = await foundry.applications.api.DialogV2.confirm({
+    window: { title: game.i18n.localize("SWIA.Purchase.Title") },
+    content: `<p>${game.i18n.format("SWIA.Purchase.OverrideConfirm", {
+      name: escapeHTML(actor.name), card: escapeHTML(itemData.name ?? ""), cost, xp
+    })}</p>`,
+    rejectClose: false
+  });
+  return out;
+}
+
+/** Charge a settled purchase and say so. */
+export async function chargeClassCardPurchase(actor, itemData, deduct) {
+  if (!deduct) return;
+  await adjustActorXp(actor, -deduct);
+  ui.notifications?.info(game.i18n.format("SWIA.Purchase.Charged", {
+    name: actor.name, card: itemData?.name ?? "", cost: deduct, xp: Number(actor.system?.xp) || 0
+  }));
+}
+
+/* ------------------------------------------------------------------ */
+/* Weapon exhaust abilities                                             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Use a weapon's printed exhaust ability: post it to chat and flip the
+ * weapon to exhausted. Refused when the weapon isn't ready.
+ */
+export async function useExhaustAbility(actor, item, index) {
+  if (!actor || !item || item.type !== "weapon") return false;
+  const abilities = Array.isArray(item.system?.exhaustAbilities) ? item.system.exhaustAbilities : Object.values(item.system?.exhaustAbilities ?? {});
+  const ability = abilities[Number(index)];
+  if (!ability) return false;
+  if ((item.system?.cardState ?? "ready") !== "ready") {
+    ui.notifications?.warn(game.i18n.format("SWIA.Inventory.ExhaustNotReady", { name: item.name }));
+    return false;
+  }
+  await item.update({ "system.cardState": "exhausted" });
+  const trigger = ability.trigger ? game.i18n.localize(`SWIA.Item.Weapon.ExhaustTrigger.${ability.trigger.charAt(0).toUpperCase()}${ability.trigger.slice(1)}`) : "";
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="swia-exhaust-card"><strong>${escapeHTML(item.name)}</strong> — ${escapeHTML(game.i18n.localize("SWIA.Inventory.ExhaustUsed"))}${trigger ? ` <em>(${escapeHTML(trigger)})</em>` : ""}<p>${escapeHTML(ability.effect ?? "")}</p></div>`
+  });
+  return true;
+}
+
+/* ------------------------------------------------------------------ */
 /* Power tokens                                                        */
 /* ------------------------------------------------------------------ */
 
@@ -455,48 +527,67 @@ export async function readyAllItemsWithNotice(actor) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Armor health: keep damage-taken constant when the max moves         */
+/* Equipment stats: keep damage / strain taken constant when a max moves  */
 /* ------------------------------------------------------------------ */
 
 /**
- * The system stores REMAINING health, but Imperial Assault tracks DAMAGE.
- * When equipped armor changes the max (equip/unequip, edit, add, remove), the
- * remaining value shifts by the same amount so the damage on the figure stays
- * put: 10/12 wearing +2 armor is 12/14, not 10/14. Runs once, on the client
+ * The system stores REMAINING health and endurance, but Imperial Assault
+ * tracks DAMAGE and STRAIN. When gear changes a max (armor equip/unequip,
+ * an armor or class-card edit, a card bought or removed), the remaining
+ * value shifts by the same amount so the damage on the figure stays put:
+ * 10/12 wearing +2 armor is 12/14, not 10/14. Runs once, on the client
  * that made the item change (it necessarily owns the actor).
  */
-function armorHealthContribution(itemLike) {
+const SHIFT_RESOURCES = ["health", "endurance"];
+
+/** {health, endurance} this item currently contributes to its owner's maxes. */
+function itemStatContribution(itemLike) {
   const sys = itemLike?.system ?? {};
-  if (!(sys.equipped ?? true)) return 0;
-  return Math.max(0, Number(sys.bonusHealth) || 0);
+  let mod = null;
+  if (itemLike?.type === "armor") mod = (sys.equipped ?? true) ? sys.modifier : null;
+  else if (itemLike?.type === "classcard" || itemLike?.type === "imperialclasscard") mod = sys.passive;
+  return {
+    health: Number(mod?.stats?.health) || 0,
+    endurance: Number(mod?.stats?.endurance) || 0
+  };
 }
 
-function activeHealthPath(actor) {
+function activeAttrPath(actor) {
   const wounded = actor?.type === "hero" && actor.system?.state?.wounded;
-  return wounded ? "system.woundedAttributes.health" : "system.attributes.health";
+  return wounded ? "system.woundedAttributes" : "system.attributes";
 }
 
 // One in-flight shift per actor: two rapid changes (equip toggle + a
-// bonusHealth edit, say) must read the value the previous shift wrote.
+// modifier edit, say) must read the value the previous shift wrote.
 const pendingShifts = new Map();
 
-function shiftHealthForArmorChange(actor, delta) {
-  if (!actor || !delta) return Promise.resolve();
+function shiftResourcesForEquipmentChange(actor, deltas) {
+  if (!actor) return Promise.resolve();
+  if (!SHIFT_RESOURCES.some((r) => deltas[r])) return Promise.resolve();
   const key = actor.uuid ?? actor.id;
   const run = async () => {
-    const path = activeHealthPath(actor);
+    const attrPath = activeAttrPath(actor);
     // Recompute the effective max from source + current items rather than
     // trusting derived data, which may not have been re-prepared yet when an
     // embedded-document hook fires.
-    const sourceMax = Number(foundry.utils.getProperty(actor._source, `${path}.max`)) || 0;
-    const max = sourceMax + (armorEffectsFor(actor).health || 0);
-    const current = Number(foundry.utils.getProperty(actor, `${path}.value`)) || 0;
-    const next = Math.max(0, Math.min(max, current + delta));
-    if (next === current) return;
+    const fx = equipmentEffectsFor(actor).stats;
+    const update = {};
+    for (const res of SHIFT_RESOURCES) {
+      const delta = deltas[res];
+      if (!delta) continue;
+      const path = `${attrPath}.${res}`;
+      const sourceMax = foundry.utils.getProperty(actor._source, `${path}.max`);
+      if (sourceMax === undefined) continue; // no such resource on this actor type
+      const max = Math.max(0, (Number(sourceMax) || 0) + (Number(fx[res]) || 0));
+      const current = Number(foundry.utils.getProperty(actor, `${path}.value`)) || 0;
+      const next = Math.max(0, Math.min(max, current + delta));
+      if (next !== current) update[`${path}.value`] = next;
+    }
+    if (!Object.keys(update).length) return;
     try {
-      await actor.update({ [`${path}.value`]: next });
+      await actor.update(update);
     } catch (error) {
-      console.warn("SWIA | Could not shift health for armor change", error);
+      console.warn("SWIA | Could not shift resources for equipment change", error);
     }
   };
   const chained = (pendingShifts.get(key) ?? Promise.resolve()).then(run, run);
@@ -507,10 +598,16 @@ function shiftHealthForArmorChange(actor, delta) {
   return chained;
 }
 
-function isOwnArmorChange(item, userId) {
-  return item?.type === "armor"
+const STAT_ITEM_TYPES = ["armor", "classcard", "imperialclasscard"];
+
+function isOwnStatItemChange(item, userId) {
+  return STAT_ITEM_TYPES.includes(item?.type)
     && item.parent?.documentName === "Actor"
     && userId === game.user?.id;
+}
+
+function diffContribution(after, before) {
+  return Object.fromEntries(SHIFT_RESOURCES.map((r) => [r, (after?.[r] ?? 0) - (before?.[r] ?? 0)]));
 }
 
 // Flipping the activation token to "activated" IS the end of that figure's
@@ -523,36 +620,57 @@ Hooks.on("updateActor", (actor, changes, options, userId) => {
   endActivation(actor).catch((err) => console.warn("SWIA | end-of-activation discard failed", err));
 });
 
+/**
+ * The Imperial deck (world imperialclasscard items) feeds every villain's
+ * derived data and card offers. Actors only re-prepare on their own
+ * updates, so a deck change resets each villain (and any open sheet) here.
+ */
+function refreshImperialFigures() {
+  const actors = (game.actors?.contents ?? []).filter((a) => a.type === "villain");
+  for (const token of canvas?.tokens?.placeables ?? []) {
+    if (token.actor?.type === "villain" && !token.document?.actorLink) actors.push(token.actor);
+  }
+  for (const actor of actors) {
+    try { actor.reset(); } catch (err) { /* synthetic actors without a reset are re-prepared on access */ }
+    if (actor.sheet?.rendered) actor.sheet.render(false);
+  }
+}
+
+for (const hook of ["createItem", "updateItem", "deleteItem"]) {
+  Hooks.on(hook, (item) => {
+    if (item?.type !== "imperialclasscard" || item.parent?.documentName === "Actor") return;
+    refreshImperialFigures();
+  });
+}
+
 Hooks.on("preUpdateItem", (item, changes, options) => {
-  if (item?.type !== "armor" || item.parent?.documentName !== "Actor") return;
-  const touchesHealth = foundry.utils.hasProperty(changes, "system.equipped")
-    || foundry.utils.hasProperty(changes, "system.bonusHealth");
-  if (!touchesHealth) return;
+  if (!STAT_ITEM_TYPES.includes(item?.type) || item.parent?.documentName !== "Actor") return;
+  const touches = foundry.utils.hasProperty(changes, "system.equipped")
+    || foundry.utils.hasProperty(changes, "system.modifier")
+    || foundry.utils.hasProperty(changes, "system.passive");
+  if (!touches) return;
   // Stash the pre-change contribution; updateItem only sees the new state.
   // `options` is shared by every item in a batched updateEmbeddedDocuments,
   // so key it by item id or a batch would read one item's value for all.
-  options.swiaArmorHealthBefore = {
-    ...(options.swiaArmorHealthBefore ?? {}),
-    [item.id]: armorHealthContribution(item)
+  options.swiaStatBefore = {
+    ...(options.swiaStatBefore ?? {}),
+    [item.id]: itemStatContribution(item)
   };
 });
 
 Hooks.on("updateItem", (item, changes, options, userId) => {
-  if (!isOwnArmorChange(item, userId)) return;
-  const before = options?.swiaArmorHealthBefore?.[item.id];
+  if (!isOwnStatItemChange(item, userId)) return;
+  const before = options?.swiaStatBefore?.[item.id];
   if (before === undefined) return;
-  const delta = armorHealthContribution(item) - before;
-  if (delta) shiftHealthForArmorChange(item.parent, delta);
+  shiftResourcesForEquipmentChange(item.parent, diffContribution(itemStatContribution(item), before));
 });
 
 Hooks.on("createItem", (item, options, userId) => {
-  if (!isOwnArmorChange(item, userId)) return;
-  const delta = armorHealthContribution(item);
-  if (delta) shiftHealthForArmorChange(item.parent, delta);
+  if (!isOwnStatItemChange(item, userId)) return;
+  shiftResourcesForEquipmentChange(item.parent, itemStatContribution(item));
 });
 
 Hooks.on("deleteItem", (item, options, userId) => {
-  if (!isOwnArmorChange(item, userId)) return;
-  const delta = -armorHealthContribution(item);
-  if (delta) shiftHealthForArmorChange(item.parent, delta);
+  if (!isOwnStatItemChange(item, userId)) return;
+  shiftResourcesForEquipmentChange(item.parent, diffContribution({}, itemStatContribution(item)));
 });

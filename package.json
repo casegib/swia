@@ -8,7 +8,9 @@
   "scripts": {
     "build:packs": "node scripts/build/build-packs.mjs --compile",
     "build:packs:source": "node scripts/build/build-packs.mjs",
-    "survey": "python3 scripts/build/class-card-survey.py && python3 scripts/build/card-survey.py"
+    "survey": "python3 scripts/build/class-card-survey.py && python3 scripts/build/card-survey.py",
+    "uses": "node scripts/build/class-card-uses.mjs",
+    "check:lang": "node scripts/build/check-lang.mjs"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,7 @@
 # SWIA User Manual — Outline
 
+> Historical. The guides were written from this outline (updated for everything through the class-card, imperial and item-QoL passes) and live in `PLAYER_GUIDE.md` and `GM_GUIDE.md`; `npm run build:packs` turns them into the "SWIA Guides" journal compendium. Edit the guides, not this file.
+
 Two guides, one source. Derived from the code as of the armor-effects / power-token passes (pre-0.1.7.0). Each bullet is something the code actually does; the parenthetical names the surface it lives on. Items marked **[decide]** need a table-rules call from the GM before they're written up.
 
 Companion file: `SURFACE_INVENTORY.md` is the raw, control-by-control inventory these outlines were cut from.

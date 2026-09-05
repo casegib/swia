@@ -8,12 +8,13 @@ import {
   SOCKET_NAME, CARD_TEMPLATE, renderTemplateFn, clampCount, recomputeCard,
   ATTACK_POOL_COLORS, DEFENSE_POOL_COLORS, heroWeapons, defaultWeaponId,
   buildAttackPool, buildDefensePool, attackKeywordsFor, weaponAccuracyFor,
-  armorDefenseBonusFor, gatherSurgeAbilities, setCombatStarter,
+  equipmentDefenseBonusFor, equipmentAttackBonusFor, gatherSurgeAbilities, setCombatStarter,
   replaceFace, recomputeFaceTotals, rollReplacementDie,
-  applySurgeToState, revertSurgeOnState, exhaustSurgeSource, readySurgeSource
+  applySurgeToState, revertSurgeOnState, exhaustSurgeSource, readySurgeSource,
+  surgeEntryLabel
 } from "./roll-dialog.js";
 import { COLOR_TO_DENOM, totalSymbols, rollFaces } from "./dice-terms.js";
-import { escapeHTML } from "../data/common.js";
+import { escapeHTML, equipmentRollNotesFor, cardUsesFor, friendlyCardUsesFor, cardUseOwner, cardUseAvailability, payCardUse, refundCardUse, resolveUseItem, ATTACK_DIE_COLORS, DEFENSE_DIE_COLORS } from "../data/common.js";
 import { countPowerTokens, POWER_TOKEN_STATUS } from "../actor-actions.js";
 import { conditionEffectsFor, discardConditions, conditionLabel, getCondition } from "../conditions.js";
 
@@ -59,7 +60,10 @@ function totalBonus(sideData, side) {
       (sideData.manualBonus?.[stat] ?? 0)
       + (sideData.armorBonus?.[stat] ?? 0)
       + (sideData.tokenBonus?.[stat] ?? 0))
-      + (sideData.conditionBonus?.[stat] ?? 0);
+      + (sideData.conditionBonus?.[stat] ?? 0)
+      // Declared class-card effects are signed too (All-Out Attack: -1 Surge;
+      // Shadow Armor: -1 Damage on the attacker, declared by the defender).
+      + (sideData.cardBonus?.[stat] ?? 0);
   }
   return out;
 }
@@ -74,6 +78,44 @@ function emptyBonus(side) {
   return Object.fromEntries(SIDE_BONUS_STATS[side].map((stat) => [stat, 0]));
 }
 
+/** A card use as stored on the combat: the descriptor plus its declared state. */
+function useEntry(use) {
+  return { ...use, applied: false, receipt: null };
+}
+
+/** Apply (sign +1) or remove (sign -1) a declared use's modifier onto the combat. */
+function applyUseModifier(combat, use, sign) {
+  const mod = use.modifier ?? {};
+  const atk = combat.attacker;
+  const def = combat.defender;
+  atk.cardBonus ??= emptyBonus("attacker");
+  def.cardBonus ??= emptyBonus("defender");
+  for (const stat of SIDE_BONUS_STATS.attacker) atk.cardBonus[stat] += sign * (Number(mod.attack?.[stat]) || 0);
+  for (const stat of SIDE_BONUS_STATS.defender) def.cardBonus[stat] += sign * (Number(mod.defense?.[stat]) || 0);
+  atk.cardPierce = (atk.cardPierce ?? 0) + sign * (Number(mod.attack?.pierce) || 0);
+  // Dice only while the matching pool is still unrolled.
+  if (combat.phase === "setup") {
+    for (const c of ATTACK_DIE_COLORS) atk.pool[c] = clampCount((atk.pool[c] ?? 0) + sign * (Number(mod.dice?.attack?.[c]) || 0));
+  }
+  if (["setup", "attackRolled"].includes(combat.phase)) {
+    for (const c of DEFENSE_DIE_COLORS) def.pool[c] = clampCount((def.pool[c] ?? 0) + sign * (Number(mod.dice?.defense?.[c]) || 0));
+  }
+  // A defender's card declared after the attack has rolled (Shadow Armor:
+  // -1 Damage) has to land on the already-built result as well.
+  const state = combat.result;
+  if (state) {
+    state.bonusDamage += sign * (Number(mod.attack?.damage) || 0);
+    state.bonusAccuracy += sign * (Number(mod.attack?.accuracy) || 0);
+    const surge = sign * (Number(mod.attack?.surge) || 0);
+    if (surge) {
+      state.preBonusSurge = (state.preBonusSurge ?? 0) + surge;
+      state.surge = Math.max(0, state.surge + surge);
+    }
+    state.bonusPierce += sign * (Number(mod.attack?.pierce) || 0);
+    recomputeCard(state);
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* State access + permissions                                          */
 /* ------------------------------------------------------------------ */
@@ -85,6 +127,8 @@ export function getCombat() {
   // per-source bonus layers. Rather than silently mis-scoring it (its armor
   // seed and manual bonuses would all read as 0), treat it as finished.
   if (!data.attacker.manualBonus || !data.defender?.manualBonus) return null;
+  // Likewise a combat from before declared card effects (no card layer).
+  if (!data.attacker.cardUses || !data.defender?.cardUses) return null;
   return data;
 }
 
@@ -175,6 +219,8 @@ async function execIntent(intent, payload, userId) {
       case "rerollDie": return await execRerollDie(payload, user);
       case "spendSurge": return await execSpendSurge(payload, user);
       case "unspendSurge": return await execUnspendSurge(payload, user);
+      case "useCard": return await execUseCard(payload, user);
+      case "unuseCard": return await execUnuseCard(payload, user);
       case "spendToken": return await execSpendToken(payload, user);
       case "unspendToken": return await execUnspendToken(payload, user);
       case "applyDamage": return await execApplyDamage(payload, user);
@@ -210,15 +256,23 @@ async function execStart({ attackerActorId, attackerTokenUuid, defenderActorId, 
       pool: withConditionDice(buildAttackPool(attacker, weaponId), atkFx.dice),
       conditionDice: atkFx.dice,
       conditionBonus: { damage: atkFx.damage, surge: atkFx.surge, accuracy: atkFx.accuracy + defFx.attackerAccuracy },
-      conditionNotes: [...atkFx.notes, ...defFx.notes],
+      conditionNotes: [...atkFx.notes, ...defFx.notes, ...equipmentRollNotesFor(attacker, "attack")],
       conditionDiscard: atkFx.discardIds,
       keywords: attackKeywordsFor(attacker, weaponId),
       accuracy: weaponAccuracyFor(attacker, weaponId),
       // Pre-roll bonuses are kept by source so each can be undone on its
       // own: manual steppers, the armor seed, and declared power tokens.
       manualBonus: emptyBonus("attacker"),
-      armorBonus: emptyBonus("attacker"),
+      // "armor" layer = always-on gear / passives (Bank Shot +1 Accuracy).
+      // Same key both sides so undo/refund and the breakdown treat it alike.
+      armorBonus: equipmentAttackBonusFor(attacker),
       tokenBonus: emptyBonus("attacker"),
+      // Declared class-card effects: the bonus they add, the extra Pierce and
+      // surge abilities they grant, and the uses on offer (with what each
+      // has paid, so Undo and Cancel refund exactly).
+      cardBonus: emptyBonus("attacker"),
+      cardPierce: 0,
+      cardUses: [...cardUsesFor(attacker, "attack"), ...friendlyCardUsesFor(attacker, "attack")].map(useEntry),
       // Per stat, the tokens declared so far (most recent last); each entry
       // carries the deleted effect so Undo can restore it exactly.
       spentTokens: { damage: [], surge: [] }
@@ -230,13 +284,15 @@ async function execStart({ attackerActorId, attackerTokenUuid, defenderActorId, 
       img: defender.img,
       pool: buildDefensePool(defender),
       conditionBonus: { block: defFx.block, evade: defFx.evade },
-      conditionNotes: defFx.notes,
+      conditionNotes: [...defFx.notes, ...equipmentRollNotesFor(defender, "defense")],
       manualBonus: emptyBonus("defender"),
       // Equipped armor's printed Block/Evade pre-seed the bonus row. The
       // manual stepper can pull the total back down when the printed text
       // doesn't apply ("+1 Block against Ranged").
-      armorBonus: armorDefenseBonusFor(defender),
+      armorBonus: equipmentDefenseBonusFor(defender),
       tokenBonus: emptyBonus("defender"),
+      cardBonus: emptyBonus("defender"),
+      cardUses: [...cardUsesFor(defender, "defense"), ...friendlyCardUsesFor(defender, "defense")].map(useEntry),
       spentTokens: { block: [], evade: [] }
     },
     result: null
@@ -327,7 +383,7 @@ async function execRollAttack(_payload, user) {
     evade: 0,
     dodge: 0,
     weaponAccuracy: combat.attacker.accuracy ?? 0,
-    basePierce: kw.pierce ?? 0,
+    basePierce: (kw.pierce ?? 0) + (combat.attacker.cardPierce ?? 0),
     blast: kw.blast ?? 0,
     cleave: Boolean(kw.cleave),
     bonusDamage: pre.damage ?? 0,
@@ -342,7 +398,7 @@ async function execRollAttack(_payload, user) {
     tokenSurge: combat.attacker.tokenBonus?.surge ?? 0,
     conditionNotes: [...(combat.attacker.conditionNotes ?? []), ...(combat.defender.conditionNotes ?? [])],
     rerollLocked: false,
-    surgeAbilities: gatherSurgeAbilities(attacker, combat.attacker.weaponId)
+    surgeAbilities: [...gatherSurgeAbilities(attacker, combat.attacker.weaponId), ...cardSurgeAbilities(combat)]
   });
   combat.phase = "attackRolled";
   await setCombat(combat);
@@ -472,6 +528,90 @@ async function execSpendToken({ side, stat, kind = "typed" }, user) {
   await setCombat(combat);
 }
 
+/**
+ * Declare a class-card effect for `side` (by use key). Pays the cost on the
+ * figure first — exhaust / deplete the card, take strain — then folds the
+ * modifier into the combat's card layer. Only inside the side's declaration
+ * window, and only while the use's cost can still be paid.
+ */
+/** A side's controller may declare any of its uses; a friendly card's owner may declare their own card. */
+function canDeclareUse(user, combat, side, use) {
+  if (canControl(user, combat, side)) return true;
+  return Boolean(use?.ownerActorId) && userOwnsActor(user, use.ownerActorId);
+}
+
+async function execUseCard({ side, key }, user) {
+  const combat = getCombat();
+  if (!combat || !["attacker", "defender"].includes(side)) return;
+  const sideData = combat[side];
+  const use = (sideData.cardUses ?? []).find((u) => u.key === key);
+  if (!use || use.applied) return;
+  if (!inDeclareWindow(combat, side) || !canDeclareUse(user, combat, side, use)) return;
+  if (use.choice && (sideData.cardUses ?? []).some((u) => u !== use && u.applied && u.choice === use.choice)) return;
+  // The card's owner pays (a friend lending Called Shot exhausts THEIR card).
+  const actor = cardUseOwner(use, sideActor(combat, side));
+  const item = resolveUseItem(actor, use.itemId);
+  if (!actor || !item) return;
+  const rawUse = (item.system?.use ?? [])[use.useIndex];
+  if (!cardUseAvailability(actor, item, rawUse ?? use).available) return;
+
+  const receipt = await payCardUse(actor, use);
+  if (!receipt) return;
+  use.applied = true;
+  use.receipt = receipt;
+  applyUseModifier(combat, use, +1);
+  await setCombat(combat);
+}
+
+/** Undo a declared card effect: refund its cost and remove its modifier. */
+async function execUnuseCard({ side, key }, user) {
+  const combat = getCombat();
+  if (!combat || !["attacker", "defender"].includes(side)) return;
+  const sideData = combat[side];
+  const use = (sideData.cardUses ?? []).find((u) => u.key === key);
+  if (!use?.applied) return;
+  if (!inDeclareWindow(combat, side) || !canDeclareUse(user, combat, side, use)) return;
+  const actor = cardUseOwner(use, sideActor(combat, side));
+  await refundCardUse(actor, use, use.receipt);
+  use.applied = false;
+  use.receipt = null;
+  applyUseModifier(combat, use, -1);
+  await setCombat(combat);
+}
+
+/** Every card effect declared on either side is refunded (cancel path). */
+async function refundDeclaredCardUses(combat) {
+  for (const side of ["attacker", "defender"]) {
+    const sideActorDoc = sideActor(combat, side);
+    for (const use of combat?.[side]?.cardUses ?? []) {
+      const actor = cardUseOwner(use, sideActorDoc);
+      if (!use.applied || !actor) continue;
+      try { await refundCardUse(actor, use, use.receipt); }
+      catch (err) { console.warn("SWIA | could not refund a declared card effect", err); }
+    }
+  }
+}
+
+/** Surge abilities granted by the attacker's declared cards, in roll-card shape. */
+function cardSurgeAbilities(combat) {
+  const out = [];
+  for (const use of combat?.attacker?.cardUses ?? []) {
+    if (!use.applied) continue;
+    for (const entry of use.surgeAbilities ?? []) {
+      const type = entry.effectType ?? "special";
+      const value = Number(entry.effectValue) || 0;
+      out.push({
+        cost: Math.max(1, Number(entry.cost) || 1),
+        effects: ["damage", "accuracy", "pierce"].includes(type) ? [{ type, value }] : [],
+        label: surgeEntryLabel(entry),
+        source: escapeHTML(use.ownerName ? `${use.ownerName}: ${use.name}` : use.name),
+        spent: false
+      });
+    }
+  }
+  return out;
+}
+
 /** Put a declared token back on its figure from the stashed effect data. */
 async function restoreTokenEffect(actor, entry) {
   if (!actor || !entry?.effect) return;
@@ -583,6 +723,7 @@ async function execCancel(_payload, user) {
   // Declared tokens were removed from the figures; a cancelled attack never
   // happened, so they go back.
   await refundDeclaredTokens(combat);
+  await refundDeclaredCardUses(combat);
   await setCombat(null);
 }
 
@@ -626,6 +767,8 @@ export class SWIACombatWindow extends BaseApplication {
       combatRerollDie: SWIACombatWindow.prototype._onRerollDie,
       combatSpendSurge: SWIACombatWindow.prototype._onSpendSurge,
       combatUnspendSurge: SWIACombatWindow.prototype._onUnspendSurge,
+      combatUseCard: SWIACombatWindow.prototype._onUseCard,
+      combatUnuseCard: SWIACombatWindow.prototype._onUnuseCard,
       combatSpendToken: SWIACombatWindow.prototype._onSpendToken,
       combatUnspendToken: SWIACombatWindow.prototype._onUnspendToken,
       combatApplyDamage: SWIACombatWindow.prototype._onApplyDamage,
@@ -664,7 +807,8 @@ export class SWIACombatWindow extends BaseApplication {
       : [];
     const kw = combat.attacker.keywords ?? {};
     const keywordParts = [];
-    if (kw.pierce > 0) keywordParts.push(`${game.i18n.localize("SWIA.Keywords.Pierce")} ${kw.pierce}`);
+    const pierce = (kw.pierce ?? 0) + (combat.attacker.cardPierce ?? 0);
+    if (pierce > 0) keywordParts.push(`${game.i18n.localize("SWIA.Keywords.Pierce")} ${pierce}`);
     if (kw.blast > 0) keywordParts.push(`${game.i18n.localize("SWIA.Keywords.Blast")} ${kw.blast}`);
     if (kw.cleave) keywordParts.push(game.i18n.localize("SWIA.Keywords.Cleave"));
     if (kw.reach) keywordParts.push(game.i18n.localize("SWIA.Keywords.Reach"));
@@ -684,14 +828,15 @@ export class SWIACombatWindow extends BaseApplication {
         const armor = sideData.armorBonus?.[stat] ?? 0;
         const token = sideData.tokenBonus?.[stat] ?? 0;
         const condition = sideData.conditionBonus?.[stat] ?? 0;
+        const card = sideData.cardBonus?.[stat] ?? 0;
         const spent = sideData.spentTokens?.[stat]?.length ?? 0;
         const takesTokens = SIDE_TOKEN_STATS[side].includes(stat);
         const label = game.i18n.localize(`SWIA.Dice.${stat.charAt(0).toUpperCase()}${stat.slice(1)}`);
         return {
           side, stat, label,
           count: totals[stat],
-          manual, armor, token, condition,
-          breakdown: game.i18n.format("SWIA.Combat.BonusBreakdown", { manual, armor, token, condition }),
+          manual, armor, token, condition, card,
+          breakdown: game.i18n.format("SWIA.Combat.BonusBreakdown", { manual, armor, token, condition, card }),
           takesTokens,
           typedTokens: takesTokens ? (held[stat] ?? 0) : 0,
           anyTokens: takesTokens ? (held.any ?? 0) : 0,
@@ -705,6 +850,40 @@ export class SWIACombatWindow extends BaseApplication {
     const isSetup = combat.phase === "setup";
     const isAttackRolled = combat.phase === "attackRolled";
     const isRolled = combat.phase === "rolled";
+
+    // Declared card effects: one button per use the side's figure offers.
+    // Availability is read live (the card may have been exhausted elsewhere
+    // since the combat started); applied uses always show their Undo.
+    const cardRows = (side, sideData, actor, canAct) => {
+      const uses = sideData.cardUses ?? [];
+      return uses.map((use) => {
+        const owner = cardUseOwner(use, actor);
+        const mayDeclare = canAct || (Boolean(use.ownerActorId) && userOwnsActor(game.user, use.ownerActorId));
+        const open = inDeclareWindow(combat, side) && mayDeclare;
+        const item = resolveUseItem(owner, use.itemId);
+        const raw = item ? (item.system?.use ?? [])[use.useIndex] : null;
+        const live = item && raw ? cardUseAvailability(owner, item, raw) : { available: false, reason: "SWIA.CardUse.Missing" };
+        const siblingApplied = Boolean(use.choice) && uses.some((u) => u !== use && u.applied && u.choice === use.choice);
+        const canUse = open && !use.applied && live.available && !siblingApplied;
+        const reason = use.applied ? "" : (siblingApplied ? "SWIA.CardUse.ChoiceTaken" : live.reason);
+        return {
+          side,
+          key: use.key,
+          name: use.name,
+          ownerName: use.ownerName ?? "",
+          isFriendly: Boolean(use.ownerActorId),
+          note: use.note,
+          effectHTML: use.effectHTML,
+          costLabels: use.costLabels ?? [],
+          applied: use.applied,
+          canUse,
+          canUndo: open && use.applied,
+          reasonLabel: reason ? game.i18n.localize(reason) : ""
+        };
+      });
+    };
+    const attackerCardRows = cardRows("attacker", combat.attacker, attackerActor, canAttacker);
+    const defenderCardRows = cardRows("defender", combat.defender, defenderActor, canDefender);
 
     return foundry.utils.mergeObject(context, {
       hasCombat: true,
@@ -728,11 +907,15 @@ export class SWIACombatWindow extends BaseApplication {
           cardState: w.system?.cardState ?? "ready"
         })),
         preBonusRows: bonusRows("attacker", combat.attacker, attackerActor, canAttacker),
+        cardRows: attackerCardRows,
+        showCards: attackerCardRows.length > 0 && isSetup,
         tokensHeld: countPowerTokens(attackerActor)
       },
       defender: {
         ...combat.defender,
         preBonusRows: bonusRows("defender", combat.defender, defenderActor, canDefender),
+        cardRows: defenderCardRows,
+        showCards: defenderCardRows.length > 0 && (isSetup || isAttackRolled),
         tokensHeld: countPowerTokens(defenderActor)
       },
       attackRows: ATTACK_POOL_COLORS.map(diceRow("attacker", combat.attacker.pool)),
@@ -795,6 +978,16 @@ export class SWIACombatWindow extends BaseApplication {
   async _onUnspendSurge(event, target) {
     event.preventDefault();
     dispatchIntent("unspendSurge", { index: Number(target?.dataset?.index) });
+  }
+
+  async _onUseCard(event, target) {
+    event.preventDefault();
+    dispatchIntent("useCard", { side: target?.dataset?.side, key: target?.dataset?.key });
+  }
+
+  async _onUnuseCard(event, target) {
+    event.preventDefault();
+    dispatchIntent("unuseCard", { side: target?.dataset?.side, key: target?.dataset?.key });
   }
 
   async _onSpendToken(event, target) {

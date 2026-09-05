@@ -19,6 +19,7 @@ import {
   registerDiceTerms, registerDiceSoNice, registerChatRenderHooks, checkLegacyDiceModule
 } from "./dice/dice-terms.js";
 import { registerRollCardHooks } from "./dice/roll-dialog.js";
+import { registerItemTradeHooks } from "./item-trade.js";
 import { registerCombatHooks, SWIACombatWindow } from "./dice/combat-window.js";
 import { definePowerTokenActorClass, registerPowerTokenBadgeHooks } from "./token-badge.js";
 import { registerConditionSettings, rebuildConditionRegistry, applyStatusEffects } from "./conditions.js";
@@ -33,6 +34,13 @@ const ActorsCollection = foundry.documents.collections.Actors;
 const ItemsCollection = foundry.documents.collections.Items;
 const LEGACY_ABILITY_MIGRATION_KEY = "schemaMigration";
 const LEGACY_ABILITY_MIGRATION_VERSION = "0.0.5-ability-to-classcard";
+const CLASS_DECK_MIGRATION_KEY = "classDeckMigration";
+// Bumped when the migration learns a new item type (imperial class cards):
+// re-running is safe, every patch skips items already carrying the fields.
+const CLASS_DECK_MIGRATION_VERSION = "0.1.9-classdeck-flags-2";
+const ARMOR_MODIFIER_MIGRATION_KEY = "armorModifierMigration";
+const ARMOR_MODIFIER_MIGRATION_VERSION = "0.1.9-armor-modifier";
+const CLASS_DECK_ITEM_TYPES = ["weapon", "weaponmod", "armor", "gear"];
 const ROUND_STATE_KEY = "roundState";
 const DEFAULT_ROUND_STATE = {
   round: 1,
@@ -93,6 +101,110 @@ async function migrateLegacyAbilityItems() {
   }
 }
 
+/**
+ * Imperial class cards from the 0.1.8 packs carry their class in flags and
+ * say "Attachment." in their text; lift both into the schema. Returns the
+ * update patch, or null when the card already has its class set.
+ */
+function imperialCardPatch(item, flags) {
+  if (item.system?.imperialClass) return null;
+  const imperialClass = flags?.imperialClass;
+  if (!imperialClass) return null;
+  const xp = Number(flags?.classXp);
+  const text = String(item.system?.description ?? "").replace(/<[^>]+>/g, "").trim();
+  return {
+    _id: item.id,
+    "system.imperialClass": imperialClass,
+    "system.classXp": Number.isFinite(xp) ? xp : 0,
+    "system.attachment": /^attachment\b/i.test(text)
+  };
+}
+
+/**
+ * Class-deck equipment imported from the 0.1.8 packs carries its deck tag in
+ * `flags.swia.{heroClass,classXp}` only. Lift it into the schema fields so
+ * the hero sheet can list those items under Class Cards. Runs once per
+ * world; items with `system.heroClass` already set are left alone.
+ */
+async function migrateClassDeckFlags() {
+  if (!game.user?.isGM) return;
+  if (game.settings.get("swia", CLASS_DECK_MIGRATION_KEY) === CLASS_DECK_MIGRATION_VERSION) return;
+
+  const patchFor = (item) => {
+    if (item.type === "imperialclasscard") return imperialCardPatch(item, item.flags?.swia ?? {});
+    if (!CLASS_DECK_ITEM_TYPES.includes(item.type)) return null;
+    if (item.system?.heroClass) return null;
+    const heroClass = item.getFlag("swia", "heroClass");
+    if (!heroClass) return null;
+    const xp = Number(item.getFlag("swia", "classXp"));
+    return { _id: item.id, "system.heroClass": heroClass, "system.classXp": Number.isFinite(xp) ? xp : 0 };
+  };
+
+  let migrated = 0;
+  const worldUpdates = (game.items?.contents ?? []).map(patchFor).filter(Boolean);
+  if (worldUpdates.length) {
+    await Item.updateDocuments(worldUpdates);
+    migrated += worldUpdates.length;
+  }
+  for (const actor of game.actors?.contents ?? []) {
+    const updates = actor.items.map(patchFor).filter(Boolean);
+    if (!updates.length) continue;
+    await actor.updateEmbeddedDocuments("Item", updates);
+    migrated += updates.length;
+  }
+
+  await game.settings.set("swia", CLASS_DECK_MIGRATION_KEY, CLASS_DECK_MIGRATION_VERSION);
+  if (migrated > 0) {
+    console.log(`SWIA | Tagged ${migrated} class-deck equipment item(s) from pack flags.`);
+    ui.notifications?.info(`SWIA tagged ${migrated} class-deck equipment item(s).`);
+  }
+}
+
+/**
+ * 0.1.8 armor stored its printed effects as bonusHealth / bonusBlock /
+ * bonusEvade. ArmorData.migrateData folds them into `modifier` in memory
+ * on every load; this writes the fold back once, per world, so the stale
+ * fields are gone from the database (otherwise an armor edited to 0 Health
+ * would re-migrate to its old value on the next reload).
+ */
+async function migrateArmorModifiers() {
+  if (!game.user?.isGM) return;
+  if (game.settings.get("swia", ARMOR_MODIFIER_MIGRATION_KEY) === ARMOR_MODIFIER_MIGRATION_VERSION) return;
+
+  // migrateData has already stripped the legacy keys from the in-memory
+  // source, so there is nothing to test against: write every armor item
+  // once (deleting an absent key with -= is a no-op).
+  const patchFor = (item) => {
+    if (item.type !== "armor") return null;
+    const mod = item.system?.modifier ?? {};
+    return {
+      _id: item.id,
+      "system.modifier.stats.health": Number(mod.stats?.health) || 0,
+      "system.modifier.defense.block": Number(mod.defense?.block) || 0,
+      "system.modifier.defense.evade": Number(mod.defense?.evade) || 0,
+      "system.-=bonusHealth": null,
+      "system.-=bonusBlock": null,
+      "system.-=bonusEvade": null
+    };
+  };
+
+  let migrated = 0;
+  const worldUpdates = (game.items?.contents ?? []).map(patchFor).filter(Boolean);
+  if (worldUpdates.length) {
+    await Item.updateDocuments(worldUpdates);
+    migrated += worldUpdates.length;
+  }
+  for (const actor of game.actors?.contents ?? []) {
+    const updates = actor.items.map(patchFor).filter(Boolean);
+    if (!updates.length) continue;
+    await actor.updateEmbeddedDocuments("Item", updates);
+    migrated += updates.length;
+  }
+
+  await game.settings.set("swia", ARMOR_MODIFIER_MIGRATION_KEY, ARMOR_MODIFIER_MIGRATION_VERSION);
+  if (migrated > 0) console.log(`SWIA | Moved ${migrated} armor item(s) onto the shared modifier.`);
+}
+
 // Initialize system on Foundry ready
 Hooks.once("init", async function initSWIA() {
   console.log("SWIA | Initializing Star Wars Imperial Assault system");
@@ -102,6 +214,7 @@ Hooks.once("init", async function initSWIA() {
   registerDiceSoNice();
   registerChatRenderHooks();
   registerRollCardHooks();
+  registerItemTradeHooks();
   checkLegacyDiceModule();
   registerCombatHooks();
 
@@ -169,6 +282,32 @@ Hooks.once("init", async function initSWIA() {
     default: ""
   });
 
+  game.settings.register("swia", CLASS_DECK_MIGRATION_KEY, {
+    name: "SWIA Class-Deck Tag Migration Version",
+    scope: "world",
+    config: false,
+    type: String,
+    default: ""
+  });
+
+  game.settings.register("swia", ARMOR_MODIFIER_MIGRATION_KEY, {
+    name: "SWIA Armor Modifier Migration Version",
+    scope: "world",
+    config: false,
+    type: String,
+    default: ""
+  });
+
+  // Table rule: buying a class card by dropping it on a hero spends its XP.
+  game.settings.register("swia", "deductClassCardXp", {
+    name: "SWIA.Settings.DeductClassCardXp.Name",
+    hint: "SWIA.Settings.DeductClassCardXp.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false
+  });
+
   game.settings.register("swia", ROUND_STATE_KEY, {
     name: "SWIA Round State",
     scope: "world",
@@ -212,7 +351,8 @@ Hooks.once("init", async function initSWIA() {
     "systems/swia/templates/dice/roll-card.hbs",
     "systems/swia/templates/dice/combat-window.hbs",
     "systems/swia/templates/settings/conditions-config.hbs",
-    "systems/swia/templates/actors/parts/condition-tray.hbs"
+    "systems/swia/templates/actors/parts/condition-tray.hbs",
+    "systems/swia/templates/items/parts/modifier-editor.hbs"
   ]);
 
   // Register actor sheets for hero, villain, and ally types
@@ -248,12 +388,44 @@ Hooks.once("setup", () => {
   applyStatusEffects();
 });
 
+/**
+ * Packs built before the class-deck tag lived in the schema carry it only in
+ * `flags.swia.{heroClass,classXp}`. Lift it as the item is created (world
+ * import, drag onto an actor, hero starters arriving with a hero) so stale
+ * packs keep working without a rebuild. The ready-hook migration covers
+ * items that were already in the world.
+ */
+Hooks.on("preCreateItem", (item, data) => {
+  if (item.type === "imperialclasscard") {
+    const patch = imperialCardPatch(item, data?.flags?.swia);
+    if (patch) { delete patch._id; item.updateSource(patch); }
+    return;
+  }
+  if (!CLASS_DECK_ITEM_TYPES.includes(item.type)) return;
+  if (item.system?.heroClass) return;
+  const heroClass = data?.flags?.swia?.heroClass;
+  if (!heroClass) return;
+  const xp = Number(data.flags.swia.classXp);
+  item.updateSource({ "system.heroClass": heroClass, "system.classXp": Number.isFinite(xp) ? xp : 0 });
+});
+
 Hooks.once("ready", async () => {
   try {
     await migrateLegacyAbilityItems();
   } catch (error) {
     console.error("SWIA | Legacy item migration failed", error);
     ui.notifications?.error("SWIA failed to migrate legacy class card items. Check console for details.");
+  }
+  try {
+    await migrateClassDeckFlags();
+  } catch (error) {
+    console.error("SWIA | Class-deck tag migration failed", error);
+    ui.notifications?.error("SWIA failed to tag class-deck equipment. Check console for details.");
+  }
+  try {
+    await migrateArmorModifiers();
+  } catch (error) {
+    console.error("SWIA | Armor modifier migration failed", error);
   }
 });
 

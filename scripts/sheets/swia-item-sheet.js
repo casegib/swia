@@ -2,6 +2,8 @@
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseItemSheet = HandlebarsApplicationMixin(foundry.applications.sheets.ItemSheetV2);
 
+import { modifierChips, modifierEffectHTML, cardUseCostLabels, toArray, CARD_USE_ITEM_TYPES } from "../data/common.js";
+
 function resolveItemDocument(ctx) {
   return ctx?.document ?? ctx?.item ?? ctx?.object ?? ctx?.options?.document ?? null;
 }
@@ -88,7 +90,9 @@ export class SWIAItemSheet extends BaseItemSheet {
       addFormSurgeAbility: SWIAItemSheet.#onAddFormSurgeAbility,
       removeFormSurgeAbility: SWIAItemSheet.#onRemoveFormSurgeAbility,
       addFormSpecialAbility: SWIAItemSheet.#onAddFormSpecialAbility,
-      removeFormSpecialAbility: SWIAItemSheet.#onRemoveFormSpecialAbility
+      removeFormSpecialAbility: SWIAItemSheet.#onRemoveFormSpecialAbility,
+      addUse: SWIAItemSheet.#onAddUse,
+      removeUse: SWIAItemSheet.#onRemoveUse
     }
   };
 
@@ -181,6 +185,12 @@ export class SWIAItemSheet extends BaseItemSheet {
     }
     if (ABILITY_ROW_TYPES.includes(item.type)) {
       Object.assign(update, this._collectAbilityRowsUpdate(form));
+    }
+    if (CARD_USE_ITEM_TYPES.includes(item.type)) {
+      Object.assign(update, this._collectCardUseUpdate(form));
+    }
+    if (item.type === "weapon") {
+      Object.assign(update, this._collectExhaustRowsUpdate(form));
     }
 
     if (!Object.keys(update).length) return;
@@ -311,6 +321,12 @@ export class SWIAItemSheet extends BaseItemSheet {
     if (ABILITY_ROW_TYPES.includes(item.type)) {
       Object.assign(update, this._collectAbilityRowsUpdate(formEl));
     }
+    if (CARD_USE_ITEM_TYPES.includes(item.type)) {
+      Object.assign(update, this._collectCardUseUpdate(formEl));
+    }
+    if (item.type === "weapon") {
+      Object.assign(update, this._collectExhaustRowsUpdate(formEl));
+    }
 
     if (!Object.keys(update).length) {
       ui.notifications?.warn(game.i18n.localize("SWIA.Item.NoChangesToSave"));
@@ -324,6 +340,75 @@ export class SWIAItemSheet extends BaseItemSheet {
       console.error("SWIA | Manual save failed", error);
       ui.notifications?.error(game.i18n.localize("SWIA.Item.SaveFailed"));
     }
+  }
+
+  // Declared card effects: add / remove a `use` row (class cards). The row
+  // fields save through the DOM scrape below, so add/remove write directly.
+  static async #onAddUse(event, target) {
+    const item = resolveItemDocument(this);
+    if (!item || !CARD_USE_ITEM_TYPES.includes(item.type)) return;
+    const uses = toArray(item.system?.use).map((u) => foundry.utils.deepClone(u));
+    uses.push({ when: "attack", scope: "self", note: "", choice: "", cost: { exhaust: true, strain: 0, deplete: false, threat: 0 }, modifier: {}, surgeAbilities: [] });
+    await item.update({ "system.use": uses });
+  }
+
+  static async #onRemoveUse(event, target) {
+    const item = resolveItemDocument(this);
+    if (!item || !CARD_USE_ITEM_TYPES.includes(item.type)) return;
+    const index = parseInt(target.dataset.index);
+    if (isNaN(index)) return;
+    const uses = toArray(item.system?.use).map((u) => foundry.utils.deepClone(u));
+    uses.splice(index, 1);
+    await item.update({ "system.use": uses });
+  }
+
+  /**
+   * Scrape the declared-effect rows (unnamed inputs carrying data-field
+   * paths relative to the row). Surge grants are carried through from the
+   * stored entry — the sheet shows but does not edit them.
+   */
+  _collectCardUseUpdate(formEl) {
+    const root = formEl
+      ?? this.element?.querySelector?.('[data-application-part="form"]')
+      ?? this.element
+      ?? null;
+    if (!(root instanceof HTMLElement)) return {};
+    if (!root.querySelector(".classcard-uses-edit")) return {};
+
+    const item = resolveItemDocument(this);
+    const stored = toArray(item?.system?.use);
+    const uses = [];
+    root.querySelectorAll(".classcard-uses-edit .use-row[data-index]").forEach((row) => {
+      const index = parseInt(row.dataset.index);
+      const entry = { when: "attack", scope: "self", note: "", choice: "", cost: { exhaust: false, strain: 0, deplete: false, threat: 0 }, modifier: {}, surgeAbilities: foundry.utils.deepClone(stored[index]?.surgeAbilities ?? []) };
+      row.querySelectorAll("[data-field]").forEach((input) => {
+        const path = input.dataset.field;
+        let value;
+        if (input.type === "checkbox") value = input.checked;
+        else if (input.type === "number") value = Number(input.value) || 0;
+        else value = input.value ?? "";
+        foundry.utils.setProperty(entry, path, value);
+      });
+      uses.push(entry);
+    });
+    return { "system.use": uses };
+  }
+
+  /** Scrape the weapon's exhaust-ability rows (unnamed inputs, like the printed ability rows). */
+  _collectExhaustRowsUpdate(formEl) {
+    const root = formEl
+      ?? this.element?.querySelector?.('[data-application-part="form"]')
+      ?? this.element
+      ?? null;
+    if (!(root instanceof HTMLElement)) return {};
+    if (!root.querySelector(".weapon-exhaust-list .exhaust-effect-input")) return {};
+    const rows = [];
+    root.querySelectorAll(".weapon-exhaust-list .weapon-exhaust-row").forEach((li) => {
+      const effect = li.querySelector(".exhaust-effect-input");
+      if (!effect) return;
+      rows.push({ trigger: li.querySelector(".exhaust-trigger-input")?.value || "action", effect: effect.value ?? "" });
+    });
+    return { "system.exhaustAbilities": rows };
   }
 
   // Add surge ability to formcard (V2)
@@ -413,11 +498,32 @@ export class SWIAItemSheet extends BaseItemSheet {
     const armorClassLabel = item.type === "armor" && system.armorClass
       ? game.i18n.localize(`SWIA.Item.Armor.ArmorClass.${system.armorClass.charAt(0).toUpperCase()}${system.armorClass.slice(1)}`)
       : "";
-    const hasArmorEffects = item.type === "armor"
-      && ((Number(system.bonusHealth) || 0) + (Number(system.bonusBlock) || 0) + (Number(system.bonusEvade) || 0)) > 0;
+    const armorChips = item.type === "armor" ? modifierChips(system.modifier) : [];
+    const hasArmorEffects = armorChips.length > 0;
+    const passiveChips = ["classcard", "imperialclasscard"].includes(item.type) ? modifierChips(system.passive) : [];
+    const useRows = CARD_USE_ITEM_TYPES.includes(item.type)
+      ? toArray(system.use).map((use, index) => ({
+          index,
+          ...use,
+          whenLabel: game.i18n.localize(`SWIA.Item.ClassCard.UseWhen.${use.when ?? "attack"}`),
+          scopeLabel: (use.scope && use.scope !== "self") ? game.i18n.localize(`SWIA.Item.ClassCard.UseScope.${use.scope}`) : "",
+          effectHTML: modifierEffectHTML(use.modifier),
+          costLabels: cardUseCostLabels(use.cost),
+          surgeLines: toArray(use.surgeAbilities).map((sa) => {
+            const v = Number(sa.effectValue) || 0;
+            const text = sa.effectType === "damage" ? `+${v} ${game.i18n.localize("SWIA.Dice.Damage")}`
+              : sa.effectType === "accuracy" ? `+${v} ${game.i18n.localize("SWIA.Dice.Accuracy")}`
+              : sa.effectType === "pierce" ? `${game.i18n.localize("SWIA.Keywords.Pierce")} ${v}`
+              : (sa.effectText ?? "");
+            return { cost: Number(sa.cost) || 1, text };
+          })
+        }))
+      : [];
 
-    const hasClasscardDetails = item.type === "classcard"
-      && Boolean(system.heroClass || system.xpCost > 0 || system.abilityText);
+    const hasClasscardDetails = (item.type === "classcard"
+      && Boolean(system.heroClass || system.xpCost > 0 || system.abilityText))
+      || item.type === "imperialclasscard"
+      || passiveChips.length > 0 || useRows.length > 0;
 
     // Enrich weapon abilities (free-form ability rows with optional prefix icons)
     // Normalize to array — Foundry can store new array fields as {} on existing documents
@@ -451,6 +557,11 @@ export class SWIAItemSheet extends BaseItemSheet {
       enrichedDescription: enrichedDescription,
       enrichedAbilityText: enrichedAbilityText,
       enrichedAbilities: enrichedAbilities,
+      exhaustRows: item.type === "weapon" ? toArray(system.exhaustAbilities).map((row) => ({
+        trigger: row.trigger || "action",
+        effect: row.effect ?? "",
+        triggerLabel: game.i18n.localize(`SWIA.Item.Weapon.ExhaustTrigger.${(row.trigger || "action").charAt(0).toUpperCase()}${(row.trigger || "action").slice(1)}`)
+      })) : [],
       editMode: this.editMode ?? false,
       isEditable: this.isEditable !== false,
       isGM: game.user?.isGM ?? false,
@@ -460,6 +571,9 @@ export class SWIAItemSheet extends BaseItemSheet {
       keywordsLine: keywordsLine,
       armorClassLabel: armorClassLabel,
       hasArmorEffects: hasArmorEffects,
+      armorChips,
+      passiveChips,
+      useRows,
       hasClasscardDetails: hasClasscardDetails,
       weaponmodAttachedWeaponName: weaponmodAttachedWeaponName,
       config: CONFIG.SWIA ?? {}

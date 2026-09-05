@@ -1,4 +1,5 @@
 import { CAMPAIGN_RESOURCES_KEY } from "./campaign-tracker.js";
+import { bindCardPreviews, hideCardPreview } from "./item-cards.js";
 import { escapeHTML } from "./data/common.js";
 
 // Foundry v13+ ApplicationV2 base
@@ -38,9 +39,6 @@ export class SWIAImperialPortal extends BaseApplication {
     super(...args);
     this._syncHooks = [];
     this._refreshHandle = null;
-    this._cardPreviewElement = null;
-    this._cardPreviewDelayHandle = null;
-    this._pendingCardPreview = null;
     this._cardPreviewEventsController = null;
     this._registerSyncHooks();
   }
@@ -181,7 +179,7 @@ export class SWIAImperialPortal extends BaseApplication {
     }
     if (!item?.parent) return false;
     if (item.parent.documentName !== "Actor") return false;
-    if (!["weapon", "classcard", "gear"].includes(item.type)) return false;
+    if (!["weapon", "classcard", "gear", "imperialclasscard"].includes(item.type)) return false;
     return this._isPortalActor(item.parent);
   }
 
@@ -357,144 +355,29 @@ export class SWIAImperialPortal extends BaseApplication {
 
   _bindCardPreviewListeners(root) {
     if (!root?.querySelectorAll) return;
-
     this._unbindCardPreviewListeners();
 
     const controller = new AbortController();
     const signal = controller.signal;
     this._cardPreviewEventsController = controller;
 
-    const itemButtons = root.querySelectorAll(".portal-item-open");
-    for (const button of itemButtons) {
-      button.addEventListener("mouseenter", this._onShowCardPreview.bind(this), { signal });
-      button.addEventListener("focusin", this._onShowCardPreview.bind(this), { signal });
-      button.addEventListener("mousemove", this._onMoveCardPreview.bind(this), { signal });
-      button.addEventListener("mouseleave", this._onHideCardPreview.bind(this), { signal });
-      button.addEventListener("focusout", this._onHideCardPreview.bind(this), { signal });
-    }
+    // Hover previews come from the shared helper (same element and timing
+    // as the hero sheet and the Player Area).
+    bindCardPreviews(root, { signal, selector: ".portal-item-open" });
 
-    const dropZones = root.querySelectorAll(".portal-drop-zone");
-    for (const dropZone of dropZones) {
-      dropZone.addEventListener("scroll", this._onHideCardPreview.bind(this), { signal });
+    for (const dropZone of root.querySelectorAll(".portal-drop-zone")) {
       // Item drag-and-drop onto portal panels (rebound on each render).
       dropZone.addEventListener("dragover", this._onPortalDragOver.bind(this), { signal });
       dropZone.addEventListener("drop", this._onPortalDrop.bind(this), { signal });
     }
   }
 
-  _ensureCardPreviewElement() {
-    if (this._cardPreviewElement) return this._cardPreviewElement;
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "swia-portal-card-preview";
 
-    const image = document.createElement("img");
-    image.alt = "";
-    image.loading = "eager";
-    wrapper.appendChild(image);
 
-    document.body.appendChild(wrapper);
-    this._cardPreviewElement = wrapper;
-    return wrapper;
-  }
 
-  _destroyCardPreviewElement() {
-    if (!this._cardPreviewElement) return;
-    this._cardPreviewElement.remove();
-    this._cardPreviewElement = null;
-  }
 
-  _extractPointer(event) {
-    const baseEvent = event?.originalEvent ?? event;
-    const touch = baseEvent?.touches?.[0] ?? baseEvent?.changedTouches?.[0] ?? null;
-    const clientX = touch?.clientX ?? baseEvent?.clientX;
-    const clientY = touch?.clientY ?? baseEvent?.clientY;
-    return { clientX, clientY };
-  }
 
-  _positionCardPreview(clientX, clientY) {
-    const preview = this._cardPreviewElement;
-    if (!preview) return;
-    if (!Number.isFinite(clientX) || !Number.isFinite(clientY)) return;
-
-    const offset = 18;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const rect = preview.getBoundingClientRect();
-    const width = rect.width || 280;
-    const height = rect.height || 410;
-
-    let left = clientX + offset;
-    let top = clientY + offset;
-
-    if (left + width > vw - 8) left = clientX - width - offset;
-    if (top + height > vh - 8) top = vh - height - 8;
-    if (left < 8) left = 8;
-    if (top < 8) top = 8;
-
-    preview.style.left = `${Math.round(left)}px`;
-    preview.style.top = `${Math.round(top)}px`;
-  }
-
-  _onShowCardPreview(event) {
-    const target = event.currentTarget;
-    const image = target?.querySelector("img");
-    const src = image?.getAttribute("src");
-    if (!src) return;
-    const { clientX, clientY } = this._extractPointer(event);
-    const rect = target?.getBoundingClientRect?.();
-    const fallbackX = rect ? rect.left + (rect.width / 2) : undefined;
-    const fallbackY = rect ? rect.top + (rect.height / 2) : undefined;
-    this._pendingCardPreview = {
-      src,
-      alt: image?.getAttribute("alt") || target?.getAttribute("title") || "",
-      clientX: Number.isFinite(clientX) ? clientX : fallbackX,
-      clientY: Number.isFinite(clientY) ? clientY : fallbackY
-    };
-
-    if (this._cardPreviewDelayHandle) {
-      clearTimeout(this._cardPreviewDelayHandle);
-    }
-
-    this._cardPreviewDelayHandle = setTimeout(() => {
-      this._cardPreviewDelayHandle = null;
-      const pending = this._pendingCardPreview;
-      if (!pending?.src) return;
-
-      const preview = this._ensureCardPreviewElement();
-      const previewImage = preview.querySelector("img");
-      if (!previewImage) return;
-
-      previewImage.src = pending.src;
-      previewImage.alt = pending.alt;
-      preview.classList.add("is-visible");
-
-      if (Number.isFinite(pending.clientX) && Number.isFinite(pending.clientY)) {
-        this._positionCardPreview(pending.clientX, pending.clientY);
-      }
-    }, 120);
-  }
-
-  _onMoveCardPreview(event) {
-    if (this._pendingCardPreview) {
-      const { clientX, clientY } = this._extractPointer(event);
-      this._pendingCardPreview.clientX = clientX;
-      this._pendingCardPreview.clientY = clientY;
-    }
-
-    if (!this._cardPreviewElement?.classList.contains("is-visible")) return;
-    const { clientX, clientY } = this._extractPointer(event);
-    this._positionCardPreview(clientX, clientY);
-  }
-
-  _onHideCardPreview() {
-    if (this._cardPreviewDelayHandle) {
-      clearTimeout(this._cardPreviewDelayHandle);
-      this._cardPreviewDelayHandle = null;
-    }
-    this._pendingCardPreview = null;
-    this._cardPreviewElement?.classList.remove("is-visible");
-  }
 
   async _onOpenActor(event, target) {
     event.preventDefault();
@@ -652,9 +535,8 @@ export class SWIAImperialPortal extends BaseApplication {
   }
 
   async close(options) {
-    this._onHideCardPreview();
+    hideCardPreview();
     this._unbindCardPreviewListeners();
-    this._destroyCardPreviewElement();
     this._unregisterSyncHooks();
     return super.close?.(options);
   }

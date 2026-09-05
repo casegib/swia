@@ -2454,6 +2454,37 @@
   color: var(--accent);
 }
 
+/* Class-deck badges: XP / Starter on every Class Cards row, and on the
+   weapon / armor / accessory rows that came from a hero's class deck. */
+.swia-sheet .class-deck-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.swia-sheet .class-deck-xp {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #3a2a12;
+  background: rgba(var(--accent-rgb), 0.22);
+  border: 1px solid rgba(var(--accent-rgb), 0.5);
+}
+
+.swia-sheet .class-deck-xp.starter {
+  color: #4a4034;
+  background: rgba(139, 111, 71, 0.1);
+  border: 1px dashed rgba(var(--accent-rgb), 0.45);
+}
+
 .swia-sheet .item-controls {
   display: flex;
   align-items: center;
@@ -6491,6 +6522,123 @@ input:checked + .defeated-label { color: #8b0000; }
 .swia-sheet.item-sheet .card-state-pill.depleted { background: linear-gradient(135deg, #c0392b, #8f1f14); border-color: #6e150c; }
 
 /* Cost sits with the other header numbers rather than alone at the bottom */
+/* Class-deck tag on equipment sheets: "Biv Bodhrik · 3 XP" chip in the
+   title strip, and a two-field editor row. */
+/* Shared modifier editor (armor effects, class-card passive): four short
+   labelled rows of small number inputs; the dice row uses die swatches. */
+.swia-sheet .modifier-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 8px;
+  border: 1px solid rgba(95, 67, 35, 0.3);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.swia-sheet .modifier-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.swia-sheet .modifier-group-label {
+  flex: 0 0 64px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.swia-sheet .modifier-group > label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #3a2a12;
+  white-space: nowrap;
+}
+
+.swia-sheet .modifier-group input[type="number"] {
+  width: 46px;
+  min-width: 0;
+  text-align: center;
+  padding: 1px 2px;
+}
+
+.swia-sheet .modifier-dice .dice-block {
+  width: 12px;
+  height: 12px;
+}
+
+.swia-sheet .modifier-dice-sep {
+  width: 1px;
+  height: 16px;
+  background: rgba(95, 67, 35, 0.35);
+  margin: 0 2px;
+}
+
+.swia-sheet.classcard-sheet .classcard-passive-chips {
+  margin: 4px 0 6px;
+}
+
+/* Extra modifier chips beyond health / block / evade */
+.armor-fx-chip.endurance { background: linear-gradient(180deg, #4f8a5b 0%, #2b5a34 100%); border-color: rgba(20, 50, 26, 0.6); }
+.armor-fx-chip.speed    { background: linear-gradient(180deg, #4a7fb5 0%, #24507f 100%); border-color: rgba(16, 38, 64, 0.6); }
+.armor-fx-chip.damage   { background: linear-gradient(180deg, #b0452f 0%, #6e2416 100%); border-color: rgba(70, 20, 10, 0.6); }
+.armor-fx-chip.surge    { background: linear-gradient(180deg, #c9a227 0%, #8a6a10 100%); border-color: rgba(90, 65, 10, 0.6); }
+.armor-fx-chip.accuracy { background: linear-gradient(180deg, #7a6a52 0%, #4b3f2e 100%); border-color: rgba(40, 30, 20, 0.6); }
+.armor-fx-chip.pierce   { background: linear-gradient(180deg, #6d5d8f 0%, #3f3260 100%); border-color: rgba(30, 20, 50, 0.6); }
+.armor-fx-chip.red      { background: #a32a1d; }
+.armor-fx-chip.blue     { background: #2a5aa3; }
+.armor-fx-chip.green    { background: #2f7a3a; }
+.armor-fx-chip.yellow   { background: #b8940f; }
+.armor-fx-chip.black    { background: #202020; }
+.armor-fx-chip.white    { background: #e8e3d8; color: #2a2318; }
+
+.swia-sheet .stat-speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.swia-sheet.item-sheet .cost-chip.class-deck-chip {
+  background: rgba(var(--accent-rgb), 0.18);
+  border-color: rgba(var(--accent-rgb), 0.55);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.swia-sheet.item-sheet .class-deck-line {
+  display: flex;
+  justify-content: flex-start;
+  margin: 4px 0 8px;
+}
+
+.swia-sheet.item-sheet .class-deck-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 72px;
+  gap: 8px;
+  align-items: end;
+}
+
+.swia-sheet.item-sheet .class-deck-edit-grid > label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--label);
+}
+
+.swia-sheet.item-sheet .class-deck-edit-grid input {
+  width: 100%;
+  min-width: 0;
+}
+
 .swia-sheet.item-sheet .cost-chip {
   flex-shrink: 0;
   font-size: 9.5px;
@@ -7374,4 +7522,272 @@ img.swia-glyph {
   border-radius: 0;
   background: none;
   object-fit: contain;
+}
+
+/* ============================================================
+   Declared class-card effects (combat window + roll dialog)
+   ============================================================ */
+.combat-card-uses {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(95, 67, 35, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.swia-roll-dialog-body .combat-card-uses {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.combat-card-uses .combat-pre-bonus-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.65;
+  margin-bottom: 2px;
+}
+.card-use-row {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+}
+.card-use-btn {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(64, 43, 21, 0.45);
+  background: linear-gradient(180deg, #f6efdf 0%, #e6d8b8 100%);
+  color: #2b1f14;
+  font-size: 11px;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+}
+.card-use-btn:hover:not(:disabled) {
+  border-color: var(--accent, #8b6f47);
+  box-shadow: 0 0 0 1px rgba(139, 111, 71, 0.35);
+}
+.card-use-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.card-use-row.applied .card-use-btn {
+  background: linear-gradient(180deg, #dfeedc 0%, #b9d5b0 100%);
+  border-color: rgba(38, 84, 42, 0.6);
+  opacity: 1;
+}
+.card-use-name {
+  font-weight: 700;
+}
+.card-use-effect {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 700;
+  color: #4a3416;
+}
+.card-use-effect .swia-glyph,
+.card-use-effect img {
+  height: 1em;
+  width: auto;
+}
+.card-use-effect .swia-glyph-die {
+  width: 11px;
+  height: 11px;
+}
+.card-use-cost {
+  padding: 0 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(110, 21, 12, 0.5);
+  background: rgba(163, 42, 29, 0.12);
+  color: #6e1a10;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.card-use-note {
+  flex-basis: 100%;
+  font-size: 10px;
+  font-style: italic;
+  opacity: 0.8;
+}
+.card-use-undo {
+  flex: 0 0 auto;
+  align-self: center;
+}
+
+/* Class-card sheet: declared-effect rows */
+.swia-sheet.classcard-sheet .classcard-uses {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 4px 0 6px;
+}
+.swia-sheet.classcard-sheet .classcard-use-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  font-size: 12px;
+}
+.swia-sheet.classcard-sheet .classcard-use-when {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 6px;
+  border-radius: 3px;
+  background: rgba(43, 31, 20, 0.08);
+  border: 1px solid rgba(43, 31, 20, 0.2);
+}
+.swia-sheet.classcard-sheet .classcard-use-surge {
+  flex-basis: 100%;
+  font-size: 11px;
+  padding-left: 8px;
+}
+.swia-sheet.classcard-sheet .use-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 1px solid rgba(95, 67, 35, 0.35);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.03);
+}
+.swia-sheet.classcard-sheet .use-row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+.swia-sheet.classcard-sheet .use-row-head label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.swia-sheet.classcard-sheet .use-row-head input[type="text"] {
+  min-width: 120px;
+}
+.swia-sheet.classcard-sheet .use-row-head input[type="number"] {
+  width: 46px;
+  text-align: center;
+}
+.swia-sheet.classcard-sheet .use-remove {
+  margin-left: auto;
+  font-size: 11px;
+}
+.swia-sheet.classcard-sheet .use-add {
+  align-self: flex-start;
+  font-size: 11px;
+}
+
+/* Villain sheet: Attachments panel (imperial class cards on the group) */
+.swia-sheet .inventory-group-attachments {
+  grid-column: 1 / -1;
+}
+.swia-sheet .attachment-use-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px 6px;
+  margin-top: 3px;
+  font-size: 11px;
+}
+.swia-sheet .attachment-use-line .classcard-use-when {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 6px;
+  border-radius: 3px;
+  background: rgba(43, 31, 20, 0.08);
+  border: 1px solid rgba(43, 31, 20, 0.2);
+}
+.swia-sheet .item-entry.class-wide-on-actor {
+  border-style: dashed;
+}
+
+/* ============================================================
+   Item QoL: give button, exhaust-ability rows, drag reorder
+   ============================================================ */
+.swia-sheet .item-give-btn {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.35);
+  color: #4a3416;
+  font-size: 10px;
+  cursor: pointer;
+}
+.swia-sheet .item-give-btn:hover {
+  background: rgba(var(--accent-rgb), 0.2);
+}
+
+.swia-sheet .weapon-exhaust-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 4px 0;
+}
+.swia-sheet .weapon-exhaust-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+.swia-sheet .exhaust-use-btn {
+  padding: 1px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(110, 21, 12, 0.5);
+  background: linear-gradient(180deg, #f1dcc9 0%, #d9b48f 100%);
+  color: #4a1f10;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.swia-sheet .exhaust-use-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.exhaust-trigger-tag {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 6px;
+  border-radius: 3px;
+  background: rgba(43, 31, 20, 0.08);
+  border: 1px solid rgba(43, 31, 20, 0.2);
+}
+.swia-sheet .weapon-exhaust-effect {
+  flex: 1 1 160px;
+}
+
+.swia-sheet .item-entry[draggable="true"] {
+  cursor: grab;
+}
+.swia-sheet .item-entry.reorder-target {
+  outline: 2px dashed var(--accent, #8b6f47);
+  outline-offset: -2px;
+}
+
+.swia-give-notice {
+  font-style: italic;
 }

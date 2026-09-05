@@ -25,6 +25,9 @@
       {{#if systemData.cost}}
       <span class="cost-chip" title="{{localize 'SWIA.Item.Weapon.Cost'}}">{{systemData.cost}} {{localize "SWIA.Item.Weapon.Credits"}}</span>
       {{/if}}
+      {{#if systemData.heroClass}}
+      <span class="cost-chip class-deck-chip" title="{{localize 'SWIA.Item.ClassDeck.Legend'}}">{{systemData.heroClass}} · {{#if systemData.classXp}}{{systemData.classXp}} {{localize "SWIA.Item.ClassCard.XP"}}{{else}}{{localize "SWIA.Inventory.ClassDeckStarter"}}{{/if}}</span>
+      {{/if}}
     </header>
 
     <div class="weapon-art-area">
@@ -43,9 +46,7 @@
       <aside class="attack-badge armor-effects-badge" aria-label="{{localize 'SWIA.Item.Armor.Effects'}}">
         <div class="attack-badge-title">{{localize "SWIA.Item.Armor.Effects"}}</div>
         <div class="attack-badge-dice armor-effects-row">
-          {{#if systemData.bonusHealth}}<span class="armor-fx-chip health" title="{{localize 'SWIA.Item.Armor.BonusHealthHint'}}">+{{systemData.bonusHealth}} <img src="systems/swia/icons/Damage.png" alt="{{localize 'SWIA.Attributes.Health'}}" /></span>{{/if}}
-          {{#if systemData.bonusBlock}}<span class="armor-fx-chip block" title="{{localize 'SWIA.Item.Armor.BonusBlockHint'}}">+{{systemData.bonusBlock}} <img src="systems/swia/icons/Block.png" alt="{{localize 'SWIA.Dice.Block'}}" /></span>{{/if}}
-          {{#if systemData.bonusEvade}}<span class="armor-fx-chip evade" title="{{localize 'SWIA.Item.Armor.BonusEvadeHint'}}">+{{systemData.bonusEvade}} <img src="systems/swia/icons/Evade.png" alt="{{localize 'SWIA.Dice.Evade'}}" /></span>{{/if}}
+          {{#each armorChips}}<span class="armor-fx-chip {{this.key}}">{{this.label}}{{#if (eq this.key "health")}} <img src="systems/swia/icons/Damage.png" alt="" />{{/if}}{{#if (eq this.key "block")}} <img src="systems/swia/icons/Block.png" alt="" />{{/if}}{{#if (eq this.key "evade")}} <img src="systems/swia/icons/Evade.png" alt="" />{{/if}}</span>{{/each}}
           {{#unless hasArmorEffects}}<span class="armor-fx-chip none">{{localize "SWIA.Item.Armor.NoEffects"}}</span>{{/unless}}
         </div>
       </aside>
@@ -70,22 +71,25 @@
     {{#if editMode}}
     <div class="weapon-meta-edit">
       <div class="meta-edit-row">
-        <div class="edit-field numeric-trio armor-effects-edit">
-          <div class="numeric-field">
-            <label title="{{localize 'SWIA.Item.Armor.BonusHealthHint'}}">{{localize "SWIA.Item.Armor.BonusHealth"}}</label>
-            <input name="system.bonusHealth" type="number" value="{{systemData.bonusHealth}}" data-dtype="Number" min="0" />
-          </div>
-          <div class="numeric-field">
-            <label title="{{localize 'SWIA.Item.Armor.BonusBlockHint'}}">{{localize "SWIA.Item.Armor.BonusBlock"}}</label>
-            <input name="system.bonusBlock" type="number" value="{{systemData.bonusBlock}}" data-dtype="Number" min="0" />
-          </div>
-          <div class="numeric-field">
-            <label title="{{localize 'SWIA.Item.Armor.BonusEvadeHint'}}">{{localize "SWIA.Item.Armor.BonusEvade"}}</label>
-            <input name="system.bonusEvade" type="number" value="{{systemData.bonusEvade}}" data-dtype="Number" min="0" />
-          </div>
+        <div class="edit-field armor-effects-edit">
+          <label title="{{localize 'SWIA.Item.Armor.EffectsHint'}}">{{localize "SWIA.Item.Armor.Effects"}}</label>
+          {{> "systems/swia/templates/items/parts/modifier-editor.hbs" path="system.modifier" mod=systemData.modifier}}
+        </div>
+        <div class="edit-field numeric-trio">
           <div class="numeric-field">
             <label>{{localize "SWIA.Item.Weapon.Cost"}}</label>
             <input name="system.cost" type="number" value="{{systemData.cost}}" data-dtype="Number" min="0" />
+          </div>
+        </div>
+        <div class="edit-field class-deck-edit-field">
+          <label>{{localize "SWIA.Item.ClassDeck.Legend"}}</label>
+          <div class="class-deck-edit-grid">
+            <label title="{{localize 'SWIA.Item.ClassDeck.HeroClassHint'}}">{{localize "SWIA.Item.ClassDeck.HeroClass"}}
+              <input name="system.heroClass" type="text" value="{{systemData.heroClass}}" placeholder="{{localize 'SWIA.Item.ClassCard.HeroClassPlaceholder'}}" />
+            </label>
+            <label title="{{localize 'SWIA.Item.ClassDeck.XpHint'}}">{{localize "SWIA.Item.ClassDeck.Xp"}}
+              <input name="system.classXp" type="number" value="{{systemData.classXp}}" data-dtype="Number" min="0" max="4" />
+            </label>
           </div>
         </div>
         <div class="edit-field">

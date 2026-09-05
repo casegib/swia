@@ -76,6 +76,26 @@
         </div>
         {{/each}}
       </div>
+      {{#if attacker.showCards}}
+      <div class="combat-card-uses">
+        <span class="combat-pre-bonus-label">{{localize "SWIA.CardUse.Title"}}</span>
+        {{#each attacker.cardRows}}
+        <div class="card-use-row {{#if applied}}applied{{/if}}">
+          <button type="button" class="card-use-btn" data-action="combatUseCard" data-side="{{side}}" data-key="{{key}}"
+            title="{{#if reasonLabel}}{{reasonLabel}}{{else}}{{localize 'SWIA.CardUse.DeclareHint'}}{{/if}}" {{#unless canUse}}disabled{{/unless}}>
+            {{#if isFriendly}}<span class="card-use-owner" title="{{localize 'SWIA.CardUse.FriendlyHint'}}">{{ownerName}}</span>{{/if}}<span class="card-use-name">{{name}}</span>
+            {{#if effectHTML}}<span class="card-use-effect">{{{effectHTML}}}</span>{{/if}}
+            {{#each costLabels}}<span class="card-use-cost">{{this}}</span>{{/each}}
+            {{#if note}}<span class="card-use-note">{{note}}</span>{{/if}}
+          </button>
+          {{#if applied}}
+          <button type="button" class="pool-token-btn undo card-use-undo" data-action="combatUnuseCard" data-side="{{side}}" data-key="{{key}}"
+            title="{{localize 'SWIA.CardUse.UndoHint'}}" {{#unless canUndo}}disabled{{/unless}}><i class="fas fa-undo"></i></button>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
       {{/if}}
     </section>
 
@@ -128,6 +148,26 @@
         </div>
         {{/each}}
       </div>
+      {{#if defender.showCards}}
+      <div class="combat-card-uses">
+        <span class="combat-pre-bonus-label">{{localize "SWIA.CardUse.Title"}}</span>
+        {{#each defender.cardRows}}
+        <div class="card-use-row {{#if applied}}applied{{/if}}">
+          <button type="button" class="card-use-btn" data-action="combatUseCard" data-side="{{side}}" data-key="{{key}}"
+            title="{{#if reasonLabel}}{{reasonLabel}}{{else}}{{localize 'SWIA.CardUse.DeclareHint'}}{{/if}}" {{#unless canUse}}disabled{{/unless}}>
+            {{#if isFriendly}}<span class="card-use-owner" title="{{localize 'SWIA.CardUse.FriendlyHint'}}">{{ownerName}}</span>{{/if}}<span class="card-use-name">{{name}}</span>
+            {{#if effectHTML}}<span class="card-use-effect">{{{effectHTML}}}</span>{{/if}}
+            {{#each costLabels}}<span class="card-use-cost">{{this}}</span>{{/each}}
+            {{#if note}}<span class="card-use-note">{{note}}</span>{{/if}}
+          </button>
+          {{#if applied}}
+          <button type="button" class="pool-token-btn undo card-use-undo" data-action="combatUnuseCard" data-side="{{side}}" data-key="{{key}}"
+            title="{{localize 'SWIA.CardUse.UndoHint'}}" {{#unless canUndo}}disabled{{/unless}}><i class="fas fa-undo"></i></button>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
       {{/if}}
     </section>
   </div>

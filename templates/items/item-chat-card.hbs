@@ -26,9 +26,7 @@
     </div>
     {{/if}}
 
-    {{#if bonusHealth}}<div class="item-chat-row"><span class="item-chat-stat">+{{bonusHealth}} {{localize "SWIA.Attributes.Health"}}</span></div>{{/if}}
-    {{#if bonusBlock}}<div class="item-chat-row"><span class="item-chat-stat">+{{bonusBlock}} {{localize "SWIA.Dice.Block"}}</span></div>{{/if}}
-    {{#if bonusEvade}}<div class="item-chat-row"><span class="item-chat-stat">+{{bonusEvade}} {{localize "SWIA.Dice.Evade"}}</span></div>{{/if}}
+    {{#each modifierChips}}<div class="item-chat-row"><span class="item-chat-stat">{{this.label}}</span></div>{{/each}}
 
     {{#each abilities}}
     <div class="item-chat-ability">{{{this}}}</div>

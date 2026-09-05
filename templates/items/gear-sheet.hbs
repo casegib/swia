@@ -32,6 +32,24 @@
       <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'SWIA.Item.Name'}}" {{#unless editMode}}disabled{{/unless}} />
     </div>
 
+    {{#if editMode}}
+    <div class="edit-field class-deck-edit-field">
+      <label>{{localize "SWIA.Item.ClassDeck.Legend"}}</label>
+      <div class="class-deck-edit-grid">
+        <label title="{{localize 'SWIA.Item.ClassDeck.HeroClassHint'}}">{{localize "SWIA.Item.ClassDeck.HeroClass"}}
+          <input name="system.heroClass" type="text" value="{{systemData.heroClass}}" placeholder="{{localize 'SWIA.Item.ClassCard.HeroClassPlaceholder'}}" />
+        </label>
+        <label title="{{localize 'SWIA.Item.ClassDeck.XpHint'}}">{{localize "SWIA.Item.ClassDeck.Xp"}}
+          <input name="system.classXp" type="number" value="{{systemData.classXp}}" data-dtype="Number" min="0" max="4" />
+        </label>
+      </div>
+    </div>
+    {{else}}{{#if systemData.heroClass}}
+    <div class="class-deck-line">
+      <span class="cost-chip class-deck-chip" title="{{localize 'SWIA.Item.ClassDeck.Legend'}}">{{systemData.heroClass}} · {{#if systemData.classXp}}{{systemData.classXp}} {{localize "SWIA.Item.ClassCard.XP"}}{{else}}{{localize "SWIA.Inventory.ClassDeckStarter"}}{{/if}}</span>
+    </div>
+    {{/if}}{{/if}}
+
     <section class="item-description-section">
       <h3>{{localize "SWIA.Item.Description"}}</h3>
       <div class="editor-container">

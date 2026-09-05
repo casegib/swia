@@ -19,6 +19,9 @@
       {{else}}
       <h1>{{item.name}}</h1>
       {{/if}}
+      {{#if systemData.heroClass}}
+      <span class="cost-chip class-deck-chip" title="{{localize 'SWIA.Item.ClassDeck.Legend'}}">{{systemData.heroClass}} · {{#if systemData.classXp}}{{systemData.classXp}} {{localize "SWIA.Item.ClassCard.XP"}}{{else}}{{localize "SWIA.Inventory.ClassDeckStarter"}}{{/if}}</span>
+      {{/if}}
     </header>
 
     <div class="weapon-art-area">
@@ -120,6 +123,20 @@
         <label>{{localize "SWIA.Item.Weaponmod.BonusAccuracy"}}</label>
         <input name="system.bonusAccuracy" type="number" value="{{systemData.bonusAccuracy}}" data-dtype="Number" min="0" />
       </div>
+
+      {{#if editMode}}
+      <div class="edit-field class-deck-edit-field">
+        <label>{{localize "SWIA.Item.ClassDeck.Legend"}}</label>
+        <div class="class-deck-edit-grid">
+          <label title="{{localize 'SWIA.Item.ClassDeck.HeroClassHint'}}">{{localize "SWIA.Item.ClassDeck.HeroClass"}}
+            <input name="system.heroClass" type="text" value="{{systemData.heroClass}}" placeholder="{{localize 'SWIA.Item.ClassCard.HeroClassPlaceholder'}}" />
+          </label>
+          <label title="{{localize 'SWIA.Item.ClassDeck.XpHint'}}">{{localize "SWIA.Item.ClassDeck.Xp"}}
+            <input name="system.classXp" type="number" value="{{systemData.classXp}}" data-dtype="Number" min="0" max="4" />
+          </label>
+        </div>
+      </div>
+      {{/if}}
 
       <div class="edit-field dice-edit-field">
         <label>{{localize "SWIA.Item.Weapon.Keywords"}}</label>

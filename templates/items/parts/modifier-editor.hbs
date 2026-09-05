@@ -1,0 +1,39 @@
+{{!--
+  Shared modifier editor. Hash params:
+    path  — dotted data path the inputs write to ("system.modifier", "system.passive")
+    mod   — the modifier object to show
+    attr  — "name" (default: saved through the form) or "data-field" (scraped
+            by the sheet relative to a row; used inside array rows)
+  Every slot of the shared modifier shape (see modifierField in common.js).
+--}}
+{{#unless attr}}{{!-- default --}}{{/unless}}
+<div class="modifier-editor">
+  <div class="modifier-group">
+    <span class="modifier-group-label" title="{{localize 'SWIA.Modifier.StatsHint'}}">{{localize "SWIA.Modifier.Stats"}}</span>
+    <label>{{localize "SWIA.Attributes.Health"}} <input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.stats.health" type="number" value="{{mod.stats.health}}" data-dtype="Number" /></label>
+    <label>{{localize "SWIA.Attributes.Endurance"}} <input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.stats.endurance" type="number" value="{{mod.stats.endurance}}" data-dtype="Number" /></label>
+    <label>{{localize "SWIA.Attributes.Speed"}} <input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.stats.speed" type="number" value="{{mod.stats.speed}}" data-dtype="Number" /></label>
+  </div>
+  <div class="modifier-group">
+    <span class="modifier-group-label" title="{{localize 'SWIA.Modifier.AttackHint'}}">{{localize "SWIA.Modifier.Attack"}}</span>
+    <label>{{localize "SWIA.Dice.Damage"}} <input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.attack.damage" type="number" value="{{mod.attack.damage}}" data-dtype="Number" /></label>
+    <label>{{localize "SWIA.Dice.Surge"}} <input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.attack.surge" type="number" value="{{mod.attack.surge}}" data-dtype="Number" /></label>
+    <label>{{localize "SWIA.Dice.Accuracy"}} <input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.attack.accuracy" type="number" value="{{mod.attack.accuracy}}" data-dtype="Number" /></label>
+    <label>{{localize "SWIA.Keywords.Pierce"}} <input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.attack.pierce" type="number" value="{{mod.attack.pierce}}" data-dtype="Number" /></label>
+  </div>
+  <div class="modifier-group">
+    <span class="modifier-group-label" title="{{localize 'SWIA.Modifier.DefenseHint'}}">{{localize "SWIA.Modifier.Defense"}}</span>
+    <label>{{localize "SWIA.Dice.Block"}} <input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.defense.block" type="number" value="{{mod.defense.block}}" data-dtype="Number" /></label>
+    <label>{{localize "SWIA.Dice.Evade"}} <input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.defense.evade" type="number" value="{{mod.defense.evade}}" data-dtype="Number" /></label>
+  </div>
+  <div class="modifier-group modifier-dice">
+    <span class="modifier-group-label" title="{{localize 'SWIA.Modifier.DiceHint'}}">{{localize "SWIA.Modifier.Dice"}}</span>
+    <label><span class="dice-block red" title="{{localize 'SWIA.Attack.Red'}}"></span><input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.dice.attack.red" type="number" value="{{mod.dice.attack.red}}" data-dtype="Number" min="0" /></label>
+    <label><span class="dice-block blue" title="{{localize 'SWIA.Attack.Blue'}}"></span><input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.dice.attack.blue" type="number" value="{{mod.dice.attack.blue}}" data-dtype="Number" min="0" /></label>
+    <label><span class="dice-block green" title="{{localize 'SWIA.Attack.Green'}}"></span><input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.dice.attack.green" type="number" value="{{mod.dice.attack.green}}" data-dtype="Number" min="0" /></label>
+    <label><span class="dice-block yellow" title="{{localize 'SWIA.Attack.Yellow'}}"></span><input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.dice.attack.yellow" type="number" value="{{mod.dice.attack.yellow}}" data-dtype="Number" min="0" /></label>
+    <span class="modifier-dice-sep"></span>
+    <label><span class="dice-block black" title="{{localize 'SWIA.Defense.Black'}}"></span><input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.dice.defense.black" type="number" value="{{mod.dice.defense.black}}" data-dtype="Number" min="0" /></label>
+    <label><span class="dice-block white" title="{{localize 'SWIA.Defense.White'}}"></span><input {{#if attr}}{{attr}}{{else}}name{{/if}}="{{path}}.dice.defense.white" type="number" value="{{mod.dice.defense.white}}" data-dtype="Number" min="0" /></label>
+  </div>
+</div>

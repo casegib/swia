@@ -1,6 +1,7 @@
 // Foundry v13+ ApplicationV2 actor sheet
 import { SWIARollDialog } from "../dice/roll-dialog.js";
-import { escapeHTML, sanitizeLabelHTML, armorEffectsFor } from "../data/common.js";
+import { escapeHTML, sanitizeLabelHTML, equipmentEffectsFor, modifierChips, modifierEffectHTML, cardUseCostLabels, toArray } from "../data/common.js";
+import { promptGive, TRADABLE_ITEM_TYPES } from "../item-trade.js";
 import { bindCardPreviews, hideCardPreview, postItemCardFromElement } from "../item-cards.js";
 import {
   getHealthyTokenSrc, getWoundedTokenSrc, syncActiveTokenTextures,
@@ -8,8 +9,7 @@ import {
   toggleArmorEquipped, readyAllItemsWithNotice,
   powerTokenRows, grantPowerToken, removePowerToken,
   conditionRows, conditionChoices, hasEndOfActivationConditions,
-  runConditionAction
-} from "../actor-actions.js";
+  runConditionAction, useExhaustAbility, settleClassCardPurchase, chargeClassCardPurchase } from "../actor-actions.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const BaseActorSheet = HandlebarsApplicationMixin(foundry.applications.sheets.ActorSheetV2);
@@ -191,6 +191,8 @@ export class SWIAActorSheet extends BaseActorSheet {
       conditionAction: SWIAActorSheet.prototype._onConditionAction,
       readyAllItems: SWIAActorSheet.prototype._onReadyAllItems,
       postItemCard: SWIAActorSheet.prototype._onPostItemCard,
+      giveItem: SWIAActorSheet.prototype._onGiveItem,
+      useExhaustAbility: SWIAActorSheet.prototype._onUseExhaustAbility,
       detachMod: SWIAActorSheet.prototype._onDetachMod,
       setAttackType: SWIAActorSheet.prototype._onSetAttackType,
       // Imperial/ally list management
@@ -363,8 +365,13 @@ export class SWIAActorSheet extends BaseActorSheet {
     // The edit input must show and write the stored base, or every save
     // would bake the armor bonus into the base and double-count it.
     const editSourceAttrs = actor._source?.system?.[editAttrPath] ?? actor._source?.system?.attributes ?? {};
-    const editHealthBaseMax = Number(editSourceAttrs.health?.max ?? editAttributes.health?.baseMax ?? editAttributes.health?.max) || 0;
-    const editHealthArmorBonus = Number(editAttributes.health?.armorBonus) || 0;
+    const editBase = (res) => Number(editSourceAttrs[res]?.max ?? editAttributes[res]?.baseMax ?? editAttributes[res]?.max) || 0;
+    const editHealthBaseMax = editBase("health");
+    const editHealthBonus = Number(editAttributes.health?.equipmentBonus) || 0;
+    const editEnduranceBaseMax = editBase("endurance");
+    const editEnduranceBonus = Number(editAttributes.endurance?.equipmentBonus) || 0;
+    const editSpeedBase = Number(editSourceAttrs.speed ?? editAttributes.speedBase ?? editAttributes.speed) || 0;
+    const editSpeedBonus = Number(editAttributes.speedBonus) || 0;
     const tokenSrc = actor?.prototypeToken?.texture?.src ?? "";
     const profileSrc = actor?.img || tokenSrc || "";
     const tokenPreviewSrc = this._getTokenPreviewSrc(actor, isWounded) || profileSrc;
@@ -500,9 +507,32 @@ export class SWIAActorSheet extends BaseActorSheet {
       );
     }
 
-    // Collect owned items grouped by type
-    const ownedItems = actor.items?.contents ?? [];
-    const abilities = ownedItems.filter(i => i.type === "classcard");
+    // Collect owned items grouped by type. Every column honours the item's
+    // `sort` (drag-to-reorder on the sheet), then falls back to a stable
+    // default (XP for class cards, then name).
+    const bySort = (a, b) => (Number(a.sort) || 0) - (Number(b.sort) || 0);
+    const ownedItems = [...(actor.items?.contents ?? [])].sort(bySort);
+    const canGive = actor.type === "hero" && actor.isOwner;
+    // Class Cards column: feat cards only, each with an XP / Starter badge,
+    // sorted by XP. Class-deck equipment stays in its own column and wears
+    // the badge there (classDeckBadge below) instead of being listed twice.
+    const classDeckBadge = (i) => {
+      if (!i.system?.heroClass) return null;
+      const xp = Number(i.system?.classXp) || 0;
+      return { xp, isStarter: xp === 0, heroClass: i.system.heroClass };
+    };
+    const abilities = ownedItems
+      .filter((i) => i.type === "classcard")
+      .map((i) => {
+        const xp = Number(i.system?.xpCost) || 0;
+        return { id: i.id, name: i.name, img: i.img, type: i.type, system: i.system, xp, isStarter: xp === 0, chips: modifierChips(i.system?.passive) };
+      })
+      .map((entry, i) => ({ ...entry, _i: i }))
+      .sort((a, b) => {
+        const sa = Number(actor.items.get(a.id)?.sort) || 0;
+        const sb = Number(actor.items.get(b.id)?.sort) || 0;
+        return (sa - sb) || (a.xp - b.xp) || a.name.localeCompare(b.name);
+      });
     const allMods = ownedItems.filter(i => i.type === "weaponmod");
     const modContext = (m) => ({
       id: m.id,
@@ -581,6 +611,15 @@ export class SWIAActorSheet extends BaseActorSheet {
           modGreenDice: SWIAActorSheet._diceArray(modDice.green),
           modYellowDice: SWIAActorSheet._diceArray(modDice.yellow),
           modBonusTags,
+          classDeck: classDeckBadge(w),
+          canGive,
+          // Printed exhaust abilities: a Use button each (posts + exhausts).
+          exhaustAbilities: toArray(w.system?.exhaustAbilities).map((row, index) => ({
+            index,
+            effect: row.effect ?? "",
+            triggerLabel: game.i18n.localize(`SWIA.Item.Weapon.ExhaustTrigger.${(row.trigger || "action").charAt(0).toUpperCase()}${(row.trigger || "action").slice(1)}`),
+            ready: (w.system?.cardState ?? "ready") === "ready"
+          })),
           attachedMods,
           surgeLines,
           slotsTotal,
@@ -592,12 +631,32 @@ export class SWIAActorSheet extends BaseActorSheet {
           // Compact rows: surge text, printed abilities and attached mods sit
           // in a details block that opens on demand.
           hasDetails: surgeLines.length > 0 || attachedMods.length > 0
-            || enrichedAbilities.some((a) => a?.enrichedDescription),
+            || enrichedAbilities.some((a) => a?.enrichedDescription)
+            || toArray(w.system?.exhaustAbilities).length > 0,
           expanded: this._expandedItems.has(w.id)
         };
       })
     );
-    const gear = ownedItems.filter(i => i.type === "gear");
+    // Imperial attachments placed on this deployment group (villains). Their
+    // passive shows as chips and each declared effect as a one-line summary.
+    const attachments = ownedItems.filter((i) => i.type === "imperialclasscard").map((i) => ({
+      id: i.id,
+      name: i.name,
+      img: i.img,
+      system: i.system,
+      imperialClass: i.system?.imperialClass ?? "",
+      isAttachment: Boolean(i.system?.attachment),
+      chips: modifierChips(i.system?.passive),
+      uses: toArray(i.system?.use).map((u) => ({
+        whenLabel: game.i18n.localize(`SWIA.Item.ClassCard.UseWhen.${u.when ?? "attack"}`),
+        effectHTML: modifierEffectHTML(u.modifier),
+        costLabels: cardUseCostLabels(u.cost),
+        note: u.note ?? ""
+      }))
+    }));
+    const gear = ownedItems.filter(i => i.type === "gear").map((g) => ({
+      id: g.id, name: g.name, img: g.img, type: g.type, system: g.system, classDeck: classDeckBadge(g), canGive
+    }));
 
     // Unattached mods: owned weaponmods pointing at nothing (or a weapon the
     // actor no longer owns). Each gets an attach-target list with slot and
@@ -607,6 +666,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       .filter((m) => !weaponById.has(m.system?.attachedWeaponId ?? ""))
       .map((m) => {
         const ctx = modContext(m);
+        ctx.canGive = canGive;
         ctx.attachTargets = weapons.map((w) => ({
           id: w.id,
           label: `${w.name} (${w.slotsUsed}/${w.slotsTotal})`,
@@ -623,11 +683,11 @@ export class SWIAActorSheet extends BaseActorSheet {
       img: a.img,
       cardState: a.system?.cardState ?? "ready",
       equipped: a.system?.equipped ?? true,
-      bonusHealth: Number(a.system?.bonusHealth) || 0,
-      bonusBlock: Number(a.system?.bonusBlock) || 0,
-      bonusEvade: Number(a.system?.bonusEvade) || 0
+      chips: modifierChips(a.system?.modifier),
+      classDeck: classDeckBadge(a),
+      canGive
     }));
-    const armorFx = armorEffectsFor(actor);
+    const armorFx = equipmentEffectsFor(actor).defense;
 
     // Form card (Shift) context — villain only
     let formCards = [];
@@ -706,7 +766,11 @@ export class SWIAActorSheet extends BaseActorSheet {
       editAttrPath,
       editAttributes,
       editHealthBaseMax,
-      editHealthArmorBonus,
+      editHealthBonus,
+      editEnduranceBaseMax,
+      editEnduranceBonus,
+      editSpeedBase,
+      editSpeedBonus,
       hasFreeCustomSlot: customSlots.some((s) => !s.enabled),
       config: CONFIG.SWIA ?? {},
       profileSrc,
@@ -722,6 +786,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       enrichedSurgeAbilities: enrichedSurgeAbilities,
       enrichedSpecialAbilities: enrichedSpecialAbilities,
       abilities: abilities,
+      attachments,
       weapons: weapons,
       gear: gear,
       armorItems,
@@ -1100,7 +1165,68 @@ export class SWIAActorSheet extends BaseActorSheet {
   // Intercept item drops dispatched by core sheet drop handling
   async _onDropItem(event, data) {
     if (await this._interceptHeroAbilityDrop(data)) return;
+    // Buying a class card: settle XP first (table rule, world setting).
+    const actor = this.document ?? this.actor;
+    let dropped = null;
+    try { dropped = data?.uuid ? await fromUuid(data.uuid) : null; } catch { dropped = null; }
+    if (dropped?.type === "classcard" && actor?.type === "hero" && dropped.parent?.id !== actor.id) {
+      const { allow, deduct } = await settleClassCardPurchase(actor, dropped);
+      if (!allow) return;
+      const result = await super._onDropItem?.(event, data);
+      await chargeClassCardPurchase(actor, dropped, deduct);
+      return result;
+    }
     return super._onDropItem?.(event, data);
+  }
+
+  /**
+   * Drag-to-reorder within a column. Rows are draggable; dropping one on a
+   * sibling row of the same list re-sorts through Foundry's integer sort
+   * (persisted on each item's `sort`, which every column honours). The
+   * drop is swallowed here so the sheet's item-drop path doesn't also try
+   * to copy the item onto its own owner.
+   */
+  _bindReorder(root, signal) {
+    const actor = this.document ?? this.actor;
+    if (!root || !actor?.isOwner) return;
+    for (const row of root.querySelectorAll(".item-list > .item-entry[data-item-id]")) {
+      row.setAttribute("draggable", "true");
+      row.addEventListener("dragstart", (event) => {
+        if (event.target?.closest?.("input, select, textarea, button")) return;
+        this._reorderItemId = row.dataset.itemId;
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", JSON.stringify({ type: "Item", uuid: actor.items.get(row.dataset.itemId)?.uuid, swiaReorder: true }));
+      }, { signal });
+      row.addEventListener("dragend", () => { this._reorderItemId = null; root.querySelectorAll(".reorder-target").forEach((el) => el.classList.remove("reorder-target")); }, { signal });
+      row.addEventListener("dragover", (event) => {
+        if (!this._reorderItemId || this._reorderItemId === row.dataset.itemId) return;
+        if (row.parentElement !== root.querySelector(`.item-entry[data-item-id="${this._reorderItemId}"]`)?.parentElement) return;
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        row.classList.add("reorder-target");
+      }, { signal });
+      row.addEventListener("dragleave", () => row.classList.remove("reorder-target"), { signal });
+      row.addEventListener("drop", async (event) => {
+        const sourceId = this._reorderItemId;
+        if (!sourceId || sourceId === row.dataset.itemId) return;
+        const list = row.parentElement;
+        const sourceRow = root.querySelector(`.item-entry[data-item-id="${sourceId}"]`);
+        if (!sourceRow || sourceRow.parentElement !== list) return;
+        event.preventDefault();
+        event.stopPropagation();
+        row.classList.remove("reorder-target");
+        this._reorderItemId = null;
+        const source = actor.items.get(sourceId);
+        const target = actor.items.get(row.dataset.itemId);
+        if (!source || !target) return;
+        const siblings = [...list.querySelectorAll(":scope > .item-entry[data-item-id]")]
+          .map((li) => actor.items.get(li.dataset.itemId))
+          .filter((i) => i && i.id !== source.id);
+        const SortingHelpers = foundry.utils.SortingHelpers ?? globalThis.SortingHelpers;
+        const updates = SortingHelpers.performIntegerSort(source, { target, siblings }).map(({ target: doc, update }) => ({ _id: doc.id, ...update }));
+        if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+      }, { signal });
+    }
   }
 
   // Intercept change events for surge/special ability inputs and save directly.
@@ -1162,6 +1288,26 @@ export class SWIAActorSheet extends BaseActorSheet {
     await postItemCardFromElement(this.document ?? this.actor, target);
   }
 
+  // "Give to…": hand a weapon / armor / gear / mod to another hero.
+  async _onGiveItem(event, target) {
+    event.preventDefault();
+    hideCardPreview();
+    const actor = this.document ?? this.actor;
+    const itemId = target?.closest("[data-item-id]")?.dataset?.itemId;
+    const item = itemId ? actor.items.get(itemId) : null;
+    if (!item || !TRADABLE_ITEM_TYPES.includes(item.type)) return;
+    await promptGive(item);
+  }
+
+  // Weapon exhaust ability: post it and exhaust the weapon.
+  async _onUseExhaustAbility(event, target) {
+    event.preventDefault();
+    const actor = this.document ?? this.actor;
+    const itemId = target?.closest("[data-item-id]")?.dataset?.itemId;
+    const item = itemId ? actor.items.get(itemId) : null;
+    await useExhaustAbility(actor, item, Number(target?.dataset?.index));
+  }
+
   // Status phase helper: ready every exhausted card on this actor in one
   // click (weapons, mods, armor, class cards, gear). Depleted cards stay.
   async _onReadyAllItems(event) {
@@ -1212,6 +1358,7 @@ export class SWIAActorSheet extends BaseActorSheet {
     this._cardPreviewAbort?.abort();
     this._cardPreviewAbort = new AbortController();
     bindCardPreviews(el, { signal: this._cardPreviewAbort.signal });
+    this._bindReorder(el, this._cardPreviewAbort.signal);
 
     // Hero-abilities disclosure: remember open/closed across re-renders.
     const disclosure = el?.querySelector?.("details.hero-ability-disclosure");

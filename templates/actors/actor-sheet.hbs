@@ -529,14 +529,14 @@
           <input name="system.{{editAttrPath}}.health.value" type="number" value="{{editAttributes.health.value}}" />
           <span>/</span>
           <input name="system.{{editAttrPath}}.health.max" type="number" value="{{editHealthBaseMax}}" title="{{localize 'SWIA.Attributes.HealthBaseMaxHint'}}" />
-          {{#if editHealthArmorBonus}}<span class="armor-health-note" title="{{localize 'SWIA.Attributes.HealthFromArmorHint'}}">+{{editHealthArmorBonus}}</span>{{/if}}
+          {{#if editHealthBonus}}<span class="armor-health-note" title="{{localize 'SWIA.Attributes.FromEquipmentHint'}}">+{{editHealthBonus}}</span>{{/if}}
         </div>
         {{else}}
         <div class="stat-stepper">
           <button type="button" class="stat-step" data-action="adjustStat" data-stat="health" data-delta="-1" title="{{localize 'SWIA.Attributes.HealthMinus'}}">&minus;</button>
           <span class="stat-current">{{currentAttributes.health.value}}</span>
           <span class="stat-sep">/</span>
-          <span class="stat-max" {{#if currentAttributes.health.armorBonus}}title="{{localize 'SWIA.Attributes.HealthFromArmor' base=currentAttributes.health.baseMax bonus=currentAttributes.health.armorBonus}}"{{/if}}>{{currentAttributes.health.max}}{{#if currentAttributes.health.armorBonus}}<span class="armor-health-note">+{{currentAttributes.health.armorBonus}}</span>{{/if}}</span>
+          <span class="stat-max" {{#if currentAttributes.health.equipmentBonus}}title="{{localize 'SWIA.Attributes.FromEquipment' base=currentAttributes.health.baseMax bonus=currentAttributes.health.equipmentBonus}}"{{/if}}>{{currentAttributes.health.max}}{{#if currentAttributes.health.equipmentBonus}}<span class="armor-health-note">+{{currentAttributes.health.equipmentBonus}}</span>{{/if}}</span>
           <button type="button" class="stat-step" data-action="adjustStat" data-stat="health" data-delta="1" title="{{localize 'SWIA.Attributes.HealthPlus'}}">+</button>
         </div>
         {{/if}}
@@ -548,14 +548,15 @@
         <div class="pair">
           <input name="system.{{editAttrPath}}.endurance.value" type="number" value="{{editAttributes.endurance.value}}" />
           <span>/</span>
-          <input name="system.{{editAttrPath}}.endurance.max" type="number" value="{{editAttributes.endurance.max}}" />
+          <input name="system.{{editAttrPath}}.endurance.max" type="number" value="{{editEnduranceBaseMax}}" title="{{localize 'SWIA.Attributes.BaseMaxHint'}}" />
+          {{#if editEnduranceBonus}}<span class="armor-health-note" title="{{localize 'SWIA.Attributes.FromEquipmentHint'}}">+{{editEnduranceBonus}}</span>{{/if}}
         </div>
         {{else}}
         <div class="stat-stepper">
           <button type="button" class="stat-step" data-action="adjustStat" data-stat="endurance" data-delta="-1" title="{{localize 'SWIA.Attributes.EnduranceMinus'}}">&minus;</button>
           <span class="stat-current">{{currentAttributes.endurance.value}}</span>
           <span class="stat-sep">/</span>
-          <span class="stat-max">{{currentAttributes.endurance.max}}</span>
+          <span class="stat-max" {{#if currentAttributes.endurance.equipmentBonus}}title="{{localize 'SWIA.Attributes.FromEquipment' base=currentAttributes.endurance.baseMax bonus=currentAttributes.endurance.equipmentBonus}}"{{/if}}>{{currentAttributes.endurance.max}}{{#if currentAttributes.endurance.equipmentBonus}}<span class="armor-health-note">+{{currentAttributes.endurance.equipmentBonus}}</span>{{/if}}</span>
           <button type="button" class="stat-step" data-action="adjustStat" data-stat="endurance" data-delta="1" title="{{localize 'SWIA.Attributes.EndurancePlus'}}">+</button>
         </div>
         {{/if}}
@@ -564,9 +565,15 @@
       <div class="resource">
         <label>{{localize "SWIA.Attributes.Speed"}}</label>
         {{#if editMode}}
-        <input name="system.{{editAttrPath}}.speed" type="number" value="{{editAttributes.speed}}" />
+        <div class="pair">
+          <input name="system.{{editAttrPath}}.speed" type="number" value="{{editSpeedBase}}" title="{{localize 'SWIA.Attributes.BaseMaxHint'}}" />
+          {{#if editSpeedBonus}}<span class="armor-health-note" title="{{localize 'SWIA.Attributes.FromEquipmentHint'}}">+{{editSpeedBonus}}</span>{{/if}}
+        </div>
         {{else}}
-        <input type="number" value="{{currentAttributes.speed}}" disabled />
+        <div class="stat-speed" {{#if currentAttributes.speedBonus}}title="{{localize 'SWIA.Attributes.FromEquipment' base=currentAttributes.speedBase bonus=currentAttributes.speedBonus}}"{{/if}}>
+          <input type="number" value="{{currentAttributes.speed}}" disabled />
+          {{#if currentAttributes.speedBonus}}<span class="armor-health-note">+{{currentAttributes.speedBonus}}</span>{{/if}}
+        </div>
         {{/if}}
       </div>
       {{#if (eq actor.type "hero")}}
@@ -888,6 +895,60 @@
   </section>
 
   <section class="inventory-sections">
+    {{#if (eq actor.type "villain")}}
+    <div class="inventory-group inventory-group-attachments">
+      <header class="inv-panel-header">
+        <h2 title="{{localize 'SWIA.Inventory.AttachmentsHint'}}">{{localize "SWIA.Inventory.Attachments"}}</h2>
+        {{#if attachments.length}}<span class="group-count">{{attachments.length}}</span>{{/if}}
+      </header>
+      <div class="collapsible-content">
+      {{#if attachments.length}}
+      <ol class="item-list">
+        {{#each attachments}}
+        <li class="item-entry {{#unless this.isAttachment}}class-wide-on-actor{{/unless}}" data-item-id="{{this.id}}">
+          <div class="item-image swia-card-preview-trigger" data-action="openItem" tabindex="0">
+            <img src="{{this.img}}" alt="{{this.name}}" title="{{localize 'SWIA.Inventory.ClickToOpen'}}" />
+          </div>
+          <div class="item-info" data-action="openItem">
+            <span class="item-name">{{this.name}}</span>
+            <span class="class-deck-tags">
+              {{#if this.imperialClass}}<span class="class-deck-kind">{{this.imperialClass}}</span>{{/if}}
+              {{#unless this.isAttachment}}<span class="class-deck-xp starter" title="{{localize 'SWIA.Inventory.ClassWideOnActorHint'}}">{{localize "SWIA.Inventory.ClassWide"}}</span>{{/unless}}
+              {{#each this.chips}}<span class="armor-fx-chip {{this.key}}">{{this.label}}</span>{{/each}}
+            </span>
+            {{#each this.uses}}
+            <span class="attachment-use-line">
+              <span class="classcard-use-when">{{this.whenLabel}}</span>
+              {{#if this.effectHTML}}<span class="card-use-effect">{{{this.effectHTML}}}</span>{{/if}}
+              {{#each this.costLabels}}<span class="card-use-cost">{{this}}</span>{{/each}}
+              {{#if this.note}}<span class="card-use-note">{{this.note}}</span>{{/if}}
+            </span>
+            {{/each}}
+          </div>
+          <div class="item-controls">
+            <button type="button" class="item-state-btn {{this.system.cardState}}" data-action="cycleItemState" title="{{this.system.cardState}}">
+              {{this.system.cardState}}
+            </button>
+            <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}">
+              <i class="fas fa-comment"></i>
+            </button>
+            {{#if ../editMode}}
+            <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
+              <i class="fas fa-trash"></i>
+            </button>
+            {{/if}}
+          </div>
+        </li>
+        {{/each}}
+      </ol>
+      {{else}}
+      <div class="inventory-empty">
+        <p>{{localize "SWIA.Inventory.EmptyAttachments"}}</p>
+      </div>
+      {{/if}}
+      </div>
+    </div>
+    {{/if}}
     {{#unless (or (eq actor.type "ally") (eq actor.type "villain"))}}
     <div class="inventory-toolbar">
       <button type="button" class="ready-all-btn" data-action="readyAllItems" title="{{localize 'SWIA.Inventory.ReadyAllHint'}}">
@@ -938,6 +999,7 @@
               {{#if this.showSlots}}<span class="mod-slots {{#if this.slotsFull}}full{{/if}}">{{localize "SWIA.Inventory.ModSlots" used=this.slotsUsed total=this.slotsTotal}}</span>{{/if}}
               {{#each this.modBonusTags}}<span class="mod-bonus-tag">{{this}}</span>{{/each}}
               {{#if this.poolNote}}<span class="weapon-pool-note">{{this.poolNote}}</span>{{/if}}
+              {{#if this.classDeck}}<span class="class-deck-xp {{#if this.classDeck.isStarter}}starter{{/if}}" title="{{this.classDeck.heroClass}}">{{#if this.classDeck.isStarter}}{{localize "SWIA.Inventory.ClassDeckStarter"}}{{else}}{{this.classDeck.xp}} {{localize "SWIA.Item.ClassCard.XP"}}{{/if}}</span>{{/if}}
             </div>
           </div>
           <div class="item-controls">
@@ -947,6 +1009,11 @@
             <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}">
               <i class="fas fa-comment"></i>
             </button>
+            {{#if this.canGive}}
+            <button type="button" class="item-give-btn" data-action="giveItem" title="{{localize 'SWIA.Give.Button'}}">
+              <i class="fas fa-hand-holding"></i>
+            </button>
+            {{/if}}
             {{#if ../editMode}}
             <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
               <i class="fas fa-trash"></i>
@@ -964,6 +1031,19 @@
             <div class="weapon-abilities-inline">
               {{#each this.enrichedAbilities}}
               {{#if this.enrichedDescription}}<span class="weapon-ability-tag">{{{this.enrichedDescription}}}</span>{{/if}}
+              {{/each}}
+            </div>
+            {{/if}}
+            {{#if this.exhaustAbilities.length}}
+            <div class="weapon-exhaust-lines">
+              {{#each this.exhaustAbilities}}
+              <div class="weapon-exhaust-line">
+                <button type="button" class="exhaust-use-btn" data-action="useExhaustAbility" data-index="{{this.index}}" title="{{localize 'SWIA.Inventory.ExhaustUseHint'}}" {{#unless this.ready}}disabled{{/unless}}>
+                  <i class="fas fa-bolt"></i> {{localize "SWIA.Inventory.ExhaustUse"}}
+                </button>
+                <span class="exhaust-trigger-tag">{{this.triggerLabel}}</span>
+                <span class="weapon-exhaust-effect">{{this.effect}}</span>
+              </div>
               {{/each}}
             </div>
             {{/if}}
@@ -1024,6 +1104,7 @@
           </span>
           <span class="mod-spacer"></span>
           <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}"><i class="fas fa-comment"></i></button>
+          {{#if this.canGive}}<button type="button" class="item-give-btn" data-action="giveItem" title="{{localize 'SWIA.Give.Button'}}"><i class="fas fa-hand-holding"></i></button>{{/if}}
           <select class="mod-attach-select">
             <option value="">{{localize "SWIA.Inventory.AttachTo"}}</option>
             {{#each this.attachTargets}}
@@ -1066,9 +1147,8 @@
           <div class="item-info" data-action="openItem">
             <span class="item-name">{{this.name}}</span>
             <div class="armor-dice-inline armor-fx-chips">
-              {{#if this.bonusHealth}}<span class="armor-fx-chip health">+{{this.bonusHealth}} {{localize "SWIA.Attributes.Health"}}</span>{{/if}}
-              {{#if this.bonusBlock}}<span class="armor-fx-chip block">+{{this.bonusBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
-              {{#if this.bonusEvade}}<span class="armor-fx-chip evade">+{{this.bonusEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
+              {{#if this.classDeck}}<span class="class-deck-xp {{#if this.classDeck.isStarter}}starter{{/if}}" title="{{this.classDeck.heroClass}}">{{#if this.classDeck.isStarter}}{{localize "SWIA.Inventory.ClassDeckStarter"}}{{else}}{{this.classDeck.xp}} {{localize "SWIA.Item.ClassCard.XP"}}{{/if}}</span>{{/if}}
+              {{#each this.chips}}<span class="armor-fx-chip {{this.key}}">{{this.label}}</span>{{/each}}
               {{#if this.equipped}}<span class="armor-feeds-tag">{{localize "SWIA.Inventory.Equipped"}}</span>{{/if}}
             </div>
           </div>
@@ -1080,6 +1160,11 @@
             <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}">
               <i class="fas fa-comment"></i>
             </button>
+            {{#if this.canGive}}
+            <button type="button" class="item-give-btn" data-action="giveItem" title="{{localize 'SWIA.Give.Button'}}">
+              <i class="fas fa-hand-holding"></i>
+            </button>
+            {{/if}}
             {{#if ../editMode}}
             <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
               <i class="fas fa-trash"></i>
@@ -1122,6 +1207,14 @@
           </div>
           <div class="item-info" data-action="openItem">
             <span class="item-name">{{this.name}}</span>
+            <span class="class-deck-tags">
+              {{#if this.isStarter}}
+              <span class="class-deck-xp starter" title="{{localize 'SWIA.Inventory.ClassDeckStarterHint'}}">{{localize "SWIA.Inventory.ClassDeckStarter"}}</span>
+              {{else}}
+              <span class="class-deck-xp" title="{{localize 'SWIA.Inventory.ClassDeckXpHint'}}">{{this.xp}} {{localize "SWIA.Item.ClassCard.XP"}}</span>
+              {{/if}}
+              {{#each this.chips}}<span class="armor-fx-chip {{this.key}}" title="{{localize 'SWIA.Item.ClassCard.PassiveHint'}}">{{this.label}}</span>{{/each}}
+            </span>
           </div>
           <div class="item-controls">
             <button type="button" class="item-state-btn {{this.system.cardState}}" data-action="cycleItemState" title="{{this.system.cardState}}">
@@ -1172,6 +1265,7 @@
           </div>
           <div class="item-info" data-action="openItem">
             <span class="item-name">{{this.name}}</span>
+            {{#if this.classDeck}}<span class="class-deck-tags">{{#if this.classDeck}}<span class="class-deck-xp {{#if this.classDeck.isStarter}}starter{{/if}}" title="{{this.classDeck.heroClass}}">{{#if this.classDeck.isStarter}}{{localize "SWIA.Inventory.ClassDeckStarter"}}{{else}}{{this.classDeck.xp}} {{localize "SWIA.Item.ClassCard.XP"}}{{/if}}</span>{{/if}}</span>{{/if}}
           </div>
           <div class="item-controls">
             <button type="button" class="item-state-btn {{this.system.cardState}}" data-action="cycleItemState" title="{{this.system.cardState}}">
@@ -1180,6 +1274,11 @@
             <button type="button" class="item-chat-btn" data-action="postItemCard" title="{{localize 'SWIA.Inventory.SendToChat'}}">
               <i class="fas fa-comment"></i>
             </button>
+            {{#if this.canGive}}
+            <button type="button" class="item-give-btn" data-action="giveItem" title="{{localize 'SWIA.Give.Button'}}">
+              <i class="fas fa-hand-holding"></i>
+            </button>
+            {{/if}}
             {{#if ../editMode}}
             <button type="button" class="item-delete" data-action="deleteItem" title="{{localize 'SWIA.Inventory.Remove'}}">
               <i class="fas fa-trash"></i>

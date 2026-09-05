@@ -1,13 +1,12 @@
 import { CAMPAIGN_RESOURCES_KEY } from "./campaign-tracker.js";
 import { SWIARollDialog, weaponModsFor } from "./dice/roll-dialog.js";
-import { armorEffectsFor } from "./data/common.js";
+import { equipmentEffectsFor, modifierChips } from "./data/common.js";
 import { bindCardPreviews, hideCardPreview, destroyCardPreview, postItemCardFromElement } from "./item-cards.js";
 import {
   canManageActor, requestWoundedState, setDefeatedState, adjustActorStat,
   adjustActorXp, toggleArmorEquipped, readyAllItemsWithNotice, READY_ALL_TYPES,
   powerTokenRows, grantPowerToken, removePowerToken,
-  conditionRows, conditionChoices, hasEndOfActivationConditions, runConditionAction
-} from "./actor-actions.js";
+  conditionRows, conditionChoices, hasEndOfActivationConditions, runConditionAction, settleClassCardPurchase, chargeClassCardPurchase } from "./actor-actions.js";
 
 // Foundry v13+ ApplicationV2 base
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -310,9 +309,10 @@ export class SWIAPlayerPortal extends BaseApplication {
     const gearItems = ownedItems.filter(item => item.type === "gear");
     const armorItems = ownedItems.filter(item => item.type === "armor");
 
-    // Armor adds no dice; its printed Block/Evade ride beside the defense
-    // dice as chips, and its Health is already folded into health.max.
-    const armorFx = armorEffectsFor(actor);
+    // Armor and class-card passives add no dice by default; their printed
+    // Block/Evade ride beside the defense dice as chips, and their Health /
+    // Endurance / Speed are already folded into the derived attributes.
+    const armorFx = equipmentEffectsFor(actor).defense;
 
     const hasReadyableCards = ownedItems.some(
       (item) => item.system?.cardState === "exhausted" && READY_ALL_TYPES.includes(item.type)
@@ -419,14 +419,10 @@ export class SWIAPlayerPortal extends BaseApplication {
       weapons: weaponItems.map((item) => ({ ...toPortalItem(item), mods: modChipsFor(item) })),
       abilities: classcardItems.map(toPortalItem),
       gear: gearItems.map(toPortalItem),
-      armor: armorItems.map((item) => ({
-        ...toPortalItem(item),
-        equipped: item.system?.equipped ?? true,
-        bonusHealth: Number(item.system?.bonusHealth) || 0,
-        bonusBlock: Number(item.system?.bonusBlock) || 0,
-        bonusEvade: Number(item.system?.bonusEvade) || 0,
-        hasEffects: Boolean(Number(item.system?.bonusHealth) || Number(item.system?.bonusBlock) || Number(item.system?.bonusEvade))
-      })),
+      armor: armorItems.map((item) => {
+        const chips = modifierChips(item.system?.modifier);
+        return { ...toPortalItem(item), equipped: item.system?.equipped ?? true, chips, hasEffects: chips.length > 0 };
+      }),
       weaponCount: weaponItems.length,
       abilityCount: classcardItems.length,
       gearCount: gearItems.length,
@@ -673,7 +669,10 @@ export class SWIAPlayerPortal extends BaseApplication {
 
     const itemData = sourceItem.toObject();
     delete itemData._id;
+    const { allow, deduct } = await settleClassCardPurchase(actor, itemData);
+    if (!allow) return;
     await actor.createEmbeddedDocuments("Item", [itemData]);
+    await chargeClassCardPurchase(actor, itemData, deduct);
   }
 
   async close(options) {

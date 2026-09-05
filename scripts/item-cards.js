@@ -6,7 +6,7 @@
 // full-size with pan/zoom — so no separate field is needed. Items without a
 // real scan fall back to a generated text card.
 
-import { sanitizeLabelHTML, sanitizeRichHTML } from "./data/common.js";
+import { sanitizeLabelHTML, sanitizeRichHTML, modifierChips } from "./data/common.js";
 
 const PREVIEW_CLASS = "swia-portal-card-preview";
 const PREVIEW_DELAY_MS = 120;
@@ -228,9 +228,7 @@ function textCardContext(item) {
   return {
     subtitle: subtypeParts.join(" – "),
     rawAbilities,
-    bonusHealth: Number(sys.bonusHealth) || 0,
-    bonusBlock: Number(sys.bonusBlock) || 0,
-    bonusEvade: Number(sys.bonusEvade) || 0,
+    modifierChips: modifierChips(sys.modifier ?? sys.passive),
     attackDice,
     hasDice: attackDice.length > 0,
     damage: Number(sys.damage ?? sys.bonusDamage) || 0,

@@ -57,7 +57,20 @@
    ],
    "other": "choose one of two surge grants"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "Close and Personal",
+    "surges": [
+     "⚡: Weaken, Stun",
+     "⚡: +2⊠"
+    ]
+   }
+  ]
  },
  {
   "group": "Biv Bodhrik",
@@ -79,7 +92,19 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {},
+    "note": "within 3 spaces of 2 or more hostile figures",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Biv Bodhrik",
@@ -162,7 +187,19 @@
    "surges": [],
    "other": "Cost is discarding Hidden. Also: become Hidden at start of mission and after an attack targeting you resolves if you suffered no damage."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {},
+    "note": "discard the Hidden condition",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Davith Elso",
@@ -210,7 +247,24 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "strain": 1
+    },
+    "note": "melee weapon",
+    "modifier": {
+     "dice": {
+      "attack": {
+       "yellow": 1
+      }
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Davith Elso",
@@ -258,7 +312,39 @@
    "surges": [],
    "other": "Damage bonus applies when attacking, evade bonus when defending (one exhaust, either use). Passive: +1 Endurance, +3 Health."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 3,
+    "endurance": 1
+   }
+  },
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   },
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Davith Elso",
@@ -280,7 +366,19 @@
    ],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "melee weapon",
+    "surges": [
+     "⚡⚡: After this attack resolves, become Hidden, move up to 2 spaces, then perform another attack."
+    ]
+   }
+  ]
  },
  {
   "group": "Diala Passil",
@@ -313,7 +411,23 @@
    "surges": [],
    "other": "reroll 1 die (attack or attribute test, self or friendly figure). Separate ability: exhaust when you perform a [Str] or [Tech] test to add 1 blue die to your dice pool."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "test",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "Strength or Tech test",
+    "modifier": {
+     "dice": {
+      "attack": {
+       "blue": 1
+      }
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Diala Passil",
@@ -359,7 +473,19 @@
    "surges": [],
    "other": "After an attack targeting you resolves, if you suffered no damage, become Focused."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {},
+    "note": "when you use \"Foresight\"",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Diala Passil",
@@ -379,7 +505,12 @@
    "surges": [],
    "other": "+1 Speed; ignore additional movement point costs for difficult terrain and spaces containing hostile figures."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "speed": 1
+   }
+  }
  },
  {
   "group": "Diala Passil",
@@ -417,7 +548,26 @@
    ],
    "other": "Spent as an action."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "strain": 1
+    },
+    "note": "action: ranged attack with a melee weapon",
+    "modifier": {
+     "dice": {
+      "attack": {
+       "blue": 1
+      }
+     }
+    },
+    "surges": [
+     "⚡: +2 Accuracy, +1⊠"
+    ]
+   }
+  ]
  },
  {
   "group": "Diala Passil",
@@ -462,7 +612,12 @@
    "other": "+2 Health. At the end of each of your activations, gain 1 [damage token] (power token)."
   },
   "verified_note": "token gained is a damage power token, not a block",
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2
+   }
+  }
  },
  {
   "group": "Drokkatta",
@@ -496,7 +651,12 @@
    "surges": [],
    "other": "When declaring a [ranged] attack, may target a figure adjacent to an empty space in your line of sight."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "attack": {
+    "accuracy": 1
+   }
+  }
  },
  {
   "group": "Drokkatta",
@@ -543,7 +703,39 @@
    "surges": [],
    "other": "Pierce 1. If target is an object: additional +1⊠ and Pierce 1."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "choice": "target",
+    "modifier": {
+     "attack": {
+      "damage": 1,
+      "accuracy": 1,
+      "pierce": 1
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "target is an object",
+    "choice": "target",
+    "modifier": {
+     "attack": {
+      "damage": 2,
+      "accuracy": 1,
+      "pierce": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Drokkatta",
@@ -568,7 +760,24 @@
    "other": "When you use Demolish, up to 2 figures or objects on or adjacent to the chosen space each suffer an additional 1⊠."
   },
   "verified_note": "cost is 1 strain (✦), not an action (⟶)",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "strain": 1
+    },
+    "note": "when you declare an attack with a [ranged] weapon",
+    "modifier": {
+     "dice": {
+      "attack": {
+       "yellow": 1
+      }
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Drokkatta",
@@ -628,7 +837,24 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true,
+     "strain": 1
+    },
+    "note": "",
+    "modifier": {
+     "dice": {
+      "defense": {
+       "white": 1
+      }
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Fenn Signis",
@@ -662,7 +888,22 @@
    "surges": [],
    "other": "gain Pierce 1"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "strain": 1
+    },
+    "note": "",
+    "modifier": {
+     "attack": {
+      "accuracy": 2,
+      "pierce": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Fenn Signis",
@@ -696,7 +937,21 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "targeting a figure within 3 spaces",
+    "modifier": {
+     "attack": {
+      "damage": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Fenn Signis",
@@ -716,7 +971,13 @@
    "surges": [],
    "other": "+3 Health, +1 Endurance; \"Havoc Shot\" applies Blast 2⊠ instead of Blast 1⊠."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 3,
+    "endurance": 1
+   }
+  }
  },
  {
   "group": "Fenn Signis",
@@ -738,7 +999,19 @@
    "surges": [],
    "other": "Action (1✦): move up to your Speed and become Focused."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {},
+    "note": "while you are Focused",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Gaarkhan",
@@ -784,7 +1057,22 @@
    "surges": [],
    "other": "may apply to an adjacent friendly figure's defense"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "you or an adjacent friendly figure",
+    "scope": "any",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Gaarkhan",
@@ -813,7 +1101,25 @@
    ],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "while Focused",
+    "modifier": {
+     "dice": {
+      "attack": {
+       "red": 1,
+       "green": -1
+      }
+     }
+    },
+    "surges": [
+     "⚡: Cleave 1⊠"
+    ]
+   }
+  ]
  },
  {
   "group": "Gaarkhan",
@@ -859,7 +1165,21 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "strain": 1
+    },
+    "note": "melee weapon",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Gaarkhan",
@@ -893,7 +1213,25 @@
    "surges": [],
    "other": "+1 Endurance, +1 Speed passive"
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "endurance": 1,
+    "speed": 1
+   }
+  },
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "while wounded",
+    "modifier": {
+     "attack": {
+      "damage": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Gideon Argus",
@@ -927,7 +1265,22 @@
    "surges": [],
    "other": "can be applied to a friendly figure's attack"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "target in your line of sight",
+    "scope": "any",
+    "modifier": {
+     "attack": {
+      "surge": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Gideon Argus",
@@ -967,7 +1320,12 @@
    "surges": [],
    "other": "+2 Health; \"Command\" may choose any friendly figure in your line of sight."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2
+   }
+  }
  },
  {
   "group": "Gideon Argus",
@@ -1119,7 +1477,12 @@
    "surges": [],
    "other": "+1 Endurance (passive). Replace 1 die in the attack pool with another attack die of your choice."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "endurance": 1
+   }
+  }
  },
  {
   "group": "Jarrod Kelvin",
@@ -1141,7 +1504,15 @@
    "surges": [],
    "other": "+1 Speed to hero and J4X-7. Both gain the printed ability 1[Block] (evade)."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "speed": 1
+   },
+   "defense": {
+    "block": 1
+   }
+  }
  },
  {
   "group": "Jarrod Kelvin",
@@ -1174,7 +1545,12 @@
    "surges": [],
    "other": "+2 Health (passive). J4X-7 becomes Focused when it declares an attack. Exhaust at start of another hero's activation: J4X-7 may ready and activate at the start or end of that activation."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2
+   }
+  }
  },
  {
   "group": "Jyn Odan",
@@ -1242,7 +1618,22 @@
    ],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "when you use \"Quick Draw\"",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    },
+    "surges": [
+     "⚡: Stun"
+    ]
+   }
+  ]
  },
  {
   "group": "Jyn Odan",
@@ -1264,7 +1655,21 @@
    "surges": [],
    "other": "may convert 1 or more [Block] results to [Evade] results"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {
+     "strain": 1
+    },
+    "note": "",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Jyn Odan",
@@ -1298,7 +1703,22 @@
    "surges": [],
    "other": "Passive: while attacking with a Pistol, can use surge abilities from any Pistol brought to the mission."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "strain": 1
+    },
+    "note": "",
+    "modifier": {
+     "attack": {
+      "surge": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Jyn Odan",
@@ -1410,7 +1830,23 @@
    "other": "Applies to a friendly figure's defense."
   },
   "verified_note": "Cost is 1 strain (1✦), not an action icon (⟶).",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true,
+     "strain": 1
+    },
+    "note": "friendly figure within 2 spaces is defending",
+    "scope": "friendly",
+    "modifier": {
+     "defense": {
+      "block": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Ko-Tun Feralo",
@@ -1455,7 +1891,13 @@
    "surges": [],
    "other": "+2 Health, +1 Speed. After a friendly figure within 3 spaces resolves an attack in which it spent a power token, you may move 1 space."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2,
+    "speed": 1
+   }
+  }
  },
  {
   "group": "Ko-Tun Feralo",
@@ -1563,7 +2005,19 @@
    "surges": [],
    "other": "Action to place a recon token on this card; discard it to interrupt a hostile figure's move/attack declaration with an attack."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "during the Overwatch interrupt attack",
+    "modifier": {
+     "attack": {
+      "surge": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Loku Kanoloa",
@@ -1595,7 +2049,20 @@
    "surges": [],
    "other": "+1[Evade] (dodge) to defense results of a friendly figure with a recon token. Action-timing: 2✦ during your activation to place a recon token on another friendly figure."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {},
+    "note": "friendly figure with a recon token is defending",
+    "scope": "friendly",
+    "modifier": {
+     "defense": {
+      "evade": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Loku Kanoloa",
@@ -1617,7 +2084,22 @@
    ],
    "other": "+2 Health."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2
+   }
+  },
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "",
+    "surges": [
+     "⚡: Exhaust this card to place a recon token on a hostile figure within 2 spaces of the target."
+    ]
+   }
+  ]
  },
  {
   "group": "Loku Kanoloa",
@@ -1641,7 +2123,18 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "strain": 2
+    },
+    "note": "target has a recon token; add 1 die of your choice (use the pool steppers)",
+    "scope": "any"
+   }
+  ]
  },
  {
   "group": "Loku Kanoloa",
@@ -1663,7 +2156,15 @@
    "surges": [],
    "other": "+1[Evade] (dodge) permanently while defending; +1 Accuracy while attacking. Also: exhaust when a hostile figure with a recon token is defeated to recover 2✦ or become Focused."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "attack": {
+    "accuracy": 1
+   },
+   "defense": {
+    "evade": 1
+   }
+  }
  },
  {
   "group": "MHD-19",
@@ -1721,7 +2222,17 @@
    ],
    "other": "After another hero is defeated, may interrupt to perform an attack targeting the figure who defeated that hero."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "",
+    "surges": [
+     "⚡: Exhaust this card and choose an adjacent friendly figure. That figure recovers 2⊠."
+    ]
+   }
+  ]
  },
  {
   "group": "MHD-19",
@@ -1741,7 +2252,12 @@
    "surges": [],
    "other": "+1 Speed. Also: 1✦ exhaust when an attack targeting another friendly figure within 4 spaces resolves to interrupt and move up to 2 spaces."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "speed": 1
+   }
+  }
  },
  {
   "group": "MHD-19",
@@ -1767,7 +2283,27 @@
    ],
    "other": "applies to another friendly figure's attack"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "strain": 2
+    },
+    "note": "another friendly figure within 2 spaces declares an attack",
+    "scope": "friendly",
+    "modifier": {
+     "dice": {
+      "attack": {
+       "yellow": 1
+      }
+     }
+    },
+    "surges": [
+     "⚡: Recover 1⊠"
+    ]
+   }
+  ]
  },
  {
   "group": "MHD-19",
@@ -1859,7 +2395,12 @@
    "surges": [],
    "other": "+2 Health; exhaust after a hostile figure within 3 spaces resolves an attack to become Focused"
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2
+   }
+  }
  },
  {
   "group": "Mak Eshka'rey",
@@ -1881,7 +2422,22 @@
    "surges": [],
    "other": "figures do not block your line of sight during this attack"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "strain": 1
+    },
+    "note": "before you declare an attack",
+    "modifier": {
+     "attack": {
+      "accuracy": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Mak Eshka'rey",
@@ -2007,7 +2563,35 @@
    "surges": [],
    "other": "applies to another Rebel figure's attack or attribute test, not your own"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "another Rebel figure within 3 spaces is attacking",
+    "scope": "friendly",
+    "modifier": {
+     "attack": {
+      "surge": 1
+     }
+    }
+   },
+   {
+    "when": "test",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "another Rebel figure within 3 spaces is testing",
+    "scope": "friendly",
+    "modifier": {
+     "attack": {
+      "surge": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Murne Rin",
@@ -2027,7 +2611,12 @@
    "surges": [],
    "other": "+2 Health; 1 strain + exhaust during activation: test Insight, each success discards 1 strain from another hero within 3 spaces"
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2
+   }
+  }
  },
  {
   "group": "Murne Rin",
@@ -2074,7 +2663,29 @@
    "surges": [],
    "other": "choose per ready activation token, each option at most once: +1 damage, Pierce 1, Recover 1 damage, or +2 Accuracy"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "one ready activation token: +1 damage",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "one ready activation token: +2 Accuracy",
+    "modifier": {
+     "attack": {
+      "accuracy": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Murne Rin",
@@ -2133,7 +2744,37 @@
    "other": "choose one test: pass Strength for +1 block OR pass Insight for +1 evade; may apply to another friendly figure's defense"
   },
   "verified_note": "Insight test grants +1 [Evade], not [Block] (model already correct).",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "pass a Strength test; you or a friendly figure within 2 spaces",
+    "scope": "any",
+    "choice": "test",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   },
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "pass an Insight test; you or a friendly figure within 2 spaces",
+    "scope": "any",
+    "choice": "test",
+    "modifier": {
+     "defense": {
+      "evade": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Onar Koma",
@@ -2167,7 +2808,19 @@
    "surges": [],
    "other": "costs 1 damage to yourself (not strain); exhaust when you use \"Rush\": you and the pushed figure each suffer 1 damage"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "suffer 1 damage",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Onar Koma",
@@ -2190,7 +2843,25 @@
    "other": "+2 Health; block bonus applies to an adjacent friendly figure's defense at the cost of 1 damage to you"
   },
   "verified_note": "Text correct, but model bonus was {evade:1}; card grants +1 [Block].",
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2
+   }
+  },
+  "use": [
+   {
+    "when": "defense",
+    "cost": {},
+    "note": "adjacent friendly figure is defending; you are healthy; suffer 1 damage",
+    "scope": "friendly",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Onar Koma",
@@ -2234,7 +2905,35 @@
    "other": "choose -1 block OR -1 evade on the defender's results; when a hostile figure voluntarily exits an adjacent space you become Focused"
   },
   "verified_note": "Second option is -1 [Evade], not [Block] (model already correct).",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "adjacent hostile figure is defending",
+    "choice": "pick",
+    "modifier": {
+     "defense": {
+      "block": -1
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "adjacent hostile figure is defending",
+    "choice": "pick",
+    "modifier": {
+     "defense": {
+      "evade": -1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Onar Koma",
@@ -2282,7 +2981,23 @@
    "surges": [],
    "other": "after resolving an attack, if the target was defeated, may suffer 1 damage to ready this card"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "when you declare an attack",
+    "modifier": {
+     "dice": {
+      "attack": {
+       "red": 1
+      }
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Saska Teft",
@@ -2316,7 +3031,21 @@
    "surges": [],
    "other": "second ability applies the +1 surge to a friendly figure's test"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "test",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "performing a Tech test; or a friendly figure performs an attribute test using \"Practical Solutions\"",
+    "modifier": {
+     "attack": {
+      "surge": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Saska Teft",
@@ -2353,7 +3082,29 @@
    "other": "choose +1 block OR +1 evade per device token discarded; usable multiple times per attack; applies to any figure holding device tokens"
   },
   "verified_note": "Second option is +1 [Evade], not [Block] (model already correct).",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {},
+    "note": "discard 1 device token",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   },
+   {
+    "when": "defense",
+    "cost": {},
+    "note": "discard 1 device token",
+    "modifier": {
+     "defense": {
+      "evade": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Saska Teft",
@@ -2375,7 +3126,35 @@
    "surges": [],
    "other": "+2 damage vs objects, +1 damage vs Droid or Vehicle"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "target is a Droid or Vehicle",
+    "choice": "target",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "target is an object",
+    "choice": "target",
+    "modifier": {
+     "attack": {
+      "damage": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Saska Teft",
@@ -2451,7 +3230,13 @@
    "surges": [],
    "other": "+2 Health, +1 Endurance; \"Battle Technician\" range extended to a friendly figure up to 3 spaces away"
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2,
+    "endurance": 1
+   }
+  }
  },
  {
   "group": "Shyla Varad",
@@ -2486,7 +3271,22 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "attacking with a melee weapon",
+    "modifier": {
+     "attack": {
+      "damage": 1,
+      "surge": -1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Shyla Varad",
@@ -2577,7 +3377,15 @@
    "other": "+1 Endurance; at the start of your activation, gain 2 movement points"
   },
   "verified_note": "+1 [Block] should be +1 [Evade]; model bonus block->evade",
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "endurance": 1
+   },
+   "defense": {
+    "evade": 1
+   }
+  }
  },
  {
   "group": "Shyla Varad",
@@ -2657,7 +3465,37 @@
    "other": "choose -1 block OR -1 evade on the defender's results; works on any attack against that figure, not only yours"
   },
   "verified_note": "second '-1 [Block]' should be '-1 [Evade]' (model already correct)",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "strain": 1
+    },
+    "note": "adjacent hostile figure is defending",
+    "choice": "pick",
+    "modifier": {
+     "defense": {
+      "block": -1
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "strain": 1
+    },
+    "note": "adjacent hostile figure is defending",
+    "choice": "pick",
+    "modifier": {
+     "defense": {
+      "evade": -1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Verena Talos",
@@ -2693,7 +3531,19 @@
    ],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "attack performed using \"Close Quarters\"",
+    "surges": [
+     "⚡: Pierce 2",
+     "⚡: Recover 2 ⊠",
+     "⚡: +5 Accuracy"
+    ]
+   }
+  ]
  },
  {
   "group": "Verena Talos",
@@ -2716,7 +3566,19 @@
    "other": "that adjacent hostile figure suffers 1 damage"
   },
   "verified_note": "text correct (+1 [Block]) but model bonus said evade:1; corrected to block:1",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {},
+    "note": "while defending, adjacent to a hostile figure other than the attacker",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Verena Talos",
@@ -2740,7 +3602,19 @@
    "surges": [],
    "other": "Pierce 1 applied to the attack results"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "Pistol, adjacent target; replace 1 attack die with red (use the pool steppers)",
+    "modifier": {
+     "attack": {
+      "pierce": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Verena Talos",
@@ -2776,7 +3650,12 @@
    "surges": [],
    "other": "+1 Endurance; becoming Focused adds a green die to your next attack"
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "endurance": 1
+   }
+  }
  },
  {
   "group": "Vinto Hreeda",
@@ -2811,7 +3690,21 @@
    "other": "Remove all ⊠, [Block], ⚡, [Evade], and [Dodge] results first; attack gains Weaken; no abilities can modify results further."
   },
   "verified_note": "last removed result is [Dodge], not [Block]",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "ranged weapon; remove all results first, then",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Vinto Hreeda",
@@ -2831,7 +3724,12 @@
    "surges": [],
    "other": "+1 Speed (passive). Exhaust after moving this activation: hostile figure within 3 spaces and LOS suffers 1⊠ on a successful [Ins] test."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "speed": 1
+   }
+  }
  },
  {
   "group": "Vinto Hreeda",
@@ -2851,7 +3749,12 @@
    "surges": [],
    "other": "+1 Endurance (passive). Exhaust while attacking to reroll 1 attack die."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "endurance": 1
+   }
+  }
  },
  {
   "group": "Vinto Hreeda",
@@ -2873,7 +3776,12 @@
    "surges": [],
    "other": "Boltslinger, Shot on the Run, and Rapid Fire range extended to 4 spaces."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "attack": {
+    "accuracy": 1
+   }
+  }
  },
  {
   "group": "Vinto Hreeda",
@@ -2895,7 +3803,21 @@
    "surges": [],
    "other": "Alternatively exhaust when using Boltslinger (+1 additional ⊠ to chosen figure) or when using Pinpoint Shot (target suffers 1⊠)."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Vinto Hreeda",
@@ -2930,7 +3852,21 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "while attacking a figure who has suffered ⊠",
+    "modifier": {
+     "attack": {
+      "damage": 3
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Vinto Hreeda",
@@ -2978,7 +3914,23 @@
    "surges": [],
    "other": "Attack gains Blast 1⊠."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "ranged attack; remove 1 attack die first (pool steppers); gains Blast 1",
+    "modifier": {
+     "dice": {
+      "attack": {
+       "red": 1
+      }
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Armored Onslaught",
@@ -3020,7 +3972,19 @@
    ],
    "other": "Action: exhaust to recover 1⊠."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "surges": [
+     "⚡: Exhaust this card to recover 2⊠"
+    ]
+   }
+  ]
  },
  {
   "group": "Armored Onslaught",
@@ -3058,7 +4022,26 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "when an Imperial figure declares a [ranged] attack",
+    "modifier": {
+     "attack": {
+      "damage": 3
+     },
+     "dice": {
+      "attack": {
+       "red": -1
+      }
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Armored Onslaught",
@@ -3092,7 +4075,24 @@
    "surges": [],
    "other": "+2 Health."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2
+   }
+  },
+  "use": [
+   {
+    "when": "defense",
+    "cost": {},
+    "note": "rolled an Evade on a black die",
+    "modifier": {
+     "defense": {
+      "block": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Armored Onslaught",
@@ -3146,7 +4146,35 @@
    "surges": [],
    "other": "Choose +1 damage or +1 surge; Bounty token setup: when no heroes have a Bounty token, each hero claims one; discard the token when that hero is defeated"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "defender has a Bounty token",
+    "choice": "pick",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "defender has a Bounty token",
+    "choice": "pick",
+    "modifier": {
+     "attack": {
+      "surge": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Hutt Mercenaries",
@@ -3238,7 +4266,23 @@
    "surges": [],
    "other": "Figures do not block line of sight for this attack"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "attack targeting a hero with a Bounty token",
+    "modifier": {
+     "dice": {
+      "attack": {
+       "blue": 1
+      }
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Hutt Mercenaries",
@@ -3260,7 +4304,35 @@
    "surges": [],
    "other": "If the attacker is a Mercenary figure, an additional +1 damage (total +2)"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "target has 3+ strain",
+    "choice": "who",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "target has 3+ strain; attacker is a Mercenary",
+    "choice": "who",
+    "modifier": {
+     "attack": {
+      "damage": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Hutt Mercenaries",
@@ -3306,7 +4378,35 @@
    "surges": [],
    "other": "If that hero has a Bounty token, an additional +1 damage (total +3)"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "a hero is defending",
+    "choice": "who",
+    "modifier": {
+     "attack": {
+      "damage": 2
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "a hero with a Bounty token is defending",
+    "choice": "who",
+    "modifier": {
+     "attack": {
+      "damage": 3
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Imperial Black Ops",
@@ -3373,7 +4473,48 @@
    "surges": [],
    "other": "Choose one: -1 damage, -1 surge, or -2 Accuracy to the attack results"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "choice": "pick",
+    "modifier": {
+     "attack": {
+      "damage": -1
+     }
+    }
+   },
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "choice": "pick",
+    "modifier": {
+     "attack": {
+      "surge": -1
+     }
+    }
+   },
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "choice": "pick",
+    "modifier": {
+     "attack": {
+      "accuracy": -2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Imperial Black Ops",
@@ -3396,7 +4537,22 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "target did not have line of sight to the attacker at the start of this activation",
+    "modifier": {
+     "attack": {
+      "accuracy": 2,
+      "damage": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Imperial Black Ops",
@@ -3473,7 +4629,19 @@
    ],
    "other": "During its activation, an Imperial figure may discard 1 Beneficial condition to gain 1 Beneficial condition of your choice"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "surges": [
+     "⚡: Hide"
+    ]
+   }
+  ]
  },
  {
   "group": "Inspiring Leadership",
@@ -3592,7 +4760,19 @@
    "surges": [],
    "other": "May reroll 1 attack die."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "other Imperial figures within 3 spaces of a friendly Leader",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Military Might",
@@ -3648,7 +4828,12 @@
    "surges": [],
    "other": "+2 Health passive; reroll 1 black die"
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "stats": {
+    "health": 2
+   }
+  }
  },
  {
   "group": "Military Might",
@@ -3682,7 +4867,19 @@
    "surges": [],
    "other": "class-wide, applies to any Trooper group"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "Trooper attacking a figure within 2 spaces",
+    "modifier": {
+     "attack": {
+      "surge": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Military Might",
@@ -3718,7 +4915,16 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "attack": {
+    "damage": 1,
+    "accuracy": 2
+   },
+   "defense": {
+    "block": 1
+   }
+  }
  },
  {
   "group": "Military Might",
@@ -3740,7 +4946,19 @@
    "surges": [],
    "other": "strain-token economy on the card"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "discard 1 strain token from this card",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Nemeses",
@@ -3764,7 +4982,33 @@
    "other": "Choose a villain on the map or reveal one in open/reserved groups; qualifying figures gain +1 surge and +1 [Evade] during this attack"
   },
   "verified_note": "Text correct; model said '+1 dodge' but printed glyph is Evade (curved arrows)",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "non-villain Imperial sharing a trait with the villain",
+    "modifier": {
+     "attack": {
+      "surge": 1
+     }
+    }
+   },
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "non-villain Imperial sharing a trait with the villain",
+    "modifier": {
+     "defense": {
+      "evade": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Nemeses",
@@ -3822,7 +5066,21 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "attacking the healthy hero who has suffered the least damage",
+    "modifier": {
+     "attack": {
+      "damage": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Nemeses",
@@ -3845,7 +5103,21 @@
    "surges": [],
    "other": "Villain only attachment; gain 2 movement points at the start of your activation"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "adjacent friendly figure is attacking (Ringleader's group is adjacent)",
+    "scope": "friendly",
+    "modifier": {
+     "attack": {
+      "damage": 1,
+      "accuracy": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Nemeses",
@@ -3900,7 +5172,31 @@
    "other": "Choose one: -1 [Block] or -1 [Evade] to the defense results"
   },
   "verified_note": "Text correct; model 'other' mislabelled glyphs as evade/dodge (printed Block/Evade)",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "Rebel within 3 spaces of a villain is defending",
+    "choice": "pick",
+    "modifier": {
+     "defense": {
+      "block": -1
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "Rebel within 3 spaces of a villain is defending",
+    "choice": "pick",
+    "modifier": {
+     "defense": {
+      "evade": -1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Nemeses",
@@ -3924,7 +5220,23 @@
    "surges": [],
    "other": "Villains cannot receive Harmful conditions; spend 1 threat when an attack targeting a villain is declared to ready this card"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "attack targeting a villain is declared",
+    "modifier": {
+     "dice": {
+      "defense": {
+       "black": 1
+      }
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Power of the Dark Side",
@@ -3982,7 +5294,21 @@
    "surges": [],
    "other": "Attacking figure suffers 1 damage; readies at the end of each Imperial group activation"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "attacker suffers 1 damage",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Power of the Dark Side",
@@ -4029,7 +5355,12 @@
    "other": "+1 [Evade]; also +1 [Block] if the starting group size is 1; at end of group's activation one figure gains 1 Power token; Non-Creature only attachment"
   },
   "verified_note": "Text correct; model 'other' had dodge/evade where card prints Evade/Block",
-  "verified": true
+  "verified": true,
+  "passive": {
+   "defense": {
+    "evade": 1
+   }
+  }
  },
  {
   "group": "Power of the Dark Side",
@@ -4126,7 +5457,12 @@
    "surges": [],
    "other": ""
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "attack": {
+    "accuracy": 1
+   }
+  }
  },
  {
   "group": "Precision Training",
@@ -4148,7 +5484,21 @@
    "surges": [],
    "other": "Applied to the attacker's results."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "modifier": {
+     "attack": {
+      "surge": -1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Precision Training",
@@ -4176,7 +5526,29 @@
    ],
    "other": "Also costs 1 threat."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "threat": 1
+    },
+    "note": "",
+    "modifier": {
+     "dice": {
+      "attack": {
+       "yellow": 1
+      }
+     }
+    },
+    "surges": [
+     "⚡: Weaken",
+     "⚡: +1⊠",
+     "⚡: Pierce 2"
+    ]
+   }
+  ]
  },
  {
   "group": "Precision Training",
@@ -4220,7 +5592,17 @@
    "surges": [],
    "other": "Also costs 2 threat."
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "threat": 2
+    },
+    "note": "remove 1 defense die (pool steppers)"
+   }
+  ]
  },
  {
   "group": "Precision Training",
@@ -4240,7 +5622,12 @@
    "surges": [],
    "other": "Pierce 1."
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "attack": {
+    "pierce": 1
+   }
+  }
  },
  {
   "group": "Precision Training",
@@ -4294,7 +5681,21 @@
    "surges": [],
    "other": "At the end of each round, choose a Rebel figure and roll 1 yellow die; it suffers damage equal to the damage results"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "modifier": {
+     "attack": {
+      "accuracy": 2
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Reactive Defenses",
@@ -4317,7 +5718,21 @@
    "other": "88-Z gains an action to place 1 energy shield (Health 5, Defense 1 [Block]) in an adjacent space"
   },
   "verified_note": "Text correct; model 'other' said 'Defense 1 evade' but card prints Block",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "attack targeting an Imperial figure is declared",
+    "modifier": {
+     "defense": {
+      "block": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Reactive Defenses",
@@ -4339,7 +5754,21 @@
    "surges": [],
    "other": "88-Z gains an action: up to 2 other figures within 2 spaces each gain 1 surge token"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "attacker is a Droid (including 88-Z)",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Reactive Defenses",
@@ -4420,7 +5849,33 @@
    "surges": [],
    "other": "Passive: when another Imperial figure within 2 spaces of 88-Z declares an attack, +1 damage and +1 Accuracy"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "another Imperial figure within 2 spaces of 88-Z declares an attack",
+    "scope": "friendly",
+    "modifier": {
+     "attack": {
+      "damage": 1,
+      "accuracy": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Subversive Tactics",
@@ -4441,7 +5896,21 @@
    "other": "Rebel attacker chooses: suffer 1 strain, or +1 [Evade] to the defense results"
   },
   "verified_note": "Text correct; model said '+1 dodge' but printed glyph is Evade",
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "defense",
+    "cost": {
+     "exhaust": true
+    },
+    "note": "Rebel attacker chose not to suffer 1 strain",
+    "modifier": {
+     "defense": {
+      "evade": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Subversive Tactics",
@@ -4463,7 +5932,12 @@
    ],
    "other": "Pierce 1"
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "attack": {
+    "pierce": 1
+   }
+  }
  },
  {
   "group": "Subversive Tactics",
@@ -4521,7 +5995,51 @@
    "surges": [],
    "other": "+1 damage per strain the hero has suffered, max +3; costs 1 threat in addition to exhaust"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "threat": 1
+    },
+    "note": "hero with 1 strain",
+    "choice": "strain",
+    "modifier": {
+     "attack": {
+      "damage": 1
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "threat": 1
+    },
+    "note": "hero with 2 strain",
+    "choice": "strain",
+    "modifier": {
+     "attack": {
+      "damage": 2
+     }
+    }
+   },
+   {
+    "when": "attack",
+    "cost": {
+     "exhaust": true,
+     "threat": 1
+    },
+    "note": "hero with 3+ strain",
+    "choice": "strain",
+    "modifier": {
+     "attack": {
+      "damage": 3
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Subversive Tactics",
@@ -4600,7 +6118,19 @@
    "surges": [],
    "other": "Optional; if used, you suffer 1 damage after the attack is resolved"
   },
-  "verified": true
+  "verified": true,
+  "use": [
+   {
+    "when": "attack",
+    "cost": {},
+    "note": "suffer 1 damage after the attack",
+    "modifier": {
+     "attack": {
+      "surge": 1
+     }
+    }
+   }
+  ]
  },
  {
   "group": "Technological Superiority",
@@ -4703,7 +6233,14 @@
    "surges": [],
    "other": "Trooper or Droid only attachment"
   },
-  "verified": true
+  "verified": true,
+  "passive": {
+   "dice": {
+    "defense": {
+     "white": 1
+    }
+   }
+  }
  },
  {
   "group": "Technological Superiority",

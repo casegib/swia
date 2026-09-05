@@ -10,7 +10,7 @@
 import {
   COLOR_TO_DENOM, totalSymbols, rollFaces, faceData, SWIA_DICE, symbolsLabel, dieImgPath
 } from "./dice-terms.js";
-import { escapeHTML, sanitizeLabelHTML, equippedArmorFor, armorEffectsFor } from "../data/common.js";
+import { escapeHTML, sanitizeLabelHTML, equippedArmorFor, equipmentEffectsFor, equipmentRollNotesFor, cardUsesFor, friendlyCardUsesFor, cardUseOwner, cardUseAvailability, payCardUse, resolveUseItem, modifierEffectHTML } from "../data/common.js";
 import { countPowerTokens, POWER_TOKEN_STATUS } from "../actor-actions.js";
 import { conditionEffectsFor, discardConditions, conditionLabel, getCondition } from "../conditions.js";
 
@@ -87,6 +87,11 @@ function surgeLabel({ effectType, effectValue, effectText }) {
   // Keep any accompanying text (matches _surgeEntryLabel on the actor sheet,
   // so the sheet and the roll card describe the ability identically).
   return text ? `${base}, ${text}` : base;
+}
+
+/** Sanitized display label for a structured surge entry (shared with card-granted surges). */
+export function surgeEntryLabel(entry) {
+  return sanitizeLabelHTML(surgeLabel(entry));
 }
 
 /** Recompute all derived numbers on a roll-card state object. */
@@ -386,43 +391,64 @@ export function buildAttackPool(actor, weaponId = null) {
       const bd = mod.system?.bonusDice ?? {};
       for (const c of ATTACK_POOL_COLORS) pool[c] = clampCount(pool[c] + clampCount(bd[c]));
     }
-    return pool;
+    return withEquipmentDice(pool, actor, "attack");
   }
   const dice = actor.system?.attributes?.attack ?? {};
   for (const c of ATTACK_POOL_COLORS) pool[c] = clampCount(dice[c]);
+  return withEquipmentDice(pool, actor, "attack");
+}
+
+/** Add always-on extra dice from gear / passives (Cloaking Device's white die) to a pool. */
+function withEquipmentDice(pool, actor, role) {
+  const extra = equipmentEffectsFor(actor).dice?.[role] ?? {};
+  for (const c of Object.keys(pool)) pool[c] = clampCount((pool[c] ?? 0) + (Number(extra[c]) || 0));
   return pool;
 }
 
 // Re-exported for callers that historically imported these from here.
-export { equippedArmorFor, armorEffectsFor };
+export { equippedArmorFor, equipmentEffectsFor };
 
 /**
  * Defense pool {black, white} for an actor: the actor's own defense attribute.
  * Armor contributes no dice in Imperial Assault; its printed Block/Evade are
- * flat results, seeded via armorDefenseBonusFor().
+ * flat results, seeded via equipmentDefenseBonusFor(). Always-on extra defense dice from gear / passives (Cloaking Device) are added here.
  *
  * Single chokepoint — the combat window's defender panel, the solo defense
  * roll and the targeted-defense path all resolve their pool through here.
  */
 export function buildDefensePool(actor) {
   const d = actor?.system?.attributes?.defense ?? {};
-  return { black: clampCount(d.black), white: clampCount(d.white) };
+  return withEquipmentDice({ black: clampCount(d.black), white: clampCount(d.white) }, actor, "defense");
 }
 
 /**
- * Flat {block, evade} a defender starts with from equipped armor. Seeds the
- * combat window's defender bonus row (still adjustable for conditional card
- * text) and the solo defense card.
+ * Flat {block, evade} a defender starts with from equipped armor and
+ * class-card passives. Seeds the combat window's defender bonus row (still
+ * adjustable for conditional card text) and the solo defense card.
  */
-export function armorDefenseBonusFor(actor) {
-  const fx = armorEffectsFor(actor);
-  return { block: fx.block, evade: fx.evade };
+export function equipmentDefenseBonusFor(actor) {
+  const fx = equipmentEffectsFor(actor).defense;
+  return { block: Number(fx.block) || 0, evade: Number(fx.evade) || 0 };
+}
+
+/**
+ * Flat {damage, surge, accuracy} an attacker starts with from class-card
+ * passives (Bank Shot's +1 Accuracy). Same layer as the defender's armor
+ * seed, so it is undoable and refunded the same way. Pierce rides with the
+ * keywords instead (attackKeywordsFor).
+ */
+export function equipmentAttackBonusFor(actor) {
+  const fx = equipmentEffectsFor(actor).attack;
+  return { damage: Number(fx.damage) || 0, surge: Number(fx.surge) || 0, accuracy: Number(fx.accuracy) || 0 };
 }
 
 /** Accumulated keyword block: weapon + attached mods (heroes only). */
 export function attackKeywordsFor(actor, weaponId = null) {
   const out = { pierce: 0, blast: 0, cleave: false, reach: false };
-  if (actor?.type !== "hero") return out;
+  if (!actor) return out;
+  // Always-on Pierce from gear / passives applies to every attack.
+  out.pierce += Math.max(0, Number(equipmentEffectsFor(actor).attack?.pierce) || 0);
+  if (actor.type !== "hero") return out;
   const weapon = weaponId ? actor.items.get(weaponId) : null;
   if (!weapon) return out;
   for (const item of [weapon, ...weaponModsFor(actor, weapon)]) {
@@ -544,6 +570,7 @@ export class SWIARollDialog extends BaseApplication {
     actions: {
       adjustDie: SWIARollDialog.prototype._onAdjustDie,
       adjustToken: SWIARollDialog.prototype._onAdjustToken,
+      toggleCardUse: SWIARollDialog.prototype._onToggleCardUse,
       executeRoll: SWIARollDialog.prototype._onExecuteRoll
     }
   };
@@ -576,6 +603,53 @@ export class SWIARollDialog extends BaseApplication {
     this.declared = Object.fromEntries(
       (ROLL_TOKEN_STATS[this.rollType] ?? []).map((stat) => [stat, { typed: 0, any: 0 }])
     );
+    // Declared class-card effects for this roll kind. Toggled in the dialog;
+    // dice join the pool at once (so the roller sees them), costs are paid
+    // and result shifts applied only when Roll is clicked.
+    // Friends' cards only when this client may pay for them (owns the friend,
+    // or is the GM) — the solo dialog has no relay to the owner's client.
+    this.cardUses = [
+      ...cardUsesFor(actor, this.rollType),
+      ...friendlyCardUsesFor(actor, this.rollType).filter((u) => game.user?.isGM || game.actors?.get(u.ownerActorId)?.isOwner)
+    ];
+    this.declaredUses = new Set();
+  }
+
+  /** The declared uses, in offer order. */
+  _declaredCardUses() {
+    return this.cardUses.filter((u) => this.declaredUses.has(u.key));
+  }
+
+  /** Pool delta of a use's dice for this roll kind (attack dice on attack/test, defense dice on defense). */
+  _useDice(use) {
+    const dice = use.modifier?.dice ?? {};
+    return this.rollType === "defense" ? (dice.defense ?? {}) : (dice.attack ?? {});
+  }
+
+  _cardRows() {
+    return this.cardUses.map((use) => {
+      const declared = this.declaredUses.has(use.key);
+      const owner = cardUseOwner(use, this.actor);
+      const item = resolveUseItem(owner, use.itemId);
+      const raw = item ? (item.system?.use ?? [])[use.useIndex] : null;
+      const live = item && raw ? cardUseAvailability(owner, item, raw) : { available: false, reason: "SWIA.CardUse.Missing" };
+      const siblingDeclared = Boolean(use.choice)
+        && this.cardUses.some((u) => u !== use && u.choice === use.choice && this.declaredUses.has(u.key));
+      const canToggle = declared || (live.available && !siblingDeclared);
+      const reason = declared ? "" : (siblingDeclared ? "SWIA.CardUse.ChoiceTaken" : live.reason);
+      return {
+        key: use.key,
+        name: use.name,
+        ownerName: use.ownerName ?? "",
+        isFriendly: Boolean(use.ownerActorId),
+        note: use.note,
+        effectHTML: use.effectHTML,
+        costLabels: use.costLabels,
+        declared,
+        canToggle,
+        reasonLabel: reason ? game.i18n.localize(reason) : ""
+      };
+    });
   }
 
   /**
@@ -768,6 +842,12 @@ export class SWIARollDialog extends BaseApplication {
     for (const c of ATTACK_COLORS) pool[c] = 0;
     Object.assign(pool, buildAttackPool(this.actor, this.selectedWeaponId));
     this._addConditionDice(pool);
+    // Declared card dice survive a weapon change.
+    for (const use of this._declaredCardUses()) {
+      for (const [color, n] of Object.entries(this._useDice(use))) {
+        if (color in pool && Number(n)) pool[color] = clampCount(pool[color] + Number(n));
+      }
+    }
   }
 
   _attackKeywords() {
@@ -833,6 +913,7 @@ export class SWIARollDialog extends BaseApplication {
     });
 
     const tokenRows = this._tokenRows();
+    const cardRows = this._cardRows();
 
     // Defender-side conditions on a targeted solo attack (rare — targeted
     // attacks normally go to the combat window) shift the attacker's accuracy.
@@ -848,6 +929,8 @@ export class SWIARollDialog extends BaseApplication {
       showConditions: conditionNotes.length > 0,
       tokenRows,
       showTokens: tokenRows.length > 0,
+      cardRows,
+      showCards: cardRows.length > 0,
       anyHeld: countPowerTokens(this.actor).any ?? 0,
       actorName: this.actor?.name ?? "",
       rollType: this.rollType,
@@ -890,6 +973,22 @@ export class SWIARollDialog extends BaseApplication {
     this.render();
   }
 
+  /** Declare / undeclare a class-card effect. Its dice move in and out of the pool immediately. */
+  async _onToggleCardUse(event, target) {
+    event.preventDefault();
+    const key = target?.dataset?.key;
+    const use = this.cardUses.find((u) => u.key === key);
+    if (!use) return;
+    const row = this._cardRows().find((r) => r.key === key);
+    if (!row?.canToggle) return;
+    const sign = this.declaredUses.has(key) ? -1 : 1;
+    if (sign > 0) this.declaredUses.add(key); else this.declaredUses.delete(key);
+    for (const [color, n] of Object.entries(this._useDice(use))) {
+      if (color in this.pool && Number(n)) this.pool[color] = clampCount(this.pool[color] + sign * Number(n));
+    }
+    this.render();
+  }
+
   /** Step a declared token count (typed or Any) for a stat, bounded by what the figure holds. */
   async _onAdjustToken(event, target) {
     event.preventDefault();
@@ -918,8 +1017,8 @@ export class SWIARollDialog extends BaseApplication {
   async _onExecuteRoll(event, target) {
     event.preventDefault();
 
-    const attackFormula = this.showAttack ? this._poolFormula(ATTACK_COLORS) : "";
-    const defenseFormula = this.showDefense ? this._poolFormula(DEFENSE_COLORS) : "";
+    let attackFormula = this.showAttack ? this._poolFormula(ATTACK_COLORS) : "";
+    let defenseFormula = this.showDefense ? this._poolFormula(DEFENSE_COLORS) : "";
     if (!attackFormula && !defenseFormula) {
       ui.notifications?.warn(game.i18n.localize("SWIA.Roll.EmptyPool"));
       return;
@@ -931,6 +1030,42 @@ export class SWIARollDialog extends BaseApplication {
     const consumed = await consumeDeclaredTokens(this.actor, this.declared);
     const tok = (stat) => consumed[stat] ?? 0;
 
+    // Declared class-card effects are paid now too. A use whose cost can no
+    // longer be paid (the card was exhausted from the sheet meanwhile) is
+    // dropped — and its dice come back out of the pool.
+    const cardFx = { damage: 0, surge: 0, accuracy: 0, pierce: 0, block: 0, evade: 0 };
+    const cardNotes = [];
+    const cardSurges = [];
+    for (const use of this._declaredCardUses()) {
+      const receipt = await payCardUse(cardUseOwner(use, this.actor), use);
+      if (!receipt) {
+        for (const [color, n] of Object.entries(this._useDice(use))) {
+          if (color in this.pool && Number(n)) this.pool[color] = clampCount(this.pool[color] - Number(n));
+        }
+        ui.notifications?.warn(game.i18n.format("SWIA.CardUse.Dropped", { name: use.name }));
+        attackFormula = this.showAttack ? this._poolFormula(ATTACK_COLORS) : "";
+        defenseFormula = this.showDefense ? this._poolFormula(DEFENSE_COLORS) : "";
+        continue;
+      }
+      const mod = use.modifier ?? {};
+      for (const k of ["damage", "surge", "accuracy", "pierce"]) cardFx[k] += Number(mod.attack?.[k]) || 0;
+      for (const k of ["block", "evade"]) cardFx[k] += Number(mod.defense?.[k]) || 0;
+      const fxHTML = use.effectHTML || modifierEffectHTML(mod);
+      const label = use.ownerName ? `${use.ownerName}: ${use.name}` : use.name;
+      cardNotes.push(fxHTML ? `${escapeHTML(label)} (${fxHTML})` : escapeHTML(label));
+      for (const entry of use.surgeAbilities ?? []) {
+        const type = entry.effectType ?? "special";
+        const value = Number(entry.effectValue) || 0;
+        cardSurges.push({
+          cost: Math.max(1, Number(entry.cost) || 1),
+          effects: ["damage", "accuracy", "pierce"].includes(type) ? [{ type, value }] : [],
+          label: surgeEntryLabel(entry),
+          source: escapeHTML(use.name),
+          spent: false
+        });
+      }
+    }
+
     // Condition shifts: the roller's own (attack or defense role) plus, on a
     // targeted solo attack, the defender's shift on the attacker's accuracy.
     const fx = this.conditionFx ?? conditionEffectsFor(this.actor, "attack");
@@ -939,7 +1074,17 @@ export class SWIARollDialog extends BaseApplication {
       : { block: 0, evade: 0, attackerAccuracy: 0, notes: [] };
     const condAttack = this.rollType === "attack" ? fx : { damage: 0, surge: 0, accuracy: 0 };
     const condDefense = this.rollType === "defense" ? fx : targetFx;
-    const conditionNotes = [...(fx.notes ?? []), ...(targetFx.notes ?? [])];
+    // Always-on gear / passive shifts for the roller (Bank Shot +1 Accuracy)
+    // ride the same layer as the armor seed; their notes join the
+    // conditions line so the card shows where every point came from.
+    const eqAttack = this.rollType === "attack" ? equipmentAttackBonusFor(this.actor) : { damage: 0, surge: 0, accuracy: 0 };
+    const equipmentNotes = this.rollType === "test" ? [] : equipmentRollNotesFor(this.actor, this.rollType);
+    const conditionNotes = [...(fx.notes ?? []), ...(targetFx.notes ?? []), ...equipmentNotes, ...cardNotes];
+    // Declared card shifts ride the same layers: attack-side onto the
+    // roller's results (attack or test), defense-side onto whoever defends.
+    eqAttack.damage += cardFx.damage;
+    eqAttack.accuracy += cardFx.accuracy;
+    eqAttack.surge += cardFx.surge;
 
     const attackRoll = attackFormula ? await new Roll(attackFormula).evaluate() : null;
     const defenseRoll = defenseFormula ? await new Roll(defenseFormula).evaluate() : null;
@@ -954,7 +1099,7 @@ export class SWIARollDialog extends BaseApplication {
     const defendingActor = this.rollType === "defense"
       ? this.actor
       : (this.rollType === "attack" ? this.targetActor : null);
-    const armorBonus = defendingActor ? armorDefenseBonusFor(defendingActor) : { block: 0, evade: 0 };
+    const armorBonus = defendingActor ? equipmentDefenseBonusFor(defendingActor) : { block: 0, evade: 0 };
 
     const state = recomputeCard({
       actorName: this.actor?.name ?? "",
@@ -973,8 +1118,8 @@ export class SWIARollDialog extends BaseApplication {
       damage: attackTotals.damage,
       // Declared Surge tokens ride on the raw surge count (as in the combat
       // window); preBonusSurge keeps them through rerolls.
-      surge: Math.max(0, attackTotals.surge + tok("surge") + condAttack.surge),
-      preBonusSurge: tok("surge") + condAttack.surge,
+      surge: Math.max(0, attackTotals.surge + tok("surge") + condAttack.surge + eqAttack.surge),
+      preBonusSurge: tok("surge") + condAttack.surge + eqAttack.surge,
       accuracy: attackTotals.accuracy,
       block: defenseTotals.block,
       evade: defenseTotals.evade,
@@ -983,8 +1128,8 @@ export class SWIARollDialog extends BaseApplication {
       // defender rolled (own defense roll, or the targeted actor on an attack),
       // plus any Block/Evade tokens the defender declared, plus condition
       // shifts (Weakened -1 Evade).
-      bonusBlock: armorBonus.block + tok("block") + (condDefense.block ?? 0),
-      bonusEvade: armorBonus.evade + tok("evade") + (condDefense.evade ?? 0),
+      bonusBlock: armorBonus.block + tok("block") + (condDefense.block ?? 0) + cardFx.block,
+      bonusEvade: armorBonus.evade + tok("evade") + (condDefense.evade ?? 0) + cardFx.evade,
       armorBlock: armorBonus.block,
       armorEvade: armorBonus.evade,
       tokenDamage: tok("damage"),
@@ -993,16 +1138,16 @@ export class SWIARollDialog extends BaseApplication {
       tokenEvade: tok("evade"),
       conditionNotes,
       weaponAccuracy: this.rollType === "attack" ? this._weaponAccuracy() : 0,
-      basePierce: keywords.pierce,
+      basePierce: keywords.pierce + cardFx.pierce,
       blast: keywords.blast,
       cleave: keywords.cleave,
-      bonusDamage: tok("damage") + condAttack.damage,
-      bonusAccuracy: this.rollType === "attack" ? condAttack.accuracy + (targetFx.attackerAccuracy ?? 0) : 0,
+      bonusDamage: tok("damage") + condAttack.damage + eqAttack.damage,
+      bonusAccuracy: this.rollType === "attack" ? condAttack.accuracy + eqAttack.accuracy + (targetFx.attackerAccuracy ?? 0) : 0,
       bonusPierce: 0,
       spentSurge: 0,
       // Rerolls stay open until a surge is spent (parity with the combat window).
       rerollLocked: false,
-      surgeAbilities: this.rollType === "defense" ? [] : this._surgeAbilities()
+      surgeAbilities: this.rollType === "defense" ? [] : [...this._surgeAbilities(), ...cardSurges]
     });
 
     const content = await renderTemplateFn(CARD_TEMPLATE, state);

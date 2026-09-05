@@ -23,6 +23,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { mdToPages } from "./md.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const SRC = path.join(ROOT, "packs/_source");
@@ -107,7 +108,8 @@ class Pack {
   }
   add(doc, folderId = null, sort = 0) {
     doc.folder = folderId; doc.sort = sort;
-    doc._key = `!${this.type === "Actor" ? "actors" : "items"}!${doc._id}`;
+    const coll = { Actor: "actors", Item: "items", JournalEntry: "journal" }[this.type] ?? "items";
+    doc._key = `!${coll}!${doc._id}`;
     this.docs.push(doc);
   }
   write() {
@@ -140,6 +142,38 @@ function actor(pack, name, type, system, { img = "", flags = {}, variant = "", i
 
 const traitsOf = (t) => Array.isArray(t) ? t : String(t ?? "").split(/\s*[-,]\s*/).filter(Boolean);
 
+/** Declared card effects (see cardUseList in scripts/data/common.js) from the sparse `use` entries in class-cards.json. */
+function cardUses(list) {
+  return (list ?? []).map((u) => ({
+    when: u.when ?? "attack",
+    scope: u.scope ?? "self",
+    note: u.note ?? "",
+    choice: u.choice ?? "",
+    cost: { exhaust: Boolean(u.cost?.exhaust), strain: Number(u.cost?.strain) || 0, deplete: Boolean(u.cost?.deplete), threat: Number(u.cost?.threat) || 0 },
+    modifier: modifier(u.modifier),
+    surgeAbilities: (u.surges ?? []).map((line) => {
+      const m = String(line).match(/^\s*((?:⚡\s*)+):\s*(.*)$/);
+      const cost = m ? (m[1].match(/⚡/g) ?? []).length : 1;
+      return weaponSurge(cost, m ? m[2] : line);
+    })
+  }));
+}
+
+/** Shared modifier shape (see modifierField in scripts/data/common.js), filled from a sparse object. */
+function modifier(partial = {}) {
+  const n = (v) => Number(v) || 0;
+  const p = partial ?? {};
+  return {
+    stats: { health: n(p.stats?.health), endurance: n(p.stats?.endurance), speed: n(p.stats?.speed) },
+    attack: { damage: n(p.attack?.damage), surge: n(p.attack?.surge), accuracy: n(p.attack?.accuracy), pierce: n(p.attack?.pierce) },
+    defense: { block: n(p.defense?.block), evade: n(p.defense?.evade) },
+    dice: {
+      attack: { red: n(p.dice?.attack?.red), blue: n(p.dice?.attack?.blue), green: n(p.dice?.attack?.green), yellow: n(p.dice?.attack?.yellow) },
+      defense: { black: n(p.dice?.defense?.black), white: n(p.dice?.defense?.white) }
+    }
+  };
+}
+
 function buildWeapon(pack, c, { img, flags, cost = 0 }) {
   const kw = parseKeywords(c.keywords);
   const traits = traitsOf(c.traits);
@@ -167,7 +201,7 @@ function buildArmor(pack, c, { img, flags, cost = 0 }) {
   for (const k of kw.rest) { let m; if ((m = k.match(/^\+(\d+)\s*\[Block\]/))) block += +m[1]; else if ((m = k.match(/^\+(\d+)\s*\[Evade\]/))) evade += +m[1]; else if ((m = k.match(/^\+(\d+)\s*Health/))) health += +m[1]; }
   const sys = {
     description: "", cost, cardState: "ready", armorClass: "", traits: traits.join(" - "),
-    bonusHealth: health, bonusBlock: block, bonusEvade: evade,
+    modifier: modifier({ stats: { health }, defense: { block, evade } }),
     abilities: [...kw.rest.filter((k) => !/^\+\d+\s*(\[Block\]|\[Evade\]|Health)/.test(k)).map((k) => ({ prefix: "none", description: iconize(k) })), ...abilityRows(c.text)],
     equipped: false, imageOffsetX: 50, imageOffsetY: 50, imageZoom: 1
   };
@@ -195,6 +229,13 @@ function buildGear(pack, c, { img, flags, cost = 0 }) {
   return item(pack, c.name, "gear", sys, { img, flags });
 }
 const EQUIP = { weapon: buildWeapon, armor: buildArmor, weaponmod: buildMod, gear: buildGear };
+
+/** Class-deck equipment carries its deck tag in the schema (hero sheet lists it under Class Cards) as well as in flags. */
+function tagClassDeck(doc, c) {
+  doc.system.heroClass = c.group;
+  doc.system.classXp = c.xp ?? 0;
+  return doc;
+}
 
 /** Class-card equipment is free text: "Attack: [ranged] blue + red. Traits: Blaster - Heavy. ⚡: +1 Accuracy. +4 Health. …" */
 function parseClassEquipment(c) {
@@ -242,9 +283,9 @@ const summary = [];
     let doc;
     if (c.shape === "equipment") {
       const parsed = parseClassEquipment(c);
-      doc = EQUIP[classKind(c)]("class-cards", parsed, { img, flags });
+      doc = tagClassDeck(EQUIP[classKind(c)]("class-cards", parsed, { img, flags }), c);
     } else {
-      doc = item("class-cards", c.name, "classcard", { description: "", cost: 0, cardState: "ready", cooldown: 0, xpCost: c.xp ?? 0, heroClass: c.group, abilityText: iconize(c.text) }, { img, flags });
+      doc = item("class-cards", c.name, "classcard", { description: "", cost: 0, cardState: "ready", cooldown: 0, xpCost: c.xp ?? 0, heroClass: c.group, abilityText: iconize(c.text), passive: modifier(c.passive), use: cardUses(c.use) }, { img, flags });
     }
     P.add(doc, fid, (c.xp ?? 0) * 100);
   }
@@ -256,7 +297,7 @@ const summary = [];
   for (const c of load("docs/class-cards.json").filter((c) => c.kind === "imperial")) {
     const fid = P.folder(c.group);
     const img = imgLookup("imperial-class-cards", (x) => x.class === c.group && norm(x.name) === norm(c.name));
-    const doc = item("imperial-class-cards", c.name, "imperialclasscard", { description: iconize(c.text), cost: c.xp ?? 0, cardState: "ready", cooldown: 0 }, { img, flags: { classXp: c.xp, imperialClass: c.group, shape: c.shape, source: "imperial-class-cards" } });
+    const doc = item("imperial-class-cards", c.name, "imperialclasscard", { description: iconize(c.text), cost: c.xp ?? 0, cardState: "ready", cooldown: 0, attachment: /^\s*attachment\b/i.test(c.text ?? ""), imperialClass: c.group, classXp: c.xp ?? 0, passive: modifier(c.passive), use: cardUses(c.use) }, { img, flags: { classXp: c.xp, imperialClass: c.group, shape: c.shape, source: "imperial-class-cards" } });
     P.add(doc, fid, (c.xp ?? 0) * 100);
   }
 }
@@ -367,8 +408,8 @@ const summary = [];
       const img = imgLookup("hero-class-cards", (x) => x.hero === c.group && norm(x.name) === norm(c.name));
       const flags = { classXp: null, heroClass: c.group, shape: c.shape, source: "hero-class-cards" };
       const doc = c.shape === "equipment"
-        ? EQUIP[classKind(c)]("heroes", parseClassEquipment(c), { img, flags })
-        : item("heroes", c.name, "classcard", { description: "", cost: 0, cardState: "ready", cooldown: 0, xpCost: 0, heroClass: c.group, abilityText: iconize(c.text) }, { img, flags });
+        ? tagClassDeck(EQUIP[classKind(c)]("heroes", parseClassEquipment(c), { img, flags }), c)
+        : item("heroes", c.name, "classcard", { description: "", cost: 0, cardState: "ready", cooldown: 0, xpCost: 0, heroClass: c.group, abilityText: iconize(c.text), passive: modifier(c.passive), use: cardUses(c.use) }, { img, flags });
       delete doc.folder; delete doc.sort;
       return doc;
     });
@@ -396,6 +437,34 @@ const summary = [];
     };
     const doc = actor("heroes", c.name, "ally", sys, { img, linked: true, flags: { source: "companion-cards", companion: true } });
     P.add(doc, cf);
+  }
+}
+
+// --- Guides (journal entries from docs/*.md) ------------------------------
+{
+  const P = new Pack("guides", "SWIA Guides", "JournalEntry"); packs.push(P);
+  const guides = [
+    { file: "docs/PLAYER_GUIDE.md", sort: 0 },
+    { file: "docs/GM_GUIDE.md", sort: 100 }
+  ];
+  for (const g of guides) {
+    const { title, pages } = mdToPages(fs.readFileSync(path.join(ROOT, g.file), "utf8"));
+    const _id = id16("guides", "JournalEntry", title);
+    const doc = {
+      _id, name: title, folder: null, sort: g.sort,
+      ownership: { default: 2 }, flags: { swia: { source: g.file } }, _stats: {},
+      pages: pages.map((p, i) => {
+        const pid = id16("guides", "JournalEntryPage", `${title}/${p.name}`);
+        return {
+          _id: pid, name: p.name, type: "text", sort: i * 1000,
+          title: { show: true, level: 1 },
+          text: { format: 1, content: p.html, markdown: "" },
+          image: {}, video: {}, src: null, system: {}, ownership: { default: -1 }, flags: {}, _stats: {},
+          _key: `!journal.pages!${_id}.${pid}`
+        };
+      })
+    };
+    P.add(doc, null, g.sort);
   }
 }
 

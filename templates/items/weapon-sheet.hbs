@@ -25,6 +25,9 @@
       {{#if systemData.cost}}
       <span class="cost-chip" title="{{localize 'SWIA.Item.Weapon.Cost'}}">{{systemData.cost}} {{localize "SWIA.Item.Weapon.Credits"}}</span>
       {{/if}}
+      {{#if systemData.heroClass}}
+      <span class="cost-chip class-deck-chip" title="{{localize 'SWIA.Item.ClassDeck.Legend'}}">{{systemData.heroClass}} · {{#if systemData.classXp}}{{systemData.classXp}} {{localize "SWIA.Item.ClassCard.XP"}}{{else}}{{localize "SWIA.Inventory.ClassDeckStarter"}}{{/if}}</span>
+      {{/if}}
     </header>
 
     <div class="weapon-art-area">
@@ -166,6 +169,17 @@
             <input name="system.cost" type="number" value="{{systemData.cost}}" data-dtype="Number" min="0" />
           </div>
         </div>
+        <div class="edit-field class-deck-edit-field">
+          <label>{{localize "SWIA.Item.ClassDeck.Legend"}}</label>
+          <div class="class-deck-edit-grid">
+            <label title="{{localize 'SWIA.Item.ClassDeck.HeroClassHint'}}">{{localize "SWIA.Item.ClassDeck.HeroClass"}}
+              <input name="system.heroClass" type="text" value="{{systemData.heroClass}}" placeholder="{{localize 'SWIA.Item.ClassCard.HeroClassPlaceholder'}}" />
+            </label>
+            <label title="{{localize 'SWIA.Item.ClassDeck.XpHint'}}">{{localize "SWIA.Item.ClassDeck.Xp"}}
+              <input name="system.classXp" type="number" value="{{systemData.classXp}}" data-dtype="Number" min="0" max="4" />
+            </label>
+          </div>
+        </div>
         <div class="edit-field keywords-edit-field">
           <label>{{localize "SWIA.Item.Weapon.Keywords"}}</label>
           <div class="keywords-edit-grid">
@@ -230,6 +244,43 @@
         <li class="empty-message">{{localize "SWIA.Item.Weapon.NoAbilities"}}</li>
         {{/each}}
       </ol>
+    </section>
+
+    <section class="weapon-abilities-section weapon-exhaust-section">
+      {{#if editMode}}
+      <div class="section-header">
+        <h3>{{localize "SWIA.Item.Weapon.ExhaustAbilities"}}</h3>
+        <button type="button" data-action="addExhaustAbility">{{localize "SWIA.Item.Weapon.AddExhaustAbility"}}</button>
+      </div>
+      {{else}}{{#if exhaustRows.length}}
+      <div class="section-header"><h3>{{localize "SWIA.Item.Weapon.ExhaustAbilities"}}</h3></div>
+      {{/if}}{{/if}}
+      {{#if (or editMode exhaustRows.length)}}
+      <ol class="weapon-abilities-list weapon-exhaust-list">
+        {{#each exhaustRows as |row index|}}
+        <li class="weapon-ability-row weapon-exhaust-row" data-index="{{index}}">
+          {{#if ../editMode}}
+          <select class="exhaust-trigger-input" data-dtype="String" title="{{localize 'SWIA.Item.Weapon.ExhaustTriggerLabel'}}">
+            <option value="action" {{#if (eq row.trigger "action")}}selected{{/if}}>{{localize "SWIA.Item.Weapon.ExhaustTrigger.Action"}}</option>
+            <option value="reaction" {{#if (eq row.trigger "reaction")}}selected{{/if}}>{{localize "SWIA.Item.Weapon.ExhaustTrigger.Reaction"}}</option>
+            <option value="free" {{#if (eq row.trigger "free")}}selected{{/if}}>{{localize "SWIA.Item.Weapon.ExhaustTrigger.Free"}}</option>
+          </select>
+          <input class="ability-desc-input exhaust-effect-input" type="text" value="{{row.effect}}" placeholder="{{localize 'SWIA.Item.Weapon.ExhaustEffectPlaceholder'}}" />
+          <button type="button" class="ability-delete" data-action="removeExhaustAbility" data-index="{{index}}" title="{{localize 'SWIA.Item.Weapon.RemoveExhaustAbility'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+          {{else}}
+          <span class="weapon-ability-view">
+            <span class="exhaust-trigger-tag">{{row.triggerLabel}}</span>
+            <span class="ability-rich-text">{{row.effect}}</span>
+          </span>
+          {{/if}}
+        </li>
+        {{else}}
+        <li class="empty-message">{{localize "SWIA.Item.Weapon.NoExhaustAbilities"}}</li>
+        {{/each}}
+      </ol>
+      {{/if}}
     </section>
 
     <section class="weapon-surge-section">

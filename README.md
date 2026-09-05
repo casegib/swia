@@ -44,7 +44,8 @@ The system ships six compendium packs, generated from transcribed card data (all
 | Heroes | 19 hero actors (both sides, hero abilities, attribute pools) with their starting class-deck equipment embedded; 7 companions |
 | Deployment Groups | Villain (Imperial, Mercenary) and ally (Rebel) actors with dice, abilities and surge abilities, in Regular / Elite folders |
 | Class Cards (Hero) | One folder per hero; equipment cards are real weapon / armor / mod items |
-| Class Cards (Imperial) | One folder per imperial class |
+| Class Cards (Imperial) | One folder per imperial class; cards in the world act class-wide, "Attachment." cards go on a deployment group's sheet |
+| SWIA Guides | The Player Guide and GM Guide as journals, built from `docs/PLAYER_GUIDE.md` and `docs/GM_GUIDE.md` |
 | Items, Supply & Rewards | Item deck by tier, supply cards, reward cards, form cards |
 | Agenda Cards | One folder per agenda deck; mission-spawning agendas are flagged `mission` |
 
@@ -69,6 +70,8 @@ npm run build:packs
 ```
 
 `scripts/build/build-packs.mjs` writes `packs/_source/<pack>/*.json` and compiles them with the Foundry CLI into `packs/<pack>`. Document ids are deterministic, so a re-run updates cards in place. `npm run survey` regenerates the two survey documents in `docs/`.
+
+Run the build with Foundry closed — it holds the pack databases open. The compiled `packs/<pack>/` folders (LevelDB: `CURRENT`, `MANIFEST-*`, `*.ldb`, `*.log`) are committed and must be in the release zip; `packs/_source/` is a build intermediate and is not committed. If a compendium shows up empty after an update, the compiled folder for it is missing from the install — Foundry silently creates an empty database in its place.
 
 ## File Map
 - `system.json` – system manifest; update `manifest`, `download`, `url` when publishing. Document types declared under `documentTypes`.

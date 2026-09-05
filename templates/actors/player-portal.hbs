@@ -93,7 +93,7 @@
               <div class="portal-stepper">
                 <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{actor.id}}" data-stat="health" data-delta="-1" title="{{localize 'SWIA.Attributes.HealthMinus'}}" {{#unless actor.canManage}}disabled{{/unless}}>&minus;</button>
                 <strong>{{actor.health.value}}</strong>
-                <span class="stat-max" {{#if actor.health.armorBonus}}title="{{localize 'SWIA.Attributes.HealthFromArmor' base=actor.health.baseMax bonus=actor.health.armorBonus}}"{{/if}}>/{{actor.health.max}}{{#if actor.health.armorBonus}}<span class="armor-health-note">+{{actor.health.armorBonus}}</span>{{/if}}</span>
+                <span class="stat-max" {{#if actor.health.equipmentBonus}}title="{{localize 'SWIA.Attributes.FromEquipment' base=actor.health.baseMax bonus=actor.health.equipmentBonus}}"{{/if}}>/{{actor.health.max}}{{#if actor.health.equipmentBonus}}<span class="armor-health-note">+{{actor.health.equipmentBonus}}</span>{{/if}}</span>
                 <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{actor.id}}" data-stat="health" data-delta="1" title="{{localize 'SWIA.Attributes.HealthPlus'}}" {{#unless actor.canManage}}disabled{{/unless}}>+</button>
               </div>
             </div>
@@ -246,7 +246,7 @@
             <div class="companion-stats">
               <span class="companion-stat">
                 <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{companion.id}}" data-stat="health" data-delta="-1" {{#unless companion.canManage}}disabled{{/unless}}>&minus;</button>
-                <strong>{{companion.health.value}}</strong><span class="stat-max" {{#if companion.health.armorBonus}}title="{{localize 'SWIA.Attributes.HealthFromArmor' base=companion.health.baseMax bonus=companion.health.armorBonus}}"{{/if}}>/{{companion.health.max}}{{#if companion.health.armorBonus}}<span class="armor-health-note">+{{companion.health.armorBonus}}</span>{{/if}}</span>
+                <strong>{{companion.health.value}}</strong><span class="stat-max" {{#if companion.health.equipmentBonus}}title="{{localize 'SWIA.Attributes.FromEquipment' base=companion.health.baseMax bonus=companion.health.equipmentBonus}}"{{/if}}>/{{companion.health.max}}{{#if companion.health.equipmentBonus}}<span class="armor-health-note">+{{companion.health.equipmentBonus}}</span>{{/if}}</span>
                 <button type="button" class="portal-step" data-action="adjustStat" data-actor-id="{{companion.id}}" data-stat="health" data-delta="1" {{#unless companion.canManage}}disabled{{/unless}}>+</button>
               </span>
               <span class="companion-stat companion-speed">{{localize "SWIA.Attributes.Speed"}} <strong>{{companion.speed}}</strong></span>
@@ -387,9 +387,7 @@
                           </div>
                           {{#if item.hasEffects}}
                           <div class="portal-mod-chips armor-fx-chips">
-                            {{#if item.bonusHealth}}<span class="armor-fx-chip health">+{{item.bonusHealth}} {{localize "SWIA.Attributes.Health"}}</span>{{/if}}
-                            {{#if item.bonusBlock}}<span class="armor-fx-chip block">+{{item.bonusBlock}} {{localize "SWIA.Dice.Block"}}</span>{{/if}}
-                            {{#if item.bonusEvade}}<span class="armor-fx-chip evade">+{{item.bonusEvade}} {{localize "SWIA.Dice.Evade"}}</span>{{/if}}
+                            {{#each item.chips}}<span class="armor-fx-chip {{this.key}}">{{this.label}}</span>{{/each}}
                           </div>
                           {{/if}}
                         </article>

@@ -14,3 +14,7 @@ hero-builder-build-checklist.md
 hero-builder-plans.md
 SECURITY_REVIEW.md
 REVIEW_2026-08-25.md
+
+# Compendium build intermediates; compiled packs/<pack>/ ARE committed
+packs/_source/
+packs/*/LOCK
