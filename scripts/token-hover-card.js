@@ -49,11 +49,12 @@ function abilityRows(list) {
 }
 
 /**
- * Surge text is often stored with its own cost prefix ("<surge img>: +1<dmg>"),
- * as typed on the sheet or carried over from older data. The card prints the
- * cost itself, so drop the prefix and keep its icon count.
+ * Surge text is often stored with its own cost prefix, with or without a
+ * colon ("<surge img>: +1<dmg>", "<surge img> +2 Accuracy"), as typed on the
+ * sheet or carried over from older data. The card prints the cost itself, so
+ * drop the prefix and keep its icon count.
  */
-const LEADING_SURGE = /^\s*((?:<img[^>]*surge[^>]*>\s*)+):\s*/i;
+const LEADING_SURGE = /^\s*((?:<img[^>]*surge[^>]*>\s*)+):?\s*/i;
 function stripSurgePrefix(text) {
   const raw = String(text ?? "");
   const match = LEADING_SURGE.exec(raw);
