@@ -81,7 +81,7 @@
   {{#if abilities.length}}
   <section class="tc-text">
     <h4>{{#if isHero}}{{#if wounded}}{{localize "SWIA.HoverCard.WoundedAbilities"}}{{else}}{{localize "SWIA.HoverCard.Abilities"}}{{/if}}{{else}}{{localize "SWIA.HoverCard.Abilities"}}{{/if}}</h4>
-    <ul>{{#each abilities}}<li>{{#if name}}<b>{{name}}.</b> {{/if}}{{{html}}}</li>{{/each}}</ul>
+    <ul>{{#each abilities}}<li>{{#if name}}<b>{{{name}}}.</b> {{/if}}{{{html}}}</li>{{/each}}</ul>
   </section>
   {{/if}}
 
@@ -90,7 +90,7 @@
     <h4>{{form.name}}</h4>
     {{#each form.keywords}}<div class="tc-keyword">{{{this}}}</div>{{/each}}
     {{#if form.surges.length}}<ul class="tc-surges">{{#each form.surges}}<li><span class="tc-cost">{{#each surges}}{{{swiaGlyph "surge"}}}{{/each}}:</span> {{{html}}}</li>{{/each}}</ul>{{/if}}
-    {{#if form.abilities.length}}<ul>{{#each form.abilities}}<li>{{#if name}}<b>{{name}}.</b> {{/if}}{{{html}}}</li>{{/each}}</ul>{{/if}}
+    {{#if form.abilities.length}}<ul>{{#each form.abilities}}<li>{{#if name}}<b>{{{name}}}.</b> {{/if}}{{{html}}}</li>{{/each}}</ul>{{/if}}
   </section>
   {{/if}}
 

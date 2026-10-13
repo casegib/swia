@@ -10,7 +10,7 @@
 // steals the hover from the token underneath it. Touch devices are skipped.
 
 import {
-  sanitizeRichHTML, escapeHTML, parseKeywordLine, toArray,
+  sanitizeRichHTML, sanitizeLabelHTML, parseKeywordLine, toArray,
   ATTACK_DIE_COLORS, DEFENSE_DIE_COLORS
 } from "./data/common.js";
 import { actorConditions, conditionLabel } from "./conditions.js";
@@ -45,7 +45,9 @@ function resource(res) {
 function abilityRows(list) {
   return toArray(list)
     .filter((a) => (a?.name ?? "").trim() || (a?.description ?? "").trim())
-    .map((a) => ({ name: (a.name ?? "").trim(), html: sanitizeRichHTML(a.description ?? "") }));
+    // Names can carry an icon (an action glyph before "Executive Order"),
+    // so they go through the label sanitizer and render as HTML.
+    .map((a) => ({ name: sanitizeLabelHTML((a.name ?? "").trim()), html: sanitizeRichHTML(a.description ?? "") }));
 }
 
 /**
@@ -74,8 +76,8 @@ function surgeRows(surges, specials) {
   for (const a of toArray(specials)) {
     const cost = Number(a?.surgeCost) || 0;
     if (!cost) continue;
-    const name = (a.name ?? "").trim();
-    rows.push({ cost, html: `${name ? `<strong>${escapeHTML(name)}:</strong> ` : ""}${sanitizeRichHTML(a.description ?? "")}` });
+    const name = sanitizeLabelHTML((a.name ?? "").trim());
+    rows.push({ cost, html: `${name ? `<strong>${name}:</strong> ` : ""}${sanitizeRichHTML(a.description ?? "")}` });
   }
   for (const row of rows) row.surges = Array.from({ length: row.cost });
   return rows;
