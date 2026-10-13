@@ -48,12 +48,28 @@ function abilityRows(list) {
     .map((a) => ({ name: (a.name ?? "").trim(), html: sanitizeRichHTML(a.description ?? "") }));
 }
 
+/**
+ * Surge text is often stored with its own cost prefix ("<surge img>: +1<dmg>"),
+ * as typed on the sheet or carried over from older data. The card prints the
+ * cost itself, so drop the prefix and keep its icon count.
+ */
+const LEADING_SURGE = /^\s*((?:<img[^>]*surge[^>]*>\s*)+):\s*/i;
+function stripSurgePrefix(text) {
+  const raw = String(text ?? "");
+  const match = LEADING_SURGE.exec(raw);
+  if (!match) return { text: raw, cost: 0 };
+  return { text: raw.slice(match[0].length), cost: (match[1].match(/<img/gi) ?? []).length };
+}
+
 /** Surge rows for a unit or form card: printed surges plus surge-cost special abilities. */
 function surgeRows(surges, specials) {
-  const rows = toArray(surges).map((s) => ({
-    cost: Math.max(1, Number(s?.cost) || 1),
-    html: sanitizeRichHTML(s?.effectText ?? "")
-  }));
+  const rows = toArray(surges).map((s) => {
+    const { text, cost } = stripSurgePrefix(s?.effectText);
+    return {
+      cost: Math.max(1, Number(s?.cost) || 1, cost),
+      html: sanitizeRichHTML(text)
+    };
+  });
   for (const a of toArray(specials)) {
     const cost = Number(a?.surgeCost) || 0;
     if (!cost) continue;

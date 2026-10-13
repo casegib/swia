@@ -7964,11 +7964,20 @@ img.swia-glyph {
 .swia-token-card .tc-text li { margin-bottom: 4px; }
 .swia-token-card .tc-text p { margin: 0; }
 .swia-token-card .tc-cost { white-space: nowrap; }
-.swia-token-card img.swia-glyph {
-  width: 14px;
-  height: 14px;
-  border: none;
-  vertical-align: -2px;
+/* Every image inside printed text is a glyph, whatever its class: stored
+   text may carry bare <img> icons, which would otherwise render full size. */
+.swia-token-card .tc-text img,
+.swia-token-card .tc-keyword img,
+.swia-token-card .tc-interaction img {
+  display: inline !important;
+  width: auto !important;
+  height: 1.15em !important;
+  max-width: none !important;
+  margin: 0 1px !important;
+  border: 0 !important;
+  vertical-align: -0.2em !important;
+  box-shadow: none !important;
+  background: none !important;
 }
 
 /* Live footer: conditions and power tokens */
