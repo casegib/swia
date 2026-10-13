@@ -131,7 +131,7 @@ function actor(pack, name, type, system, { img = "", flags = {}, variant = "", i
   return {
     _id, name, type, img: img || "icons/svg/mystery-man.svg", system, items, effects: [],
     prototypeToken: { name, actorLink: linked, displayName: 20, displayBars: 40, disposition: type === "ally" ? 1 : -1,
-      texture: { src: img || "icons/svg/mystery-man.svg" }, bar1: { attribute: "attributes.health" } },
+      texture: { src: img || "icons/svg/mystery-man.svg" }, bar1: { attribute: "current.health" }, bar2: { attribute: type === "hero" ? "current.endurance" : null } },
     folder: null, sort: 0, ownership: { default: 0 }, flags: { swia: flags }, _stats: {}
   };
 }

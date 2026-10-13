@@ -5,6 +5,9 @@ import { int, str, html, bool, resource, attackDice, defenseDice, customAttr, ab
 const fields = foundry.data.fields;
 const { TypeDataModel } = foundry.abstract;
 
+/** Resources that live on both hero sides and are exposed as `system.current.<key>`. */
+export const ACTIVE_POOL_KEYS = ["health", "endurance"];
+
 /** Shared base: biography + core attributes (health, speed, defense). */
 class SWIAActorBase extends TypeDataModel {
   static defineSchema() {
@@ -39,6 +42,43 @@ class SWIAActorBase extends TypeDataModel {
     super.prepareDerivedData?.();
     this.equipmentEffects = equipmentEffectsFor(this.parent);
     this.applyEquipmentStats(this.attributes);
+    this.prepareActivePool();
+  }
+
+  /**
+   * Which attribute set is in play, as a path under `system`. Heroes switch
+   * to "woundedAttributes" while wounded; everything else is always
+   * "attributes". Every surface that reads or writes health/endurance
+   * should go through this (or `current`) rather than pick a set itself.
+   */
+  get activeAttributesPath() {
+    return "attributes";
+  }
+
+  get activeAttributes() {
+    return this[this.activeAttributesPath] ?? this.attributes;
+  }
+
+  /**
+   * `system.current.health` / `system.current.endurance`: derived aliases of
+   * the active set's resources (the same objects, not copies), so Foundry
+   * token bars pointed at `current.*` always show what the sheet and portals
+   * show. Writes go to the real path: see resolvePoolAttribute, used by
+   * the Actor's modifyTokenAttribute override (scripts/token-bars.js).
+   */
+  prepareActivePool() {
+    const set = this.activeAttributes ?? {};
+    this.current = {};
+    for (const key of ACTIVE_POOL_KEYS) {
+      if (set[key] && typeof set[key] === "object") this.current[key] = set[key];
+    }
+  }
+
+  /** Map a "current.<key>" token attribute onto the real stored path; others pass through. */
+  resolvePoolAttribute(attribute) {
+    const match = /^current\.(\w+)$/.exec(String(attribute ?? ""));
+    if (!match || !ACTIVE_POOL_KEYS.includes(match[1])) return attribute;
+    return `${this.activeAttributesPath}.${match[1]}`;
   }
 
   applyEquipmentStats(attrs) {
@@ -127,6 +167,12 @@ export class HeroData extends SWIAActorBase {
   prepareDerivedData() {
     super.prepareDerivedData();
     this.applyEquipmentStats(this.woundedAttributes);
+    // Re-point the active pool now the wounded side is fully prepared.
+    this.prepareActivePool();
+  }
+
+  get activeAttributesPath() {
+    return this.state?.wounded ? "woundedAttributes" : "attributes";
   }
 }
 

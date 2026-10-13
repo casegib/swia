@@ -24,7 +24,9 @@ Where state lives: figures and their gear are actors and embedded items; the Imp
 
 Fastest path: drag the hero from the **Heroes** compendium. It arrives with both sides filled, its abilities, its attribute pools and its starting class-deck equipment already on the sheet. Then drop class cards on it from **Class Cards (Hero)** as they're bought.
 
-Building by hand: create the actor, set the portrait (portrait and token art are set together; **wounded token art** is separate, under Token Setup in edit mode). Edit mode is GM-only, toggled in the sheet header, and saves when you turn it off. The Healthy | Wounded stat tabs edit both attribute sets without changing the hero's state.
+Building by hand: create the actor, set the portrait (portrait and token art are set together; **wounded token art** is separate, under Token Setup in edit mode). While a hero is wounded, the header's token image shows and edits the wounded art, and the portrait edits the art healing will restore. A wounded-art change made in Foundry's Prototype Token settings while the hero is wounded is kept too. Hero tokens are labelled with the **first name** ("Verena Talos" → "Verena"); renaming the hero follows through, and a token name you type yourself in Token Config is left alone. Edit mode is GM-only, toggled in the sheet header, and saves when you turn it off. The Healthy | Wounded stat tabs edit both attribute sets without changing the hero's state.
+
+Heroes are always **linked** tokens: the system sets Link Actor Data on every new hero, so the map token, the sheet and the Player Area share one set of numbers. Don't unlink a hero token; an unlinked one keeps a private copy of health that the sheet and portals never see.
 
 Enter **printed** values for Health, Endurance and Speed. Gear is added on top automatically and shown beside the input as +N; the display side shows the total with a breakdown on hover. Never type the armor bonus into the base — it would be counted twice.
 
@@ -36,7 +38,7 @@ Use the compendiums first. **Class Cards (Hero)** is one folder per hero with th
 
 Item sheets do **not** autosave: press **Save**. Edit toggle is GM-only. The card image is the scan — click to upload, and the framing sliders pan and zoom it.
 
-**Weapons** carry range, class and subtype, attack dice (or an **Attack Pool Source** — Strength, Insight or Tech — for weapons that use the wielder's pool), accuracy, attachment slots, keywords (Pierce, Blast, Cleave, Reach), printed ability rows, structured surge rows with an **exhaust to use** flag, and **exhaust abilities** (trigger + text; the hero sheet gives each a Use button). The engine reads dice, accuracy, pierce, surges and exhaust flags; the rest is display for the table.
+**Weapons** carry range, class and subtype, attack dice (or an **Attack Pool Source** — Strength, Insight or Tech — for weapons that use the wielder's pool), accuracy, attachment slots, keywords (Pierce, Blast, Cleave, Reach), printed ability rows, structured surge rows with an **exhaust to use** flag, and **exhaust abilities** (trigger + text; the hero sheet gives each a Use button). The engine reads dice, accuracy, pierce, surges and exhaust flags; the rest is display for the table. A surge row set to **Special** still applies any numbers in its text — "+1 Accuracy, Pierce 1" gives both when spent; words with no number (Bleed, Stun, Hide) stay for the table.
 
 **Weapon mods** carry melee/ranged compatibility (drives the subtype list and attach validation), bonus dice, damage, accuracy, keywords and surge rows. Attach them from the hero sheet's Unattached Mods block, not by typing the weapon id.
 
@@ -78,6 +80,8 @@ Owners can drop items on their own sheet (the Player Area drop zones are yours).
 
 The **GM Area** header carries the round counter, the Activation/Status phase toggle, Threat Level and Threat, and the round buttons: **Reset Activations** and **End Round** (no confirmation), **Reset Round** (confirmed). Every card on every board has an activation token; flipping a figure to activated also discards its end-of-activation conditions.
 
+**Token hover card.** Resting the pointer on a map token shows that figure's card: hero sheet (active side, wounded abilities when wounded, greyed with a DEFEATED banner when defeated) or deployment card (group size, deploy and reinforce cost, attack, printed keyword line, surge rows, abilities, active Shift form), read from the token's own actor — an unlinked Imperial figure shows its own health. Conditions, power tokens and Activated are in the footer; the card refreshes as they change. Every player sees every visible figure's card; hidden tokens show only to the GM. Each player can turn it off (Configure Settings → *Token hover card*). Touch screens don't get it.
+
 **Status phase**: Ready All per figure, on the portal or the sheet. Depleted cards need a deliberate manual ready. Threat accrual per round is yours to do in the Campaign Tracker; the GM Area only displays it. Deploy and reinforce costs and group size are tracking fields; the Imperial Area shows On Map counts and per-token health bars for reading.
 
 Damage outside combat: the health steppers on any card. Conditions: from the token HUD or the tray on the sheet and Player Area cards; five carry rules (Section 12). Power tokens: the ± trays on the hero sheet header and Player Area cards, or the token HUD.
@@ -88,7 +92,7 @@ The window opens on every client and you can act for either side. Each **Declare
 
 The **Class Cards** block on each side lists the acting figure's own declared effects and any a friendly figure can lend, with the friend's name prefixed. Declaring pays on the spot and applies to whichever side the modifier belongs to, even after the attack has rolled — a defender declaring Shadow Armor takes a Damage off the attacker's result. Undo refunds; Cancel refunds everything, tokens included.
 
-The rules the engine applies: rerolls are free until a surge is spent and unlock when the spend is undone; Evade results eat surges; Pierce subtracts from Block; a Dodge result zeroes the damage. **Apply Damage** is wounded-aware, clamps at 0, posts a summary card, discards the attacker's after-attack conditions and closes the window. **Cancel Combat** has no confirmation.
+The rules the engine applies: rerolls are free until a surge is spent and unlock when the spend is undone; Evade results eat surges; Pierce subtracts from Block (weapon and mod keywords, gear and passives, declared cards, spent surges, and a unit's printed keyword line); a Dodge result zeroes the damage. **Apply Damage** is wounded-aware, clamps at 0, posts a summary card, discards the attacker's after-attack conditions and closes the window. **Cancel Combat** has no confirmation.
 
 Solo rolls (untargeted attacks, tests, defense rolls) have the same rerolls, surge undo, token declaration and card declaration as the window, minus post-roll undo of tokens and cards. A combat saved before a system update is discarded at load; if the window says a combat is already in progress, resolve or cancel it from the window.
 
@@ -101,6 +105,8 @@ Declaration is the rule: attacker tokens during setup, defender tokens until the
 ## 11. Health, endurance, speed and gear
 
 Max Health, max Endurance and Speed are **derived**: printed base plus equipped armor plus class-card passives plus, for villains, attachments and class-wide cards. The sheet's edit inputs read and write the base. When a max moves — armor equipped or unequipped, a card added, removed or edited — the current value moves with it so damage and strain taken stay constant: 10/12 wearing +2 armor is 12/14, not 10/14. Both hero sides get the bonus; the wounded side's own printed numbers are the base there.
+
+Token bars read `current.health` (bar 1) and `current.endurance` (bar 2): whichever side the hero is on, so a wounded hero's token shows the wounded pool. Editing the bar from the token HUD writes to that side too. Token Config still offers the raw per-side paths (`attributes.health`, `woundedAttributes.health`) if you want a bar pinned to one side.
 
 Armor and passive Block and Evade seed the defender's rows; passive Accuracy, Damage and Surge seed the attacker's; passive Pierce joins the weapon's; extra dice join the pool. Every seed is a named note beside the conditions. Multiple equipped armor pieces stack — if your table plays otherwise, unequip.
 
@@ -124,7 +130,7 @@ Blast, Cleave, adjacency, line of sight, movement, range versus accuracy: remind
 
 ## 15. Troubleshooting
 
-Nothing changed after the update — restart the world, then reload. Every label shows as a raw `SWIA.…` key — the language file failed to load; run `npm run check:lang` (a key that is also a prefix of another key breaks the whole file). Combat window empty or can't attack — an old combat is active; cancel it. A player can't see their hero — OBSERVER; can't act on it — OWNER. "A GM must be connected" — the relay needs an active GM. Item edits vanished — item sheets need Save. A compendium shows up empty after an update — its compiled folder is missing from the install.
+Nothing changed after the update — restart the world, then reload. Every label shows as a raw `SWIA.…` key — the language file failed to load; run `npm run check:lang` (a key that is also a prefix of another key breaks the whole file). Combat window empty or can't attack — an old combat is active; cancel it. A player can't see their hero — OBSERVER; can't act on it — OWNER. "A GM must be connected" — the relay needs an active GM. Item edits vanished — item sheets need Save. A compendium shows up empty after an update — its compiled folder is missing from the install. A token's health bar disagrees with the sheet — open Token Config → Resources and check bar 1 reads `current.health` and Link Actor Data is ticked (heroes).
 
 ## 16. Reference
 
@@ -134,7 +140,7 @@ Nothing changed after the update — restart the world, then reload. Every label
 
 **Confirmations.** Healthy → Wounded (sheet and Player Area); delete an owned item; remove an Imperial or Agenda card; Reset Round; Apply Damage; add a class card the hero can't afford (GM override).
 
-**What the engine reads.** Weapons: dice or pool attribute, accuracy, keywords (pierce), surge rows, exhaust flags, exhaust abilities. Mods: dice, damage, accuracy, keywords, surges, compatibility. Armor: the modifier (health, block, evade, and any other slot), equipped. Class cards and Imperial class cards: passive modifier, declared effects (when, scope, cost, modifier, surges, choice), attachment flag, XP. Actors: attributes, defense dice, state, companionOf, special-ability surge costs, form cards.
+**What the engine reads.** Weapons: dice or pool attribute, accuracy, keywords (pierce), surge rows, exhaust flags, exhaust abilities. Mods: dice, damage, accuracy, keywords, surges, compatibility. Armor: the modifier (health, block, evade, and any other slot), equipped. Class cards and Imperial class cards: passive modifier, declared effects (when, scope, cost, modifier, surges, choice), attachment flag, XP. Actors: attributes, defense dice, state, companionOf, special-ability surge costs, form cards, and a unit's printed attack keyword line — a zero-cost special ability whose whole text is "Pierce 3", "+2 Accuracy", "+1 Accuracy, Pierce 1" or "+1⊠" applies to every attack the unit makes and shows as a note. Anything with other words in it ("+1 Block", "Mobile", a conditional "while attacking…") stays text.
 
 **Bonus layers in combat.** Manual · Gear · Tokens · Conditions · Cards, per stat, per side; the row shows the sum, the tooltip the parts.
 

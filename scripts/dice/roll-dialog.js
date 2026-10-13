@@ -10,7 +10,7 @@
 import {
   COLOR_TO_DENOM, totalSymbols, rollFaces, faceData, SWIA_DICE, symbolsLabel, dieImgPath
 } from "./dice-terms.js";
-import { escapeHTML, sanitizeLabelHTML, equippedArmorFor, equipmentEffectsFor, equipmentRollNotesFor, cardUsesFor, friendlyCardUsesFor, cardUseOwner, cardUseAvailability, payCardUse, resolveUseItem, modifierEffectHTML } from "../data/common.js";
+import { escapeHTML, sanitizeLabelHTML, equippedArmorFor, equipmentEffectsFor, equipmentRollNotesFor, cardUsesFor, friendlyCardUsesFor, cardUseOwner, cardUseAvailability, payCardUse, resolveUseItem, modifierEffectHTML, TEXT_EFFECT_PATTERNS, printedAttackKeywordsFor } from "../data/common.js";
 import { countPowerTokens, POWER_TOKEN_STATUS } from "../actor-actions.js";
 import { conditionEffectsFor, discardConditions, conditionLabel, getCondition } from "../conditions.js";
 
@@ -39,13 +39,9 @@ export function clampCount(value) {
  * words ("+2 Damage", "Pierce 2", "+1 Accuracy") and the inline icon images
  * used in effect text (e.g. "+1<img src='.../Damage.png'>").
  * Unrecognized text simply yields no effects (display-only spend).
+ * Patterns live in data/common.js (TEXT_EFFECT_PATTERNS), shared with
+ * printed keyword lines.
  */
-const TEXT_EFFECT_PATTERNS = [
-  { type: "pierce", re: /pierce\s*\+?\s*(\d+)/i },
-  { type: "damage", re: /\+\s*(\d+)\s*(?:<img[^>]*damage[^>]*>|damage\b)/i },
-  { type: "accuracy", re: /\+\s*(\d+)\s*(?:<img[^>]*accuracy[^>]*>|accuracy\b)/i }
-];
-
 export function parseTextEffects(text) {
   const effects = [];
   if (!text) return effects;
@@ -182,6 +178,21 @@ export function recomputeFaceTotals(state, side = null) {
     state.dodge = d.dodge;
   }
   return recomputeCard(state);
+}
+
+const SURGE_EFFECT_TYPES = ["damage", "accuracy", "pierce"];
+
+/**
+ * Numeric effects of a structured surge entry (weapon, mod, class-card
+ * grant). A single-effect entry carries its type and value; a "special"
+ * entry is printed text the pack builder couldn't reduce to one effect —
+ * "+1 Accuracy, Pierce 1", "+1⊠, Pierce 3", "Pierce 2, Bleed" — so read the
+ * numbers out of its text. Effects with no number (Bleed, Stun) stay text.
+ */
+export function structuredSurgeEffects(entry) {
+  const type = entry?.effectType ?? "special";
+  if (SURGE_EFFECT_TYPES.includes(type)) return [{ type, value: Number(entry?.effectValue) || 0 }];
+  return parseTextEffects(entry?.effectText);
 }
 
 /** Numeric effects of a surge ability (structured or parsed). */
@@ -439,7 +450,13 @@ export function equipmentDefenseBonusFor(actor) {
  */
 export function equipmentAttackBonusFor(actor) {
   const fx = equipmentEffectsFor(actor).attack;
-  return { damage: Number(fx.damage) || 0, surge: Number(fx.surge) || 0, accuracy: Number(fx.accuracy) || 0 };
+  // A unit's printed keyword line ("+2 Accuracy") rides the same layer.
+  const printed = printedAttackKeywordsFor(actor);
+  return {
+    damage: (Number(fx.damage) || 0) + printed.damage,
+    surge: Number(fx.surge) || 0,
+    accuracy: (Number(fx.accuracy) || 0) + printed.accuracy
+  };
 }
 
 /** Accumulated keyword block: weapon + attached mods (heroes only). */
@@ -448,6 +465,8 @@ export function attackKeywordsFor(actor, weaponId = null) {
   if (!actor) return out;
   // Always-on Pierce from gear / passives applies to every attack.
   out.pierce += Math.max(0, Number(equipmentEffectsFor(actor).attack?.pierce) || 0);
+  // Units: the always-on keyword line printed on the deployment card.
+  out.pierce += printedAttackKeywordsFor(actor).pierce;
   if (actor.type !== "hero") return out;
   const weapon = weaponId ? actor.items.get(weaponId) : null;
   if (!weapon) return out;
@@ -495,11 +514,9 @@ export function gatherSurgeAbilities(actor, weaponId = null) {
     });
   };
   const pushStructured = (entry, source, sourceItemId = null) => {
-    const type = entry.effectType ?? "special";
-    const value = Number(entry.effectValue) || 0;
     out.push({
       cost: Math.max(1, Number(entry.cost) || 1),
-      effects: ["damage", "accuracy", "pierce"].includes(type) ? [{ type, value }] : [],
+      effects: structuredSurgeEffects(entry),
       label: sanitizeLabelHTML(surgeLabel(entry)),
       source,
       sourceItemId,
@@ -1054,11 +1071,9 @@ export class SWIARollDialog extends BaseApplication {
       const label = use.ownerName ? `${use.ownerName}: ${use.name}` : use.name;
       cardNotes.push(fxHTML ? `${escapeHTML(label)} (${fxHTML})` : escapeHTML(label));
       for (const entry of use.surgeAbilities ?? []) {
-        const type = entry.effectType ?? "special";
-        const value = Number(entry.effectValue) || 0;
         cardSurges.push({
           cost: Math.max(1, Number(entry.cost) || 1),
-          effects: ["damage", "accuracy", "pierce"].includes(type) ? [{ type, value }] : [],
+          effects: structuredSurgeEffects(entry),
           label: surgeEntryLabel(entry),
           source: escapeHTML(use.name),
           spent: false
@@ -1091,7 +1106,9 @@ export class SWIARollDialog extends BaseApplication {
 
     const attackTotals = totalSymbols(attackRoll);
     const defenseTotals = totalSymbols(defenseRoll);
-    const keywords = this.rollType === "attack" && this.actor?.type === "hero"
+    // Every attacker: heroes add weapon/mod keywords, units their printed
+    // keyword line, everyone their gear and passive Pierce.
+    const keywords = this.rollType === "attack"
       ? this._attackKeywords()
       : { pierce: 0, blast: 0, cleave: false, reach: false };
 

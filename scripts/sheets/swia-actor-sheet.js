@@ -376,6 +376,10 @@ export class SWIAActorSheet extends BaseActorSheet {
     const profileSrc = actor?.img || tokenSrc || "";
     const tokenPreviewSrc = this._getTokenPreviewSrc(actor, isWounded) || profileSrc;
     const woundedTokenPreviewSrc = actor?.system?.woundedTokenImage || tokenPreviewSrc;
+    // The header token image edits the wounded art while wounded (_onEditImage).
+    const tokenImageTitle = game.i18n.localize(
+      actor?.type === "hero" && isWounded ? "SWIA.WoundedTokenImage" : "SWIA.TokenImageTitle"
+    );
     const tokenFootprint = this._getTokenFootprint(actor);
 
     // Extract dice pools from current (or wounded) attributes
@@ -775,6 +779,7 @@ export class SWIAActorSheet extends BaseActorSheet {
       config: CONFIG.SWIA ?? {},
       profileSrc,
       tokenPreviewSrc,
+      tokenImageTitle,
       woundedTokenPreviewSrc,
       tokenFootprint,
       enrichedBiography: enrichedBiography,
@@ -1005,20 +1010,31 @@ export class SWIAActorSheet extends BaseActorSheet {
       callback: async (url) => {
         console.log(`Updating ${path} with ${url}`);
         const updateObj = {};
-        // Portrait and healthy token images stay in sync unless editing wounded art.
-        if (path === "system.woundedTokenImage") {
-          updateObj[path] = url;
-          if (doc.type === "hero" && (doc.system?.state?.wounded ?? false)) {
-            updateObj["prototypeToken.texture.src"] = url;
-          }
+        const wounded = doc.type === "hero" && (doc.system?.state?.wounded ?? false);
+        // While a hero is wounded the header's Token image SHOWS the wounded
+        // art, so clicking it edits the wounded art — the field wounding
+        // reads — not the prototype alone (which the next wound/heal would
+        // overwrite) and never the portrait.
+        const editsWoundedArt = path === "system.woundedTokenImage"
+          || (wounded && path === "prototypeToken.texture.src");
+        if (editsWoundedArt) {
+          updateObj["system.woundedTokenImage"] = url;
+          if (wounded) updateObj["prototypeToken.texture.src"] = url;
+        } else if (wounded && path === "img") {
+          // Portrait while wounded: it pairs with the healthy token art, which
+          // is stashed while wounded (setWoundedState). Update the stash so
+          // healing restores the new art; the prototype keeps the wounded art.
+          updateObj.img = url;
+          updateObj["system.healthyTokenImage"] = url;
         } else if (path === "img" || path === "prototypeToken.texture.src") {
+          // Healthy: portrait and token art stay in sync.
           updateObj.img = url;
           updateObj["prototypeToken.texture.src"] = url;
         } else {
           updateObj[path] = url;
         }
         await doc.update(updateObj);
-        if (path === "system.woundedTokenImage" && doc.type === "hero" && (doc.system?.state?.wounded ?? false)) {
+        if (editsWoundedArt && wounded) {
           await sheet._syncActiveTokenTextures(doc, url);
         }
         // Re-render to refresh the portrait immediately

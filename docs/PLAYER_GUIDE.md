@@ -22,6 +22,8 @@ If you have a **companion**, it nests under your card with its own health steppe
 
 Things you will see but cannot change here: your unspent XP (the GM edits it), power tokens (the GM grants and removes them), and drops onto the columns (the GM does those — or you drop onto your own sheet, which works the same way).
 
+**Hover a token for its card.** Rest the pointer on any figure on the map for a moment and its card appears beside it: a hero's sheet (the side it's on), an Imperial or ally deployment card, an object's interaction text. Health and endurance are live, and conditions, power tokens and Activated sit along the bottom. It hides when you click, drag or pan. If it gets in your way, switch it off under Configure Settings → *Token hover card* (it's a per-player setting).
+
 ## 3. Rolling dice
 
 Click **Strength, Insight or Tech** (or a custom attribute the GM added) on your card or sheet for an attribute test. A dialog shows your pool; adjust it with − and + if a card says to, declare anything you want to declare (see below), then **Roll**. The chat card shows the faces and the surge total, and every die has a **↺ reroll** button you can use as often as you like until you spend a surge.

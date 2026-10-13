@@ -113,6 +113,66 @@ export function toArray(value) {
 
 export const MODIFIER_STATS = ["health", "endurance", "speed"];
 export const MODIFIER_ATTACK = ["damage", "surge", "accuracy", "pierce"];
+
+/* ------------------------------------------------------------------ */
+/* Printed effect text                                                 */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Numeric attack effects recognisable in printed card text: plain words
+ * ("+2 Damage", "Pierce 2", "+1 Accuracy") and the inline glyph images the
+ * pack builder writes for ⊠ ("+1<img … Damage.png …>"). Shared by surge
+ * parsing (roll-dialog.js parseTextEffects) and printed keyword lines.
+ */
+export const TEXT_EFFECT_PATTERNS = [
+  { type: "pierce", re: /pierce\s*\+?\s*(\d+)/i },
+  { type: "damage", re: /\+\s*(\d+)\s*(?:<img[^>]*damage[^>]*>|damage\b)/i },
+  { type: "accuracy", re: /\+\s*(\d+)\s*(?:<img[^>]*accuracy[^>]*>|accuracy\b)/i }
+];
+
+/**
+ * A printed keyword line made ONLY of numeric attack effects — "Pierce 3",
+ * "+2 Accuracy", "+1 Accuracy, Pierce 1", "+1⊠". Returns the summed
+ * {damage, accuracy, pierce}, or null when anything else is in the text
+ * (prose, a condition, defense keywords like "+1 Block"): those stay
+ * display-only rather than risk applying a conditional effect every time.
+ */
+export function parseKeywordLine(text) {
+  let rest = String(text ?? "");
+  if (!rest.trim()) return null;
+  const out = { damage: 0, accuracy: 0, pierce: 0 };
+  let found = false;
+  for (const { type, re } of TEXT_EFFECT_PATTERNS) {
+    rest = rest.replace(new RegExp(re.source, "gi"), (_match, n) => {
+      out[type] += Number(n) || 0;
+      found = true;
+      return " ";
+    });
+  }
+  const leftover = rest.replace(/<br\s*\/?>/gi, " ").replace(/&nbsp;/gi, " ").replace(/[\s,.;]+/g, "");
+  return found && !leftover ? out : null;
+}
+
+/**
+ * Always-on attack keywords printed on a unit's deployment card. The pack
+ * builder stores the card's keyword line ("Pierce 3", "+2 Accuracy") as a
+ * zero-cost special ability; any such ability whose text is a pure keyword
+ * line (parseKeywordLine) applies to every attack the unit makes. Heroes
+ * carry theirs on weapons and cards instead, so they get nothing here.
+ */
+export function printedAttackKeywordsFor(actor) {
+  const out = { damage: 0, accuracy: 0, pierce: 0 };
+  if (!actor || actor.type === "hero") return out;
+  for (const entry of toArray(actor.system?.specialAbilities)) {
+    if ((Number(entry?.surgeCost) || 0) > 0) continue;
+    const fx = parseKeywordLine(entry?.description);
+    if (!fx) continue;
+    out.damage += fx.damage;
+    out.accuracy += fx.accuracy;
+    out.pierce += fx.pierce;
+  }
+  return out;
+}
 export const MODIFIER_DEFENSE = ["block", "evade"];
 export const ATTACK_DIE_COLORS = ["red", "blue", "green", "yellow"];
 export const DEFENSE_DIE_COLORS = ["black", "white"];
@@ -319,6 +379,14 @@ export function equipmentRollNotesFor(actor, role) {
       }
     }
     if (parts.length) notes.push(`${escapeHTML(item.name)} (${parts.join(", ")})`);
+  }
+  if (role === "attack") {
+    const printed = printedAttackKeywordsFor(actor);
+    const parts = [];
+    if (printed.pierce) parts.push(`${escapeHTML(game.i18n.localize("SWIA.Keywords.Pierce"))} ${printed.pierce}`);
+    if (printed.accuracy) parts.push(`+${printed.accuracy} ${statGlyphHTML("accuracy")}`);
+    if (printed.damage) parts.push(`+${printed.damage} ${statGlyphHTML("damage")}`);
+    if (parts.length) notes.push(`${escapeHTML(actor.name)} (${parts.join(", ")})`);
   }
   return notes;
 }

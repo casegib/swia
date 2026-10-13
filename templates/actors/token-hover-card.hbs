@@ -1,0 +1,110 @@
+<div class="tc-card tc-{{type}}{{#if wounded}} is-wounded{{/if}}{{#if defeated}} is-defeated{{/if}}">
+  <header class="tc-head">
+    {{#if img}}<img class="tc-portrait" src="{{img}}" alt="" />{{/if}}
+    <div class="tc-title">
+      <h3>{{name}}</h3>
+      {{#if subtitle}}<p>{{subtitle}}</p>{{/if}}
+    </div>
+    <div class="tc-chips">
+      {{#if isHero}}
+      {{#if wounded}}<span class="tc-chip wounded">{{localize "SWIA.State.Wounded"}}</span>{{else}}<span class="tc-chip healthy">{{localize "SWIA.State.Healthy"}}</span>{{/if}}
+      {{/if}}
+      {{#if isElite}}<span class="tc-chip elite">{{localize "SWIA.HoverCard.Elite"}}</span>{{/if}}
+      {{#if isUnique}}<span class="tc-chip unique">{{localize "SWIA.HoverCard.Unique"}}</span>{{/if}}
+      {{#if activated}}<span class="tc-chip muted">{{localize "SWIA.HoverCard.Activated"}}</span>{{/if}}
+    </div>
+  </header>
+
+  {{#if defeated}}<div class="tc-banner">{{localize "SWIA.State.Defeated"}}</div>{{/if}}
+
+  {{#if isUnit}}
+  <div class="tc-group">
+    <span>{{localize "SWIA.Villain.GroupSize"}} <b>{{groupSize}}</b></span>
+    <span>{{localize "SWIA.Villain.DeployCost"}} <b>{{deployCost}}</b></span>
+    <span>{{localize "SWIA.HoverCard.Reinforce"}} <b>{{reinforceCost}}</b></span>
+  </div>
+  {{/if}}
+
+  {{#if showLive}}
+  <section class="tc-live">
+    {{#if showHealth}}
+    <div class="tc-res hp">
+      <span class="tc-rl">{{{swiaGlyph "damage"}}}{{localize "SWIA.Attributes.Health"}}</span>
+      <span class="tc-track"><span class="tc-fill" style="width: {{health.pct}}%"></span></span>
+      <span class="tc-rv">{{health.value}}<small>/{{health.max}}</small></span>
+    </div>
+    {{/if}}
+    {{#if isHero}}
+    <div class="tc-res end">
+      <span class="tc-rl">{{{swiaGlyph "strain"}}}{{localize "SWIA.Attributes.Endurance"}}</span>
+      <span class="tc-track"><span class="tc-fill" style="width: {{endurance.pct}}%"></span></span>
+      <span class="tc-rv">{{endurance.value}}<small>/{{endurance.max}}</small></span>
+    </div>
+    {{/if}}
+    <div class="tc-mini">
+      {{#unless isObject}}<span>{{localize "SWIA.Attributes.Speed"}} <b>{{speed}}</b>{{#if speedBonus}}<em>+{{speedBonus}}</em>{{/if}}</span>{{/unless}}
+      {{#if defense.length}}<span>{{localize "SWIA.Attributes.Defense"}} {{#each defense}}<span class="tc-die {{this}}"></span>{{/each}}</span>{{/if}}
+    </div>
+  </section>
+  {{/if}}
+
+  {{#if isHero}}
+  <section class="tc-pools">
+    {{#each pools}}
+    <div class="tc-pool">
+      {{#if icon}}<img class="tc-icon" src="{{icon}}" alt="" />{{else}}<i class="fas fa-star tc-icon"></i>{{/if}}
+      <span class="tc-pl">{{label}}</span>
+      {{#each dice}}<span class="tc-die {{this}}"></span>{{/each}}
+    </div>
+    {{/each}}
+  </section>
+  {{/if}}
+
+  {{#if isUnit}}
+  <section class="tc-attack">
+    <div class="tc-pool">
+      <img class="tc-icon" src="systems/swia/icons/{{#if attackMelee}}Melee{{else}}Ranged{{/if}}.png" alt="" />
+      <span class="tc-pl wide">{{attackLabel}}</span>
+      {{#each attack}}<span class="tc-die {{this}}"></span>{{/each}}
+    </div>
+    {{#each keywords}}<div class="tc-keyword">{{{this}}}</div>{{/each}}
+  </section>
+  {{/if}}
+
+  {{#if surges.length}}
+  <section class="tc-text">
+    <h4>{{localize "SWIA.HoverCard.SurgeAbilities"}}</h4>
+    <ul class="tc-surges">{{#each surges}}<li><span class="tc-cost">{{#each surges}}{{{swiaGlyph "surge"}}}{{/each}}:</span> {{{html}}}</li>{{/each}}</ul>
+  </section>
+  {{/if}}
+
+  {{#if abilities.length}}
+  <section class="tc-text">
+    <h4>{{#if isHero}}{{#if wounded}}{{localize "SWIA.HoverCard.WoundedAbilities"}}{{else}}{{localize "SWIA.HoverCard.Abilities"}}{{/if}}{{else}}{{localize "SWIA.HoverCard.Abilities"}}{{/if}}</h4>
+    <ul>{{#each abilities}}<li>{{#if name}}<b>{{name}}.</b> {{/if}}{{{html}}}</li>{{/each}}</ul>
+  </section>
+  {{/if}}
+
+  {{#if form}}
+  <section class="tc-text tc-form">
+    <h4>{{form.name}}</h4>
+    {{#each form.keywords}}<div class="tc-keyword">{{{this}}}</div>{{/each}}
+    {{#if form.surges.length}}<ul class="tc-surges">{{#each form.surges}}<li><span class="tc-cost">{{#each surges}}{{{swiaGlyph "surge"}}}{{/each}}:</span> {{{html}}}</li>{{/each}}</ul>{{/if}}
+    {{#if form.abilities.length}}<ul>{{#each form.abilities}}<li>{{#if name}}<b>{{name}}.</b> {{/if}}{{{html}}}</li>{{/each}}</ul>{{/if}}
+  </section>
+  {{/if}}
+
+  {{#if interaction}}
+  <section class="tc-text">
+    <h4>{{localize "SWIA.HoverCard.Interaction"}}</h4>
+    <div class="tc-interaction">{{{interaction}}}</div>
+  </section>
+  {{/if}}
+
+  {{#if hasFooter}}
+  <footer class="tc-foot">
+    {{#each conditions}}<span class="tc-cond">{{#if img}}<img src="{{img}}" alt="" />{{/if}}{{label}}</span>{{/each}}
+    {{#each tokens}}<span class="tc-tok" title="{{label}}"><img src="{{icon}}" alt="{{label}}" /><b>{{count}}</b></span>{{/each}}
+  </footer>
+  {{/if}}
+</div>

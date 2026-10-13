@@ -7,7 +7,7 @@
 import {
   SOCKET_NAME, CARD_TEMPLATE, renderTemplateFn, clampCount, recomputeCard,
   ATTACK_POOL_COLORS, DEFENSE_POOL_COLORS, heroWeapons, defaultWeaponId,
-  buildAttackPool, buildDefensePool, attackKeywordsFor, weaponAccuracyFor,
+  buildAttackPool, buildDefensePool, attackKeywordsFor, weaponAccuracyFor, structuredSurgeEffects,
   equipmentDefenseBonusFor, equipmentAttackBonusFor, gatherSurgeAbilities, setCombatStarter,
   replaceFace, recomputeFaceTotals, rollReplacementDie,
   applySurgeToState, revertSurgeOnState, exhaustSurgeSource, readySurgeSource,
@@ -598,11 +598,9 @@ function cardSurgeAbilities(combat) {
   for (const use of combat?.attacker?.cardUses ?? []) {
     if (!use.applied) continue;
     for (const entry of use.surgeAbilities ?? []) {
-      const type = entry.effectType ?? "special";
-      const value = Number(entry.effectValue) || 0;
       out.push({
         cost: Math.max(1, Number(entry.cost) || 1),
-        effects: ["damage", "accuracy", "pierce"].includes(type) ? [{ type, value }] : [],
+        effects: structuredSurgeEffects(entry),
         label: surgeEntryLabel(entry),
         source: escapeHTML(use.ownerName ? `${use.ownerName}: ${use.name}` : use.name),
         spent: false

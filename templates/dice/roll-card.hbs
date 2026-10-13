@@ -71,6 +71,9 @@
     <span class="roll-card-net">{{localize "SWIA.Roll.NetDamage"}}: {{netDamage}}</span>
     {{/if}}
   </div>
+  {{#if pierceTotal}}
+  <p class="roll-card-keyword roll-card-pierce">{{localize "SWIA.Keywords.Pierce"}} {{pierceTotal}}{{#unless showDefenseTotals}} &mdash; {{localize "SWIA.Roll.PierceSoloHint"}}{{/unless}}</p>
+  {{/if}}
   {{#if blast}}
   <p class="roll-card-keyword">{{localize "SWIA.Keywords.Blast"}} {{blast}} &mdash; {{localize "SWIA.Roll.BlastHint"}}</p>
   {{/if}}

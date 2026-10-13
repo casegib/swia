@@ -22,6 +22,9 @@ import { registerRollCardHooks } from "./dice/roll-dialog.js";
 import { registerItemTradeHooks } from "./item-trade.js";
 import { registerCombatHooks, SWIACombatWindow } from "./dice/combat-window.js";
 import { definePowerTokenActorClass, registerPowerTokenBadgeHooks } from "./token-badge.js";
+import { registerTokenBars, migrateTokenBars } from "./token-bars.js";
+import { registerTokenIdentity, migrateHeroTokenNames } from "./token-identity.js";
+import { registerTokenHoverCard } from "./token-hover-card.js";
 import { registerConditionSettings, rebuildConditionRegistry, applyStatusEffects } from "./conditions.js";
 import { statGlyphHTML } from "./data/common.js";
 
@@ -223,6 +226,19 @@ Hooks.once("init", async function initSWIA() {
   definePowerTokenActorClass();
   registerPowerTokenBadgeHooks();
 
+  // Token bars follow the active (healthy/wounded) pool via system.current.*,
+  // and hero tokens are linked (scripts/token-bars.js). Subclasses the Actor
+  // class above, so it must run after definePowerTokenActorClass.
+  registerTokenBars();
+
+  // Hero tokens show first names; wounded token art edited outside the
+  // sheet's picker is kept (scripts/token-identity.js).
+  registerTokenIdentity();
+
+  // Live stat card when the pointer rests on a map token
+  // (scripts/token-hover-card.js); client setting to switch it off.
+  registerTokenHoverCard();
+
   // Register system data models (schemas live here; document types are declared in system.json)
   Object.assign(CONFIG.Actor.dataModels, {
     hero: HeroData,
@@ -352,7 +368,8 @@ Hooks.once("init", async function initSWIA() {
     "systems/swia/templates/dice/combat-window.hbs",
     "systems/swia/templates/settings/conditions-config.hbs",
     "systems/swia/templates/actors/parts/condition-tray.hbs",
-    "systems/swia/templates/items/parts/modifier-editor.hbs"
+    "systems/swia/templates/items/parts/modifier-editor.hbs",
+    "systems/swia/templates/actors/token-hover-card.hbs"
   ]);
 
   // Register actor sheets for hero, villain, and ally types
@@ -426,6 +443,16 @@ Hooks.once("ready", async () => {
     await migrateArmorModifiers();
   } catch (error) {
     console.error("SWIA | Armor modifier migration failed", error);
+  }
+  try {
+    await migrateTokenBars();
+  } catch (error) {
+    console.error("SWIA | Token bar migration failed", error);
+  }
+  try {
+    await migrateHeroTokenNames();
+  } catch (error) {
+    console.error("SWIA | Hero token name migration failed", error);
   }
 });
 

@@ -7791,3 +7791,227 @@ img.swia-glyph {
 .swia-give-notice {
   font-style: italic;
 }
+
+/* ============================================================
+   Token hover card (scripts/token-hover-card.js)
+   One fixed element on <body>; pointer-events: none so it never
+   steals the hover from the token beneath it.
+   ============================================================ */
+.swia-token-card {
+  position: fixed;
+  z-index: 11000;
+  width: 310px;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 16px);
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+.swia-token-card.is-visible { opacity: 1; transform: none; }
+
+.swia-token-card .tc-card {
+  --tc-ink: #2b1f14;
+  --tc-label: #5a4429;
+  --tc-muted: #7a6a55;
+  --tc-edge: #8b6f47;
+  --tc-rule: rgba(139, 111, 71, 0.35);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 12.5px;
+  line-height: 1.38;
+  color: var(--tc-ink);
+  background: linear-gradient(180deg, #efe3c8, #e3d3b0);
+  border: 2px solid var(--tc-edge);
+  border-radius: 8px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+/* Header — colour by side/state */
+.swia-token-card .tc-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  color: #fff;
+  background: linear-gradient(90deg, #a82323, #7d1919);
+}
+.swia-token-card .tc-villain .tc-head { background: linear-gradient(90deg, #3d4652, #262c33); }
+.swia-token-card .tc-ally .tc-head { background: linear-gradient(90deg, #2f6b45, #1f4a30); }
+.swia-token-card .tc-character .tc-head,
+.swia-token-card .tc-object .tc-head { background: linear-gradient(90deg, #6b5538, #4a3a25); }
+.swia-token-card .tc-card.is-wounded .tc-head { background: linear-gradient(90deg, #6e1414, #3e0b0b); }
+
+.swia-token-card .tc-portrait {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  border: 2px solid #f3ead8;
+  object-fit: cover;
+  background: #c9b48c;
+}
+.swia-token-card .tc-title { flex: 1; min-width: 0; }
+.swia-token-card .tc-title h3 {
+  margin: 0;
+  border: none;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: inherit;
+}
+.swia-token-card .tc-title p { margin: 1px 0 0; font-size: 11px; opacity: 0.85; }
+.swia-token-card .tc-chips { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.swia-token-card .tc-chip {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.swia-token-card .tc-chip.healthy { background: #2f7d43; color: #fff; }
+.swia-token-card .tc-chip.wounded { background: #f3ead8; color: #7d1919; }
+.swia-token-card .tc-chip.elite { background: #c9a227; color: #2b1f14; }
+.swia-token-card .tc-chip.unique { background: #f3ead8; color: #3d4652; }
+.swia-token-card .tc-chip.muted { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+/* Defeated: grey the card, banner across the top */
+.swia-token-card .tc-card.is-defeated { filter: grayscale(0.85); }
+.swia-token-card .tc-banner {
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-size: 13px;
+  padding: 4px 0;
+  color: #f3ead8;
+  background: #2b1f14;
+}
+
+.swia-token-card .tc-group {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  background: rgba(61, 70, 82, 0.12);
+  border-bottom: 1px solid var(--tc-rule);
+}
+
+.swia-token-card section { padding: 8px 10px; border-bottom: 1px solid var(--tc-rule); }
+.swia-token-card section:last-of-type { border-bottom: none; }
+
+/* Live resources */
+.swia-token-card .tc-res {
+  display: grid;
+  grid-template-columns: 96px 1fr auto;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+.swia-token-card .tc-rl {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--tc-label);
+}
+.swia-token-card .tc-track { height: 9px; border-radius: 5px; background: rgba(0, 0, 0, 0.15); overflow: hidden; }
+.swia-token-card .tc-fill { display: block; height: 100%; background: #b52b2b; }
+.swia-token-card .tc-res.end .tc-fill { background: #2c6aa0; }
+.swia-token-card .tc-rv { min-width: 46px; text-align: right; font-weight: 700; font-size: 14px; }
+.swia-token-card .tc-rv small { font-weight: 400; font-size: 11px; color: var(--tc-muted); }
+.swia-token-card .tc-mini { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.swia-token-card .tc-mini em { font-style: normal; font-size: 10px; font-weight: 700; color: #2f7d43; margin-left: 3px; }
+
+/* Dice pools */
+.swia-token-card .tc-pool { display: flex; align-items: center; gap: 5px; margin: 3px 0; }
+.swia-token-card .tc-icon { width: 15px; height: 15px; border: none; flex: none; }
+.swia-token-card .tc-pl { width: 70px; font-size: 11.5px; font-weight: 700; color: var(--tc-label); }
+.swia-token-card .tc-pl.wide { width: auto; margin-right: 4px; }
+.swia-token-card .tc-die {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  margin-right: 2px;
+  vertical-align: middle;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+.swia-token-card .tc-die.red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.swia-token-card .tc-die.blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+.swia-token-card .tc-die.green { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.swia-token-card .tc-die.yellow { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+.swia-token-card .tc-die.black { background: linear-gradient(135deg, #4d4d4d, #1f1f1f); border-color: #9a9a9a; }
+.swia-token-card .tc-die.white { background: linear-gradient(135deg, #ffffff, #e0e0e0); border-color: #b0b0b0; }
+.swia-token-card .tc-keyword { margin-top: 3px; font-size: 11.5px; font-weight: 700; color: var(--tc-label); }
+
+/* Printed text */
+.swia-token-card .tc-text h4 {
+  margin: 2px 0 4px;
+  border: none;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tc-label);
+}
+.swia-token-card .tc-text ul { margin: 0 0 4px; padding-left: 15px; }
+.swia-token-card .tc-text ul.tc-surges { list-style: none; padding-left: 0; }
+.swia-token-card .tc-text li { margin-bottom: 4px; }
+.swia-token-card .tc-text p { margin: 0; }
+.swia-token-card .tc-cost { white-space: nowrap; }
+.swia-token-card img.swia-glyph {
+  width: 14px;
+  height: 14px;
+  border: none;
+  vertical-align: -2px;
+}
+
+/* Live footer: conditions and power tokens */
+.swia-token-card .tc-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-top: 1px solid var(--tc-rule);
+}
+.swia-token-card .tc-cond {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px 2px 3px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f3ead8;
+  background: #3b2f22;
+}
+.swia-token-card .tc-cond img { width: 18px; height: 18px; border: none; }
+.swia-token-card .tc-tok {
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  border: 1px solid #3a2a14;
+  background: #f3ead8;
+}
+.swia-token-card .tc-tok img { width: 22px; height: 22px; border: none; }
+.swia-token-card .tc-tok b {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  width: 14px;
+  height: 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 9px;
+  color: #fff;
+  background: #1f1f1f;
+}

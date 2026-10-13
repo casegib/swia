@@ -41,7 +41,7 @@
         </div>
         <div class="image-container {{#if editMode}}editing{{/if}}">
           <img class="profile-image {{#if editMode}}clickable{{/if}}" src="{{profileSrc}}" {{#if editMode}}data-action="editImage" data-path="img"{{/if}} title="{{actor.name}}" />
-          <img class="token-image {{#if editMode}}clickable{{/if}}" src="{{tokenPreviewSrc}}" {{#if editMode}}data-action="editImage" data-path="prototypeToken.texture.src"{{/if}} title="Token" />
+          <img class="token-image {{#if editMode}}clickable{{/if}}" src="{{tokenPreviewSrc}}" {{#if editMode}}data-action="editImage" data-path="prototypeToken.texture.src"{{/if}} title="{{tokenImageTitle}}" />
         </div>
         {{#if editMode}}
         <details class="token-setup">
@@ -83,7 +83,7 @@
       {{else}}
       <div class="image-container {{#if editMode}}editing{{/if}}">
         <img class="profile-image {{#if editMode}}clickable{{/if}}" src="{{profileSrc}}" {{#if editMode}}data-action="editImage" data-path="img"{{/if}} title="{{actor.name}}" />
-        <img class="token-image {{#if editMode}}clickable{{/if}}" src="{{tokenPreviewSrc}}" {{#if editMode}}data-action="editImage" data-path="prototypeToken.texture.src"{{/if}} title="Token" />
+        <img class="token-image {{#if editMode}}clickable{{/if}}" src="{{tokenPreviewSrc}}" {{#if editMode}}data-action="editImage" data-path="prototypeToken.texture.src"{{/if}} title="{{tokenImageTitle}}" />
       </div>
       {{#if (eq actor.type "hero")}}
       {{#if editMode}}
